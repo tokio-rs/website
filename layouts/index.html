@@ -1,0 +1,73 @@
+{{ partial "header" . }}
+
+<div class="jumbotron">
+  <div class="tk-jumbotron">
+    <img src="/img/logo-large.png" class="align-middle tk-logo" alt="">
+    <p class="lead">A platform for writing fast networking code with Rust.</p>
+    <a href="{{ ref . "docs/guides/getting-started.md" }}" class="btn call-to-action" role="button" aria-pressed="true">Get Started</a>
+  </div>
+</div>
+
+<div class="container tk-home">
+  <div class="row">
+    <div class="col-md-5">
+      <div class="tk-features">
+        <h2>
+          <i class="fa fa-bolt" aria-hidden="true"></i>
+          Lightning Fast
+        </h2>
+        <p>Get more throughput and less latency while using less resources.</p>
+
+        <h2>
+          <i class="fa fa-bed" aria-hidden="true"></i>
+          Managed dependencies
+        </h2>
+        <p>When you just need to include Bootstrap's compiled CSS and JS, use
+        the Bootstrap CDN, free from the Max CDN folks.</p>
+
+        <h2>
+          <i class="fa fa-gavel" aria-hidden="true"></i>
+          JavaScript Interop
+        </h2>
+        <p>Elm compiles to JavaScript, so trying out Elm is easy. Convert a
+        small part of your app to Elm and embed it in JS. No full rewrites, no
+        huge time investment. More about that here.</p>
+      </div>
+    </div>
+    <div class="col-md-7">
+      <div class="tk-content">
+        <pre>
+<code>// This code is editable and runnable!
+fn main() {
+    // A simple integer calculator:
+    // `+` or `-` means add or subtract by 1
+    // `*` or `/` means multiply or divide by 2
+
+    let program = "+ + * - /";
+    let mut accumulator = 0;
+
+    for token in program.chars() {
+        match token {
+            '+' => accumulator += 1,
+            '-' => accumulator -= 1,
+            '*' => accumulator *= 2,
+            '/' => accumulator /= 2,
+            _ => { /* ignore everything else */ }
+        }
+    }
+
+    println!("The program \"{}\" calculates the value {}",
+              program, accumulator);
+}</code>
+        </pre>
+      </div>
+    </div>
+  </div>
+
+  <p class="lead final-pitch">
+Rust is a systems programming language that runs blazingly fast, prevents segfaults, and guarantees thread safety. 
+<a href="#">See who's using Rust</a>.
+  </p>
+</div>
+
+{{ partial "footer" . }}

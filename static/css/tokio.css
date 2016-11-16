@@ -1,0 +1,334 @@
+a {
+  color: #479cea;
+}
+
+a:hover {
+  color: #316aa1;
+}
+
+/*
+ *
+ * ===== Content ====
+ *
+ */
+
+.tk-content {
+  max-width: 600px;
+  line-height: 1.75rem;
+}
+
+.tk-content h1 {
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.tk-content h1:first-child {
+  margin-top: 0;
+}
+
+.tk-content h2, .tk-content h3 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.tk-content hr {
+  margin: 2rem 0;
+}
+
+/*
+ *
+ * ===== Navbar =====
+ *
+ */
+
+.navbar-nav li {
+  margin-left:30px;
+  margin-right:30px;
+  line-height: 60px;
+  height: 60px;
+  padding-top: 0;
+}
+
+.navbar {
+  padding-top: 0px;
+  text-align: center;
+}
+
+.navbar ul {
+    display: inline-block;
+}
+
+.leftnav li {
+  margin: 1.25rem 0rem;
+}
+
+.leftnav a {
+  font-weight: 600;
+}
+
+
+/*
+ *
+ * ===== Nav menu =====
+ *
+ */
+
+@media (min-width: 768px) {
+   .bootstrap-vertical-nav .navbar .navbar-collapse {
+      padding: 0;
+      max-height: none;
+   }
+   .bootstrap-vertical-nav .navbar ul {
+      float: none;
+   }
+   .bootstrap-vertical-nav .navbar ul:not {
+      display: block;
+   }
+   .bootstrap-vertical-nav .navbar li {
+      float: none;
+      display: block;
+   }
+
+   .bootstrap-vertical-nav .navbar-nav .nav-item+.nav-item {
+      margin-left: 0;
+   }
+}
+
+@media (max-width: 768px) {
+   .bootstrap-vertical-nav {
+   }
+}
+
+/*
+ *
+ * ===== Page header =====
+ *
+ */
+
+.tk-pageheader, .jumbotron {
+  background-color: #479cea;
+  color: #fff;
+}
+
+.jumbotron {
+  border-radius: 0;
+  padding: 4rem;
+}
+
+.tk-jumbotron {
+  margin-left: auto;
+  margin-right: auto;
+  width: 700px;
+  max-width: 100%;
+  text-align: center;
+}
+
+.jumbotron .tk-logo {
+  width: auto;
+  height: 10rem;
+}
+
+.jumbotron .lead {
+  font-size: 1.5rem;
+  margin: 2.5rem 0;
+}
+
+.tk-pageheader {
+  padding: 2rem 1rem;
+  margin-bottom: 3rem;
+}
+
+.tk-pageheader .lead {
+  color: #DAEBFB;
+  font-size: 1.5rem;
+}
+
+@media (min-width: 576px) {
+  .tk-pageheader {
+    padding: 3.5rem 0rem;
+  }
+}
+
+.call-to-action {
+  color: #fff;
+  border-color: #fff;
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
+  border-radius: 0.3rem;
+}
+
+.call-to-action:hover {
+  color: #479cea;
+  background-color: #fff;
+  border-color: #fff;
+}
+
+.call-to-action:focus {
+  color: #479cea;
+  background-color: #fff;
+  border-color: #fff;
+}
+
+.call-to-action:active {
+  color: #479cea;
+  background-color: #fff;
+  border-color: #fff;
+}
+
+/*
+ *
+ * ===== Home =====
+ *
+ */
+
+.tk-home {
+  margin: 0 auto;
+  width: 900px;
+}
+
+.tk-features {
+}
+
+.tk-features h2 {
+  font-size: 1.5rem;
+  margin-top: 2.25rem;
+  margin-bottom: 0.8rem;
+}
+
+.tk-features .fa {
+  margin-right: 1rem;
+}
+
+.tk-features p {
+  font-size: 1rem;
+}
+
+.final-pitch {
+  text-align: center;
+}
+
+/*
+ *
+ * ===== Footer =====
+ *
+ */
+
+.tk-footer {
+  padding: 4rem 0;
+  margin-top: 4rem;
+  font-size: 85%;
+  line-height: 35px;
+  background-color: #f5f5f5;
+}
+
+.tk-footer .fa {
+  font-size: 35px;
+  margin-left: 35px;
+}
+
+/*
+ *
+ * ===== Highlight =====
+ *
+ */
+
+code {
+  color: #a13289;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  margin: 1rem 0rem;
+  padding: 1.5rem;
+  background: #f7f7f7;
+  font-size: 90%;
+  line-height: 1.2rem;
+}
+
+
+/* Base color: saturation 0; */
+
+.hljs,
+.hljs-subst {
+  color: #444;
+}
+
+.hljs-comment {
+  color: #818a91;
+}
+
+.hljs-keyword,
+.hljs-attribute,
+.hljs-selector-tag,
+.hljs-meta-keyword,
+.hljs-doctag,
+.hljs-name {
+  font-weight: bold;
+}
+
+
+/* User color: hue: 0 */
+
+.hljs-type,
+.hljs-string,
+.hljs-number,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-quote,
+.hljs-template-tag,
+.hljs-deletion {
+  color: #6aa132;
+}
+
+.hljs-title,
+.hljs-section {
+  /*color: #429aed;*/
+  font-weight: bold;
+}
+
+.hljs-regexp,
+.hljs-symbol,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-link,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #BC6060;
+}
+
+
+/* Language color: hue: 90; */
+
+.hljs-literal {
+  color: #78A960;
+}
+
+.hljs-built_in,
+.hljs-bullet,
+.hljs-code,
+.hljs-addition {
+  color: #a13289;
+}
+
+
+/* Meta color: hue: 200 */
+
+.hljs-meta {
+  color: #1f7199;
+}
+
+.hljs-meta-string {
+  color: #4d99bf;
+}
+
+
+/* Misc effects */
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}

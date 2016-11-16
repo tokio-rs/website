@@ -1,0 +1,35 @@
+{{ partial "header" . }}
+
+<div class="tk-pageheader">
+  <div class="container">
+    <h1 class="display-4">{{ .Title }}</h1>
+    <p class="lead">{{ .Description }}</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+
+      <nav class="leftnav">
+        <div class="" id="">
+          <ul class="nav">
+            {{ range .Site.Menus.guides }}
+            <li class="active">
+            <a href="{{ .URL }}" class="text-muted">{{ .Name }}</a>
+            </li>
+            {{ end }}
+          </ul>
+        </div>
+      </nav>
+
+    </div>
+    <div class="col-md-9">
+      <div class="tk-content">
+        {{ .Content }}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ partial "footer" . }}
