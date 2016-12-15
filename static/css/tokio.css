@@ -1,9 +1,9 @@
 a {
-  color: #479cea;
+  color: #116699;
 }
 
 a:hover {
-  color: #316aa1;
+  color: #116699;
 }
 
 /*
@@ -106,7 +106,7 @@ a:hover {
  */
 
 .tk-pageheader, .jumbotron {
-  background-color: #479cea;
+  background-color: #774466;
   color: #fff;
 }
 
@@ -233,7 +233,7 @@ a:hover {
  */
 
 code {
-  color: #a13289;
+  color: #995577;
 }
 
 .hljs {
@@ -278,7 +278,7 @@ code {
 .hljs-quote,
 .hljs-template-tag,
 .hljs-deletion {
-  color: #6aa132;
+  color: #338855;
 }
 
 .hljs-title,
@@ -308,7 +308,7 @@ code {
 .hljs-bullet,
 .hljs-code,
 .hljs-addition {
-  color: #a13289;
+    color: #995577;
 }
 
 
