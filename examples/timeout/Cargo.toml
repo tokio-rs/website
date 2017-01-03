@@ -1,0 +1,9 @@
+[package]
+name = "timeout"
+version = "0.1.0"
+authors = ["Aaron Turon <aturon@mozilla.com>"]
+
+[dependencies]
+futures = "0.1"
+futures-cpupool = "0.1"
+tokio-timer = { git = "https://github.com/tokio-rs/tokio-timer" }

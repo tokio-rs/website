@@ -6,6 +6,14 @@ a:hover {
   color: #116699;
 }
 
+table, td {
+    border: 1px solid black;
+}
+
+td {
+    padding: 4px
+}
+
 /*
  *
  * ===== Content ====
@@ -33,6 +41,10 @@ a:hover {
 
 .tk-content hr {
   margin: 2rem 0;
+}
+
+.tk-next {
+  text-align: right;
 }
 
 /*

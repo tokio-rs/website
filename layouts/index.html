@@ -4,7 +4,7 @@
   <div class="tk-jumbotron">
     <img src="/img/logo-large.png" class="align-middle tk-logo" alt="">
     <p class="lead">A platform for writing fast networking code with Rust.</p>
-    <a href="{{ ref . "docs/guides/getting-started.md" }}" class="btn call-to-action" role="button" aria-pressed="true">Get Started</a>
+    <a href="{{ ref . "docs/getting-started/tokio.md" }}" class="btn call-to-action" role="button" aria-pressed="true">Get Started</a>
   </div>
 </div>
 
@@ -13,61 +13,81 @@
     <div class="col-md-5">
       <div class="tk-features">
         <h2>
-          <i class="fa fa-bolt" aria-hidden="true"></i>
-          Lightning Fast
+          <i class="fa fa-rocket" aria-hidden="true"></i>
+          Fast
         </h2>
-        <p>Get more throughput and less latency while using less resources.</p>
+        <p>Tokio's zero-cost abstractions give you bare-metal performance.</p>
 
         <h2>
-          <i class="fa fa-bed" aria-hidden="true"></i>
-          Managed dependencies
+          <i class="fa fa-cogs" aria-hidden="true"></i>
+          Productive
         </h2>
-        <p>When you just need to include Bootstrap's compiled CSS and JS, use
-        the Bootstrap CDN, free from the Max CDN folks.</p>
+        <p>Use proto for rapid protocol implementation; make async easy with
+         futures and streams.</p>
 
         <h2>
-          <i class="fa fa-gavel" aria-hidden="true"></i>
-          JavaScript Interop
+          <i class="fa fa-bug" aria-hidden="true"></i>
+          Reliable
         </h2>
-        <p>Elm compiles to JavaScript, so trying out Elm is easy. Convert a
-        small part of your app to Elm and embed it in JS. No full rewrites, no
-        huge time investment. More about that here.</p>
+        <p>Tokio leverages Rust's ownership and concurrency model to ensure
+        thread safety.</p>
+
+        <h2>
+          <i class="fa fa-dashboard" aria-hidden="true"></i>
+          Scalable
+        </h2>
+        <p>Tokio has a minimal footprint, and handles backpressure and
+        cancellation naturally.</p>
       </div>
     </div>
     <div class="col-md-7">
       <div class="tk-content">
         <pre>
-<code>// This code is editable and runnable!
+<code>// A tiny echo server with tokio-core
+
+extern crate futures;
+extern crate tokio_core;
+
+use futures::{Future, Stream};
+use tokio_core::io::{copy, Io};
+use tokio_core::net::TcpListener;
+use tokio_core::reactor::Core;
+
 fn main() {
-    // A simple integer calculator:
-    // `+` or `-` means add or subtract by 1
-    // `*` or `/` means multiply or divide by 2
+    // Create the event loop that will drive this server
+    let mut lp = Core::new().unwrap();
+    let handle = lp.handle();
 
-    let program = "+ + * - /";
-    let mut accumulator = 0;
+    // Bind the server's socket
+    let addr = "127.0.0.1:12345".parse().unwrap();
+    let sock = TcpListener::bind(&addr, &handle).unwrap();
 
-    for token in program.chars() {
-        match token {
-            '+' => accumulator += 1,
-            '-' => accumulator -= 1,
-            '*' => accumulator *= 2,
-            '/' => accumulator /= 2,
-            _ => { /* ignore everything else */ }
-        }
-    }
+    // Pull out a stream of incoming connections
+    let server = sock.incoming().for_each(|(sock, _)| {
+        let (reader, writer) = sock.split();
 
-    println!("The program \"{}\" calculates the value {}",
-              program, accumulator);
-}</code>
+        // Build a future to echo the data and print
+        // what happened
+        let handle_conn = copy(reader, writer).map(|amt| {
+            println!("wrote {} bytes", amt)
+        }).map_err(|err| {
+            println!("IO error {:?}", err)
+        });
+
+        // Spawn the future as a concurrent task
+        handle.spawn(handle_conn);
+
+        Ok(())
+    });
+
+    // Spin up the server on the event loop
+    lp.run(server).unwrap();
+}
+</code>
         </pre>
       </div>
     </div>
   </div>
-
-  <p class="lead final-pitch">
-Rust is a systems programming language that runs blazingly fast, prevents segfaults, and guarantees thread safety. 
-<a href="#">See who's using Rust</a>.
-  </p>
 </div>
 
 {{ partial "footer" . }}

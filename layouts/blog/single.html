@@ -13,32 +13,13 @@
 
       <nav class="leftnav">
         <div class="" id="">
-          <h5>Getting started</h5>
-          <hr/>
-
-          <div class="" id="">
-            <ul class="nav">
-              {{ range .Site.Menus.getting_started }}
-              <li class="active">
-                <a href="{{ .URL }}" class="text-muted">{{ .Name }}</a>
-              </li>
-              {{ end }}
-            </ul>
-          </div>
-
-          <br/>
-          <h5>Going deeper</h5>
-          <hr/>
-
-          <div class="" id="">
-            <ul class="nav">
-              {{ range .Site.Menus.going_deeper }}
-              <li class="active">
-                <a href="{{ .URL }}" class="text-muted">{{ .Name }}</a>
-              </li>
-              {{ end }}
-            </ul>
-          </div>
+          <ul class="nav">
+            {{ range .Site.Menus.blog }}
+            <li class="active">
+              <a href="{{ .URL }}" class="text-muted">{{ .Name }}</a>
+            </li>
+            {{ end }}
+          </ul>
         </div>
       </nav>
 

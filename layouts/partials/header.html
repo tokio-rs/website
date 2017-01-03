@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/tokio.css">
+
+    <title>{{ .Title }}</title>
   </head>
   <body>
     <nav class="navbar navbar-light bg-faded">
@@ -23,16 +25,13 @@
           <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-        <a class="nav-link" href="{{ ref . "docs/guides/getting-started.md" }}">Getting Started</a>
+          <a class="nav-link" href="{{ ref . "docs/getting-started/tokio.md" }}">Documentation</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Documentation</a>
+          <a class="nav-link" href="{{ ref . "community/index.md" }}">Community</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Community</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Blog</a>
+          <a class="nav-link" href="{{ ref . "blog/tokio-0.1.md" }}">Blog</a>
         </li>
       </ul>
     </nav>
