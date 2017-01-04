@@ -85,16 +85,18 @@ impl Codec for LineCodec {
     type Out = io::Result<EasyBuf>;
 ```
 
-The [`EasyBuf` type](TODO) used here provides simple but efficient buffer
-management; you can think of it like `Arc<[u8]>`, a reference-counted immutable
-slice of bytes, with all the details handled for you. Outgoing messages from the
-server use `Result` in order to convey service errors on the Rust side.
+The [`EasyBuf` type]({{< api-url "core" >}}/io/struct.EasyBuf.html) used here
+provides simple but efficient buffer management; you can think of it like
+`Arc<[u8]>`, a reference-counted immutable slice of bytes, with all the details
+handled for you. Outgoing messages from the server use `Result` in order to
+convey service errors on the Rust side.
 
-`EasyBuf` is in fact a [built-in part of decoding](TODO): we are given
-an input `EasyBuf` that contains a chunk of unprocessed data, and we
-must try to extract the first complete message, if there is one. If the
-buffer doesn't contain a complete message, we return `None`, and the
-server will automatically fetch more data before trying to decode again.
+`EasyBuf` is in fact a [built-in part of decoding]({{< api-url "core"
+>}}/io/trait.Codec.html#tymethod.decode): we are given an input `EasyBuf` that
+contains a chunk of unprocessed data, and we must try to extract the first
+complete message, if there is one. If the buffer doesn't contain a complete
+message, we return `None`, and the server will automatically fetch more data
+before trying to decode again.
 
 For our line-based protocol, decoding is straightforward:
 
@@ -130,11 +132,12 @@ fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
 # fn main() {}
 ```
 
-The [`drain` method](TODO) on `EasyBuf` splits the buffer in two at the
-given index, returning a new `EasyBuf` instance corresponding to the
-prefix ending at the index, and updating the existing `EasyBuf` to
-contain only the suffix. It's the typical way to remove one complete
-message from the input buffer.
+The [`drain_to` method]({{< api-url "core"
+>}}/io/struct.EasyBuf.html#method.drain_to) on `EasyBuf` splits the buffer in
+two at the given index, returning a new `EasyBuf` instance corresponding to the
+prefix ending at the index, and updating the existing `EasyBuf` to contain only
+the suffix. It's the typical way to remove one complete message from the input
+buffer.
 
 Encoding is even easier: you're given mutable access to a `Vec<u8>`,
 into which you serialize your output data. To keep things simple,
