@@ -14,7 +14,7 @@ function,
 [`read_exact`](https://static.rust-lang.org/doc/master/std/io/trait.Read.html#method.read_exact),
 to do this:
 
-```rust
+```rust,ignore
 // reads 4096 bytes into `my_vec`
 socket.read_exact(&mut my_vec[..4096]);
 ```
@@ -92,7 +92,7 @@ For our lengthy computation, we'll inefficiently confirm that a large prime
 number is prime:
 
 ```rust
-CONST BIG_PRIME: u64 = 15485867;
+const BIG_PRIME: u64 = 15485867;
 
 // checks whether a number is prime, slowly
 fn is_prime(num: u64) -> bool {
@@ -109,6 +109,8 @@ Before we use futures, here's how we'd run this computation synchronously---we
 just call the function:
 
 ```rust
+# const BIG_PRIME: u64 = 1;
+# fn is_prime(num: u64) -> bool { true }
 // Synchronous version
 fn main() {
     if is_prime(BIG_PRIME) {
@@ -128,8 +130,14 @@ Now let's use futures and a thread pool to launch the computation
 asynchronously:
 
 ```rust
+extern crate futures;
+extern crate futures_cpupool;
+
 use futures::Future;
 use futures_cpupool::CpuPool;
+
+# const BIG_PRIME: u64 = 1;
+# fn is_prime(num: u64) -> bool { true }
 
 fn main() {
     // set up a thread pool
@@ -157,16 +165,21 @@ Even though futures are asynchronous, you always have the option of treating
 them synchronously, by *waiting* for completion:
 
 ```rust
+# extern crate futures;
+# fn main() {
+# use futures::Future;
 // ...
 
 println!("Created the future");
 
 // unwrap here since we know the result is Ok
+# let prime_future = futures::future::ok::<bool, ()>(true);
 if prime_future.wait().unwrap() {
     println!("Prime");
 } else {
     println!("Not prime");
 }
+# }
 ```
 
 While
@@ -184,10 +197,18 @@ work with thread pools. But one strength of futures is their ability to
 timeout future:
 
 ```rust
-use tokio_timer::Timer;
-use futures::Future;
+extern crate futures;
+extern crate futures_cpupool;
+extern crate tokio_timer;
+
 use std::time::Duration;
+
+use futures::Future;
 use futures_cpupool::CpuPool;
+use tokio_timer::Timer;
+
+# const BIG_PRIME: u64 = 1;
+# fn is_prime(num: u64) -> bool { true }
 
 fn main() {
     let pool = CpuPool::new_num_cpus();
@@ -251,7 +272,7 @@ which has a lot of similarities to the
 [`Iterator` trait](https://static.rust-lang.org/doc/master/std/iter/trait.Iterator.html)
 in the standard library:
 
-```rust
+```rust,ignore
 trait Future {
     // The type of value that the future yields on successful completion.
     type Item;

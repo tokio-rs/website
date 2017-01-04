@@ -57,8 +57,10 @@ where messages are arbitrary byte sequences delimited by `'\n'`. To do
 this, we'll need a couple of tools from `tokio-core`:
 
 ```rust
+# extern crate tokio_core;
 use std::io;
 use tokio_core::io::{Codec, EasyBuf};
+# fn main() {}
 ```
 
 In general, codecs may need local state, for example to record
@@ -74,7 +76,7 @@ encoding and decoding. To start with, we'll need to specify the message
 type. `In` gives the types of incoming messages *after decoding*, while
 `Out` gives the type of outgoing messages *prior to encoding*:
 
-```rust
+```rust,ignore
 impl Codec for LineCodec {
     type In = EasyBuf;
     type Out = io::Result<EasyBuf>;
@@ -94,6 +96,17 @@ server will automatically fetch more data before trying to decode again.
 For our line-based protocol, decoding is straightforward:
 
 ```rust
+# extern crate tokio_core;
+#
+# use std::io;
+# use tokio_core::io::{Codec, EasyBuf};
+#
+# struct LineCodec;
+#
+# impl Codec for LineCodec {
+#   type In = EasyBuf;
+#   type Out = io::Result<EasyBuf>;
+#
 fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
     if let Some(i) = buf.as_slice().iter().position(|&b| b == b'\n') {
         // remove the line, including the '\n', from the buffer
@@ -105,6 +118,13 @@ fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
         Ok(None)
     }
 }
+#
+#   fn encode(&mut self, out: io::Result<EasyBuf>, buf: &mut Vec<u8>) -> io::Result<()> {
+#       Ok(())
+#   }
+#
+# }
+# fn main() {}
 ```
 
 The [`drain` method](TODO) on `EasyBuf` splits the buffer in two at the
@@ -118,6 +138,21 @@ into which you serialize your output data. To keep things simple,
 we won't provide support for error responses:
 
 ```rust
+# extern crate tokio_core;
+#
+# use std::io;
+# use tokio_core::io::{Codec, EasyBuf};
+#
+# struct LineCodec;
+#
+# impl Codec for LineCodec {
+#   type In = EasyBuf;
+#   type Out = io::Result<EasyBuf>;
+#
+#    fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
+#        Ok(None)
+#    }
+#
 fn encode(&mut self, item: io::Result<EasyBuf>, into: &mut Vec<u8>)
          -> io::Result<()>
 {
@@ -126,6 +161,8 @@ fn encode(&mut self, item: io::Result<EasyBuf>, into: &mut Vec<u8>)
     into.push(b'\n');
     Ok(())
 }
+# }
+# fn main() {}
 ```
 
 And that's it for our codec.
@@ -138,7 +175,9 @@ streaming protocols. For our line-based protocol, though, we'll use the simplest
 style: a pipelined, non-streaming protocol:
 
 ```rust
+# extern crate tokio_proto;
 use tokio_proto::pipeline::ServerProto;
+# fn main() {}
 ```
 
 As with codecs, protocols can carry state, typically used for configuration. We
@@ -152,7 +191,31 @@ Setting up a protocol requires just a bit of boilerplate, tying together our
 chosen protocol style with the codec that we've built:
 
 ```rust
+# extern crate tokio_proto;
+# extern crate tokio_core;
+#
+# use std::io;
+#
+# use tokio_proto::pipeline::ServerProto;
 use tokio_core::io::{Io, Framed};
+# use tokio_core::io::{EasyBuf, Codec};
+#
+# struct LineCodec;
+#
+# impl Codec for LineCodec {
+#   type In = EasyBuf;
+#   type Out = EasyBuf;
+#
+#   fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
+#       Ok(None)
+#   }
+#
+#   fn encode(&mut self, out: EasyBuf, buf: &mut Vec<u8>) -> io::Result<()> {
+#       Ok(())
+#   }
+# }
+#
+# struct LineProto;
 
 impl<T: Io + 'static> ServerProto<T> for LineProto {
     /// For this protocol style, `Request` matches the codec `In` type
@@ -173,6 +236,8 @@ impl<T: Io + 'static> ServerProto<T> for LineProto {
         Ok(io.framed(LineCodec))
     }
 }
+#
+# fn main() {}
 ```
 
 ## Step 3: Implement a service
@@ -182,7 +247,9 @@ protocol, we need to pair it with a *service* that says how to respond to reques
 The `tokio-service` crate provides a `Service` trait for just this purpose:
 
 ```rust
+# extern crate tokio_service;
 use tokio_service::Service;
+# fn main() {}
 ```
 
 As with the other components we've built, in general a service may have data
@@ -200,7 +267,9 @@ for asynchronous code, through the `Future` trait. You can think of a future as
 an asynchronous version of `Result`. Let's bring the basics into scope:
 
 ```rust
+# extern crate futures;
 use futures::{future, Future, BoxFuture};
+# fn main() {}
 ```
 
 For our echo service, we don't need to do any I/O to produce a response for a
@@ -211,6 +280,18 @@ which allows us to use the `BoxFuture` trait to define our service, no matter
 what future we actually use inside---more on those tradeoffs later!
 
 ```rust
+# extern crate tokio_service;
+# extern crate tokio_core;
+# extern crate futures;
+#
+# use std::io;
+# use tokio_service::Service;
+# use tokio_core::io::EasyBuf;
+# use futures::future;
+# use futures::{Future, BoxFuture};
+#
+# struct Echo;
+#
 impl Service for Echo {
     // These types must match the corresponding protocol types:
     type Request = EasyBuf;
@@ -226,6 +307,8 @@ impl Service for Echo {
         future::ok(req).boxed()
     }
 }
+#
+# fn main() {}
 ```
 
 ## We're done---now configure and run!
@@ -235,8 +318,61 @@ protocol, and a particular service to provide on it. All that remains is to
 actually configure and launch the server, which we'll do using the `TcpServer`
 builder:
 
-```rust
+```rust,no_run
+# extern crate tokio_proto;
+# extern crate tokio_core;
+# extern crate futures;
+# extern crate tokio_service;
+#
+# use std::io;
+#
+# use futures::future;
+# use futures::{Future, BoxFuture};
+# use tokio_core::io::{EasyBuf, Codec, Framed, Io};
 use tokio_proto::TcpServer;
+# use tokio_proto::pipeline::ServerProto;
+# use tokio_service::Service;
+#
+# struct LineCodec;
+#
+# impl Codec for LineCodec {
+#   type In = EasyBuf;
+#   type Out = EasyBuf;
+#
+#   fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
+#       Ok(None)
+#   }
+#
+#   fn encode(&mut self, out: EasyBuf, buf: &mut Vec<u8>) -> io::Result<()> {
+#       Ok(())
+#   }
+# }
+#
+# struct LineProto;
+#
+# impl<T: Io + 'static> ServerProto<T> for LineProto {
+#     type Request = EasyBuf;
+#     type Response = EasyBuf;
+#     type Error = io::Error;
+#     type Transport = Framed<T, LineCodec>;
+#     type BindTransport = Result<Self::Transport, io::Error>;
+#     fn bind_transport(&self, io: T) -> Self::BindTransport {
+#         Ok(io.framed(LineCodec))
+#     }
+# }
+#
+# struct Echo;
+#
+# impl Service for Echo {
+#     type Request = EasyBuf;
+#     type Response = EasyBuf;
+#     type Error = io::Error;
+#     type Future = BoxFuture<Self::Response, Self::Error>;
+#
+#     fn call(&mut self, req: Self::Request) -> Self::Future {
+#         future::ok(req).boxed()
+#     }
+# }
 
 fn main() {
     // Specify the localhost address
@@ -271,6 +407,16 @@ did---the protocol specification---is reusable. To prove it, let's build a
 service that echos its input in reverse:
 
 ```rust
+# extern crate tokio_service;
+# extern crate tokio_core;
+# extern crate futures;
+#
+# use std::io;
+# use tokio_service::Service;
+# use tokio_core::io::EasyBuf;
+# use futures::future;
+# use futures::{Future, BoxFuture};
+#
 struct EchoRev;
 
 impl Service for EchoRev {
@@ -288,6 +434,8 @@ impl Service for EchoRev {
         future::ok(resp).boxed()
     }
 }
+#
+# fn main() {}
 ```
 
 Not too shabby. And now, if we serve `EchoRev` instead of `Echo`, we'll see:

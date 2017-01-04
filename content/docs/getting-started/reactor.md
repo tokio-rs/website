@@ -15,7 +15,7 @@ Almost all asynchronous libraries are powered in one form or another by an
 **event loop**. That's just a fancy term for code like this executing
 on a thread:
 
-```rust
+```rust,ignore
 loop {
     // Learn what the next "event" was, blocking if none available
     let event = next_event();
@@ -62,7 +62,7 @@ Most servers consist of some setup, followed by running the event loop with a
 connection-handling future, as we also saw before. To recap, the basic structure
 looks as follows:
 
-```rust
+```rust,no_run
 extern crate futures;
 extern crate tokio_core;
 
@@ -88,7 +88,7 @@ fn main() {
 For clients, however, you can use the [`run`][`Core::run`] method for one-off
 futures or otherwise one-off tasks. Some pseudo-code for this could look like:
 
-```rust
+```rust,ignore
 let my_request = http::get("https://www.rust-lang.org");
 let my_response = my_context.core.run(my_request).unwrap();
 ```
@@ -120,7 +120,7 @@ executed concurrently* on the event loop thread, which is typically ideal, for
 example, when handling TCP connections. Taking our `run` example from before, we
 could enhance it by handling all clients concurrently by adding:
 
-```rust
+```rust,ignore
 // Acquire a `Handle` and then use that to spawn work for each client as
 // they're accepted from the TCP socket.
 let handle = core.handle();
@@ -133,7 +133,7 @@ let server = listener.incoming().for_each(|(client, _client_addr)| {
 
 and add a `process` function for handling a client:
 
-```rust
+```rust,ignore
 // Here we'll express the handling of `client` and return it as a future
 // to be spawned onto the event loop.
 fn process(client: TcpStream) -> Box<Future<Item = (), Error = ()>> {

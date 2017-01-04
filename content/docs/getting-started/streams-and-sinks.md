@@ -44,7 +44,7 @@ in the standard library:
 
 The definition of the [`Stream`] trait also resembles that of [`Iterator`]:
 
-```rust
+```rust,ignore
 trait Stream {
     // The type of item yielded each time the stream's event occurs
     type Item;
@@ -72,7 +72,7 @@ server that immediately sends "Hello, world!" to each client that connects, and
 then hangs up. (We'll use `tokio-core` in this example, which is covered in
 greater depth in the next section.)
 
-```rust
+```rust,no_run
 extern crate futures;
 extern crate tokio_core;
 
@@ -99,7 +99,7 @@ fn main() {
 
 That was easy! Let's pick apart a few key lines. First, there's the *reactor setup*:
 
-```rust
+```rust,ignore
 let mut core = Core::new().unwrap();
 ```
 
@@ -110,13 +110,13 @@ here we're working at a lower level.
 
 We then set up an async TCP listener, associated with that reactor:
 
-```rust
+```rust,ignore
 let listener = TcpListener::bind(&address, &core.handle()).unwrap();
 ```
 
 Our first encounter with streams is the `incoming` stream:
 
-```rust
+```rust,ignore
 let connections = listener.incoming();
 ```
 
@@ -128,7 +128,7 @@ the [`Stream`] trait to manipulate the stream:
 
 [`TcpStream`]: https://tokio-rs.github.io/tokio-core/tokio_core/net/struct.TcpStream.html
 
-```rust
+```rust,ignore
 let welcomes = connections.and_then(|(socket, _peer_addr)| {
     tokio_core::io::write_all(socket, b"Hello, world!\n")
 });
@@ -152,7 +152,8 @@ with the connection at that point.
 
 How do we actually consume this stream? As with iterators, loops are a common
 way to consume streams---but we use the futures-based [`for_each`] method:
-```rust
+
+```rust,ignore
 let server = welcomes.for_each(|(_socket, _welcome)| {
     Ok(())
 })
@@ -174,7 +175,7 @@ otherwise inert, to actually trigger all this processing. We also need to start
 up the reactor. We do both in a single step, by using the server as the *primary
 future* of the reactor:
 
-```rust
+```rust,ignore
 core.run(server).unwrap();
 ```
 
@@ -196,7 +197,7 @@ reactor's ability to "spawn" additional work:
 
 [`spawn`]: https://tokio-rs.github.io/tokio-core/tokio_core/reactor/struct.Handle.html#method.spawn
 
-```rust
+```rust,ignore
 let handle = core.handle();
 let server = connections.for_each(|(socket, _peer_addr)| {
     let serve_one = tokio_core::io::write_all(socket, b"Hello, world!\n")
@@ -246,7 +247,7 @@ Sinks are essentially the opposite of streams: they are places that you can
 asynchronously send many values over time. As usual, sinks are types that
 implement the `Sink` trait:
 
-```rust
+```rust,ignore
 trait Sink {
     // The type of value that the sink accepts.
     type SinkItem;

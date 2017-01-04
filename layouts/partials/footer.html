@@ -21,6 +21,17 @@
       $(function () {
         $("pre code").each(function(i, block) {
           // $(block).parent().wrap('<div class="tk-example"></div>');
+          if (block.className.indexOf('language-rust') >= 0) {
+            var new_content = '';
+            var lines = block.textContent.split('\n');
+            for (var i = 0; i < lines.length; i++) {
+              if (lines[i].indexOf('# ') == 0) {
+                continue
+              }
+              new_content += lines[i].trimRight() + '\n';
+            }
+            block.textContent = new_content.replace(/\n\n\n/g, "\n\n").trimRight();
+          }
           hljs.highlightBlock(block);
         });
       });
