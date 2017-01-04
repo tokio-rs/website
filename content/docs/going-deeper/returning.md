@@ -23,8 +23,13 @@ There are several options, listed from most to least ergonomic:
 First, you always have the option of returning a boxed [trait object]:
 
 ```rust
+# extern crate futures;
+# use std::io;
+# use futures::Future;
+# fn main() {}
 fn foo() -> Box<Future<Item = u32, Error = io::Error>> {
     // ...
+# loop {}
 }
 ```
 
@@ -36,8 +41,12 @@ Note that the [`boxed`] method returns a `BoxFuture`, which is a type alias for
 `Box<Future + Send>`:
 
 ```rust
+# extern crate futures;
+# use futures::{Future, BoxFuture};
+# use futures::future;
+# fn main() {}
 fn foo() -> BoxFuture<u32, u32> {
-    finished(1).boxed()
+    future::ok(1).boxed()
 }
 ```
 
@@ -63,7 +72,7 @@ example:
 
 [`impl Trait`]: https://github.com/rust-lang/rfcs/blob/master/text/1522-conservative-impl-trait.md
 
-```rust
+```rust,ignore
 fn add_10<F>(f: F) -> impl Future<Item = i32, Error = F::Error>
     where F: Future<Item = i32>,
 {
@@ -94,6 +103,10 @@ If you'd like to not return a `Box`, but want to stick with stable Rust, another
 option is to write the return type directly:
 
 ```rust
+# extern crate futures;
+# use futures::Future;
+# use futures::future::Map;
+# fn main() {}
 fn add_10<F>(f: F) -> Map<F, fn(i32) -> i32>
     where F: Future<Item = i32>,
 {
@@ -123,13 +136,13 @@ very verbose signatures, and leaks implementation details to clients.
 Finally, you can wrap the concrete return type in a new type, and implement
 future for it. For example:
 
-```rust
+```rust,ignore
 struct MyFuture {
-    inner: Oneshot<i32>,
+    inner: Sender<i32>,
 }
 
 fn foo() -> MyFuture {
-    let (tx, rx) = oneshot();
+    let (tx, rx) = oneshot::channel();
     // ...
     MyFuture { inner: tx }
 }

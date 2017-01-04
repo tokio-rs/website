@@ -91,7 +91,7 @@ The solution forms the other main component of the design: tasks.
 **A *task* is a future that is being executed**. That future is almost always
 made up of a chain of other futures, like the following one:
 
-```rust
+```rust,ignore
 id_rpc(&my_server).and_then(|id| {
     get_row(id)
 }).map(|row| {
@@ -136,7 +136,7 @@ it is executing—**so no allocation is needed to create or install this callbac
 Completing the analogy with threads, tasks provide a [`park`]/[`unpark`] API for
 "blocking" and wakeup:
 
-```rust
+```rust,ignore
 /// Returns a handle to the current task to call unpark at a later date.
 fn park() -> Task;
 
@@ -173,7 +173,7 @@ by example, so let's revisit `join`.
 To implement the `join` combinator, we'll introduce a new concrete type, `Join`,
 that tracks the necessary state:
 
-```rust
+```rust,ignore
 fn join<F: Future, G: Future>(f: F, g: G) -> Join<F, G> {
     Join::BothRunning(f, g)
 }
@@ -314,7 +314,7 @@ same way.
 Let's start with streams. They have a `poll` function that is very similar to
 the one for futures:
 
-```rust
+```rust,ignore
 fn poll(&mut self) -> Poll<Option<Self::Item>, Self::Error>;
 ```
 
@@ -324,7 +324,7 @@ an error, or completing with `None`.
 
 Sinks are more interesting:
 
-```rust
+```rust,ignore
 trait Sink {
     // The type of value that the sink accepts.
     type SinkItem;

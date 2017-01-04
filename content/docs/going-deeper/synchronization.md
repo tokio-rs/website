@@ -313,10 +313,12 @@ for `SplitStream`:
 ```rust
 # extern crate futures;
 #
-# use futures::Stream;
+# use futures::{Stream, Async, Poll};
 # use futures::sync::BiLock;
 #
-# pub struct SplitStream<S>(BiLock<S>);
+# struct SplitStream<S>(BiLock<S>);
+#
+# fn main() {}
 #
 impl<S: Stream> Stream for SplitStream<S> {
     type Item = S::Item;
