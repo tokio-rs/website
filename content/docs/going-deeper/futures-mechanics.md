@@ -12,7 +12,7 @@ look at a few more. It's also worth spending some time with the trait
 documentation to familiarize yourself with the full range of combinators
 available.
 
-### Some concrete futures and streams
+### [Some concrete futures and streams](#concrete) {#concrete}
 
 Any value can be turned into an immediately complete future. There are a few
 functions in the `future` module for creating such a future:
@@ -41,7 +41,7 @@ later, on demand.
 
 [`lazy`]: https://docs.rs/futures/0.1.7/futures/fn.lazy.html
 
-### IntoFuture
+### [IntoFuture](#intofuture) {#intofuture}
 
 A crucial API to know about is the [`IntoFuture`] trait, which is a trait for
 values that can be converted into futures. Most APIs that you think of as taking
@@ -51,7 +51,7 @@ that futures are expected.
 
 [`IntoFuture`]: https://docs.rs/futures/0.1.7/futures/future/trait.IntoFuture.html
 
-### Adapters
+### [Adapters](#adapters) {#adapters}
 
 Like [`Iterator`], the `Future`, `Stream` and `Sink` traits all come equipped
 with a broad range of "adapter" methods. These methods all consume the receiving
@@ -112,7 +112,7 @@ All adapters are zero-cost, meaning that no memory is allocated internally and
 the implementation will optimize to what you would have otherwise written by
 hand.
 
-### Error handling
+### [Error handling](#error-handling) {#error-handling}
 
 TODO: write this
 

@@ -17,7 +17,7 @@ There are several options, listed from most to least ergonomic:
 * [Named types][return-named-types]
 * [Custom types][return-custom-types]
 
-### Trait objects
+### [Trait objects](#trait-objects) {#trait-objects}
 [return-trait-objects]: #trait-objects
 
 First, you always have the option of returning a boxed [trait object]:
@@ -54,7 +54,7 @@ dynamic dispatch for the entire chain.
 [trait object]: https://doc.rust-lang.org/book/trait-objects.html
 [`boxed`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.boxed
 
-### `impl Trait`
+### [`impl Trait`](#impl-trait) {#impl-trait}
 [return-impl-trait]: #impl-trait
 
 In an ideal world, however, we can have our cake and eat it too with a new
@@ -87,7 +87,7 @@ Trait` hits stable Rust all crates using futures can immediately benefit. It
 should be a backwards-compatible extension to change return types from `Box` to
 [`impl Trait`]
 
-### Named types
+### [Named types](#named-types) {#named-types}
 [return-named-types]: #named-types
 
 If you'd like to not return a `Box`, but want to stick with stable Rust, another
@@ -117,7 +117,7 @@ very verbose signatures, and leaks implementation details to clients.
 
 [`Map`]: https://docs.rs/futures/0.1/futures/future/struct.Map.html
 
-### Custom types
+### [Custom types](#custom-types) {#custom-types}
 [return-custom-types]: #custom-types
 
 Finally, you can wrap the concrete return type in a new type, and implement

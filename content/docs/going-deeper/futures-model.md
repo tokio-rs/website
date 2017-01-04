@@ -21,7 +21,7 @@ proceed on their own.
 To understand both of these points, we'll walk through the story with a focus on
 futures. We'll then touch on streams and sinks at the end.
 
-## Revisiting the `Future` trait
+## [Revisiting the `Future` trait](#revisiting) {#revisiting}
 
 Let's take another look at the core definition of the `Future` trait, this time
 paying more attention to the required `poll` method:
@@ -86,7 +86,7 @@ future.
 
 The solution forms the other main component of the design: tasks.
 
-### The cornerstone: tasks
+### [The cornerstone: tasks](#tasks) {#tasks}
 
 **A *task* is a future that is being executed**. That future is almost always
 made up of a chain of other futures, like the following one:
@@ -168,7 +168,7 @@ continues execution from the current state—working just like hand-rolled code
 based on [mio](http://github.com/carllerche/mio). This point is most easily seen
 by example, so let's revisit `join`.
 
-### Example: sketching the `join` combinator
+### [Example: sketching the `join` combinator](#join) {#join}
 
 To implement the `join` combinator, we'll introduce a new concrete type, `Join`,
 that tracks the necessary state:
@@ -244,14 +244,14 @@ data has to live *somewhere*---but the key is to avoid constant allocations as
 the state machine progresses, by instead making space for the entire thing up
 front.
 
-## Futures at scale
+## [Futures at scale](#at-scale) {#at-scale}
 
 We've seen the basics mechaics of futures, but there are a number of concerns
 about *robustness* that we also want to cover. It turns out that these concerns
 are addressed naturally by the demand-driven `poll` model. Let's take a look at
 a few of the most important.
 
-### Cancellation
+### [Cancellation](#cancellation) {#cancellation}
 
 Futures are often used to represent substantial work that is running
 concurrently. Sometimes it will become clear that this work is no longer
@@ -268,7 +268,7 @@ natural consequence of nested state machines like `Join`. Futures whose
 computation requires some special effort to cancel (such as canceling an RPC
 call) can provide this logic as part of their `Drop` implementation.
 
-### Backpressure
+### [Backpressure](#backpressure) {#backpressure}
 
 Another essential aspect of at-scale use of futures (and streams and sinks) is
 *backpressure*: the ability of an overloaded component in one part of a system
@@ -286,7 +286,7 @@ e.g. allowing backpressure to flow from the database service back to a
 particular client connection then back to the overall connection manager. Such
 cascades are a natural consequence of the demand-driven model.
 
-### Communicating the cause of a wakeup
+### [Communicating the cause of a wakeup](#wakeup-cause) {#wakeup-cause}
 
 If you're familiar with interfaces like
 [epoll](http://man7.org/linux/man-pages/man7/epoll.7.html), you may have noticed
@@ -306,7 +306,7 @@ determine what happened. See [`with_unpark_event`] for more detail.
 
 [`with_unpark_event`]: https://docs.rs/futures/0.1.7/futures/task/fn.with_unpark_event.html
 
-## Streams and sinks
+## [Streams and sinks](#streams-and-sinks) {#streams-and-sinks}
 
 We've focused primarily on futures above, but streams and sinks work largely the
 same way.
