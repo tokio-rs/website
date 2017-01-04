@@ -25,7 +25,7 @@
             var new_content = '';
             var lines = block.textContent.split('\n');
             for (var i = 0; i < lines.length; i++) {
-              if (lines[i].indexOf('#') == 0) {
+              if (lines[i].indexOf('# ') == 0 || lines[i] == '#') {
                 continue
               }
               new_content += lines[i].trimRight() + '\n';
