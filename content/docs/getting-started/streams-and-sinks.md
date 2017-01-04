@@ -145,10 +145,10 @@ the stream, a bit like `and_then` on `Result`, except that the closure we give
   the `welcomes` stream.
 
 The future we use is [`write_all`] from the `tokio-core` crate. It
-asynchronously entire buffer to the socket provided, then returns the socket and
-ownership of that buffer. So `welcomes` is again a stream that includes one
-socket for each connection, with `Hello, world!` written to them.  We're done
-with the connection at that point.
+asynchronously writes the entire buffer to the socket provided, then returns
+the socket and ownership of that buffer. So `welcomes` is again a stream that
+includes one socket for each connection, with `Hello, world!` written to them.
+We're done with the connection at that point.
 
 How do we actually consume this stream? As with iterators, loops are a common
 way to consume streams---but we use the futures-based [`for_each`] method:
