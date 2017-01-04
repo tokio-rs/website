@@ -43,6 +43,21 @@ td {
   margin: 2rem 0;
 }
 
+.tk-content figure {
+  margin: 2.5rem auto;
+  max-width: 80%;
+}
+
+.tk-content figure figcaption {
+  font-size: 90%;
+  color: #818a91;
+  text-align: right;
+}
+
+.tk-content figure img {
+  max-width: 100%;
+}
+
 .tk-next {
   text-align: right;
 }
