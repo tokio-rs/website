@@ -344,3 +344,13 @@ code {
 .hljs-strong {
   font-weight: bold;
 }
+
+/* Show section header on hover */
+
+h2:hover a:after {
+    content: '\2002\00a7\2002';
+}
+
+h2:hover a {
+    text-decoration: none;
+}

@@ -15,7 +15,7 @@ with the [`futures-rs` task system].
 [`sync`]: https://docs.rs/futures/0.1/futures/sync/index.html
 [`futures-rs` task system]: ../futures-model
 
-## Oneshot
+## [Oneshot]({{< ref "#oneshot" >}}) {#oneshot}
 
 One of the most useful tools in [`sync`] is the [`oneshot`] module, providing a
 "channel" which can be used precisely once. A oneshot models what can typically
@@ -123,7 +123,7 @@ cancellation but also still be able to send a value if the value becomes ready.
 [`Stream`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html
 [`futures`]: https://github.com/alexcrichton/futures-rs
 
-## Channels
+## [Channels]({{< ref "#channels" >}}) {#channels}
 
 The oneshot channel above is useful for sending one value or just as a concrete
 implementation of the [`Future`] trait, but often many values need to be
@@ -265,7 +265,7 @@ handles, all of which can send values to one receiver.
 
 [`Clone`]: https://doc.rust-lang.org/std/clone/trait.Clone.html
 
-## BiLock
+## [BiLock]({{< ref "#bilock" >}}) {#bilock}
 
 The final tool in the [`sync`] toolkit that the [`futures`] crate provides is a
 primitive called a [`BiLock`]. This type is similar to a [`Mutex`] in that
@@ -299,15 +299,66 @@ fn split(self) -> (SplitSink<Self>, SplitStream<Self>)
 # fn main() {}
 ```
 
+This method ends up being a perfect use case for [`BiLock`] where we simply
+want synchronized access between two owners, no more. The [`BiLock::new`]
+method consumes the data of the lock and returns the two separate owners. These
+are then stashed away in `SplitStream` and `SplitSink` to get returned.
 
+[`BiLock::new`]: https://docs.rs/futures/0.1/futures/sync/struct.BiLock.html#method.new
 
+Some of the real magic happens, though, in the implementations of [`Stream`]
+and [`Sink`] on these types. Let's take a look at the [`Stream`] implementation
+for `SplitStream`:
 
+```rust
+# extern crate futures;
+#
+# use futures::Stream;
+# use futures::sync::BiLock;
+#
+# pub struct SplitStream<S>(BiLock<S>);
+#
+impl<S: Stream> Stream for SplitStream<S> {
+    type Item = S::Item;
+    type Error = S::Error;
 
+    fn poll(&mut self) -> Poll<Option<S::Item>, S::Error> {
+        match self.0.poll_lock() {
+            Async::Ready(mut inner) => inner.poll(),
+            Async::NotReady => Ok(Async::NotReady),
+        }
+    }
+}
+```
 
+Here we can see the [`poll_lock`] method in action. This method is similar to
+[`try_lock`] on mutexes where it will not block but it attempts to acquire the
+lock. The [`poll_lock`] method, however, is "futures aware" which means that
+it interacts with the task system, namely calling [`task::park`].
 
+The [`Async`] return value indicates whether the lock was acquired or whether
+the lock is already held by the other owner (remember there can only be one
+other owner). In the case of `Ready` the payload is an RAII object
+[`BiLockGuard`] which similar to [`MutexGuard`] in the standard library will
+allow mutable access to the internal data and will unlock the lock when
+dropped.
 
+If we get `NotReady` from [`poll_lock`] then this signifies that our task is
+ready to receive a wakeup when the lock is unlocked. This means that we just
+propagate `NotReady` outwards as we're unable to make progress at this time.
 
+[`poll_lock`]: https://docs.rs/futures/0.1/futures/sync/struct.BiLock.html#method.poll_lock
+[`try_lock`]: https://doc.rust-lang.org/std/sync/struct.Mutex.html#method.try_lock
+[`task::park`]: https://docs.rs/futures/0.1/futures/task/fn.park.html
+[`Async`]: https://docs.rs/futures/0.1/futures/enum.Async.html
+[`BiLockGuard`]: https://docs.rs/futures/0.1/futures/sync/struct.BiLockGuard.html
+[`MutexGuard`]: https://doc.rust-lang.org/std/sync/struct.MutexGuard.html
 
+Semantically this implementation means that if the lock is acquired, we check
+to see if the stream has an element to make progress. If the lock couldn't be
+acquired, then we'll try again to look at the stream when the lock is unlocked.
 
-
-
+The [`BiLock`] primitive is quite restrictive in that it only allows at most
+two aliases to the data owned internally. Eventually we'd like to extend the
+[`futures`] crate to have a full-blown mutex, but at this time it's not
+implemented.
