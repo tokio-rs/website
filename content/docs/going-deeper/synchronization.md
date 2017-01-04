@@ -62,9 +62,9 @@ type of the oneshot.  The `Error` type is [`Canceled`], which happens when the
 
 [`oneshot::channel`]: https://docs.rs/futures/0.1/futures/sync/oneshot/fn.channel.html
 [mpsc-std]: https://doc.rust-lang.org/std/sync/mpsc/fn.channel.html
-[`Sender`]: https://docs.rs/futures/0.1.7/futures/sync/oneshot/struct.Sender.html
-[`Sender::complete`]: https://docs.rs/futures/0.1.7/futures/sync/oneshot/struct.Sender.html#method.complete
-[`Receiver`]: https://docs.rs/futures/0.1.7/futures/sync/oneshot/struct.Receiver.html
+[`Sender`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Sender.html
+[`Sender::complete`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Sender.html#method.complete
+[`Receiver`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Receiver.html
 [`Canceled`]: https://docs.rs/futures/0.1/futures/struct.Canceled.html
 
 This concrete implementation of `Future` can be used (as shown here) to
@@ -75,13 +75,15 @@ sometimes this is the *only* type that's a future. With the [`futures`] crate,
 however, it's recommended to only use this type when necessary, relying on
 trait methods for sequencing like [`and_then`] where possible.
 
+[`and_then`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.and_then
+
 The [`Sender`] type also provides the ability to get notified when the
 [`Receiver`] is no longer interested in a value being produced. In other words,
 the producer ([`Sender`]) can get notified when the consumer ([`Receiver`])
 is dropped. The [`Sender::poll_cancel`] method will register the current task
 to receive such a notification. For example:
 
-[`Sender::poll_cancel`]: https://docs.rs/futures/0.1.7/futures/sync/oneshot/struct.Sender.html#method.poll_cancel
+[`Sender::poll_cancel`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Sender.html#method.poll_cancel
 
 ```rust
 extern crate futures;
@@ -111,11 +113,15 @@ the value-to-be-produced after some time has passed (20ms here). The
 [`poll_fn`] combinator is then used to turn [`Sender::poll_cancel`] into a
 future.
 
-[`poll_fn`]: https://docs.rs/futures/0.1.7/futures/future/fn.poll_fn.html
+[`poll_fn`]: https://docs.rs/futures/0.1/futures/future/fn.poll_fn.html
 
 If you call `poll_cancel` then you'll typically do so within a custom
 implementation of the [`Future`] trait. This allows you to be able to check for
 cancellation but also still be able to send a value if the value becomes ready.
+
+[`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
+[`Stream`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html
+[`futures`]: https://github.com/alexcrichton/futures-rs
 
 ## Channels
 
