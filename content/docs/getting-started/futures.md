@@ -39,7 +39,7 @@ and have all of that tracking and dispatching taken care of for us.
 
 That's where futures come in.
 
-## Futures
+## [Futures](#futures) {#futures}
 
 A future is a value that's in the process of being computed, but might not be
 ready yet. Usually, the future becomes *complete* (the value is ready) due to an
@@ -69,7 +69,7 @@ sizes. The asynchrony is reflected in the fact that you get a *future* right
 away, without blocking, even though the *value* the future represents will
 become ready only at some unknown time in the... future.
 
-#### A simple example
+#### [A simple example](#simple-example) {#simple-example}
 
 Let's make this concrete with an example: we'll take a long-running computation
 and add a timeout to it using futures.
@@ -103,7 +103,7 @@ fn is_prime(num: u64) -> bool {
 }
 ```
 
-##### Synchronous version
+##### [Synchronous version](#synchronous-version) {#synchronous-version}
 
 Before we use futures, here's how we'd run this computation synchronously---we
 just call the function:
@@ -124,7 +124,7 @@ fn main() {
 The effect is that the main thread is blocked until the computation finishes,
 and then it prints out the result.
 
-##### Asynchronous version
+##### [Asynchronous version](#asynchronous-version) {#asynchronous-version}
 
 Now let's use futures and a thread pool to launch the computation
 asynchronously:
@@ -189,7 +189,7 @@ between a future (like `prime_future`) and the value it produces; the future is
 returned right away, allowing you to do additional work concurrently (like
 printing a message, here), and retrieve the value later on.
 
-##### Adding a timeout
+##### [Adding a timeout](#adding-a-timeout) {#adding-a-timeout}
 
 So far this example isn't terribly interesting, since there are simpler ways to
 work with thread pools. But one strength of futures is their ability to
@@ -254,14 +254,14 @@ up. Once you have a number of basic "events" set up as futures, you can combine
 them in complex ways, and the futures library takes care of tracking all of the
 relevant state and synchronization.
 
-##### Whence I/O?
+##### [Whence I/O?](#whence-io) {#whence-io}
 
 We haven't shown how to work directly with I/O events as futures. That's because
 I/O is a bit more complicated, and you often end up working with sibling
 abstractions to futures: streams and sinks. These are all covered in subsequent
 guides.
 
-## The `Future` trait
+## [The `Future` trait](#the-future-trait) {#the-future-trait}
 
 At this point, we've seen just a tiny bit of the futures API---but what actually
 *is* a future?

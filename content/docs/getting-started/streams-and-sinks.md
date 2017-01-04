@@ -22,7 +22,7 @@ incoming events (which are caused by something external happening, like a
 timeout firing) while sinks are for outgoing events (like sending a message
 chunk).
 
-## Streams
+## [Streams](#streams) {#streams}
 
 Let's see how [`Future`] and [`Stream`] relate to their synchronous equivalents
 in the standard library:
@@ -182,7 +182,7 @@ core.run(server).unwrap();
 The reactor's event loop will keep running on the current thread until the
 server future completes successfully or with an error.
 
-##### Concurrency
+##### [Concurrency](#concurrency) {#concurrency}
 
 There's an important point to drive home about the previous example: it has *no
 concurrency*!  Streams represent in-order processing of data, and in this case
@@ -241,7 +241,7 @@ All of the multiplexing and dispatch is handled behind the scenes by the reactor
 and futures; we just write code that looks pretty close to synchronous code that
 spawns a thread per connection.
 
-## Sinks
+## [Sinks](#sinks) {#sinks}
 
 Sinks are essentially the opposite of streams: they are places that you can
 asynchronously send many values over time. As usual, sinks are types that

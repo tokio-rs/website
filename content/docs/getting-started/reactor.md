@@ -39,7 +39,7 @@ action" to respond to an event, for example, by scheduling a write after a read
 is finished, attempting to complete a future's state machine, or starting
 handling timeout logic for a timeout which fired.
 
-## The event loop of `tokio-core`
+## [The event loop of `tokio-core`](#event-loop) {#event-loop}
 
 The heart of the `tokio-core` library is the [`tokio_core::reactor`] module;
 "reactor" is a common synonym for "event loop". The module contains the [`Core`]
@@ -47,7 +47,7 @@ type, which is the actual event loop, as well as the [`Handle`] and [`Remote`]
 types, which are used to send messages and interact with the event loop without
 holding the [`Core`] itself.
 
-### `Core`
+### [`Core`](#core) {#core}
 
 The [`Core`] type has a relatively small API surface area; the main item of
 interest is the [`run`][`Core::run`] method. This method takes a future, `F`,
@@ -99,7 +99,7 @@ tasks. Alternatively a thread could be spawned on a client running a [`Core`]
 and work could be shipped over to it whenever necessary and returned later;
 we'll see how to do that with [`Remote`] in just a moment.
 
-### `Handle`
+### [`Handle`](#handle) {#handle}
 
 In general, the code being run by the event loop needs the ability to make
 additional requests of the event loop, and thus needs some way to access the
@@ -145,7 +145,7 @@ Beyond spawning threads, a [`Handle`] is also use for constructing objects
 associated with the event loop. For example the [`TcpListener::bind`] method
 that we've been using takes `&Handle` as its second argument.
 
-### `Remote`
+### [`Remote`](#remote) {#remote}
 
 With [`Handle`] we're now able to retain a reference to the event loop without
 holding a [`Core`] itself. The [`Handle`] type itself, however, is not sendable

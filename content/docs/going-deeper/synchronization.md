@@ -15,7 +15,7 @@ with the [`futures-rs` task system].
 [`sync`]: https://docs.rs/futures/0.1/futures/sync/index.html
 [`futures-rs` task system]: ../futures-model
 
-## [Oneshot]({{< ref "#oneshot" >}}) {#oneshot}
+## [Oneshot](#oneshot) {#oneshot}
 
 One of the most useful tools in [`sync`] is the [`oneshot`] module, providing a
 "channel" which can be used precisely once. A oneshot models what can typically
@@ -123,7 +123,7 @@ cancellation but also still be able to send a value if the value becomes ready.
 [`Stream`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html
 [`futures`]: https://github.com/alexcrichton/futures-rs
 
-## [Channels]({{< ref "#channels" >}}) {#channels}
+## [Channels](#channels) {#channels}
 
 The oneshot channel above is useful for sending one value or just as a concrete
 implementation of the [`Future`] trait, but often many values need to be
@@ -265,7 +265,7 @@ handles, all of which can send values to one receiver.
 
 [`Clone`]: https://doc.rust-lang.org/std/clone/trait.Clone.html
 
-## [BiLock]({{< ref "#bilock" >}}) {#bilock}
+## [BiLock](#bilock) {#bilock}
 
 The final tool in the [`sync`] toolkit that the [`futures`] crate provides is a
 primitive called a [`BiLock`]. This type is similar to a [`Mutex`] in that

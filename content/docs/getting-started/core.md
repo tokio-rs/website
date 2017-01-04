@@ -13,7 +13,7 @@ business and do some I/O! In this section, we'll cover "high-level" I/O with
 the lowest level with `tokio-core`, which gives you maximal control over things
 like buffering strategy.
 
-### Concrete I/O types
+### [Concrete I/O types](#concrete-io) {#concrete-io}
 
 The [`tokio-core`] crate doesn't provide a full suite of I/O primitives; it's
 focused on TCP/UDP networking types. That's because these are the only I/O
@@ -33,7 +33,7 @@ Similarly types are also enhanced with futures-aware methods such as
 [`TcpStream::connect`] returning a future or [`TcpListener::incoming`] returning
 a stream.
 
-### I/O helpers
+### [I/O helpers](#io-helpers) {#io-helpers}
 
 In addition to the concrete networking types [`tokio-core`] also provides a
 number of utilities in the [`tokio_core::io`] module for working with I/O
@@ -68,7 +68,7 @@ managed correctly.
 The second method, [`Io::framed`], is important enough that we'll give it a
 whole section!
 
-### I/O codecs and framing
+### [I/O codecs and framing](#io-codecs) {#io-codecs}
 
 Working with a raw stream of bytes isn't always the easiest thing to do,
 especially in an asynchronous context. Additionally, many protocols aren't
@@ -102,7 +102,7 @@ you up and running quickly. Crates like [`tokio-proto`] work with a [`Stream`]
 and a [`Sink`] directly, so you can swap out [`Io::framed`] with your own
 implementation if it becomes a bottleneck.
 
-### Datagrams
+### [Datagrams](#datagrams) {#datagrams}
 
 Note that most of this discussion has been around I/O or byte *streams*, which
 UDP importantly is not! To accommodate this, however, the [`UdpSocket`] type

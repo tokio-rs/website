@@ -32,7 +32,7 @@ extern crate tokio_proto;
 extern crate tokio_service;
 ```
 
-## Overview
+## [Overview](#overview) {#overview}
 
 A server in `tokio-proto` is made up of three distinct parts:
 
@@ -52,7 +52,7 @@ Each part can vary independently, so once you've implemented a protocol
 
 Let's see how it's done.
 
-## Step 1: Implement a codec
+## [Step 1: Implement a codec](#implement-codec) {#implement-codec}
 
 We'll start by implementing a codec for a simple line-based protocol,
 where messages are arbitrary byte sequences delimited by `'\n'`. To do
@@ -173,7 +173,7 @@ fn encode(&mut self, item: io::Result<EasyBuf>, into: &mut Vec<u8>)
 
 And that's it for our codec.
 
-## Step 2: Specify the protocol
+## [Step 2: Specify the protocol](#specify-protocol) {#specify-protocol}
 
 Next, we turn the codec into a full-blown protocol. The `tokio-proto` crate is
 equipped to deal with a variety of protocol styles, including
@@ -248,7 +248,7 @@ impl<T: Io + 'static> ServerProto<T> for LineProto {
 # fn main() {}
 ```
 
-## Step 3: Implement a service
+## [Step 3: Implement a service](#implement-service) {#implement-service}
 
 At this point, we've built a generic line-based protocol. To actually *use* this
 protocol, we need to pair it with a *service* that says how to respond to requests.
@@ -319,7 +319,7 @@ impl Service for Echo {
 # fn main() {}
 ```
 
-## We're done---now configure and run!
+## [We're done---now configure and run!](#configure-and-run) {#configure-and-run}
 
 With that, we have the ingredients necessary for a full-blown server: a general
 protocol, and a particular service to provide on it. All that remains is to
@@ -408,7 +408,7 @@ echo
 echo
 ```
 
-## Pairing with another service
+## [Pairing with another service](#pairing) {#pairing}
 
 That was a fair amount of ceremony for a simple echo server. But most of what we
 did---the protocol specification---is reusable. To prove it, let's build a
