@@ -125,21 +125,189 @@ cancellation but also still be able to send a value if the value becomes ready.
 
 ## Channels
 
-TODO: update this text
+The oneshot channel above is useful for sending one value or just as a concrete
+implementation of the [`Future`] trait, but often many values need to be
+sent over time as well. For this, a concrete implementation of the [`Stream`]
+trait is available in the [`mpsc`] module of the [`futures`] crate.
 
-For the [`Stream`] trait, a similar primitive is available, [`channel`]. This
-type also has two halves, where the sending half is used to send messages and
-the receiving half implements `Stream`.
+[`mpsc`]: https://docs.rs/futures/0.1/futures/sync/mpsc/index.html
 
-The channel's [`Sender`] type differs from the standard library's in an
-important way: when a value is sent to the channel it consumes the sender,
-returning a future that will resolve to the original sender only once the sent
-value is consumed. This creates backpressure so that a producer won't be able to
-make progress until the consumer has caught up.
+The [`mpsc`] module stands for Multi-Producer Single-Consumer. This module is
+very similar to that in the [standard library][mpsc-std]. The channel in
+this module has two halves, like oneshot above, for sending and receiving
+values. Let's take a look how this might be used by creating a helper function
+that uses a worker thread to create a stream of lines on stdin:
 
-[`channel`]: https://docs.rs/futures/0.1/futures/stream/fn.channel.html
-[`Sender`]: https://docs.rs/futures/0.1/futures/stream/struct.Sender.html
+```rust
+extern crate futures;
 
-## Bilock
+use std::io::{self, BufRead};
+use std::thread;
 
-TODO: write this section
+use futures::{Stream, Sink, Future};
+use futures::stream::BoxStream;
+use futures::sync::mpsc;
+
+fn stdin() -> BoxStream<String, io::Error> {
+    let (mut tx, rx) = mpsc::channel(1);
+
+    thread::spawn(|| {
+        let stdin = io::stdin();
+        for line in stdin.lock().lines() {
+            match tx.send(line).wait() {
+                Ok(t) => tx = t,
+                Err(_) => break,
+            }
+        }
+    });
+
+    rx.then(|r| r.unwrap()).boxed()
+}
+#
+# fn main() {}
+```
+
+There's quite a lot in play here, so let's take a closer look and explain in
+detail what's happening. First up we see:
+
+```rust,ignore
+let (mut tx, rx) = mpsc::channel(1);
+```
+
+This statement creates a new channel and returns the two halves of it. The `tx`
+variable is a [`Sender`][mpsc-tx] and `rx` is a [`Receiver`][mpsc-rx]. The
+integer argument here, 1, we'll get to in a moment.
+
+Next up we'll see our helper thread spawned via `thread::spawn`. This thread
+closes over the `tx` value to send data along the channel, and inside we see:
+
+```rust,ignore
+let stdin = io::stdin();
+for line in stdin.lock().lines() {
+    match tx.send(line).wait() {
+        Ok(t) => tx = t,
+        Err(_) => break,
+    }
+}
+```
+
+This just gets a handle to stdin, creates a blocking iterator using the standard
+library over all lines of input on stdin, and then executes some code per line.
+The first operation to do per each line is:
+
+```rust,ignore
+tx.send(line).wait()
+```
+
+This is using [`Sender`][mpsc-tx]'s implementation of the [`Sink`] trait to
+call the [`Sink::send`] method. Recall that sinks model *backpressure*, so
+sending a value may not always complete immediately. Consequently the return
+value of [`send`][`Sink::Send`] is [a future][`Send`]. In our example our worker
+thread is blocking, and we can't make more progress until our line of stdin is
+sent, so we just immediately call [`wait`].
+
+Precisely how the [`mpsc`] module applies backpressure depends on how the
+channel was created. Earlier we called the [`mpsc::channel`] function with an
+argument of 1, and this indicates that the channel will have approximately
+space for one message before it applies backpressure to senders. In our case it
+means that we can send one line off stdin without blocking, but the next one
+may block until the first is received.
+
+The [`mpsc`] module also supports channels which do not apply backpressure
+through the [`mpsc::unbounded`] function. These types also implement the
+[`Sink`] and [`Stream`] traits but you're guaranteed that the [`Sink`] method
+[`start_send`] will never return "not ready". To signify this there is an
+auxiliary [`UnboundedSender::send`] method which immediately returns a result.
+Note that unbounded channels should be used with great care as it may be easy
+for them to exhaust the resources of an overloaded system as they don't model
+backpressure from one end of a system to another.
+
+[mpsc-rx]: https://docs.rs/futures/0.1/futures/sync/mpsc/struct.Receiver.html
+[mpsc-tx]: https://docs.rs/futures/0.1/futures/sync/mpsc/struct.Sender.html
+[`Sink`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html
+[`Sink::send`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html#method.send
+[`Send`]: https://docs.rs/futures/0.1/futures/sink/struct.Send.html
+[`wait`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.wait
+[`mpsc::channel`]: https://docs.rs/futures/0.1/futures/sync/mpsc/fn.channel.html
+[`mpsc::unbounded`]: https://docs.rs/futures/0.1/futures/sync/mpsc/fn.unbounded.html
+[`start_send`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html#tymethod.start_send
+[`UnboundedSender::send`]: https://docs.rs/futures/0.1/futures/sync/mpsc/struct.UnboundedSender.html#method.send
+
+Moving along in our code example, we next see:
+
+```rust,ignore
+match ... {
+    Ok(t) => tx = t,
+    Err(_) => break,
+}
+```
+
+Here we're just taking a look at the result of the [`wait`] operation. A
+successful send represents that the message was sent along the channel and is
+enqueued for the receiver to acquire. In this case we get the sender back
+(consumed by [`send`][`Send::send`] earlier), and we just reassign it to `tx`.
+
+The erroneous case, however, is also important here. In the case of an error
+we'll get back a [`SendError`]. This type means that the message failed to
+send, which for mpsc channels means that the receiver has gone away. This error
+means that we'll never be able to send another message, so here we just
+terminate the worker thread by breaking out of the loop.
+
+[`SendError`]: https://docs.rs/futures/0.1/futures/sync/mpsc/struct.SendError.html
+
+That about wraps up our example with mpsc channels. We've seen that these
+channels come in two variants: one with a configurable amount of backpressure
+and one without. These channels implement the standard [`Sink`] and [`Stream`]
+traits and model cross-thread communication. One last note to make is that the
+"multi producer" aspect is implemented through an implementation of [`Clone`] on
+the [`Sender`][mpsc-tx] type. Through that trait you can create multiple
+handles, all of which can send values to one receiver.
+
+[`Clone`]: https://doc.rust-lang.org/std/clone/trait.Clone.html
+
+## BiLock
+
+The final tool in the [`sync`] toolkit that the [`futures`] crate provides is a
+primitive called a [`BiLock`]. This type is similar to a [`Mutex`] in that
+it provides synchronized access to an owned value. Unlike [`Mutex`], however, a
+[`BiLock`] only allows at most two aliases to the data.
+
+[`BiLock`]: https://docs.rs/futures/0.1/futures/sync/struct.BiLock.html
+[`Mutex`]: https://doc.rust-lang.org/std/sync/struct.Mutex.html
+
+To get a better idea about how [`BiLock`] is useful, let's take a look at the
+implementation of the [`Stream::split`] method:
+
+[`Stream::split`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.split
+
+```rust
+# extern crate futures;
+# use futures::sync::BiLock;
+# use futures::Sink;
+# struct SplitSink<T>(BiLock<T>);
+# struct SplitStream<T>(BiLock<T>);
+# trait Stream {
+fn split(self) -> (SplitSink<Self>, SplitStream<Self>)
+    where Self: Sink + Sized
+{
+    let (a, b) = BiLock::new(self);
+    let read = SplitStream(a);
+    let write = SplitSink(b);
+    (write, read)
+}
+# }
+# fn main() {}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
