@@ -6,8 +6,6 @@ On the web site:
   - aturon
 - `simple-client.md`: Add (or remove) proto client example
   - aturon
-- `core-low-level.md`: Write this section
-  - acrichto
 - `multiplex.md`: Write a simple explanation of how to do multiplexed, non-streaming server protocols
   - carllerche or aturon
 - `streaming.md`: Write a simple explanation of how to do pipelines, streaming server protocols. (Add note at the end about combining streaming + multiplexing)
