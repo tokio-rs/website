@@ -68,7 +68,7 @@ take a transport and handle the required logic to map that to an implementation
 of `Service`.
 
 A big advantage of having a standardized `Service` interface is that it is
-possible to write reusable [middleware](TODO) components that add usefulf
+possible to write reusable [middleware](TODO) components that add useful
 functionality.
 
 ## [Application](#application) {#application}
