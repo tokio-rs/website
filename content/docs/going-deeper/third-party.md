@@ -23,6 +23,9 @@ of Tokio itself, however, filling in more functionality!
 * [`trust-dns`] is an asynchronous DNS client and server, supporting features
   like DNSSec as well
 
+If you've got your own crate or know of others that should be present on this
+list, please feel free to send a PR!
+
 [`futures`]: https://github.com/alexcrichton/futures-rs
 [`tokio-core`]: https://github.com/tokio-rs/tokio-core
 [`tokio-service`]: https://github.com/tokio-rs/tokio-service
