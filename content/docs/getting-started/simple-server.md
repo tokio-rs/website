@@ -36,8 +36,9 @@ extern crate tokio_service;
 
 A server in `tokio-proto` is made up of three distinct parts:
 
-- A **codec**, which manages serialization of Rust request and response
-  types a protocol.
+- A **transport**, which manages serialization of Rust request and response
+  types to the underlying socket. In this guide, we will implement this using
+  the `Codec` helper.
 
 - A **protocol specification**, which puts together a codec and some basic
   information about the protocol (is it
