@@ -16,8 +16,6 @@ On the web site:
   - acrichto
 - `examples.md`: Make list of Tokio code examples
   - acrichto
-- `third-party.md`: Make list of third-party Tokio crates
-  - acrichto/carllerche
 - blog post
   - aturon
 
