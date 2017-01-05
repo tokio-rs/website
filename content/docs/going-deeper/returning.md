@@ -37,6 +37,8 @@ The upside of this strategy is that it's easy to write down (just a [`Box`]) and
 easy to create. This is also maximally flexible in terms of future changes to
 the method as *any* type of future can be returned as an opaque, boxed `Future`.
 
+[`Box`]: https://doc.rust-lang.org/std/boxed/struct.Box.html
+
 Note that the [`boxed`] method returns a `BoxFuture`, which is a type alias for
 `Box<Future + Send>`:
 
@@ -91,10 +93,13 @@ return type is hidden, and it's ergonomic to write as it's similar to the nice
 
 The downside to this approach is only that it's not on stable Rust yet. As of
 the time of this writing [`impl Trait`] is available on nightly, but will likely
-take some time to stabilize. The good news, however, is that as soon as `impl
+take some time to stabilize. You can track the progress of this feature at
+[rust-lang/rust#34511]. The good news, however, is that as soon as `impl
 Trait` hits stable Rust all crates using futures can immediately benefit. It
 should be a backwards-compatible extension to change return types from `Box` to
 [`impl Trait`]
+
+[rust-lang/rust#34511]: https://github.com/rust-lang/rust/issues/34511
 
 ### [Named types](#named-types) {#named-types}
 [return-named-types]: #named-types
