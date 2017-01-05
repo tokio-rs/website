@@ -12,8 +12,6 @@ On the web site:
   - carllerche
 - `tasks.md`: Write it
   - acrichto
-- `examples.md`: Make list of Tokio code examples
-  - acrichto
 - blog post
   - aturon
 

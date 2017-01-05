@@ -22,6 +22,10 @@ of Tokio itself, however, filling in more functionality!
   processes exiting as well as I/O pipes to children.
 * [`trust-dns`] is an asynchronous DNS client and server, supporting features
   like DNSSec as well
+* [`capnproto-rust`] is an implementation of Cap'n Proto for Rust which has the
+  ability to with futures as well
+* [`tk-sendfile`] allows using the `sendfile` syscall with Tokio
+* [`tokio-postgres`] is an asynchronous PostgreSQL driver
 
 If you've got your own crate or know of others that should be present on this
 list, please feel free to send a PR!
@@ -41,3 +45,6 @@ list, please feel free to send a PR!
 [`tokio-signal`]: https://github.com/alexcrichton/tokio-signal
 [`tokio-process`]: https://github.com/alexcrichton/tokio-process
 [`trust-dns`]: http://trust-dns.org/
+[`capnproto-rust`]: https://github.com/dwrensha/capnproto-rust
+[`tk-sendfile`]: https://crates.io/crates/tk-sendfile
+[`tokio-postgres`]: https://crates.io/crates/tokio-postgres
