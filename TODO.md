@@ -2,8 +2,6 @@ On the web site:
 
 - `simple-server.md`: Fix TODO links in simple-server
   - aturon
-- `db.md`: Add DB example
-  - acrichto
 - `pipeline-server.md`: Add simple pipeline example
   - aturon
 - `simple-client.md`: Add (or remove) proto client example
