@@ -1,6 +1,6 @@
 +++
 title = "Multiplexed protocols"
-description = ""
+description = "An introduction to implementing a server for a multiplexed protocol"
 menu = "going_deeper"
 weight = 102
 +++
