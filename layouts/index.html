@@ -54,8 +54,8 @@ use tokio_core::reactor::Core;
 
 fn main() {
     // Create the event loop that will drive this server
-    let mut lp = Core::new().unwrap();
-    let handle = lp.handle();
+    let mut core = Core::new().unwrap();
+    let handle = core.handle();
 
     // Bind the server's socket
     let addr = "127.0.0.1:12345".parse().unwrap();
@@ -85,7 +85,7 @@ fn main() {
     });
 
     // Spin up the server on the event loop
-    lp.run(server).unwrap();
+    core.run(server).unwrap();
 }
 </code>
         </pre>
