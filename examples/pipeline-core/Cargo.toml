@@ -1,0 +1,9 @@
+[package]
+name = "pipeline-core"
+version = "0.1.0"
+authors = ["Aaron Turon <aturon@mozilla.com>"]
+
+[dependencies]
+futures = "0.1"
+tokio-core = "0.1"
+tokio-service = { git = "https://github.com/tokio-rs/tokio-service" }

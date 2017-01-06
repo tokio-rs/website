@@ -1,9 +1,5 @@
 On the web site:
 
-- `simple-server.md`: Fix TODO links in simple-server
-  - aturon
-- `pipeline-server.md`: Add simple pipeline example
-  - aturon
 - `simple-client.md`: Add (or remove) proto client example
   - aturon
 - `multiplex.md`: Write a simple explanation of how to do multiplexed, non-streaming server protocols
@@ -23,4 +19,3 @@ In the real docs:
   - core
   - service
   - proto (should be in OK shape)
-
