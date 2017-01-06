@@ -22,8 +22,7 @@
           <i class="fa fa-cogs" aria-hidden="true"></i>
           Productive
         </h2>
-        <p>Use proto for rapid protocol implementation; make async easy with
-         futures and streams.</p>
+        <p>Tokio makes it easy to implement protocols and program asynchronously.</p>
 
         <h2>
           <i class="fa fa-bug" aria-hidden="true"></i>
@@ -43,7 +42,7 @@
     <div class="col-md-7">
       <div class="tk-content">
         <pre>
-<code>// A tiny echo server with tokio-core
+<code>// A tiny async echo server with tokio-core
 
 extern crate futures;
 extern crate tokio_core;
@@ -62,13 +61,18 @@ fn main() {
     let addr = "127.0.0.1:12345".parse().unwrap();
     let sock = TcpListener::bind(&addr, &handle).unwrap();
 
-    // Pull out a stream of incoming connections
+    // Pull out a stream of sockets for incoming connections
     let server = sock.incoming().for_each(|(sock, _)| {
+        // Split up the reading and writing parts of the
+        // socket
         let (reader, writer) = sock.split();
 
-        // Build a future to echo the data and print
-        // what happened
-        let handle_conn = copy(reader, writer).map(|amt| {
+        // A future that echos the data and returns how
+        // many bytes were copied...
+        let bytes_copied = copy(reader, writer);
+
+        // ... after which we'll print what happened
+        let handle_conn = bytes_copied.map(|amt| {
             println!("wrote {} bytes", amt)
         }).map_err(|err| {
             println!("IO error {:?}", err)
