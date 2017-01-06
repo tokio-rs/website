@@ -100,14 +100,15 @@ The full example can be found
 ### [Augmenting the transport](#augmenting-transport) {#augmenting-transport}
 
 A transport can do more than just encoding and decoding frames. Transports are
-able to handle arbitrary connection specific logic. For example, lets
-add ping / pong support to the line-based protocol described above. In
-this case, the protocol specification states that whenever a `PING` line
-is received, the peer should respond immediately with a `PONG`.
+able to handle arbitrary connection-specific logic. For example, let's add
+ping-pong support to the line-based protocol described above. In this case, the
+protocol specification states that whenever a `PING` line is received, the peer
+should respond immediately with a `PONG` (and neither is treated as a normal
+message).
 
-This behavior isn't application specific, and as such shouldn't be
+This behavior isn't application-specific, and as such shouldn't be
 exposed at the request / response layer. To handle this, we implement a
-transport middleware that adds the ping / pong behavior:
+transport middleware that adds the ping-pong behavior:
 
 ```rust,ignore
 struct PingPong<T> {
