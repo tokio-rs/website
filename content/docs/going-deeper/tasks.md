@@ -11,3 +11,4 @@ weight = 107
   * namely synchronization around unpark
 * explain how futures-cpupool works
   * queue of runnable items
+* unpark events

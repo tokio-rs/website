@@ -14,6 +14,8 @@ for our protocol. This codec is almost the same as the echo server example,
 except that we won't bother with error responses:
 
 ```rust
+# extern crate tokio_core;
+#
 use std::io;
 use tokio_core::io::{Io, Codec, EasyBuf};
 
@@ -43,11 +45,16 @@ impl Codec for LineCodec {
         Ok(())
     }
 }
+# fn main() {}
 ```
 
 Now we'll write a server that can host an arbitrary service over this protocol:
 
 ```rust,no_run
+# extern crate tokio_core;
+# extern crate tokio_service;
+# extern crate futures;
+#
 # use std::io;
 # use tokio_core::io::{Io, Codec, EasyBuf};
 #
@@ -109,6 +116,8 @@ fn serve<S>(s: S) -> io::Result<()>
 
     core.run(server)
 }
+#
+# fn main() {}
 ```
 
 The basic structure of the server should look familiar at this point; we've seen

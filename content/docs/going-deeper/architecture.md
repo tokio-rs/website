@@ -72,7 +72,7 @@ have a server that wishes to open up a connection to a remote host and stream
 log messages. This use case does not really have a request / response structure,
 but we can still reuse the `Codec` we implemented:
 
-```rust
+```rust,ignore
 // Connect to a remote address
 TcpStream::connect(&remote_addr, &handle)
     .and_then(|socket| {

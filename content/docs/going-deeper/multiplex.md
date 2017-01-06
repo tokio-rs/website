@@ -87,6 +87,17 @@ Again, we will use `Codec` and the `Io::framed` helper to help us go from a
 This is what our `Codec` implementation looks like:
 
 ```rust
+# extern crate tokio_core;
+# extern crate tokio_proto;
+# extern crate byteorder;
+#
+# use std::io;
+# use std::str;
+#
+# use tokio_core::io::{EasyBuf, Codec};
+# use tokio_proto::multiplex::RequestId;
+# use byteorder::{BigEndian, ByteOrder};
+#
 struct LineCodec;
 
 impl Codec for LineCodec {
@@ -135,4 +146,6 @@ impl Codec for LineCodec {
         Ok(())
     }
 }
+#
+# fn main() {}
 ```
