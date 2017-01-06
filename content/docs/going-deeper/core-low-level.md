@@ -29,10 +29,10 @@ All I/O with [`tokio-core`] consistently adheres to two properties:
 
 [error kind]: https://doc.rust-lang.org/std/io/enum.ErrorKind.html
 
-As an example of this, let's take a look at some concrete examples with
-[`TcpStream`]. Here we're going to take a look at the lowest level of I/O that
-TCP streams support, which in this case is the [`Read`] and [`Write`] traits.
-Sure enough, we see a number of trait implementations for [`TcpStream`]:
+Let's take a look at some concrete examples with [`TcpStream`]. The lowest level
+of I/O that TCP streams support is the [`Read`] and [`Write`] traits from the
+standard library. Sure enough, we see a number of trait implementations for
+[`TcpStream`]:
 
 [`TcpStream`]: https://docs.rs/tokio-core/0.1/tokio_core/net/struct.TcpStream.html
 [`Read`]: https://doc.rust-lang.org/std/io/trait.Read.html
@@ -45,20 +45,23 @@ impl<'a> Read for &'a TcpStream
 impl<'a> Write for &'a TcpStream
 ```
 
-In accordance with the two properties above, these implementations are quite
-different than their standard library counterparts. Principally they are all
-*non-blocking* in that they will never block the current thread waiting for data
-to arrive.
+In accordance with the two properties mentioned above, these implementations are
+quite different than their standard library counterparts. They are all
+*non-blocking*; rather than blocking the current thread for data to arrive or
+for there to be room to write, they will return `WouldBlock`.
 
 The second property though is a little more subtle. It transitively implies that
-**all I/O objects can only be used on a future's task**. With this behavior
-though we can get ergonomic and efficient management of blocking the current
-task waiting for I/O to complete.
+**all Tokio I/O objects can only be used within the context of a task**, which
+generally means within `poll`-like methods. (This task context is tracked
+implicitly using thread-local storage; see the [section on tasks](../tasks) for
+more detail.)  With this property, though, we can get ergonomic and efficient
+management of "blocking" the current *task* waiting for I/O to complete. In
+other words, we get a lightweight threading model.
 
 Recall in the [futures model]({{< relref "futures-model.md" >}}) section we
 learned that whenever a future returns `NotReady` it will schedule the current
-task to receive a notification when it would otherwise become ready. I/O
-performs exactly the same way. Let's take a look at an example:
+task to receive a notification when it would otherwise become ready. Basic I/O
+operations in Tokio work in a similar way. For example:
 
 ```rust,ignore
 let mut buf = [0; 128];
@@ -78,8 +81,9 @@ three values:
   not fail per se but otherwise could not complete. This error indicates that
   there may eventually be more data to read but it's not available at this time.
   Like with a future returning `NotReady`, this also means that the current task
-  has been parked. When the `tcp_stream` receives some more data, the task will
-  be unparked and the outer future can resume.
+  has been scheduled for wakeup when data is ready. When the `tcp_stream`
+  receives some more data, the task will be woken up and the outer future can
+  resume.
 
 * `Err(e)` means that an otherwise "real" I/O error happened. This typically
   should be communicated up the stack to indicate that a potentially fatal error
@@ -106,11 +110,10 @@ then actually allocate buffers and such.
 
 [`poll_read`]: https://docs.rs/tokio-core/0.1/tokio_core/net/struct.TcpStream.html#method.poll_read
 
-Types such as UDP sockets and TCP listeners have `poll_*` as methods on the
-object, but byte streams like TCP streams also implement the [`Io`] trait which
-contains two methods for read/write. The [`Io`] trait also provides a convenient
-method to go from a stream of bytes to a `Sink + Stream` implementation through
-[`framed`].
+Types like UDP sockets and TCP listeners have `poll_*` as methods on the object,
+whereas byte streams like TCP streams providing polling methods via the [`Io`]
+trait. The [`Io`] trait also provides a convenient method to go from a stream of
+bytes to a `Sink + Stream` implementation through [`framed`].
 
 [`Io`]: https://docs.rs/tokio-core/0.1/tokio_core/io/trait.Io.html#method.framed
 
