@@ -149,3 +149,75 @@ impl Codec for LineCodec {
 #
 # fn main() {}
 ```
+
+It's almost exactly the same as the codec that we implemented in the [simple
+server](/docs/getting-started/simple-server) example. The main difference is
+that the codec encodes and decodes frames that include the `RequestId`.
+
+## [Step 2: Specify the protocol](#specify-protocol) {#specify-protocol}
+
+The next step is to define the protocol details.
+
+```rust
+use tokio_proto::multiplex::ServerProto;
+
+struct LineProto;
+
+impl<T: Io + 'static> ServerProto<T> for LineProto {
+    type Request = String;
+    type Response = String;
+    type Error = io::Error;
+
+    /// `Framed<T, LineCodec>` is the return value of `io.framed(LineCodec)`
+    type Transport = Framed<T, LineCodec>;
+    type BindTransport = Result<Self::Transport, io::Error>;
+
+    fn bind_transport(&self, io: T) -> Self::BindTransport {
+        Ok(io.framed(LineCodec))
+    }
+}
+```
+
+This is exactly the same as the [simple
+server](/docs/getting-started/simple-server#specify-protocol) example, except
+that we are using `tokio_proto::multiplex::ServerProto`.
+
+## [Step 3: Implement a service](#implement-service) {#implement-service}
+
+This part is exactly the same as the [simple
+server](/docs/getting-started/simple-server#implement-service)
+
+```rust,ignore
+struct Echo;
+
+impl Service for Echo {
+    type Request = String;
+    type Response = String;
+    type Error = io::Error;
+    type Future = BoxFuture<Self::Response, Self::Error>;
+
+    fn call(&mut self, req: Self::Request) -> Self::Future {
+        future::ok(req).boxed()
+    }
+}
+
+fn main() {
+    // Specify the localhost address
+    let addr = "0.0.0.0:12345".parse().unwrap();
+
+    // The builder requires a protocol and an address
+    let server = TcpServer::new(LineProto, addr);
+
+    // We provide a way to *instantiate* the service for each new
+    // connection; here, we just immediately return a new instance.
+    server.serve(|| Ok(Echo));
+}
+```
+
+An interesting thing to note is that `RequestId` does not show up as part of the
+`Service`'s request and response types. The `RequestId` is only needed for
+tokio-proto to manage the internal state of keeping requests and responses
+matched when operating on the transport.
+
+Again, you can find the full working example
+[here](https://github.com/tokio-rs/tokio-line/tree/master/multiplexed).
