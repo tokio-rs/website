@@ -12,3 +12,4 @@ weight = 107
 * explain how futures-cpupool works
   * queue of runnable items
 * unpark events
+* be sure to mention that tasks use thread local storage
