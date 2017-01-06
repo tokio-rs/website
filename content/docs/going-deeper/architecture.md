@@ -43,7 +43,11 @@ Tokio's abstractions map on to these different layers.
 ## [Byte streams](#byte-streams) {#byte-streams}
 
 [tokio-core](http://github.com/tokio-rs/tokio-core) provides the lowest level
-building blocks for writing asynchronous I/O code: an [event loop](/docs/getting-started/reactor/) and the [concrete I/O types](/docs/getting-started/core/#concrete-io), such as TCP and UDP sockets. These primitives work on the byte level, just like the `std::io` types, except the Tokio types are non-blocking.
+building blocks for writing asynchronous I/O code: an [event
+loop](/docs/getting-started/reactor/) and the [concrete I/O
+types](/docs/getting-started/core/#concrete-io), such as TCP and UDP sockets.
+These primitives work on the byte level, just like the `std::io` types, except
+the Tokio types are non-blocking.
 
 ## [Framing](#framing) {#framing}
 
@@ -52,6 +56,43 @@ then implementing a  transport as a [`Stream + Sink`](/docs/getting-started/stre
 that yields the frame. The transport will handle encoding and decoding the frame
 value to the raw stream of bytes. This can either be done [manually](TODO) or
 using a helper like [`Codec`](/docs/getting-started/core/#io-codecs).
+
+### [Using a transport](#using-transport) {#using-transport}
+
+If the protocol being represented is a stream oriented protocol, aka does not
+really have a request / response structure, then it may make sense to operate
+directly on the transport instead of using [tokio-proto](TODO).
+
+For example, the [line-based protocol](TODO) implemented as part of our [first
+server](TODO) could also be used in a streaming fashion. Let's imagine that we
+have a server that wishes to open up a connection to a remote host and stream
+log messages. This use case does not really have a request / response structure,
+however we can still reuse the `Codec` we implemented:
+
+```rust
+// Connect to a remote address
+TcpStream::connect(&remote_addr, &handle)
+    .and_then(|socket| {
+        // Once the socket has been established, use the `framed` helper to
+        // create a transport.
+        let transport = socket.framed(LineCodec);
+
+        // We're just going to send a few "log" messages to the remote
+        let lines_to_send: Vec<Result<String, io::Error>> = vec![
+            Ok("Hello world".to_string()),
+            Ok("This is another message".to_string()),
+            Ok("Not much else to say".to_string()),
+        ];
+
+        // Send all the messages to the remote. The strings will be encoded by
+        // the `Codec`. `send_all` returns a future that completes once
+        // everything has been sent.
+        transport.send_all(stream::iter(lines_to_send))
+    });
+```
+
+The full example can be found
+[here](https://github.com/tokio-rs/tokio-line/blob/master/simple/examples/stream_client.rs).
 
 ## [Request / Response](#request-response) {#request-response}
 
