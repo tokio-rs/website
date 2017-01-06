@@ -109,7 +109,7 @@ This behavior isn't application specific, and as such shouldn't be
 exposed at the request / response layer. To handle this, we implement a
 transport middleware that adds the ping / pong behavior:
 
-```rust
+```rust,ignore
 struct PingPong<T> {
     // The upstream transport
     upstream: T,
@@ -151,7 +151,7 @@ Then, the line based transport from above can be decorated by `PingPong`
 and used the same way as it would have been without the ping / pong
 functionality:
 
-```rust
+```rust,ignore
 let transport = PingPong {
     upstream: socket.framed(line::LineCodec),
 };
