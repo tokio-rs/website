@@ -53,7 +53,7 @@ fn serve<S>(s: S) -> io::Result<()>
         let mut service = s.new_service()?;
 
         let responses = reader.and_then(move |req| service.call(req));
-        handle.spawn(writer.send_all(responses)).then(|_| Ok(())));
+        handle.spawn(writer.send_all(responses).then(|_| Ok(())));
 
         Ok(())
     });

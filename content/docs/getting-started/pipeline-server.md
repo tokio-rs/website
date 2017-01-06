@@ -14,6 +14,7 @@ for our protocol. This codec is almost the same as the echo server example,
 except that we won't bother with error responses:
 
 ```rust
+
 # extern crate tokio_core;
 #
 use std::io;
