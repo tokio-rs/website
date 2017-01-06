@@ -97,6 +97,68 @@ TcpStream::connect(&remote_addr, &handle)
 The full example can be found
 [here](https://github.com/tokio-rs/tokio-line/blob/master/simple/examples/stream_client.rs).
 
+### [Augmenting the transport](#augmenting-transport) {#augmenting-transport}
+
+A transport can do more than just encoding and decoding frames. Transports are
+able to handle arbitrary connection specific logic. For example, lets
+add ping / pong support to the line-based protocol described above. In
+this case, the protocol specification states that whenever a `PING` line
+is received, the peer should respond immediately with a `PONG`.
+
+This behavior isn't application specific, and as such shouldn't be
+exposed at the request / response layer. To handle this, we implement a
+transport middleware that adds the ping / pong behavior:
+
+```rust
+struct PingPong<T> {
+    // The upstream transport
+    upstream: T,
+}
+
+/// Implement `Stream` for our transport ping / pong middleware
+impl<T> Stream for PingPong<T>
+    where T: Stream<Item = String, Error = io::Error>,
+          T: Sink<SinkItem = String, SinkError = io::Error>,
+{
+    type Item = String;
+    type Error = io::Error;
+
+    fn poll(&mut self) -> Poll<Option<String>, io::Error> {
+        loop {
+            // Poll the upstream transport. `try_ready!` will bubble up errors
+            // and Async::NotReady.
+            match try_ready!(self.upstream.poll()) {
+                Some(ref msg) if msg == "PING" => {
+                    // Intercept PING messages and send back a PONG
+                    let res = try!(self.start_send("PONG".to_string()));
+
+                    // Ideally, the case of the sink not being ready
+                    // should be handled. See the link to the full
+                    // example below.
+                    assert!(res.is_ready());
+
+                    // Try flushing the pong, only bubble up errors
+                    try!(self.poll_complete());
+                }
+                m => return Ok(Async::Ready(m)),
+            }
+        }
+    }
+}
+```
+
+Then, the line based transport from above can be decorated by `PingPong`
+and used the same way as it would have been without the ping / pong
+functionality:
+
+```rust
+let transport = PingPong {
+    upstream: socket.framed(line::LineCodec),
+};
+```
+
+[Full example](https://github.com/tokio-rs/tokio-line/blob/master/simple/examples/ping_pong.rs)
+
 ## [Request / Response](#request-response) {#request-response}
 
 The request / response exchange layer is handled by Tokio's [`Service`](TODO)
