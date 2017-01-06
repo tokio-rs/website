@@ -2,7 +2,7 @@
 title = "Multiplexed protocols"
 description = ""
 menu = "going_deeper"
-weight = 105
+weight = 102
 +++
 
 Multiplexing is a method by which many concurrent requests can be issued over a

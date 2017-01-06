@@ -2,7 +2,7 @@
 title = "Synchronization"
 description = "Coordinating concurrent futures"
 menu = "going_deeper"
-weight = 103
+weight = 104
 +++
 
 The `futures-rs` crate comes equipped with a small *futures-aware
