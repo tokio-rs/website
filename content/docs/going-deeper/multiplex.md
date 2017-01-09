@@ -158,7 +158,7 @@ that the codec encodes and decodes frames that include the `RequestId`.
 
 The next step is to define the protocol details.
 
-```rust
+```rust,ignore
 use tokio_proto::multiplex::ServerProto;
 
 struct LineProto;

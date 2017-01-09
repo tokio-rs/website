@@ -311,7 +311,7 @@ impl Service for Echo {
     type Future = BoxFuture<Self::Response, Self::Error>;
 
     // Produce a future for computing a response from a request.
-    fn call(&mut self, req: Self::Request) -> Self::Future {
+    fn call(&self, req: Self::Request) -> Self::Future {
         // In this case, the response is immediate.
         future::ok(req).boxed()
     }
@@ -378,7 +378,7 @@ use tokio_proto::TcpServer;
 #     type Error = io::Error;
 #     type Future = BoxFuture<Self::Response, Self::Error>;
 #
-#     fn call(&mut self, req: Self::Request) -> Self::Future {
+#     fn call(&self, req: Self::Request) -> Self::Future {
 #         future::ok(req).boxed()
 #     }
 # }
@@ -434,7 +434,7 @@ impl Service for EchoRev {
     type Error = io::Error;
     type Future = BoxFuture<Self::Response, Self::Error>;
 
-    fn call(&mut self, req: Self::Request) -> Self::Future {
+    fn call(&self, req: Self::Request) -> Self::Future {
         let rev: Vec<u8> = req.as_slice().iter()
             .rev()
             .cloned()
