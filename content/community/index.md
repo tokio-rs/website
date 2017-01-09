@@ -9,7 +9,7 @@ ask questions, report problems, or pitch ideas.
 
 We also have very active issue trackers on the main Tokio repositories, including:
 
-- [futures-rs](https://github.com/alexcrichton/futures-rs/issues)
+- [futures](https://github.com/alexcrichton/futures-rs/issues)
 - [tokio-core](https://github.com/tokio-rs/tokio-core/issues)
 - [tokio-service](https://github.com/tokio-rs/tokio-service/issues)
 - [tokio-proto](https://github.com/tokio-rs/tokio-proto/issues)

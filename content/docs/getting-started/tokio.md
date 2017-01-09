@@ -20,7 +20,7 @@ several layers, with entry points based on your needs:
   if your problem doesn't fit into `tokio-proto`, or you need absolute control
   over the internals of your server or client.
 
-* **The `futures-rs` layer provides abstractions like futures, streams and
+* **The `futures` layer provides abstractions like futures, streams and
   sinks**, which are used throughout Tokio and the wider ecosystem. These
   zero-cost abstractions are our approach for productive, asynchronous
   programming in Rust.

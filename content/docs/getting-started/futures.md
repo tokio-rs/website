@@ -266,7 +266,7 @@ guides.
 At this point, we've seen just a tiny bit of the futures API---but what actually
 *is* a future?
 
-In the `futures-rs` library, a future is anything that implements the
+In the `futures` library, a future is anything that implements the
 [`Future` trait](https://docs.rs/futures/0.1.7/futures/future/trait.Future.html),
 which has a lot of similarities to the
 [`Iterator` trait](https://static.rust-lang.org/doc/master/std/iter/trait.Iterator.html)

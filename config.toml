@@ -4,7 +4,7 @@ languageCode = "en-us"
 canonifyURLs = "true"
 
 [params]
-futuresDocsURL = "https://docs.rs/futures-rs/0.1/futures"
+futuresDocsURL = "https://docs.rs/futures/0.1/futures"
 coreDocsURL = "https://docs.rs/tokio-core/0.1/tokio_core"
 protoDocsURL = "https://docs.rs/tokio-proto/0.1/tokio_proto"
 serviceDocsURL = "https://docs.rs/tokio-service/0.1/tokio_service"

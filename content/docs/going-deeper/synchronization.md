@@ -5,15 +5,15 @@ menu = "going_deeper"
 weight = 104
 +++
 
-The `futures-rs` crate comes equipped with a small *futures-aware
+The `futures` crate comes equipped with a small *futures-aware
 synchronization* toolkit, in the [`sync` module]. The abstractions here can be
 used to coordinate concurrent interactions between futures, streams, or sinks.
 Like the rest of the futures library, these APIs are non-blocking; they work
-with the [`futures-rs` task system].
+with the [`futures` task system].
 
 [`sync` module]: https://docs.rs/futures/0.1/futures/sync/index.html
 [`sync`]: https://docs.rs/futures/0.1/futures/sync/index.html
-[`futures-rs` task system]: ../futures-model
+[`futures` task system]: ../futures-model
 
 ## [Oneshot](#oneshot) {#oneshot}
 

@@ -1,5 +1,5 @@
 +++
-title = "The futures-rs model in depth"
+title = "The futures model in depth"
 description = "Understanding how futures, streams and sinks work"
 menu = "going_deeper"
 weight = 105
@@ -16,7 +16,8 @@ All three abstractions rest on the same core ideas:
 proceed on their own.
 
 - Encapsulating async computations into *tasks*, which are essentially
-  lightweight threads (and the basic unit of concurrency in `futures-rs`).
+  lightweight threads (and the basic unit of concurrency in the `futures`
+  crate).
 
 To understand both of these points, we'll walk through the story with a focus on
 futures. We'll then touch on streams and sinks at the end.

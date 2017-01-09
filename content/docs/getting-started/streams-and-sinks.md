@@ -16,7 +16,7 @@ asynchronous event. But there are a lot of cases where you want to deal with a
 
 and so on.
 
-The `futures-rs` library provides two abstractions that are similar to futures,
+The `futures` library provides two abstractions that are similar to futures,
 but work with series of events over time: streams and sinks. Streams are for
 incoming events (which are caused by something external happening, like a
 timeout firing) while sinks are for outgoing events (like sending a message
