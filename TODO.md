@@ -1,5 +1,6 @@
-On the web site:
+Before shipping 0.1:
 
+Web site:
 - `simple-client.md`: Add (or remove) proto client example
   - aturon
 - `streaming.md`: Write a simple explanation of how to do pipelines, streaming server protocols. (Add note at the end about combining streaming + multiplexing)
@@ -9,12 +10,9 @@ On the web site:
 - blog post
   - aturon
 - Full edit pass for structure / clarity
+- Pass over TODO links
+- Publish site
 
-In the real docs:
-
-- Make crate-level docs just point to the web site
-- Do an audit of API docs
-  - futures
-  - core
-  - service
-  - proto (should be in OK shape)
+Code:
+- Update READMEs and crate docs to point at tokio.rs
+- Publish 0.1 versions, replacing git dependencies
