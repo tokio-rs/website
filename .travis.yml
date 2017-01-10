@@ -1,0 +1,33 @@
+language: rust
+sudo: false
+
+install:
+  - curl -L https://github.com/spf13/hugo/releases/download/v0.18.1/hugo_0.18.1_Linux-64bit.tar.gz |
+      tar xzf -
+  - pip install --user awscli
+  - ~/.local/bin/aws configure set preview.cloudfront true
+
+script:
+  - ci/test.sh
+  - ./hugo_0.18.1_linux_amd64/hugo_0.18.1_linux_amd64
+
+deploy:
+  provider: s3
+  access_key_id: wut
+  secret_access_key:
+    secure: wut
+  bucket: tokio.rs
+  acl: public_read
+  skip_cleanup: true
+  local_dir: public
+  on:
+    branch: master
+    condition: $TRAVIS_PULL_REQUEST = "false"
+
+after_deploy:
+  - |
+    echo -n '{"Paths": {"Items": ["/*"], "Quantity": 1}, "CallerReference":"' >> payload.json &&
+    echo -n "travis-$(date)" >> payload.json &&
+    echo -n '"}' >> payload.json
+  - ~/.local/bin/aws cloudfront create-invalidation
+     --invalidation-batch file://payload.json --distribution-id E25WPEM258W4SB
