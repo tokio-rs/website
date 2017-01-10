@@ -30,4 +30,4 @@ after_deploy:
     echo -n "travis-$(date)" >> payload.json &&
     echo -n '"}' >> payload.json
   - ~/.local/bin/aws cloudfront create-invalidation
-     --invalidation-batch file://payload.json --distribution-id E25WPEM258W4SB
+     --invalidation-batch file://payload.json --distribution-id ELMMDTQCB9BNA
