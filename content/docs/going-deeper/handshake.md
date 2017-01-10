@@ -88,10 +88,9 @@ transport.into_future()
     })
 ```
 
-The [transport](/going-deeper/architecture#using-transport) returned by
-`Io::framed` is a value implementing [`Stream`] + [`Sink`] over the
-frame type. In our case, the frame type is `String`, so we can use the transport
-directly in order to implement our handshake logic.
+The transport returned by `Io::framed` is a value implementing [`Stream`] +
+[`Sink`] over the frame type. In our case, the frame type is `String`, so we can
+use the transport directly in order to implement our handshake logic.
 
 [`Stream`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html
 [`Sink`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html
