@@ -13,9 +13,9 @@ script:
 
 deploy:
   provider: s3
-  access_key_id: wut
+  access_key_id: AKIAJV4HPWEPYM57X6TQ
   secret_access_key:
-    secure: wut
+    secure: "iFvXzgWVZYnSfHFqnujZafl4Dh7tI9nYDywlkM7pb2BFio7BWtM7+2E1Zx+zcZ+8aUiytHGpey/gfFxcsMDRZkzwPUr18LOGIRZ9l072yJRzIMYS6vPnCIGSyXTWiM3i8n0WcUxrfue1QHOA3nSJs337WZ2tm8wP2X3/xuS76jJtCXixaIgB6x1isLvWyJI3s6W7C9GVzYd7WBoeljt+WTb/Fmv3rAL3wPsYyuQs0c3hokXTE96zaYXmUDsE2bNf/BJyT/e5YJUdFmI/+/GJ8UjBdU34y71mVf6VeT9FgV5gMrKRxkXJiVd4b5uIMxma9kn9cdBxds3E9NC0tyj8uGdrRAruk4ow0If8H/dgT5APLo9l3ld8VkvKAzBZztEKRV8J1yvWeZTB+lDtPlEkLlNQI/s7zGJdUMZBz09us0eWpdmYM3iSZDAGrHDIV/v7QxeXM6epnF0cn47hVZChrcAJm4TLMWm1F0bY/aZzM2CfFei2edhcIBW5yMoJo7YlCWGbrSnGKVYtNRMovSEncxmhIvthAHE+nNtUQ5F4AD4BnC5gE0QXA1LrZK7ZB6YcxtNZz0eZXudKMDEKNpqpxAfbVF25CiU+b8pVb4NCln9teDJdOgClc2LqE1fiDs5jmlN/FoMTG+J2D9bXHBU0kw4uxE4Mws9cSHgGCaPy+v8="
   bucket: tokio.rs
   acl: public_read
   skip_cleanup: true
