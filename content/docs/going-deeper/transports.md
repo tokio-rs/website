@@ -7,7 +7,9 @@ weight = 104
 
 If the protocol being represented is a stream-oriented protocol (i.e., does not
 really have a simple request / response structure), then it may make sense to
-operate directly on the transport instead of using [tokio-proto](TODO).
+operate directly on the transport instead of using [tokio-proto].
+
+[tokio-proto]: https://github.com/tokio-rs/tokio-proto
 
 For example, the [line-based protocol](TODO) implemented as part of our [first
 server](TODO) could also be used in a streaming fashion. Let's imagine that we

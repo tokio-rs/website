@@ -38,7 +38,9 @@ Each part can vary independently, so once you've implemented a protocol
 
 This guide specifically covers implementing a **pipelined** streaming protocol.
 Implementing a multiplexed streaming protocol is similar and just requires using
-the equivalent traits and types from the [`multiplex`](TODO) module.
+the equivalent traits and types from the [`multiplex`] module.
+
+[`multiplex`]: https://tokio-rs.github.io/tokio-proto/tokio_proto/streaming/multiplex/index.html
 
 A full implementation can be found in the
 [tokio-line](https://github.com/tokio-rs/tokio-line/blob/master/streaming/src/lib.rs)
@@ -60,7 +62,9 @@ chunks of the line until another empty line is reached, which represents the
 termination of the streaming line.
 
 For our transport to be compatible with tokio-proto's streaming support, the
-transport's frame type must be an instance of [`pipeline::Frame`](TODO):
+transport's frame type must be an instance of [`pipeline::Frame`]:
+
+[`pipeline::Frame`]: https://tokio-rs.github.io/tokio-proto/tokio_proto/streaming/pipeline/enum.Frame.html
 
 ```rust,ignore
 pub enum Frame<T, B, E> {
@@ -276,7 +280,9 @@ request body as a sequence of bytes. Here, we use `String` for both directions.
 ## [Step 3: Implement a service](#implement-service) {#implement-service}
 
 The `Request` and `Response` types for a streaming protocol `Service` is
-required to be [`tokio_proto::streaming::Message`](TODO):
+required to be [`tokio_proto::streaming::Message`]:
+
+[`tokio_proto::streaming::Message`]: https://tokio-rs.github.io/tokio-proto/tokio_proto/streaming/enum.Message.html
 
 ```rust
 pub enum Message<T, B> {
@@ -287,7 +293,9 @@ pub enum Message<T, B> {
 
 Here `T` will be the message head and `B` will be a [`Stream`]({{< api-url
 "futures" >}}/stream/trait.Stream.html) of the body chunk type. `B` is usually
-set to [`Body`](TODO), but this is not a requirement.
+set to [`Body`], but this is not a requirement.
+
+[`Body`]: https://tokio-rs.github.io/tokio-proto/tokio_proto/streaming/struct.Body.html
 
 This step is similar to the
 [echo server](/docs/getting-started/simple-server#implement-service), except for
