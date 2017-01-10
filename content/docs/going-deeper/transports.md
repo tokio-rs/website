@@ -8,7 +8,7 @@ weight = 107
 A transport in Tokio is a full duplex channel of frame values. The transport is
 responsible for encoding and decoding these frame values from an underlying I/O
 source, like a socket. It is represented by the [`Stream`]({{< api-url "futures"
->}}/stream/trait.Stream.html) + [`Sink`](/sink/trait.Sink.html) traits and can
+>}}/stream/trait.Stream.html) + [`Sink`]({{< api-url "futures" >}}/sink/trait.Sink.html) traits and can
 be used directly or passed to tokio-proto. The transport can also encapsulate
 protocol specific logic as shown in the [augmenting](#augmenting-transport)
 section.
