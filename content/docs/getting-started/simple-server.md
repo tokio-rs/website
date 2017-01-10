@@ -117,7 +117,8 @@ fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
         // Turn this data into a UTF string and return it in a Frame.
         return match str::from_utf8(&line.as_ref()) {
             Ok(s) => Ok(Some(s.to_string())),
-            Err(_) => Err(io::Error::new(io::ErrorKind::Other, "invalid string")),
+            Err(_) => Err(io::Error::new(io::ErrorKind::Other,
+                                         "invalid UTF-8")),
         }
     } else {
         Ok(None)

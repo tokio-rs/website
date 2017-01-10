@@ -5,12 +5,13 @@ menu = "going_deeper"
 weight = 103
 +++
 
-All of the previous guides used protocols that had fully buffered requests and
-responses. In other words, the entire request and response data had to be
-buffered before parsing the value, in turn, forcing the application to wait for
-all the data to be received before it can start processing the request.
+All of the previous guides used protocols that where requests and responses were
+comprised by a single message frame. In other words, the entire request and
+response data had to be buffered before parsing the value, in turn forcing the
+application to wait for all the data to be received before starting to
+processing the request.
 
-Sometimes, it is desired to begin processing the request before all data has
+Sometimes it is possible to begin processing the request before all data has
 been received. For example, in HTTP, the application can start processing a
 request once the head is received but before the body has been received. The
 body of an HTTP request may be large, so it is useful for the application to be
@@ -18,7 +19,7 @@ able to stream in the body in chunks as it is received.
 
 ## [Overview](#overview) {#overview}
 
-Just like in the [simple server](/docs/getting-started/simple-server) guide,
+Just like in the [echo server](/docs/getting-started/simple-server) guide,
 implementing a client or server for a multiplexed protocol is done in three
 parts:
 
@@ -50,7 +51,7 @@ implementing [`Stream`]({{< api-url "futures" >}}/stream/trait.Stream.html)` +
 `[`Sink`]({{< api-url "futures" >}}/sink/trait.Sink.html) where the yielded
 items are frames.
 
-We'll implement the same line-based protocol as in the [simple
+We'll implement the same line-based protocol as in the [echo
 server](/docs/getting-started/simple-server) guide, but this time, we will make
 it streaming. The protocol being implemented is a stream of frames, where each
 frame is a UTF-8 encoded string terminated by a `\n` character. If an empty line
@@ -76,7 +77,7 @@ pub enum Frame<T, B, E> {
 }
 ```
 
-Where `T` represents the request or response head type, `B` represents the
+Here, `T` represents the request or response head type and `B` represents the
 type of each stream chunk. `E` is not used as part of this guide, but it
 represents the type of an error frame. We will just set it to `io::Error`.
 
@@ -84,9 +85,9 @@ By having our `Codec` yield frames of this type, `tokio-proto` is able to
 dispatch the streaming body frames appropriately.
 
 Again, we will use `Codec` and the `Io::framed` helper to help us go from a
-`TcpStream` to a `Stream + Sink` for our frame type.
-
-This is what our `Codec` implementation looks like:
+`TcpStream` to a `Stream + Sink` for our frame type. Unlike previous examples,
+our codec will retain some state for parsing (which is typical for streaming
+protocols):
 
 ```rust
 # extern crate tokio_core;
@@ -204,14 +205,14 @@ impl Codec for LineCodec {
 # fn main() {}
 ```
 
-The implementaiton is very similar as the codec we implemented in the [simple
-server](/docs/getting-started/simple-server) example. The main difference is
-that we are returning `pipeline::Frame` values and we are differentiating
+The implementation is similar in spirit to the codec we implemented in the
+[echo server](/docs/getting-started/simple-server) example. The main difference
+is that we are returning `pipeline::Frame` values and we are differentiating
 between the message head and a body chunk.
 
 ## [Step 2: Specify the protocol](#specify-protocol) {#specify-protocol}
 
-The next step is to define the protocol details.
+The next step is to define the protocol details:
 
 ```rust
 # extern crate tokio_core;
@@ -265,12 +266,12 @@ impl<T: Io + 'static> ServerProto<T> for LineProto {
 # fn main() {}
 ```
 
-There are two additional associated types over the buffered `ServerProto`
-trait: `RequestBody` and `ResponseBody`. This is the type of the streaming body
-chunks, and they can differ from the `Request` and `Response` types. So, for
-HTTP, the `Request` type may be `HttpRequestHead` and the `RequestBody` type
-could be set to `Vec<u8>` to represent streaming in the request body as a
-sequence of bytes.
+There are two additional associated types compared to the non-streaming version
+of `ServerProto`: `RequestBody` and `ResponseBody`. This is the type of the
+streaming body chunks, and they can differ from the `Request` and `Response`
+types. So, for HTTP, the `Request` type may be `HttpRequestHead` and the
+`RequestBody` type could be set to `Vec<u8>` to represent streaming in the
+request body as a sequence of bytes. Here, we use `String` for both directions.
 
 ## [Step 3: Implement a service](#implement-service) {#implement-service}
 
@@ -284,12 +285,13 @@ pub enum Message<T, B> {
 }
 ```
 
-Where `T` will be the message head and `B` will be a [`Stream`]({{< api-url
+Here `T` will be the message head and `B` will be a [`Stream`]({{< api-url
 "futures" >}}/stream/trait.Stream.html) of the body chunk type. `B` is usually
 set to [`Body`](TODO), but this is not a requirement.
 
-This part is exactly the same as the [simple
-server](/docs/getting-started/simple-server#implement-service)
+This step is similar to the
+[echo server](/docs/getting-started/simple-server#implement-service), except for
+the change in types for the `Service`, which allows working with body streams:
 
 ```rust,no_run
 extern crate futures;
@@ -387,9 +389,9 @@ fn main() {
 You can see that the service is able to stream in the response body chunks.
 
 In this example, we exposed the `Message` and `Body` types provided by
-tokio-proto. However, in practice, you will probably want to keep those types
+`tokio-proto`. In practice, you will probably want to keep those types
 encapsulated in your library and provide your own request, response, and body
-stream types. You can see how this is done in the [full
-example](https://github.com/tokio-rs/tokio-line/blob/master/streaming/src/lib.rs),
+stream types. You can see how this is done in the
+[full example](https://github.com/tokio-rs/tokio-line/blob/master/streaming/src/lib.rs),
 specifically the `Line`, `LineStream`, `ServerTypeMap`, and `ClientTypeMap`
 types.
