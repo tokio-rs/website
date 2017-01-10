@@ -1,6 +1,6 @@
 +++
 title = "Tasks and executors"
-description = ""
+description = "The guts of the task system"
 menu = "going_deeper"
 weight = 108
 +++
@@ -19,8 +19,8 @@ Finally we'll explore the concept of [unpark events](#unpark-events) in depth if
 you're curious about more than the [high level overview]({{< relref
 "futures-model.md#wakeup-cause" >}}).
 
-This material is mostly relevant for those wishing to build their own executors
-(e.g., custom thread pools), but understanding it can be helpful for
+**This material is mostly relevant for those wishing to build their own executors
+(e.g., custom thread pools)**, but understanding it can be helpful for
 internalizing the futures model more deeply.
 
 ## [Exploring `Future::wait`](#exploring-wait) {#exploring-wait}
