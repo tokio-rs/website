@@ -54,11 +54,12 @@ streams.
 
 ## [Framing](#framing) {#framing}
 
-Framing is done with Tokio by first defining a frame type, usually an `enum`,
-then implementing a transport as a
-[`Stream + Sink`]({{< relref "streams-and-sinks.md" >}}) that works with that
-frame type. The transport handles encoding and decoding the frame values to
-the raw stream of bytes. This can either be done [manually](TODO) or using a
+Framing is done with Tokio by first defining a frame type, usually an
+`enum`, then implementing a transport as a [`Stream + Sink`]({{< relref
+"streams-and-sinks.md" >}}) that works with that frame type. The
+transport handles encoding and decoding the frame values to the raw
+stream of bytes. This can either be done
+[manually](/docs/going-deeper/transports/#implementing) or using a
 helper like [`Codec`]({{< relref "core.md#io-codecs" >}}).
 
 Later sections cover [working with transports](../transports) and
@@ -75,15 +76,15 @@ however, Tokio's `Service` trait is abstract over the underlying protocol.
 
 [`Service`]: https://tokio-rs.github.io/tokio-service/tokio_service/trait.Service.html
 
-There are generally two ways to map request / responses to a stream of frames:
-[pipelining](TODO) or [multiplexing](TODO). [tokio-proto]'s goal is to
-take a transport and handle the required logic to map that to an implementation
-of `Service`.
+There are generally two ways to map request / responses to a stream of
+frames: pipelined or [multiplexing](/docs/going-deeper/multiplex).
+[tokio-proto]'s goal is to take a transport and handle the required
+logic to map that to an implementation of `Service`.
 
 [tokio-proto]: https://github.com/tokio-rs/tokio-proto
 
 A big advantage of having a standardized `Service` interface is that it is
-possible to write reusable [middleware](TODO) components that add useful
+possible to write reusable middleware components that add useful
 functionality.
 
 ## [Application](#application) {#application}

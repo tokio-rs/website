@@ -6,5 +6,5 @@ canonifyURLs = "true"
 [params]
 futuresDocsURL = "https://docs.rs/futures/0.1/futures"
 coreDocsURL = "https://docs.rs/tokio-core/0.1/tokio_core"
-protoDocsURL = "https://docs.rs/tokio-proto/0.1/tokio_proto"
-serviceDocsURL = "https://docs.rs/tokio-service/0.1/tokio_service"
+protoDocsURL = "https://tokio-rs.github.io/tokio-proto/tokio_proto"
+serviceDocsURL = "https://tokio-rs.github.io/tokio-service/tokio_service"
