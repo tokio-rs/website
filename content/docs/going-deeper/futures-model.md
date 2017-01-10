@@ -2,7 +2,7 @@
 title = "The futures model in depth"
 description = "Understanding how futures, streams and sinks work"
 menu = "going_deeper"
-weight = 106
+weight = 105
 +++
 
 At this point, we're ready to dig into the implementation details for futures,

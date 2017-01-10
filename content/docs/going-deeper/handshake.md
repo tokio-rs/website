@@ -2,7 +2,7 @@
 title = "Connection handshakes"
 description = "How to handle initial steps in a protocol"
 menu = "going_deeper"
-weight = 105
+weight = 104
 +++
 
 Some protocols require some setup before they can start accepting requests. For

@@ -2,7 +2,7 @@
 title = "Working with transports"
 description = "How to implement, use, and augment transports in Tokio"
 menu = "going_deeper"
-weight = 104
+weight = 107
 +++
 
 A transport in Tokio is a full duplex channel of frame values. The transport is
@@ -17,7 +17,7 @@ section.
 
 The easiest way to implement a transport is to use the
 [`Codec`](/docs/getting-started/core/#io-codecs) helper. If that isn't
-sufficient, then it is also possible to implement `Stream + `Sink` directly for
+sufficient, then it is also possible to implement `Stream` + `Sink` directly for
 a custom type.
 
 This is what a transport that encodes and decodes single byte numbers as `u32`
