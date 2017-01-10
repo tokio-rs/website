@@ -32,11 +32,11 @@ in the standard library:
 | 1 | [`Result`]   | [`Future`] | [`map`], [`and_then`]                        |
 | ∞ | [`Iterator`] | [`Stream`] | [`map`][stream-map], [`fold`], [`collect`]   |
 
-[`Future`]: https://docs.rs/futures/0.1/futures/trait.Future.html
+[`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
 [`Stream`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html
 [`Result`]: https://doc.rust-lang.org/std/result/enum.Result.html
-[`map`]: https://docs.rs/futures/0.1/futures/trait.Future.html#method.map
-[`and_then`]: https://docs.rs/futures/0.1/futures/trait.Future.html#method.and_then
+[`map`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.map
+[`and_then`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.and_then
 [stream-map]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.map
 [`fold`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.fold
 [`collect`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.collect
@@ -126,7 +126,7 @@ incoming connection. It's an async version of
 in the standard library. And just as with iterators, we can use the methods on
 the [`Stream`] trait to manipulate the stream:
 
-[`TcpStream`]: https://tokio-rs.github.io/tokio-core/tokio_core/net/struct.TcpStream.html
+[`TcpStream`]: https://docs.rs/tokio-core/0.1.2/tokio_core/net/struct.TcpStream.html
 
 ```rust,ignore
 let welcomes = connections.and_then(|(socket, _peer_addr)| {

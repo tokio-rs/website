@@ -21,9 +21,9 @@ functions in the `future` module for creating such a future:
 - [`err`], which is analogous to `Result::Err`: it treats the value you give it as an immediately failed future.
 - [`result`], which lifts a result to an immediately-complete future.
 
-[`ok`]: https://docs.rs/futures/0.1/futures/fn.ok.html
-[`err`]: https://docs.rs/futures/0.1/futures/fn.err.html
-[`result`]: https://docs.rs/futures/0.1/futures/fn.result.html
+[`ok`]: https://docs.rs/futures/0.1/futures/future/fn.ok.html
+[`err`]: https://docs.rs/futures/0.1/futures/future/fn.err.html
+[`result`]: https://docs.rs/futures/0.1/futures/future/fn.result.html
 
 For streams, there are a few equivalents of an "immediately ready" stream:
 
@@ -39,7 +39,7 @@ In addition to these constructors, there's also a function, [`lazy`], which
 allows you to construct a future given a *closure* that will produce that future
 later, on demand.
 
-[`lazy`]: https://docs.rs/futures/0.1/futures/fn.lazy.html
+[`lazy`]: https://docs.rs/futures/0.1/futures/future/fn.lazy.html
 
 ### [IntoFuture](#intofuture) {#intofuture}
 
