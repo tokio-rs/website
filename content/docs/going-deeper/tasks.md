@@ -19,21 +19,22 @@ Finally we'll explore the concept of [unpark events](#unpark-events) in depth if
 you're curious about more than the [high level overview]({{< relref
 "futures-model.md#wakeup-cause" >}}).
 
-
+This material is mostly relevant for those wishing to build their own executors
+(e.g., custom thread pools), but understanding it can be helpful for
+internalizing the futures model more deeply.
 
 ## [Exploring `Future::wait`](#exploring-wait) {#exploring-wait}
 
 Let's start out our tour of tasks and executors with a deep dive into the
 implementation of the [`wait`] method on the [`Future`] trait. To recap, this
 method will block the current thread until the future has been resolved,
-returning the result of the future at that time. Note that this method also
-requires the computation associated with the future will be completed on another
-thread or inline.
+returning the result of the future at that time. That can happen either through
+work done on the thread running [`wait`], or elsewhere.
 
 [`wait`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.wait
 [`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
 
-First up let's take a look at the method itself:
+Let's take a look at the method itself:
 
 ```rust,ignore
 fn wait(self) -> Result<Self::Item, Self::Error>
@@ -44,15 +45,13 @@ fn wait(self) -> Result<Self::Item, Self::Error>
 ```
 
 Well that was pretty simple! Here we're just calling the [`spawn`] function
-followed by the [`wait_future`] method. Recall that tasks are simply just a
-future which likely contains many sub-futures. The [`spawn`] method is where the
-chain comes to an end. By spawning a future it's bound to a task (in the
-[`Spawn`] return type) and it's ready to start making progress via polling.
-
-The [`spawn`] function is pretty mundane, it's just creating a new instance of
-`Spawn` with associated data required to create the future's task. Once this is
-done, the real meat happens in the [`wait_future`] method, so let's take a look
-at that:
+followed by the [`wait_future`] method. Recall that tasks are, in the end, just
+a "big" future (usually made up of many sub-futures). The [`spawn`] method is
+the basic way to turn a future into a task, which means that we can no longer
+compose it with other futures, but we can *execute* it. The method creates a new
+instance of the [`Spawn`] type with associated data required to create the
+future's task. Once this is done, the real meat happens in the [`wait_future`]
+method, so let's take a look at that:
 
 [`spawn`]: https://docs.rs/futures/0.1/futures/executor/fn.spawn.html
 [`wait_future`]: https://docs.rs/futures/0.1/futures/executor/struct.Spawn.html#method.wait_future
@@ -70,8 +69,7 @@ fn wait_future(&mut self) -> Result<F::Item, F::Error> {
 }
 ```
 
-There's going to be a few new concepts here, so let's take a look at what's
-going on here line-by-line:
+There's going to be a few new concepts here, so we'll go line-by-line:
 
 ```rust,ignore
 let unpark = Arc::new(ThreadUnpark::new(thread::current()));
@@ -81,7 +79,7 @@ First we create an instance of the [`Unpark`] trait, in this case
 `Arc<ThreadUnpark>`. Recall that "unpark" for a future's task is akin to
 unblocking it, similar to how [`Thread::unpark`] in the standard library will
 wake up that thread. In fact, that's the exact implementation of `Unpark for
-ThreadUnpark`!
+ThreadUnpark`:
 
 ```rust,ignore
 impl Unpark for ThreadUnpark {
@@ -92,11 +90,9 @@ impl Unpark for ThreadUnpark {
 }
 ```
 
-Essentially what we're creating in the [`wait_future`] method is the ability to
-wake up the future after it's blocked. This ability, realized through an
-instance of the `Unpark` trait, is going to be specific to the executor running
-the future itself. In our case the execution model for the future is to block
-the thread, so the wakeup model is to wake up the blocking thread!
+In general, [`Unpark`] is used to notify a task that it should be woken, which
+in this case means waking up the thread running [`wait_future`]. As we'll see,
+other executors have other ways of "waking up" a task.
 
 The [`Unpark`] implementation has some extra state to resolve races (the
 `ready` flag), and we'll see more of that in a moment. In the meantime let's
@@ -116,15 +112,14 @@ loop {
 
 This is the main loop which is going to drive the future forward. We will
 continually poll the future through the [`poll_future`] method on [`Spawn`].
-Internally this method will call the [`poll`] method on our future in a context
-where [`park`] is guaranteed to succeed. The [`poll_future`] method is the
-point of transition to "coming on to a task" for a future, and inside that
-method other poll methods can be called as well. This state is managed through a
-thread-local that is maintained by [`poll_future`].
+Internally this method will call the [`poll`] method, but set things up so that
+calls to [`park`] within the future will correctly tie in to our [`Unpark`]
+implementation (this is done using a thread local). The [`poll_future`] method
+is the main way to "enter a task".
 
-The [`poll_future`] method takes one argument, and `Arc<Unpark>`. We previously
-created this with our instance which will unblock our thread. This means that
-on each iteration of the loop we just pass in a clone of this instance.
+The [`poll_future`] method takes one argument: an `Arc<Unpark>`. We previously
+created an instance which will unblock our thread. This means that on each
+iteration of the loop we just pass in a clone of this instance.
 
 Take note while we're here that this is where the "one allocation required"
 guarantee comes into play we saw before. The `Arc<Unpark>` is the only
@@ -178,13 +173,12 @@ blocking.
 ## [Executors in `futures-cpupool`](#futures-cpupool) {#futures-cpupool}
 
 Now that we've taken a look at a relatively simple executor (the current
-thread), let's take a look at another relatively simple executor, a thread pool.
-For this the [`futures-cpupool`] crate provides a [`CpuPool`] type which acts as
-a thread pool that will execute futures to completion on the threads associated
-with the thread pool itself.
+thread), let's take a look at a slightly more complex case: a thread pool.  The
+[`futures-cpupool`] crate provides a [`CpuPool`] type, which is a thread pool
+for executing any number of futures to completion.
 
-First up let's review the actual interface that the [`CpuPool`] exposes,
-[`spawn`][cpu-spawn]:
+Here's the main interface that the [`CpuPool`] exposes, the
+[`spawn`][cpu-spawn] method:
 
 ```rust,ignore
 fn spawn<F>(&self, f: F) -> CpuFuture<F::Item, F::Error>
@@ -229,17 +223,18 @@ fn spawn<F>(&self, f: F) -> CpuFuture<F::Item, F::Error>
 
 Here we're creating a [oneshot channel] to bridge the thread pool and the
 returned future. On the thread pool we'll complete the `tx` and and the `rx` end
-is the returned [`CpuFuture`]. A small wrapper, [`Sender`] is created to own the
+is the returned [`CpuFuture`]. A small wrapper, `Sender` is created to own the
 future `f` and the `tx` sender. This struct is itself a future which simply runs
 `f` to completion, sending the completed value on `tx`.
 
 [oneshot channel]: https://docs.rs/futures/0.1/futures/sync/oneshot/index.html
 
-After we've created the `sender` then we see our familiar [`spawn`] method.
-We just saw that this is where we tie off a future and a task is created.
-Unlike before, however, we then see a new method called, [`execute`]. This
-method consumes ownership of the [`Spawn`] and will run it to completion on an
-instance of the [`Executor`] trait provided.
+After we've created the `sender` then we see our familiar executor [`spawn`]
+method.  We just saw that this is where we tie off a future and a task is
+created.  Unlike before, however, we then see a new method called,
+[`execute`]. This method consumes ownership of the [`Spawn`] and will run it to
+completion on an instance of the [`Executor`] trait provided; it automatically
+takes care of the unpark details we mentioned before.
 
 [`execute`]: https://docs.rs/futures/0.1/futures/executor/struct.Spawn.html#method.execute
 [`Executor`]: https://docs.rs/futures/0.1/futures/executor/trait.Executor.html
@@ -256,8 +251,8 @@ trait Executor: Send + Sync + 'static {
 ```
 
 An executor just knows how to run units of work, encapsulated in a [`Run`]. The
-[`Run`] structure opaquely contains a future internally and work will be done
-(e.g. the future will get polled) when the [`run`][run-run] method is called.
+[`Run`] structure opaquely contains a future which it will poll when the
+[`run`][run-run] method is called.
 
 [`Run`]: https://docs.rs/futures/0.1/futures/executor/struct.Run.html
 [run-run]: https://docs.rs/futures/0.1/futures/executor/struct.Run.html#method.run
