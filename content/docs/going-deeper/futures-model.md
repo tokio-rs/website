@@ -303,7 +303,8 @@ the ability to associate "unpark events" with a given `Task` handle. That is,
 there may be various handles to the same task floating around, all of which can
 be used to wake the task up, but each of which carries different unpark events.
 When woken, the future within the task can inspect these unpark events to
-determine what happened. See [`with_unpark_event`] for more detail.
+determine what happened. See [`with_unpark_event`] or [tasks in more depth]({{<
+relref "tasks.md#unpark-events" >}}) for more detail.
 
 [`with_unpark_event`]: https://docs.rs/futures/0.1.7/futures/task/fn.with_unpark_event.html
 
