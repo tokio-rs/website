@@ -6,8 +6,7 @@ weight = 0
 
 ##### Tokio is a platform for writing fast networking code in Rust.
 
-It's broken into
-several layers, with entry points based on your needs:
+It's broken into several layers, with entry points based on your needs:
 
 * **The `tokio-proto` layer is the easiest way to build servers and
   clients**. All you have to do is handle message serialization; proto takes
