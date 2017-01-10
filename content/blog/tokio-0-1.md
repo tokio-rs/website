@@ -18,9 +18,10 @@ servers like proxies.
 
 **Tokio is primarily intended as a foundation for other libraries**, in
 particular for high performance protocol implementations. Over time, we expect
-Tokio to grow a rich middleware ecosystem and ultimately to
-support various web and application frameworks. [Hyper], for example, has been
-growing Tokio integration, and there's a [growing list] of other protocol implementations as well.
+Tokio to grow a rich middleware ecosystem and ultimately to support various web
+and application frameworks. [Hyper], for example, has been adding Tokio
+integration, and there's a [growing list] of other protocol implementations as
+well.
 
 [Hyper]: http://hyper.rs/
 [growing list]: ../../going-deeper/third-party/
