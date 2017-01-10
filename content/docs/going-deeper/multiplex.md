@@ -101,7 +101,7 @@ struct LineCodec;
 
 impl Codec for LineCodec {
     type In = (RequestId, String);
-    type Out = (RequestId, io::Result<String>);
+    type Out = (RequestId, String);
 
     fn decode(&mut self, buf: &mut EasyBuf)
              -> Result<Option<(RequestId, String)>, io::Error>
@@ -138,11 +138,10 @@ impl Codec for LineCodec {
         Ok(None)
     }
 
-    fn encode(&mut self, msg: (RequestId, io::Result<String>),
+    fn encode(&mut self, msg: (RequestId, String),
               buf: &mut Vec<u8>) -> io::Result<()>
     {
         let (id, msg) = msg;
-        let msg = msg.expect("This example doesn't handle error frames");
 
         let mut encoded_id = [0; 4];
         BigEndian::write_u32(&mut encoded_id, id as u32);
@@ -174,7 +173,6 @@ struct LineProto;
 impl<T: Io + 'static> ServerProto<T> for LineProto {
     type Request = String;
     type Response = String;
-    type Error = io::Error;
 
     // `Framed<T, LineCodec>` is the return value
     // of `io.framed(LineCodec)`

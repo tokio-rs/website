@@ -15,7 +15,7 @@ We'll re-use the codec from the [initial server example](../simple-server):
 pub struct LineCodec;
 impl Codec for LineCodec {
     type In = String;
-    type Out = io::Result<String>;
+    type Out = String;
     ...
 }
 ```
@@ -34,13 +34,13 @@ Now we'll write a server that can host an arbitrary service over this protocol:
 #
 # impl Codec for LineCodec {
 #   type In = String;
-#   type Out = io::Result<String>;
+#   type Out = String;
 #
 #   fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
 #       Ok(None)
 #   }
 #
-#   fn encode(&mut self, out: io::Result<String>, buf: &mut Vec<u8>) -> io::Result<()> {
+#   fn encode(&mut self, out: String, buf: &mut Vec<u8>) -> io::Result<()> {
 #       Ok(())
 #   }
 # }
@@ -66,11 +66,7 @@ fn serve<S>(s: S) -> io::Result<()>
         let (writer, reader) = socket.framed(LineCodec).split();
         let mut service = s.new_service()?;
 
-        let responses = reader.and_then(move |req| {
-            service.call(req)
-                // reify service result as a response
-                .then(|res| future::ok(res))
-        });
+        let responses = reader.and_then(move |req| service.call(req));
         let server = writer.send_all(responses)
             .then(|_| Ok(()));
         handle.spawn(server);
