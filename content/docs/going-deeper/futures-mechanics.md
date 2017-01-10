@@ -111,3 +111,26 @@ stream and sink objects using the [`split`] adapter.
 All adapters are zero-cost, meaning that no memory is allocated internally and
 the implementation will optimize to what you would have otherwise written by
 hand.
+
+### [Error handling](#error-handling) {#error-handling}
+
+Futures, streams and sinks all treat error handling as a core concern: they are
+all equipped with an associated error type, and the various adapter methods
+interpret errors in sensible ways. For example:
+
+- The sequencing combinators [`then`], [`and_then`], [`or_else`], [`map`], and
+  [`map_err`] all chain errors similarly to the `Result` type in the standard
+  library. So, for example, if you chain futures using [`and_then`] and the
+  first future fails with an error, the chained future is never run.
+
+- Combinators like [`select`] and [`join`] also deal with errors. For
+  [`select`], the first future to complete *in any way* yields an answer,
+  propagating the error, but also giving access to the other future should you
+  want to keep working with it. For [`join`], if any future produces an error,
+  the entire join produces that error.
+
+By default, futures don't have any special handling for panics. In most cases,
+though, futures are ultimately run as tasks within a thread pool, where you'll
+want to catch any panic they produce and propagate that elsewhere. The
+[`catch_unwind`] adapter can be used to reify a panic into a `Result` without
+taking down the worker thread.
