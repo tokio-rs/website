@@ -83,8 +83,8 @@ Here we'll bring in futures and a couple additional tools on top:
 
 ```toml
 [dependencies]
-futures = "0.1.7"
-futures-cpupool = "0.1.2"
+futures = "0.1"
+futures-cpupool = "0.1"
 tokio-timer = { git = "https://github.com/tokio-rs/tokio-timer" }
 ```
 
@@ -183,7 +183,7 @@ if prime_future.wait().unwrap() {
 ```
 
 While
-[`wait`](https://docs.rs/futures/0.1.7/futures/future/trait.Future.html#method.wait)
+[`wait`](https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.wait)
 isn't very commonly used in practice, it's a nice illustration of the difference
 between a future (like `prime_future`) and the value it produces; the future is
 returned right away, allowing you to do additional work concurrently (like
@@ -238,12 +238,12 @@ fn main() {
 
 Here, we're using a couple of additional methods on futures:
 
-- [`then`](https://docs.rs/futures/0.1.7/futures/future/trait.Future.html#method.then),
+- [`then`](https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.then),
   which in general allows you to sequence one future to run after getting the
   value of another. In this case, we're just using it to change the value
   returned from the timeout future to `Err(())`.
 
-- [`select`](https://docs.rs/futures/0.1.7/futures/future/trait.Future.html#method.select),
+- [`select`](https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.select),
   which combines two futures of the same type, allowing them to "race" to
   completion. It yields a pair, where the first component is the value produced
   by the first future to complete, and the second gives you the other future
@@ -267,7 +267,7 @@ At this point, we've seen just a tiny bit of the futures API---but what actually
 *is* a future?
 
 In the `futures` library, a future is anything that implements the
-[`Future` trait](https://docs.rs/futures/0.1.7/futures/future/trait.Future.html),
+[`Future` trait](https://docs.rs/futures/0.1/futures/future/trait.Future.html),
 which has a lot of similarities to the
 [`Iterator` trait](https://static.rust-lang.org/doc/master/std/iter/trait.Iterator.html)
 in the standard library:
@@ -299,8 +299,9 @@ concern baked in to the trait and its methods.
 
 The `poll` method is the heart of the futures trait---it's how futures actually
 do their work. However, it's not generally called directly. Instead, you tend to
-work through the other methods of the `Future` trait (which are all default methods).
-You can find an in-depth explanation of `poll` in TODO.
+work through the other methods of the `Future` trait (which are all default
+methods).  You can find an in-depth explanation of `poll` in [the futures model
+in depth]({{< relref "futures-model.md" >}}).
 
 So that's the quick tour. In the next section, we'll look at a more involved
 example: hooking up a database to the [line-based protocol](../simple-server) we

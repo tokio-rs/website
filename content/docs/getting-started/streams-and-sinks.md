@@ -32,14 +32,14 @@ in the standard library:
 | 1 | [`Result`]   | [`Future`] | [`map`], [`and_then`]                        |
 | ∞ | [`Iterator`] | [`Stream`] | [`map`][stream-map], [`fold`], [`collect`]   |
 
-[`Future`]: https://docs.rs/futures/0.1.7/futures/trait.Future.html
-[`Stream`]: https://docs.rs/futures/0.1.7/futures/stream/trait.Stream.html
+[`Future`]: https://docs.rs/futures/0.1/futures/trait.Future.html
+[`Stream`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html
 [`Result`]: https://doc.rust-lang.org/std/result/enum.Result.html
-[`map`]: https://docs.rs/futures/0.1.7/futures/trait.Future.html#method.map
-[`and_then`]: https://docs.rs/futures/0.1.7/futures/trait.Future.html#method.and_then
-[stream-map]: https://docs.rs/futures/0.1.7/futures/stream/trait.Stream.html#method.map
-[`fold`]: https://docs.rs/futures/0.1.7/futures/stream/trait.Stream.html#method.fold
-[`collect`]: https://docs.rs/futures/0.1.7/futures/stream/trait.Stream.html#method.collect
+[`map`]: https://docs.rs/futures/0.1/futures/trait.Future.html#method.map
+[`and_then`]: https://docs.rs/futures/0.1/futures/trait.Future.html#method.and_then
+[stream-map]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.map
+[`fold`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.fold
+[`collect`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.collect
 [`Iterator`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html
 
 The definition of the [`Stream`] trait also resembles that of [`Iterator`]:
@@ -65,7 +65,7 @@ stream's [`poll`][stream-poll] method returns `Option<Self::Item>` instead of
 means that the stream has terminated. Like futures, streams can produce
 errors, which *also* terminate the stream.
 
-[stream-poll]: https://docs.rs/futures/0.1.7/futures/stream/trait.Stream.html#tymethod.poll
+[stream-poll]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#tymethod.poll
 
 The stream API is easiest to understand by example, so let's write a little
 server that immediately sends "Hello, world!" to each client that connects, and
@@ -277,8 +277,8 @@ mention two of the most important methods it offers:
   accept additional items even when the underlying sink is not ready for
   items. That's useful for buffering up responses on a socket, for example.
 
-[`send_all`]: https://docs.rs/futures/0.1.7/futures/sink/trait.Sink.html#method.send_all
-[`buffer`]: https://docs.rs/futures/0.1.7/futures/sink/trait.Sink.html#method.buffer
+[`send_all`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html#method.send_all
+[`buffer`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html#method.buffer
 
 Most of the time, the interesting work happens on the stream and future sides,
 with sinks acting as a final endpoint for pushing data through.

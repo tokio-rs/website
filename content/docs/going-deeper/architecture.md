@@ -65,17 +65,21 @@ Later sections cover [working with transports](../transports) and
 
 ## [Request / Response](#request-response) {#request-response}
 
-The request / response exchange layer is handled by Tokio's [`Service`](TODO)
+The request / response exchange layer is handled by Tokio's [`Service`]
 trait. The `Service` trait is a simplified interface making it easy to write
 network applications in a modular and reusable way, decoupled from the
 underlying protocol. It is one of Tokio's fundamental abstractions. It is a
 similar abstraction to Finagle's `Service`, Ruby's Rack, or Java's servlet;
 however, Tokio's `Service` trait is abstract over the underlying protocol.
 
+[`Service`]: https://tokio-rs.github.io/tokio-service/tokio_service/trait.Service.html
+
 There are generally two ways to map request / responses to a stream of frames:
-[pipelining](TODO) or [multiplexing](TODO). [tokio-proto](TODO)'s goal is to
+[pipelining](TODO) or [multiplexing](TODO). [tokio-proto]'s goal is to
 take a transport and handle the required logic to map that to an implementation
 of `Service`.
+
+[tokio-proto]: https://github.com/tokio-rs/tokio-proto
 
 A big advantage of having a standardized `Service` interface is that it is
 possible to write reusable [middleware](TODO) components that add useful
@@ -85,9 +89,11 @@ functionality.
 
 Generally, all the previously listed layers will be implemented in libraries.
 For example, an HTTP server implementation would implement an HTTP transport,
-then use [tokio-proto](TODO) to map that to a `Service`. The `Service` is what
+then use [tokio-proto] to map that to a `Service`. The `Service` is what
 the HTTP library would expose.
 
 An application would depend on many different libraries, providing various
-protocol implementations exposed as services, and using the [futures](TODO)
+protocol implementations exposed as services, and using the [futures]
 library to hook everything together.
+
+[futures]: https://github.com/alexcrichton/futures-rs

@@ -64,7 +64,7 @@ The method has several outcomes:
 After completion of any kind, it is a contract violation to poll a future
 again. (You can use [`fuse`] to work around that if need be.)
 
-[`fuse`]: https://docs.rs/futures/0.1.7/futures/future/trait.Future.html#method.fuse
+[`fuse`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.fuse
 
 In the async I/O world, this kind of interface is sometimes referred to as
 *readiness-based*, because events are signaled based on "readiness" of
@@ -124,9 +124,9 @@ thread would block. Tasks provide an equivalent to this model: the task "blocks"
 by yielding back to its executor, **after installing itself as a callback for
 the events it's waiting on**.
 
-[`park`]: https://docs.rs/futures/0.1.7/futures/task/fn.park.html
-[`unpark`]: https://docs.rs/futures/0.1.7/futures/task/fn.park.html
-[`Task`]: https://docs.rs/futures/0.1.7/futures/task/struct.Task.html
+[`park`]: https://docs.rs/futures/0.1/futures/task/fn.park.html
+[`unpark`]: https://docs.rs/futures/0.1/futures/task/fn.park.html
+[`Task`]: https://docs.rs/futures/0.1/futures/task/struct.Task.html
 
 Returning to the example of reading from a socket, on a `NotReady` result the
 task can be added to the event loop's dispatch table, so that it will be woken
@@ -306,7 +306,7 @@ When woken, the future within the task can inspect these unpark events to
 determine what happened. See [`with_unpark_event`] or [tasks in more depth]({{<
 relref "tasks.md#unpark-events" >}}) for more detail.
 
-[`with_unpark_event`]: https://docs.rs/futures/0.1.7/futures/task/fn.with_unpark_event.html
+[`with_unpark_event`]: https://docs.rs/futures/0.1/futures/task/fn.with_unpark_event.html
 
 ## [Streams and sinks](#streams-and-sinks) {#streams-and-sinks}
 
@@ -376,5 +376,5 @@ flushed (and, in particular, before it is dropped). For that, you use
 [`poll_complete`], whose signature matches that of a future that returns `()` on
 completion (i.e., when the data has been entirely flushed).
 
-[`start_send`]: https://docs.rs/futures/0.1.7/futures/sink/trait.Sink.html#tymethod.start_send
-[`poll_complete`]: https://docs.rs/futures/0.1.7/futures/sink/trait.Sink.html#tymethod.poll_complete
+[`start_send`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html#tymethod.start_send
+[`poll_complete`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html#tymethod.poll_complete

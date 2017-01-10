@@ -38,11 +38,14 @@ impl<T: Io + 'static> ServerProto<T> for LineProto {
 }
 ```
 
-The [`BindTransport`](TODO) associated type, returned from the `bind_transport`
-function is an [`IntoFuture`](TODO). This means that all connection setup work
+The [`BindTransport`] associated type, returned from the `bind_transport`
+function is an [`IntoFuture`]. This means that all connection setup work
 can be done before realizing the `BindTransport` future. So far, none of our
 protocols needed any setup, so we just used `Result`. But now, we're going
 to change that.
+
+[`BindTransport`]: https://tokio-rs.github.io/tokio-proto/tokio_proto/pipeline/trait.ServerProto.html#associatedtype.BindTransport
+[`IntoFuture`]: https://docs.rs/futures/0.1/futures/future/trait.IntoFuture.html
 
 ## [Implementing the handshake](#implementing-handshake) {#implementing-handshake}
 

@@ -5,7 +5,7 @@ menu = "going_deeper"
 weight = 101
 +++
 
-[`Future`]: https://docs.rs/futures/0.1.7/futures/future/trait.Future.html
+[`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
 [`Iterator`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html
 
 When working with futures, one of the first things you're likely to need to do
