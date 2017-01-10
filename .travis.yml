@@ -11,6 +11,11 @@ script:
   - ci/test.sh
   - ./hugo_0.18.1_linux_amd64/hugo_0.18.1_linux_amd64
 
+env:
+  global:
+    - AWS_ACCESS_KEY_ID=AKIAJV4HPWEPYM57X6TQ
+    - secure: "ahRJ0v+gWtbqqLmfYa6pq8e4hWi1cxPuq9rK5ElG0abgynlg6vj1FjvJfeaK33b5edc7O2njMFWEJNYSs/iVnVPhIjo7d59Et95eYt3WDNZPp8Nk1rcXgn9qyCFa5nRM4cZDpf/EKvsElBYwApNW7arLOrlELKeJBhXZsN+PR9G31E2RQkkdKu8Gxyj3aG/hg6sXL0QEoMp4FJZRWDShbdRIWMR8GUs9zprIxdz5OuCJO4DgfLz0SOm2WRba4eSFrK3n1NgMKcXT746mtPVmsRyJ4mxf5zZZiA23xNfi9ZnnMRgpxwiK2WP0nDXJffBJSmdheukXAV5M1VoRK56DgiD5KLZA8PAWGJ9qyIuMwRKryF6zC8nVvDFHPNQOoc1Eqk0H3ZaRI93x1mk80uoP+4fe2Z5g5Zds5ZfowPYjEznRru+DianjVH+g5+p4lxFDRi6vGaFxCRnlPFDo0vz6KpZvMNe+SLXn+rec68tuJcbGzNTxo4Zy+TWszYreypeQhEmW2rbicDOrlrtFxgXOMSHoVZbgf8F2lnwFVWnxEP+3msdL7OW3/5N/mlrdbtzN71JEpimJAdEvRX249MiXB7uJG9iEGS//XAeh4FI31JzHKtwxh6wqfopYRoQEbO4rKrdnkToiVdQkVE462y3AGmvpQsA+MfiRuJb0oh6qu5w="
+
 deploy:
   provider: s3
   access_key_id: AKIAJV4HPWEPYM57X6TQ
