@@ -111,11 +111,3 @@ stream and sink objects using the [`split`] adapter.
 All adapters are zero-cost, meaning that no memory is allocated internally and
 the implementation will optimize to what you would have otherwise written by
 hand.
-
-### [Error handling](#error-handling) {#error-handling}
-
-TODO: write this
-
-- combinators know how to deal with errors. explain `then`, `and_then`, etc, and
-  examples of how errors propagate throuh `select` and `join`
-- how to deal with panics
