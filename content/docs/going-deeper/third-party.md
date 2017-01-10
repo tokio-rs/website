@@ -2,7 +2,7 @@
 title = "Third-party crates"
 description = ""
 menu = "going_deeper"
-weight = 109
+weight = 110
 +++
 
 Currently the [`futures`], [`tokio-core`], [`tokio-service`], and [`tokio-proto`] crates provide

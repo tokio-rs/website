@@ -1,8 +1,8 @@
 +++
-title = "Connection handshake"
-description = ""
+title = "Connection handshakes"
+description = "How to handle initial steps in a protocol"
 menu = "going_deeper"
-weight = 104
+weight = 105
 +++
 
 Some protocols require some setup before they can start accepting requests. For
@@ -27,7 +27,8 @@ impl<T: Io + 'static> ServerProto<T> for LineProto {
     type Response = String;
     type Error = io::Error;
 
-    /// `Framed<T, LineCodec>` is the return value of `io.framed(LineCodec)`
+    // `Framed<T, LineCodec>` is the return value of
+    // `io.framed(LineCodec)`
     type Transport = Framed<T, LineCodec>;
     type BindTransport = Result<Self::Transport, io::Error>;
 
@@ -39,8 +40,8 @@ impl<T: Io + 'static> ServerProto<T> for LineProto {
 
 The [`BindTransport`](TODO) associated type, returned from the `bind_transport`
 function is an [`IntoFuture`](TODO). This means that all connection setup work
-can be done before realizing the `BindTransport` future. So far, all of our
-protocols didn't need anything, so we just used `Result`, but now, we're going
+can be done before realizing the `BindTransport` future. So far, none of our
+protocols needed any setup, so we just used `Result`. But now, we're going
 to change that.
 
 ## [Implementing the handshake](#implementing-handshake) {#implementing-handshake}
@@ -69,18 +70,19 @@ transport.into_future()
             Some(ref msg) if msg == "You ready?" => {
                 println!("SERVER: received client handshake");
                 // Send back the acknowledgement
-                Box::new(transport.send("Bring it!".to_string())) as Self::BindTransport
+                Box::new(transport.send("Bring it!".to_string()))
+                    as Self::BindTransport
             }
             _ => {
                 // The client sent an unexpected handshake, error out
                 // the connection
                 println!("SERVER: client handshake INVALID");
-                let err = io::Error::new(io::ErrorKind::Other, "invalid handshake");
+                let err = io::Error::new(io::ErrorKind::Other,
+                                         "invalid handshake");
                 Box::new(future::err(err)) as Self::BindTransport
             }
         }
     })
-
 ```
 
 The [transport](/going-deeper/architecture#using-transport) returned by
@@ -95,7 +97,7 @@ handshake has been completed.
 
 The next step is to update the `bind_transport` function in our protocol
 specification. Instead of returning the transport directly, we will perform the
-handshake shown above:
+handshake shown above. Here's the full code:
 
 ```rust,ignore
 impl<T: Io + 'static> ServerProto<T> for ServerLineProto {
@@ -103,33 +105,39 @@ impl<T: Io + 'static> ServerProto<T> for ServerLineProto {
     type Response = String;
     type Error = io::Error;
 
-    /// `Framed<T, LineCodec>` is the return value of `io.framed(LineCodec)`
+    // `Framed<T, LineCodec>` is the return value of
+    // `io.framed(LineCodec)`
     type Transport = Framed<T, line::LineCodec>;
-    type BindTransport = Box<Future<Item = Self::Transport, Error = io::Error>>;
+    type BindTransport = Box<Future<Item = Self::Transport,
+                                    Error = io::Error>>;
 
     fn bind_transport(&self, io: T) -> Self::BindTransport {
         // Construct the line-based transport
         let transport = io.framed(line::LineCodec);
 
-        // The handshake requires that the client sends `You ready?`, so wait to
-        // receive that line. If anything else is sent, error out the connection
+        // The handshake requires that the client sends `You ready?`, so
+        // wait to receive that line. If anything else is sent, error out
+        // the connection
         let handshake = transport.into_future()
-            // If the transport errors out, we don't care about the transport
-            // anymore, so just keep the error
+            // If the transport errors out, we don't care about the
+            // transport anymore, so just keep the error
             .map_err(|(e, _)| e)
             .and_then(|(line, transport)| {
-                // A line has been received, check to see if it is the handshake
+                // A line has been received, check to see if it is the
+                // handshake
                 match line {
                     Some(ref msg) if msg == "You ready?" => {
                         println!("SERVER: received client handshake");
                         // Send back the acknowledgement
-                        Box::new(transport.send("Bring it!".to_string())) as Self::BindTransport
+                        Box::new(transport.send("Bring it!".to_string()))
+                            as Self::BindTransport
                     }
                     _ => {
-                        // The client sent an unexpected handshake, error out
-                        // the connection
+                        // The client sent an unexpected handshake, error
+                        // out the connection
                         println!("SERVER: client handshake INVALID");
-                        let err = io::Error::new(io::ErrorKind::Other, "invalid handshake");
+                        let err = io::Error::new(io::ErrorKind::Other,
+                                                 "invalid handshake");
                         Box::new(future::err(err)) as Self::BindTransport
                     }
                 }

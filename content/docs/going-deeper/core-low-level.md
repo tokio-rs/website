@@ -2,7 +2,7 @@
 title = "Low-level I/O using core"
 description = ""
 menu = "going_deeper"
-weight = 106
+weight = 107
 +++
 
 We've seen some examples of [high level I/O]({{< relref "core.md" >}}) with

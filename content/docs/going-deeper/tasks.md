@@ -2,7 +2,7 @@
 title = "Tasks and executors"
 description = ""
 menu = "going_deeper"
-weight = 107
+weight = 108
 +++
 
 The concepts of a tasks for futures were introduced in [the futures model in

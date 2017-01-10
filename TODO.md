@@ -9,6 +9,7 @@ Web site:
   - acrichto
 - blog post
   - aturon
+- Change simple-server to use String rather than EasyBuf
 - Full edit pass for structure / clarity
 - Pass over TODO links
 - Publish site

@@ -2,7 +2,7 @@
 title = "Larger examples"
 description = ""
 menu = "going_deeper"
-weight = 108
+weight = 109
 +++
 
 Often times when learning a new framework or if you're just getting your feet
