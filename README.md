@@ -8,7 +8,7 @@ The current plan is to announce this website 2016-01-10 or very near this date!
 
 # Tokio's Website
 
-The website for the Tokio project. Lives at [https://tokio.rs](https://tokio.rs).
+The website for the Tokio project. Lives at [http://tokio.rs](http://tokio.rs).
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ brew update && brew install hugo
 Then, get the website running locally:
 
 ```sh
-git clone https://github.com/tokio-rs/website.git
+git clone https://github.com/tokio-rs/website
 cd website
 hugo server
 ```
