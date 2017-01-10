@@ -22,7 +22,7 @@ One of the most useful tools in [`sync`] is the [`oneshot`] module, providing a
 be found as a future in many other languages, a producer/consumer pattern. Let's
 take a look at an example:
 
-[`oneshot`]: https://docs.rs/futures/0.1/futures/sync/fn.oneshot.html
+[`oneshot`]: https://docs.rs/futures/0.1/futures/sync/oneshot/index.html
 
 ```rust
 extern crate futures;
@@ -65,7 +65,7 @@ type of the oneshot.  The `Error` type is [`Canceled`], which happens when the
 [`Sender`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Sender.html
 [`Sender::complete`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Sender.html#method.complete
 [`Receiver`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Receiver.html
-[`Canceled`]: https://docs.rs/futures/0.1/futures/struct.Canceled.html
+[`Canceled`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Canceled.html
 
 This concrete implementation of `Future` can be used (as shown here) to
 communicate values across threads. Each half implements the `Send` trait and is
