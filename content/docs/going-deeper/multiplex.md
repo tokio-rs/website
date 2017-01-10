@@ -102,7 +102,7 @@ struct LineCodec;
 
 impl Codec for LineCodec {
     type In = (RequestId, String);
-    type Out = (RequestId, String);
+    type Out = (RequestId, io::Result<String>);
 
     fn decode(&mut self, buf: &mut EasyBuf) -> Result<Option<(RequestId, String)>, io::Error> {
         // At least 5 bytes are required for a frame: 4 byte head + one byte
@@ -133,8 +133,9 @@ impl Codec for LineCodec {
         Ok(None)
     }
 
-    fn encode(&mut self, msg: (RequestId, String), buf: &mut Vec<u8>) -> io::Result<()> {
+    fn encode(&mut self, msg: (RequestId, io::Result<String>), buf: &mut Vec<u8>) -> io::Result<()> {
         let (request_id, msg) = msg;
+        let msg = msg.expect("This simple example doesn't handle error frames");
 
         let mut encoded_request_id = [0; 4];
         BigEndian::write_u32(&mut encoded_request_id, request_id as u32);

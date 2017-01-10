@@ -9,44 +9,15 @@ let's use it to write a simple pipelined server that uses the [`Service`] trait
 to host an arbitrary service using a simple line-based protocol (much like we
 saw in the [initial proto example](../simple-server)).
 
-Just as with the [echo server](../simple-server), we'll start by writing a codec
-for our protocol. This codec is almost the same as the echo server example,
-except that we won't bother with error responses:
+We'll re-use the codec from the [initial server example](../simple-server):
 
-```rust
-
-# extern crate tokio_core;
-#
-use std::io;
-use tokio_core::io::{Io, Codec, EasyBuf};
-
+```rust,ignore
 pub struct LineCodec;
-
 impl Codec for LineCodec {
-    type In = EasyBuf;
-    type Out = EasyBuf;
-
-    fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
-        if let Some(i) = buf.as_slice().iter().position(|&b| b == b'\n') {
-            // remove the line, including the '\n', from the buffer
-            let mut full_line = buf.drain_to(i + 1);
-
-            // strip the `\n` from the returned buffer
-            Ok(Some(full_line.drain_to(i)))
-        } else {
-            Ok(None)
-        }
-    }
-
-    fn encode(&mut self, item: EasyBuf, into: &mut Vec<u8>)
-              -> io::Result<()>
-    {
-        into.extend(item.as_slice());
-        into.push(b'\n');
-        Ok(())
-    }
+    type In = String;
+    type Out = io::Result<String>;
+    ...
 }
-# fn main() {}
 ```
 
 Now we'll write a server that can host an arbitrary service over this protocol:
@@ -62,38 +33,26 @@ Now we'll write a server that can host an arbitrary service over this protocol:
 # pub struct LineCodec;
 #
 # impl Codec for LineCodec {
-#     type In = EasyBuf;
-#     type Out = EasyBuf;
+#   type In = String;
+#   type Out = io::Result<String>;
 #
-#     fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
-#         if let Some(i) = buf.as_slice().iter().position(|&b| b == b'\n') {
-#             // remove the line, including the '\n', from the buffer
-#             let mut full_line = buf.drain_to(i + 1);
+#   fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
+#       Ok(None)
+#   }
 #
-#             // strip the `\n` from the returned buffer
-#             Ok(Some(full_line.drain_to(i)))
-#         } else {
-#             Ok(None)
-#         }
-#     }
-#
-#     fn encode(&mut self, item: EasyBuf, into: &mut Vec<u8>)
-#               -> io::Result<()>
-#     {
-#         into.extend(item.as_slice());
-#         into.push(b'\n');
-#         Ok(())
-#     }
+#   fn encode(&mut self, out: io::Result<String>, buf: &mut Vec<u8>) -> io::Result<()> {
+#       Ok(())
+#   }
 # }
 #
 use tokio_core::reactor::Core;
 use tokio_core::net::TcpListener;
 use tokio_service::{Service, NewService};
-use futures::{Future, Stream, Sink};
+use futures::{future, Future, Stream, Sink};
 
 fn serve<S>(s: S) -> io::Result<()>
-    where S: NewService<Request = EasyBuf,
-                        Response = EasyBuf,
+    where S: NewService<Request = String,
+                        Response = String,
                         Error = io::Error> + 'static
 {
     let mut core = Core::new()?;
@@ -107,7 +66,11 @@ fn serve<S>(s: S) -> io::Result<()>
         let (writer, reader) = socket.framed(LineCodec).split();
         let mut service = s.new_service()?;
 
-        let responses = reader.and_then(move |req| service.call(req));
+        let responses = reader.and_then(move |req| {
+            service.call(req)
+                // reify service result as a response
+                .then(|res| future::ok(res))
+        });
         let server = writer.send_all(responses)
             .then(|_| Ok(()));
         handle.spawn(server);
@@ -192,11 +155,11 @@ use futures::{BoxFuture, future}
 struct EchoService;
 
 impl Service for EchoService {
-    type Request = EasyBuf;
-    type Response = EasyBuf;
+    type Request = String;
+    type Response = String;
     type Error = io::Error;
-    type Future = BoxFuture<EasyBuf, io::Error>;
-    fn call(&mut self, input: EasyBuf) -> Self::Future {
+    type Future = BoxFuture<String, io::Error>;
+    fn call(&mut self, input: String) -> Self::Future {
         future::ok(input).boxed()
     }
 }

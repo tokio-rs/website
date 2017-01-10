@@ -3,8 +3,6 @@ Before shipping 0.1:
 Web site:
 - `streaming.md`: Write a simple explanation of how to do pipelines, streaming server protocols. (Add note at the end about combining streaming + multiplexing)
   - carllerche
-- blog post
-  - aturon
 - Change simple-server to use String rather than EasyBuf
 - Full edit pass for structure / clarity
 - Pass over TODO links
