@@ -11,7 +11,8 @@ It's broken into several layers, with entry points based on your needs:
 * **The `tokio-proto` layer is the easiest way to build servers and
   clients**. All you have to do is handle message serialization; proto takes
   care of the rest.  The library encompasses a wide range of protocol flavors,
-  including streaming and multiplexed protocols.
+  including [streaming](/docs/going-deeper/streaming) and
+  [multiplexed](/docs/going-deeper/multiplex) protocols.
 
 * **The `tokio-core` layer is good for writing specialized, low-level
   asynchronous code**. It allows you to work directly with I/O objects and event

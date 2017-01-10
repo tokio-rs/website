@@ -168,7 +168,8 @@ impl<T: Io + 'static> ServerProto<T> for LineProto {
     type Response = String;
     type Error = io::Error;
 
-    /// `Framed<T, LineCodec>` is the return value of `io.framed(LineCodec)`
+    // `Framed<T, LineCodec>` is the return value
+    // of `io.framed(LineCodec)`
     type Transport = Framed<T, LineCodec>;
     type BindTransport = Result<Self::Transport, io::Error>;
 
