@@ -1,8 +1,6 @@
 Before shipping 0.1:
 
 Web site:
-- `simple-client.md`: Add (or remove) proto client example
-  - aturon
 - `streaming.md`: Write a simple explanation of how to do pipelines, streaming server protocols. (Add note at the end about combining streaming + multiplexing)
   - carllerche
 - `tasks.md`: Write it
