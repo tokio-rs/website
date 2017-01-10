@@ -42,8 +42,8 @@ A server in `tokio-proto` is made up of three distinct parts:
 
 - A **protocol specification**, which puts together a codec and some basic
   information about the protocol (is it
-[multiplexed](/docs/going-deeper/multiplex)?
-[streaming](/docs/going-deeper/streaming)?).
+[multiplexed]({{< relref "multiplex.md" >}})?
+[streaming]({{< relref "streaming.md" >}})?).
 
 - A **service**, which says how to produce a response given a request. A
   service is basically an asynchronous function.
@@ -185,8 +185,8 @@ And that's it for our codec.
 
 Next, we turn the codec into a full-blown protocol. The `tokio-proto` crate is
 equipped to deal with a variety of protocol styles, including
-[multiplexed](/docs/going-deeper/multiplexed) and
-[streaming](/docs/going-deeper/streaming) protocols. For our line-based
+[multiplexed]({{< relref "multiplex.md" >}}) and
+[streaming]({{< relref "streaming.md" >}}) protocols. For our line-based
 protocol, though, we'll use the simplest style: a pipelined, non-streaming
 protocol:
 

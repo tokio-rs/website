@@ -24,10 +24,10 @@ integration, and there's a [growing list] of other protocol implementations as
 well.
 
 [Hyper]: http://hyper.rs/
-[growing list]: ../../going-deeper/third-party/
+[growing list]: {{< relref "third-party.md" >}}
 
 Along with this initial release, **we're publishing a set of
-[documentation](../../getting-started/tokio)** on this web site, ranging from
+[documentation]({{< relref "tokio.md" >}})** on this web site, ranging from
 getting started guides to meatier examples to deep dives into the implementation
 of the stack. Please take a look, and
 [let us know](https://github.com/tokio-rs/tokio-website/issues) what needs to be

@@ -19,7 +19,7 @@ able to stream in the body in chunks as it is received.
 
 ## [Overview](#overview) {#overview}
 
-Just like in the [echo server](/docs/getting-started/simple-server) guide,
+Just like in the [echo server]({{< relref "simple-server.md" >}}) guide,
 implementing a client or server for a multiplexed protocol is done in three
 parts:
 
@@ -48,13 +48,13 @@ repository. Let's see how it's done.
 
 ## [Step 1: Implement a transport](#implement-transport) {#implement-transport}
 
-In Tokio, a [transport](/docs/going-deeper/architecture/#framing) is any type
+In Tokio, a [transport]({{< relref "architecture.md#framing" >}}) is any type
 implementing [`Stream`]({{< api-url "futures" >}}/stream/trait.Stream.html)` +
 `[`Sink`]({{< api-url "futures" >}}/sink/trait.Sink.html) where the yielded
 items are frames.
 
 We'll implement the same line-based protocol as in the [echo
-server](/docs/getting-started/simple-server) guide, but this time, we will make
+server]({{< relref "simple-server.md" >}}) guide, but this time, we will make
 it streaming. The protocol being implemented is a stream of frames, where each
 frame is a UTF-8 encoded string terminated by a `\n` character. If an empty line
 is received, then the line will be streamed in chunks. All following frames are
@@ -210,7 +210,7 @@ impl Codec for LineCodec {
 ```
 
 The implementation is similar in spirit to the codec we implemented in the
-[echo server](/docs/getting-started/simple-server) example. The main difference
+[echo server]({{< relref "simple-server.md" >}}) example. The main difference
 is that we are returning `pipeline::Frame` values and we are differentiating
 between the message head and a body chunk.
 
@@ -298,7 +298,7 @@ set to [`Body`], but this is not a requirement.
 [`Body`]: https://tokio-rs.github.io/tokio-proto/tokio_proto/streaming/struct.Body.html
 
 This step is similar to the
-[echo server](/docs/getting-started/simple-server#implement-service), except for
+[echo server]({{< relref "simple-server.md#implement-service" >}}), except for
 the change in types for the `Service`, which allows working with body streams:
 
 ```rust,no_run

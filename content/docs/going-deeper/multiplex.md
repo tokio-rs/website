@@ -52,7 +52,7 @@ repository. Let's take it step by step.
 
 ## [Step 1: Implement a transport](#implement-transport) {#implement-transport}
 
-In Tokio, a [transport](/docs/going-deeper/architecture/#framing) is any type
+In Tokio, a [transport]({{< relref "architecture.md#framing" >}}) is any type
 implementing [`Stream`]({{< api-url "futures" >}}/stream/trait.Stream.html)` +
 `[`Sink`]({{< api-url "futures" >}}/sink/trait.Sink.html) where the yielded
 items are frames.
@@ -158,7 +158,7 @@ impl Codec for LineCodec {
 ```
 
 It's almost exactly the same as the codec that we implemented in the [simple
-server](/docs/getting-started/simple-server) example. The main difference is
+server]({{< relref "simple-server.md" >}}) example. The main difference is
 that the codec encodes and decodes frames that include the `RequestId`.
 
 ## [Step 2: Specify the protocol](#specify-protocol) {#specify-protocol}
@@ -186,13 +186,13 @@ impl<T: Io + 'static> ServerProto<T> for LineProto {
 ```
 
 This is exactly the same as the [simple
-server](/docs/getting-started/simple-server#specify-protocol) example, except
+server]({{< relref "simple-server.md#specify-protocol" >}}) example, except
 that we are using `tokio_proto::multiplex::ServerProto`.
 
 ## [Step 3: Implement a service](#implement-service) {#implement-service}
 
 This part is exactly the same as the [simple
-server](/docs/getting-started/simple-server#implement-service)
+server]({{< relref "simple-server.md#implement-service" >}})
 
 ```rust,ignore
 struct Echo;

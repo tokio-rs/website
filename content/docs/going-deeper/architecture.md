@@ -44,21 +44,22 @@ Tokio's abstractions map on to these different layers.
 
 [tokio-core](http://github.com/tokio-rs/tokio-core) provides the lowest level
 building blocks for writing asynchronous I/O code: an
-[event loop](/docs/getting-started/reactor/) and the
-[concrete I/O types](/docs/getting-started/core/#concrete-io), such as TCP and
+[event loop]({{< relref "reactor.md" >}}) and the
+[concrete I/O types]({{< relref "core.md#concrete-io" >}}), such as TCP and
 UDP sockets.  These primitives work on the byte level much like the `std::io`
 types, except the Tokio types are non-blocking. Other sections describe both
-[high-level](/docs/getting-started/core) and [low-level](../core-low-level) APIs
-for working with byte streams.
+[high-level]({{< relref "core.md" >}}) and
+[low-level]({{< relref "core-low-level.md" >}}) APIs for working with byte
+streams.
 
 ## [Framing](#framing) {#framing}
 
 Framing is done with Tokio by first defining a frame type, usually an `enum`,
 then implementing a transport as a
-[`Stream + Sink`](/docs/getting-started/streams-and-sinks) that works with that
+[`Stream + Sink`]({{< relref "streams-and-sinks.md" >}}) that works with that
 frame type. The transport handles encoding and decoding the frame values to
 the raw stream of bytes. This can either be done [manually](TODO) or using a
-helper like [`Codec`](/docs/getting-started/core/#io-codecs).
+helper like [`Codec`]({{< relref "core.md#io-codecs" >}}).
 
 Later sections cover [working with transports](../transports) and
 [handshakes in particular](../handshake).

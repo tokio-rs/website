@@ -14,7 +14,7 @@ and so does [HTTP/2.0](http://httpwg.org/specs/rfc7540.html#starting). This
 section will show how to model that using Tokio.
 
 This guide will build off of the [simple line-based
-protocol](/docs/getting-started/simple-server) we saw earlier. Let's look at the
+protocol]({{< relref "simple-server.md" >}}) we saw earlier. Let's look at the
 protocol specification again:
 
 ```rust,ignore
