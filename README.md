@@ -4,7 +4,7 @@ This website is currently a work in progress and will be announced shortly. If
 you stumble upon this we'd be grateful if you held off on tweeting or otherwise
 sharing it until it's ready.
 
-The current plan is to announce this website 2016-01-11 or very near this date!
+The current plan is to announce this website 2017-01-11 or very near this date!
 
 # Tokio's Website
 
