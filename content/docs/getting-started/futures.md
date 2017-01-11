@@ -286,7 +286,7 @@ trait Future {
     // Blocks until completion.
     fn wait(self) -> Result<Self::Item, Self::Error> { ... }
 
-    // Transforms the result of the future using the gives closure.
+    // Transforms the result of the future using the given closure.
     fn map<F, U>(self, f: F) -> Map<Self, F>
         where F: FnOnce(Self::Item) -> U { ... }
 
