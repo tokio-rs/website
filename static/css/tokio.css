@@ -375,11 +375,3 @@ h4:hover a,
 h5:hover a {
     text-decoration: none;
 }
-
-.banner-warning {
-  background-color: #fecece;
-  font-size: 120%;
-  font-weight: bold;
-  border: 10px solid red;
-  margin: 10px;
-}
