@@ -29,7 +29,7 @@ Most networking applications are structured in a layered fashion.
   original request.
 
 * At the **application** layer, the details of how requests and responses are
-  mapped onto a transport doesn't matter. A single application may be receiving
+  mapped onto a transport don't matter. A single application may be receiving
   and issuing requests for many different protocols. An HTTP server application
   will be receiving HTTP requests, and then in turn, issuing database requests
   or other HTTP requests.
@@ -38,7 +38,7 @@ Each of these layers tend to be implemented in different libraries, and the end
 application will pull in the protocol implementations and just interact with
 them at the request / response exchange layer.
 
-Tokio's abstractions map on to these different layers.
+Tokio's abstractions map onto these different layers.
 
 ## [Byte streams](#byte-streams) {#byte-streams}
 

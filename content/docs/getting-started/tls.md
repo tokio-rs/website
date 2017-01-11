@@ -161,7 +161,7 @@ let request = tls_handshake.and_then(|socket| {
 
 Here we take the future from the previous step, `tls_handshake`, and
 use [`and_then`] again to continue the computation. The [`write_all`]
-combinator writes the entirety of our HTTP request, issueing multiple
+combinator writes the entirety of our HTTP request, issuing multiple
 writes as necessary. Here we're just doing a simple HTTP/1.0 request,
 so there's not much we need to write.
 

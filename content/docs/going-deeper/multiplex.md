@@ -13,7 +13,7 @@ the request is processed. Generally, multiplexed protocols will make better
 usage of available resources like TCP sockets.
 
 Since responses arrive out of order, a **request ID** is used to match
-reesponses with their associated requests. When the client issues a request, the
+responses with their associated requests. When the client issues a request, the
 request will be paired with an identifier. The server processes the request, and
 sends a response to the client paired with the same request identifier. This
 allows the client to match the response with the request that it issued.
