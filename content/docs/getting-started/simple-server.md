@@ -75,7 +75,7 @@ pub struct LineCodec;
 ```
 
 Codecs in Tokio implement the  [`Codec` trait]({{< api-url "core"
->}}/io/trait.Codec.html) trait, which implements message encoding and decoding.
+>}}/io/trait.Codec.html), which implements message encoding and decoding.
 To start with, we'll need to specify the message type. `In` gives the types of
 incoming messages *after decoding*, while `Out` gives the type of outgoing
 messages *prior to encoding*:
