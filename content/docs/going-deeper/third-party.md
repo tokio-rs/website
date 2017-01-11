@@ -48,3 +48,4 @@ list, please feel free to send a PR!
 [`capnproto-rust`]: https://github.com/dwrensha/capnproto-rust
 [`tk-sendfile`]: https://crates.io/crates/tk-sendfile
 [`tokio-postgres`]: https://crates.io/crates/tokio-postgres
+[`thrussh`]: https://crates.io/crates/thrussh
