@@ -6,8 +6,8 @@ if [ ! -d tmp ]; then
 futures = "0.1"
 futures-cpupool = "0.1"
 tokio-core = "0.1"
-tokio-proto = { git = "https://github.com/tokio-rs/tokio-proto" }
-tokio-service = { git = "https://github.com/tokio-rs/tokio-service" }
+tokio-proto = "0.1"
+tokio-service = "0.1"
 tokio-timer = { git = "https://github.com/tokio-rs/tokio-timer" }
 tokio-minihttp = { git = "https://github.com/tokio-rs/tokio-minihttp" }
 tokio-tls = "0.1"
