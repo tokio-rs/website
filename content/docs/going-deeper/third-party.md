@@ -16,8 +16,8 @@ of Tokio itself, however, filling in more functionality!
 * [`tokio-openssl`] is similar to [`tokio-tls`] but hardwired to OpenSSL.
 * [`tokio-uds`] is a Unix library for supporting Unix Domain Sockets in the same
   way that `tokio_core::net` works with TCP sockets
-* [`tokio-inotify`] enables the use of inotify file descriptors as a `Stream`.
-* [`tokio-signal`] allows abstraction Unix signals as a `Stream`.
+* [`tokio-inotify`] maps inotify file descriptors to a `Stream`.
+* [`tokio-signal`] maps Unix signals to a `Stream`.
 * [`tokio-process`] enables asynchronous process managment, both for child
   processes exiting as well as I/O pipes to children.
 * [`trust-dns`] is an asynchronous DNS client and server, supporting features
