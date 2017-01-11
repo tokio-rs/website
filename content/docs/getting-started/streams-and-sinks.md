@@ -222,7 +222,7 @@ After calling `core.run`, the event loop blocks until a connection
 arrives. Suppose two connections arrive at the same time.  At that point, the
 event loop will emit two sockets on the `connections` stream, which will result
 in two spawned `Hello, world!` futures. The event loop will then attempt to
-complete those futures, one at a time.  Each futures will attempt to write to
+complete those futures, one at a time.  Each future will attempt to write to
 its socket. If its socket is not ready to receive data, the future will go into
 a *waiting state* until the status of the socket changes; the event loop *does
 not* block. Once the socket *is* ready, the event loop will again start trying
