@@ -26,7 +26,7 @@ well.
 [Hyper]: http://hyper.rs/
 [growing list]: {{< relref "third-party.md" >}}
 
-Along with this initial release, **we're publishing a set of
+Along with this initial release, **we're publishing
 [documentation]({{< relref "tokio.md" >}})** on this web site, ranging from
 getting started guides to meatier examples to deep dives into the implementation
 of the stack. Please take a look, and
@@ -35,7 +35,7 @@ improved!
 
 The 0.1 release is a **beta quality** release. The stack has undergone a fair
 amount of testing, usage, and feedback, but it's still early days, and we don't
-have a lot of production use under out belt yet. Intrepid users are welcome to
+have a lot of production use under our belt yet. Intrepid users are welcome to
 work toward production usage, but you should expect bugs and limitations. The
 [gitter channel] is active and helpful for both learning and debugging.
 
