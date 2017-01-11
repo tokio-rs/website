@@ -70,13 +70,15 @@ Next up, let's get through the boilerplate of setting up our server:
 
 ```rust,ignore
 fn main() {
-    let addr = "127.0.0.1:8080".parse().unwrap();
+    let addr = "127.0.0.1:8080".parse().expect("Failed to parse address");
     let thread_pool = CpuPool::new(10);
 
     let db_url = "postgres://postgres@localhost";
     let db_config = r2d2::Config::default();
-    let db_manager = PostgresConnectionManager::new(db_url, TlsMode::None).unwrap();
-    let db_pool = r2d2::Pool::new(db_config, db_manager).unwrap();
+    let db_manager = PostgresConnectionManager::new(db_url, TlsMode::None)
+        .expect("Failed to create connection manager");
+    let db_pool = r2d2::Pool::new(db_config, db_manager)
+       .expect("Failed to create connection pool");
 
     TcpServer::new(tokio_minihttp::Http, addr).serve(move || {
         // ...
@@ -231,7 +233,8 @@ our implementation of `Service::call` let's take a look at the last piece:
 
 ```rust,ignore
 msg.map(|msg| {
-    let json = rustc_serialize::json::encode(&msg).unwrap();
+    let json = rustc_serialize::json::encode(&msg)
+        .expect("Cannot convert message to JSON");
     let mut response = Response::new();
     response.header("Content-Type", "application/json");
     response.body(&json);
@@ -314,7 +317,8 @@ impl Service for Server {
         });
 
         msg.map(|msg| {
-            let json = rustc_serialize::json::encode(&msg).unwrap();
+            let json = rustc_serialize::json::encode(&msg)
+                .expect("Cannot convert message to JSON");
             let mut response = Response::new();
             response.header("Content-Type", "application/json");
             response.body(&json);
@@ -324,13 +328,15 @@ impl Service for Server {
 }
 
 fn main() {
-    let addr = "127.0.0.1:8080".parse().unwrap();
+    let addr = "127.0.0.1:8080".parse().expect("Failed to parse address");
     let thread_pool = CpuPool::new(10);
 
     let db_url = "postgres://postgres@localhost";
     let db_config = r2d2::Config::default();
-    let db_manager = PostgresConnectionManager::new(db_url, TlsMode::None).unwrap();
-    let db_pool = r2d2::Pool::new(db_config, db_manager).unwrap();
+    let db_manager = PostgresConnectionManager::new(db_url, TlsMode::None)
+        .expect("Failed to create connection manager");
+    let db_pool = r2d2::Pool::new(db_config, db_manager)
+       .expect("Failed to create connection pool");;
 
     TcpServer::new(tokio_minihttp::Http, addr).serve(move || {
         Ok(Server {

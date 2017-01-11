@@ -44,7 +44,7 @@ fn main() {
     });
 
     let rx = rx.map(|x| x + 3);
-    let result = rx.wait().unwrap();
+    let result = rx.wait().expect("Computation failed");
     assert_eq!(result, 203);
 }
 ```
@@ -104,7 +104,7 @@ fn main() {
     });
 
     let future = future::poll_fn(|| tx.poll_cancel());
-    future.wait().unwrap();
+    future.wait().expect("Future failed to complete");
 }
 ```
 
@@ -161,7 +161,7 @@ fn stdin() -> BoxStream<String, io::Error> {
         }
     });
 
-    rx.then(|r| r.unwrap()).boxed()
+    rx.then(|r| r.expect("Future was canceled")).boxed()
 }
 #
 # fn main() {}

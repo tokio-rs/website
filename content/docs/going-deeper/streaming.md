@@ -383,7 +383,7 @@ impl Service for PrintStdout {
 
 fn main() {
     // Specify the localhost address
-    let addr = "0.0.0.0:12345".parse().unwrap();
+    let addr = "0.0.0.0:12345".parse().expect("Failed to parse address");
 
     // The builder requires a protocol and an address
     let server = TcpServer::new(LineProto, addr);

@@ -44,7 +44,7 @@ fn serve<S>(s: S) -> io::Result<()>
     let mut core = Core::new()?;
     let handle = core.handle();
 
-    let address = "0.0.0.0:12345".parse().unwrap();
+    let address = "0.0.0.0:12345".parse().expect("Failed to parse address");
     let listener = TcpListener::bind(&address, &handle)?;
 
     let connections = listener.incoming();
