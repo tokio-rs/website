@@ -456,7 +456,7 @@ entire lifetime of the future.
 Your own usage of unpark events may be a little more complicated than this,
 however. You may want to take a look at their usage in the [`buffer_unordered`
 combinator] or the [`futures_unordered` combinator] which handle many of the
-subtelties of working with unpark events.
+subtleties of working with unpark events.
 
 [`buffer_unordered` combinator]: https://github.com/alexcrichton/futures-rs/blob/master/src/stream/buffer_unordered.rs
 [`futures_unordered` combinator]: https://github.com/alexcrichton/futures-rs/blob/master/src/stream/futures_unordered.rs
