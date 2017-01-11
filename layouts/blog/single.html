@@ -1,4 +1,5 @@
 {{ partial "header" . }}
+{{ $currentURL := .URL }}
 
 <div class="tk-pageheader">
   <div class="container">
@@ -16,7 +17,7 @@
           <ul class="nav">
             {{ range .Site.Menus.blog }}
             <li class="active">
-              <a href="{{ .URL }}" class="text-muted">{{ .Name }}</a>
+              <a href="{{ .URL }}" {{ if not (eq $currentURL .URL) }}class="text-muted"{{ end }}>{{ .Name }}</a>
             </li>
             {{ end }}
           </ul>
