@@ -30,7 +30,7 @@ Along with this initial release, **we're publishing
 [documentation]({{< relref "tokio.md" >}})** on this web site, ranging from
 getting started guides to meatier examples to deep dives into the implementation
 of the stack. Please take a look, and
-[let us know](https://github.com/tokio-rs/tokio-website/issues) what needs to be
+[let us know](https://github.com/tokio-rs/website/issues) what needs to be
 improved!
 
 The 0.1 release is a **beta quality** release. The stack has undergone a fair
