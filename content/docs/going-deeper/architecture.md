@@ -83,8 +83,8 @@ logic to map that to an implementation of `Service`.
 
 [tokio-proto]: https://github.com/tokio-rs/tokio-proto
 
-A big advantage of having a standardized `Service` interface is that it is
-possible to write reusable middleware components that add useful
+A big advantage of having a standardized `Service` interface is that it makes
+it possible to write reusable middleware components that add useful
 functionality.
 
 ## [Application](#application) {#application}
