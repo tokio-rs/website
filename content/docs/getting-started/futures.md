@@ -227,7 +227,7 @@ fn main() {
     // completes first!
     let winner = timeout.select(prime).map(|(win, _)| win);
 
-    // now block until we have a winner, than print what happened
+    // now block until we have a winner, then print what happened
     match winner.wait() {
         Ok(true) => println!("Prime"),
         Ok(false) => println!("Not prime"),
