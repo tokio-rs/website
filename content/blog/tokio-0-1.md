@@ -10,7 +10,7 @@ Today we are publishing the preliminary version of the Tokio stack, 0.1!
 futures,
 [a zero-cost abstraction for asynchronous programming in Rust](http://aturon.github.io/blog/2016/08/11/futures/).
 It provides a suite of basic tools, `tokio-core`, for asynchronous I/O with
-futures.  It also provide a higher-level layer, `tokio-proto`, for easily
+futures.  It also provides a higher-level layer, `tokio-proto`, for easily
 building sophisticated servers and clients; all you have to do is handle message
 serialization. You can use the Tokio stack to handle a wide range of protocols,
 including streaming and multiplexed protocols, as well as more specialized
@@ -35,7 +35,7 @@ improved!
 
 The 0.1 release is a **beta quality** release. The stack has undergone a fair
 amount of testing, usage, and feedback, but it's still early days, and we don't
-have a lot of production use under our belt yet. Intrepid users are welcome to
+have a lot of production use under our belt yet. Intrepid users are welcomed to
 work toward production usage, but you should expect bugs and limitations. The
 [gitter channel] is active and helpful for both learning and debugging.
 
