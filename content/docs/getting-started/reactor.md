@@ -147,7 +147,7 @@ that we've been using takes `&Handle` as its second argument.
 
 ### [`Remote`](#remote) {#remote}
 
-With [`Handle`] we're now able to retain a reference to the event loop without
+With [`Handle`], we're now able to retain a reference to the event loop without
 holding a [`Core`] itself. The [`Handle`] type itself, however, is not sendable
 across threads; it is only usable on the event loop thread itself, which gives
 substantial performance benefits. If you need to communicate with the event loop
@@ -155,7 +155,7 @@ from a different thread, you can use the [`Remote`] type as a form of
 "downgraded" handle. You can get a [`Remote`] by calling the [`remote`] method
 on a [`Handle`].
 
-A [`Remote`], like [`Handle`] is associated with an event loop (e.g. it's
+A [`Remote`], like a [`Handle`], is associated with an event loop (i.e. it's
 another kind of handle to [`Core`]). [`Remote`], however, can be sent across
 threads. The [`Remote`] type also currently only has a
 [`spawn`][`Remote::spawn`] function. This [`spawn`][`Remote::spawn`] is
