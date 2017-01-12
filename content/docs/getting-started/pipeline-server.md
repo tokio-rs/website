@@ -155,7 +155,7 @@ impl Service for EchoService {
     type Response = String;
     type Error = io::Error;
     type Future = BoxFuture<String, io::Error>;
-    fn call(&mut self, input: String) -> Self::Future {
+    fn call(&self, input: String) -> Self::Future {
         future::ok(input).boxed()
     }
 }
