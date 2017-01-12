@@ -53,7 +53,7 @@ The [`Core`] type has a relatively small API surface area; the main item of
 interest is the [`run`][`Core::run`] method. This method takes a future, `F`,
 and starts executing an event loop on the current thread until the future `F` is
 completed. While this may look similar to [`Future::wait`], there's a crucial
-difference: while it's waiting for the future to resolve it executes other work
+difference: while it's waiting for the future to resolve, it executes other work
 on the event loop rather than just blocking the thread. As we saw in the
 [previous section](../streams-and-sinks), that other work includes tasks that
 were spawned onto the event loop.
@@ -108,7 +108,7 @@ loop. Consequently, the [`Core`] type provides the ability to acquire an owned
 [`Core::handle`] method.
 
 Let's first take a look at the `Handle`'s [`spawn`][`Handle::spawn`] method. Like
-[`Core::run`], [`spawn`][`Handle::spawn`] will ensure the provided future run to
+[`Core::run`], [`spawn`][`Handle::spawn`] will ensure the provided future runs to
 completion. Unlike [`Core::run`], however, spawning requires the item/error type
 of a future to be `()` and also requires the `'static` bound. The requirement of
 `()` signifies that future is executed in the background of the event loop to
@@ -141,9 +141,9 @@ fn process(client: TcpStream) -> Box<Future<Item = (), Error = ()>> {
 }
 ```
 
-Beyond spawning threads, a [`Handle`] is also use for constructing objects
-associated with the event loop. For example the [`TcpListener::bind`] method
-that we've been using takes `&Handle` as its second argument.
+Beyond spawning threads, a [`Handle`] is also used for constructing objects
+associated with the event loop. For example, the [`TcpListener::bind`] method
+that we've been using takes a `&Handle` as its second argument.
 
 ### [`Remote`](#remote) {#remote}
 
@@ -166,7 +166,7 @@ future is then spawned onto the event loop to be executed locally.
 The closure provided, when run, is yielded a [`Handle`] as proof that it's
 running on the same thread as the event loop. This handle can then be used to
 create and work with I/O objects. Like [`Handle::spawn`], the [`Remote::spawn`]
-method requires the item/error types of the future to be `()`, as it's run
+method requires the item/error types of the future to be `()` as it's run
 concurrently.
 
 [IOCP]: https://www.freebsd.org/cgi/man.cgi?query=kqueue&sektion=2
