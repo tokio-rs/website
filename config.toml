@@ -2,6 +2,7 @@ baseurl = "https://tokio.rs"
 title = "Tokio"
 languageCode = "en-us"
 canonifyURLs = "true"
+googleAnalytics = "UA-90234741-1"
 
 [params]
 futuresDocsURL = "https://docs.rs/futures/0.1/futures"

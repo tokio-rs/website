@@ -227,7 +227,7 @@ fn main() {
     // completes first!
     let winner = timeout.select(prime).map(|(win, _)| win);
 
-    // now block until we have a winner, than print what happened
+    // now block until we have a winner, then print what happened
     match winner.wait() {
         Ok(true) => println!("Prime"),
         Ok(false) => println!("Not prime"),
@@ -286,7 +286,7 @@ trait Future {
     // Blocks until completion.
     fn wait(self) -> Result<Self::Item, Self::Error> { ... }
 
-    // Transforms the result of the future using the gives closure.
+    // Transforms the result of the future using the given closure.
     fn map<F, U>(self, f: F) -> Map<Self, F>
         where F: FnOnce(Self::Item) -> U { ... }
 

@@ -45,7 +45,7 @@ pools.
 [`postgres`]: https://github.com/sfackler/rust-postgres
 [crates.io]: https://crates.io
 
-Alright, a general layout in mind let's pull in our dependencies:
+With a general layout in mind, let's pull in our dependencies:
 
 ```rust
 // basic dependencies from echo server before
@@ -100,7 +100,7 @@ TcpServer::new(tokio_minihttp::Http, addr).serve(move || {
 
 Here we're using [`TcpServer`] in the [`tokio-proto`] crate, and we're
 specifying the [`Http`] protocol implementation in the [`tokio-minihttp`] crate.
-Behind the scenes this is going to create an event loop, configure it to accept
+Behind the scenes, this is going to create an event loop, configure it to accept
 TCP connections, and then create a new service (with our closure) for each
 connection. All connections will be handled by the [`Http`] protocol
 implementation.
@@ -108,8 +108,8 @@ implementation.
 [`TcpServer`]: https://tokio-rs.github.io/tokio-proto/tokio_proto/struct.TcpServer.html
 [`Http`]: https://tokio-rs.github.io/tokio-minihttp/tokio_minihttp/struct.Http.html
 
-Alright so with that out of the way, let's take a look at what our actual
-service is:
+With that out of the way, let's take a look at what our actual service
+is:
 
 ```rust,ignore
 use tokio_minihttp::{Request, Response};
@@ -137,7 +137,7 @@ TcpServer::new(tokio_minihttp::Http, addr).serve(move || {
 ```
 
 Our `Server` is a [`Service`] which will map [`tokio-minihttp`]'s [`Request`]
-type to a [`Response`] type. This basically just means that we'll be taking HTTP
+type to a [`Response`] type. This means that we'll be taking HTTP
 requests and returning HTTP responses. When we actually construct a `Server`
 we'll be sure to store handles to our [`CpuPool`] to execute work on along
 with the pool of database connections as well.
@@ -241,7 +241,7 @@ msg.map(|msg| {
 
 The [`spawn_fn`] function returned a [`CpuFuture`] representing the loaded row
 (`Message`) above. Our service will take this loaded instance of `Message` and
-then transforms it to an HTTP response by serializing it to JSON and filling
+then transform it to an HTTP response by serializing it to JSON and filling
 out a [`Response`] from the [`tokio-minihttp`] crate. Finally we see the
 [`boxed`] method is used to package up this whole future into a trait object so
 we can return it.

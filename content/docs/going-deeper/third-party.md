@@ -23,7 +23,7 @@ of Tokio itself, however, filling in more functionality!
 * [`trust-dns`] is an asynchronous DNS client and server, supporting features
   like DNSSec as well
 * [`capnproto-rust`] is an implementation of Cap'n Proto for Rust which has the
-  ability to with futures as well
+  ability to work with futures as well
 * [`tk-sendfile`] allows using the `sendfile` syscall with Tokio
 * [`tokio-postgres`] is an asynchronous PostgreSQL driver
 
