@@ -10,7 +10,7 @@ At this point, we've got a pretty solid grasp of what event loops are and how
 business and do some I/O! In this section, we'll cover "high-level" I/O with
 `tokio-core`, where we'll work with futures, streams and sinks. A
 [later section](../../going-deeper/core-low-level) will explain how to work at
-the lowest level with `tokio-core`, which gives you maximal control over things
+the lowest level with [`tokio-core`], which gives you maximal control over things
 like buffering strategy.
 
 ### [Concrete I/O types](#concrete-io) {#concrete-io}
@@ -26,7 +26,7 @@ servers and should look very similar to their [standard library
 counterparts][`std::net`].
 
 The main difference between [`tokio_core::net`] and [`std::net`] is that the
-Tokio versions are all *non-blocking*. The `Read`/`Write` trait implementations
+Tokio versions are all *non-blocking*. The [`Read`]/[`Write`] trait implementations
 are not blocking and will return a "would block" error instead of blocking (see
 the [low-level I/O section](../../going-deeper/core-low-level) for more).
 Similarly types are also enhanced with futures-aware methods such as
@@ -40,7 +40,7 @@ number of utilities in the [`tokio_core::io`] module for working with I/O
 objects. When using these utilities, it's important to remember a few points:
 
 * They only work with "futures aware" and non-blocking
-  implementations of `Read`/`Write`, although this should be the default if Tokio
+  implementations of [`Read`]/[`Write`], although this should be the default if Tokio
   types are used internally.
 * They are intended to be *helpers*. For your particular use case they may not
   always be the most efficient. The helpers are intended to help you hit the
@@ -61,7 +61,7 @@ with default implementations are of particular note.
 
 The [`Io::split`] method assists in working with "halves" of a stream
 independently. This method essentially takes a `Read + Write` objects and
-returns two objects that implement [`Read`] and `Write`, respectively. This can
+returns two objects that implement [`Read`] and [`Write`], respectively. This can
 often be convenient when working with futures to ensure ownership is
 managed correctly.
 
@@ -75,7 +75,7 @@ especially in an asynchronous context. Additionally, many protocols aren't
 really byte-oriented but rather have a higher level "framing" they're using.
 Often this means that abstractions like [`Stream`] and [`Sink`] from the
 [`futures`] crate are a perfect fit for a protocol, and you just need to somehow
-get a stream of bytes into a [`Stream`] and `Sink`. Thankfully, [`tokio-core`]
+get a stream of bytes into a [`Stream`] and [`Sink`]. Thankfully, [`tokio-core`]
 helps you do exactly this with the last method of the [`Io`] trait,
 [`Io::framed`].
 
