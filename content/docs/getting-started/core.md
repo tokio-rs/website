@@ -5,12 +5,12 @@ menu = "getting_started"
 weight = 6
 +++
 
-At this point we've got a pretty solid grasp on what event loops are and how
+At this point, we've got a pretty solid grasp of what event loops are and how
 [`Core`] allows us to work with futures on an event loop. Let's get down to
 business and do some I/O! In this section, we'll cover "high-level" I/O with
 `tokio-core`, where we'll work with futures, streams and sinks. A
 [later section](../../going-deeper/core-low-level) will explain how to work at
-the lowest level with `tokio-core`, which gives you maximal control over things
+the lowest level with [`tokio-core`], which gives you maximal control over things
 like buffering strategy.
 
 ### [Concrete I/O types](#concrete-io) {#concrete-io}
@@ -26,7 +26,7 @@ servers and should look very similar to their [standard library
 counterparts][`std::net`].
 
 The main difference between [`tokio_core::net`] and [`std::net`] is that the
-Tokio versions are all *non-blocking*. The `Read`/`Write` trait implementations
+Tokio versions are all *non-blocking*. The [`Read`]/[`Write`] trait implementations
 are not blocking and will return a "would block" error instead of blocking (see
 the [low-level I/O section](../../going-deeper/core-low-level) for more).
 Similarly types are also enhanced with futures-aware methods such as
@@ -35,12 +35,12 @@ a stream.
 
 ### [I/O helpers](#io-helpers) {#io-helpers}
 
-In addition to the concrete networking types [`tokio-core`] also provides a
+In addition to the concrete networking types, [`tokio-core`] also provides a
 number of utilities in the [`tokio_core::io`] module for working with I/O
-objects When using these utilities, it's important to remember a few points:
+objects. When using these utilities, it's important to remember a few points:
 
-* They only work with "futures aware" and nonblocking
-  implementations of `Read`/`Write`, though this should be the default if Tokio
+* They only work with "futures aware" and non-blocking
+  implementations of [`Read`]/[`Write`], although this should be the default if Tokio
   types are used internally.
 * They are intended to be *helpers*. For your particular use case they may not
   always be the most efficient. The helpers are intended to help you hit the
@@ -56,12 +56,12 @@ often required to be `'static`, making borrowing impossible.
 
 In addition to these functions, the module includes an [`Io`] trait. This trait
 expresses the concept of an I/O object which implements both [`Read`] and
-`Write`. [`Io`] currently doesn't have any required methods, but two methods
+[`Write`]. [`Io`] currently doesn't have any required methods, but two methods
 with default implementations are of particular note.
 
 The [`Io::split`] method assists in working with "halves" of a stream
 independently. This method essentially takes a `Read + Write` objects and
-returns two objects that implement [`Read`] and `Write`, respectively. This can
+returns two objects that implement [`Read`] and [`Write`], respectively. This can
 often be convenient when working with futures to ensure ownership is
 managed correctly.
 
@@ -75,7 +75,7 @@ especially in an asynchronous context. Additionally, many protocols aren't
 really byte-oriented but rather have a higher level "framing" they're using.
 Often this means that abstractions like [`Stream`] and [`Sink`] from the
 [`futures`] crate are a perfect fit for a protocol, and you just need to somehow
-get a stream of bytes into a [`Stream`] and `Sink`. Thankfully, [`tokio-core`]
+get a stream of bytes into a [`Stream`] and [`Sink`]. Thankfully, [`tokio-core`]
 helps you do exactly this with the last method of the [`Io`] trait,
 [`Io::framed`].
 
@@ -88,9 +88,9 @@ traits, using the [`Codec`] provided to decode and encode frames. Note that a
 
 As we saw [much earlier](../simple-server), a [`Codec`] defines how to decode
 data received on the I/O stream, as well as how to encode frames back into the
-I/O stream. This sort of operation requires some level of buffering which is
+I/O stream. This sort of operation requires some level of buffering, which is
 typically quite a tricky topic in asynchronous I/O handling. The [`Codec`] trait
-provides an [`EasyBuf`] for decoding which is essentially a reference-counted
+provides an [`EasyBuf`] for decoding, which is essentially a reference-counted
 owned list of bytes. This allows efficient extraction of slices of the buffer
 through [`EasyBuf::drain_to`]. For encoding a [`Codec`] simply append bytes to
 the provided `Vec`.
@@ -112,10 +112,10 @@ also provides a number of methods for working with it conveniently:
   an error if the entire datagram couldn't be sent at once.
 * [`recv_dgram`] expresses reading a datagram into a buffer, yielding both the
   buffer and the address it came from.
-* [`framed`][`UdpSocket::framed`] acts similarly to [`Io::framed`] in easing
+* [`framed`][`UdpSocket::framed`] acts similarly to [`Io::framed`] in easing the
   transformation of a [`UdpSocket`] to a [`Stream`] and a [`Sink`]. Note that
   this method takes a [`UdpCodec`] which differs from [`Codec`] to better suit
-  datagrams as opposed to a byte stream.
+  datagrams instead of byte streams.
 
 [IOCP]: https://www.freebsd.org/cgi/man.cgi?query=kqueue&sektion=2
 [`Core::handle`]: https://docs.rs/tokio-core/0.1/tokio_core/reactor/struct.Core.html#method.handle

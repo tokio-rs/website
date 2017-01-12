@@ -95,16 +95,16 @@ The downside to this approach is only that it's not on stable Rust yet. As of
 the time of this writing [`impl Trait`] is available on nightly, but will likely
 take some time to stabilize. You can track the progress of this feature at
 [rust-lang/rust#34511]. The good news, however, is that as soon as `impl
-Trait` hits stable Rust all crates using futures can immediately benefit. It
+Trait` hits stable Rust, all crates using futures can immediately benefit. It
 should be a backwards-compatible extension to change return types from `Box` to
-[`impl Trait`]
+[`impl Trait`].
 
 [rust-lang/rust#34511]: https://github.com/rust-lang/rust/issues/34511
 
 ### [Named types](#named-types) {#named-types}
 [return-named-types]: #named-types
 
-If you'd like to not return a `Box`, but want to stick with stable Rust, another
+If you wouldn't like to return a `Box` and want to stick with stable Rust, another
 option is to write the return type directly:
 
 ```rust
@@ -120,7 +120,7 @@ fn add_10<F>(f: F) -> Map<F, fn(i32) -> i32>
 }
 ```
 
-Here we name the return type exactly as the compiler sees it. The [`map`]
+Here we name the return type exactly as the compiler sees it. The `map`
 function returns the [`Map`] struct which internally contains the future and the
 function to perform the map.
 
@@ -129,8 +129,8 @@ The upside to this approach is that it doesn't have the runtime overhead of
 
 The downside, however, is that it's often quite difficult to name the type.
 Sometimes the types can get quite large or be unnameable altogether. Here we're
-using a function pointer (`fn(i32) -> i32`) but we would ideally use a closure.
-Unfortunately the return type cannot name the closure, for now. It also leads to
+using a function pointer (`fn(i32) -> i32`), but we would ideally use a closure.
+Unfortunately, the return type cannot name the closure, for now. It also leads to
 very verbose signatures, and leaks implementation details to clients.
 
 [`Map`]: https://docs.rs/futures/0.1/futures/future/struct.Map.html
