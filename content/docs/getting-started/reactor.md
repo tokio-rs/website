@@ -45,7 +45,7 @@ The heart of the `tokio-core` library is the [`tokio_core::reactor`] module;
 "reactor" is a common synonym for "event loop". The module contains the [`Core`]
 type, which is the actual event loop, as well as the [`Handle`] and [`Remote`]
 types, which are used to send messages and interact with the event loop without
-holding the [`Core`] itself.
+holding the [`Core`].
 
 ### [`Core`](#core) {#core}
 
@@ -147,27 +147,25 @@ that we've been using takes a `&Handle` as its second argument.
 
 ### [`Remote`](#remote) {#remote}
 
-With [`Handle`], we're now able to retain a reference to the event loop without
-holding a [`Core`] itself. The [`Handle`] type itself, however, is not sendable
-across threads; it is only usable on the event loop thread itself, which gives
-substantial performance benefits. If you need to communicate with the event loop
-from a different thread, you can use the [`Remote`] type as a form of
-"downgraded" handle. You can get a [`Remote`] by calling the [`remote`] method
-on a [`Handle`].
+With [`Handle`], we're able to retain a reference to the event loop without
+holding a [`Core`]. To provide substantial performance benefits, the [`Handle`]
+type is not sendable across threads; it is only usable on the event loop
+thread. If you need to communicate with the event loop from a different thread,
+you can use the [`Remote`] type.
 
-A [`Remote`], like a [`Handle`], is associated with an event loop (i.e. it's
-another kind of handle to [`Core`]). [`Remote`], however, can be sent across
-threads. The [`Remote`] type also currently only has a
-[`spawn`][`Remote::spawn`] function. This [`spawn`][`Remote::spawn`] is
-importantly different from [`Handle::spawn`] in that it takes a *closure* which
-is `Send` (i.e. it can be sent across threads) which creates a future. The created
-future is then spawned onto the event loop to be executed locally.
+A [`Remote`] is a "downgraded" [`Handle`] created by calling the [`remote`]
+method on a [`Handle`]. The [`Remote`] type currently has only
+a [`spawn`][`Remote::spawn`] method. Unlike [`Handle::spawn`], [`Remote::spawn`]
+takes a *closure* that creates a future and must be `Send` (i.e. it can be sent
+across threads).
 
-The closure provided, when run, is yielded a [`Handle`] as proof that it's
-running on the same thread as the event loop. This handle can then be used to
-create and work with I/O objects. Like [`Handle::spawn`], the [`Remote::spawn`]
-method requires the item/error types of the future to be `()` as it's run
-concurrently.
+When the closure is run, it is yielded a [`Handle`] as proof that it's running
+on the same thread as the event loop. This handle can then be used to create and
+work with I/O objects. The created future is spawned onto the event loop to be
+executed locally.
+
+Like [`Handle::spawn`], the [`Remote::spawn`] method requires the item/error
+types of the future to be `()` as it's run concurrently.
 
 [IOCP]: https://www.freebsd.org/cgi/man.cgi?query=kqueue&sektion=2
 [`Core::handle`]: https://docs.rs/tokio-core/0.1/tokio_core/reactor/struct.Core.html#method.handle
