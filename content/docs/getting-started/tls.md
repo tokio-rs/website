@@ -4,7 +4,7 @@ menu = "getting_started"
 weight = 8
 +++
 
-Much of the functionality throughout the Tokio stack is generic to be as
+Much of the functionality throughout the Tokio stack is generic, so as to be as
 flexible as possible. A great way to show an example of that is to explore how
 we might make a simple HTTP request over HTTPS using TLS. In this example we'll
 only use `tokio-core` for now rather than `tokio-proto`, but the concepts
@@ -67,8 +67,8 @@ let handle = core.handle();
 let addr = "www.rust-lang.org:443".to_socket_addrs().unwrap().next().unwrap();
 ```
 
-This is our standard version of creating an event loop and a handle to it. As
-an added piece here we're using [`to_socket_addrs`] in the standard library to
+This is our standard version of creating an event loop and adding a handle to it.
+As an added piece here we're using the standard library's [`to_socket_addrs`] to
 resolve the hostname `www.rust-lang.org` before our event loop runs. Note that
 this DNS query happens synchronously, but there are a number of options for
 asynchronous DNS queries in the ecosystem.
@@ -86,16 +86,16 @@ This uses the [`native-tls`] crate to create an instance of [`TlsConnector`]
 which is used to create new TLS connections. This is where TLS settings can
 be configured, but for us all of the defaults will work fine.
 
-Afterwards we issue a connection to `www.rust-lang.org` to the previously
+Afterwards, we issue a connection to `www.rust-lang.org` to the previously
 resolved address, using [`TcpStream::connect`]. Note that this returns a future
-so we don't actually have the socket yet, but rather it will be fully connected
+as we don't actually have the socket yet. It will be fully connected
 at some later point in time.
 
 [`native-tls`]: https://github.com/sfackler/rust-native-tls
 [`TlsConnector`]: https://docs.rs/native-tls/0.1/native_tls/struct.TlsConnector.html
 [`TcpStream::connect`]: https://tokio-rs.github.io/tokio-core/tokio_core/net/struct.TcpStream.html#method.connect
 
-Once our socket is available we need to perform three tasks to download the
+Once our socket is available, we need to perform three tasks to download the
 rust-lang.org home page:
 
 1. Perform a TLS handshake. The home page is only served over HTTPS, and we've
@@ -116,17 +116,17 @@ let tls_handshake = socket.and_then(|socket| {
 });
 ```
 
-Here we use the [`and_then`] method on the [`Future`] trait to continue
+Here, we use the [`and_then`] method on the [`Future`] trait to continue
 building on the future returned by [`TcpStream::connect`]. The [`and_then`] method
 takes a closure which receives the resolved value of this previous future. In
-this case `socket` will have type [`TcpStream`]. The [`and_then`] closure,
+this case, `socket` will have type [`TcpStream`]. The [`and_then`] closure,
 however, will not run if [`TcpStream::connect`] returned an error.
 
 [`and_then`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.and_then
 [`TcpStream`]: https://tokio-rs.github.io/tokio-core/tokio_core/net/struct.TcpStream.html
 
 Once we have our `socket`, we use our previously created TLS connector to
-initiate the TLS handshake through the [`connect_async`] method provided in the
+initiate the TLS handshake through the [`connect_async`] method provided by the
 [`tokio-tls`] crate. The first argument is the domain name we're connecting to,
 with the I/O object as the second.
 
@@ -161,7 +161,7 @@ let request = tls_handshake.and_then(|socket| {
 
 Here we take the future from the previous step, `tls_handshake`, and
 use [`and_then`] again to continue the computation. The [`write_all`]
-combinator writes the entirety of our HTTP request, issueing multiple
+combinator writes the entirety of our HTTP request, issuing multiple
 writes as necessary. Here we're just doing a simple HTTP/1.0 request,
 so there's not much we need to write.
 
@@ -193,7 +193,7 @@ version!
 
 If we were to return at this point in the program, you might be surprised to see
 that nothing happens when it's run! That's because all we've done so
-far is construct a future-based computation, we haven't actually run it. Up to
+far is construct a futures-based computation; we haven't actually run it. Up to
 this point in the program we've done no I/O, issued no HTTP requests, etc.
 
 To actually execute our future and drive it to completion we'll need to run the
@@ -206,11 +206,11 @@ println!("{}", String::from_utf8_lossy(&data));
 
 Here we pass our `response` future, our entire HTTP request, to
 the event loop, [asking it to resolve the future][`core_run`]. The event loop will
-then run until the future has been resolved, returning the result of the future
+then run until the future has been resolved, returning the result of the future,
 which in this case is `io::Result<(TcpStream, Vec<u8>)>`.
 
 [`core_run`]: https://tokio-rs.github.io/tokio-core/tokio_core/reactor/struct.Core.html#method.run
 
-Note that this `core.run(..)` call will block the calling thread until the
+Note that this `core.run(...)` call will block the calling thread until the
 future can itself be resolved. This means that `data` here has type `Vec<u8>`.
 We then print it out to stdout as usual.
