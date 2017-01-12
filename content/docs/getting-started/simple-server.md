@@ -62,6 +62,7 @@ this, we'll need a couple of tools from `tokio-core`:
 ```rust
 # extern crate tokio_core;
 use std::io;
+use std::str;
 use tokio_core::io::{Codec, EasyBuf};
 # fn main() {}
 ```
