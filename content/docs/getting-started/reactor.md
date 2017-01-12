@@ -165,8 +165,8 @@ future is then spawned onto the event loop to be executed locally.
 
 The closure provided, when run, is yielded a [`Handle`] as proof that it's
 running on the same thread as the event loop. This handle can then be used to
-create and work with I/O objects. Like [`Handle::spawn`] the [`Remote::spawn`]
-method requires the item/error types of the future to be `()` as it's run
+create and work with I/O objects. Like [`Handle::spawn`], the [`Remote::spawn`]
+method requires the item/error types of the future to be `()`, as it's run
 concurrently.
 
 [IOCP]: https://www.freebsd.org/cgi/man.cgi?query=kqueue&sektion=2
