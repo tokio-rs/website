@@ -160,8 +160,8 @@ another kind of handle to [`Core`]). [`Remote`], however, can be sent across
 threads. The [`Remote`] type also currently only has a
 [`spawn`][`Remote::spawn`] function. This [`spawn`][`Remote::spawn`] is
 importantly different from [`Handle::spawn`] in that it takes a *closure* which
-is `Send` (can be sent across threads) which crates a future. The created future
-is then spawned onto the event loop to be executed locally.
+is `Send` (i.e. it can be sent across threads) which creates a future. The created
+future is then spawned onto the event loop to be executed locally.
 
 The closure provided, when run, is yielded a [`Handle`] as proof that it's
 running on the same thread as the event loop. This handle can then be used to
