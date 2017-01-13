@@ -53,7 +53,7 @@ The [`Core`] type has a relatively small API surface area; the main item of
 interest is the [`run`][`Core::run`] method. This method takes a future, `F`,
 and starts executing an event loop on the current thread until the future `F` is
 completed. While this may look similar to [`Future::wait`], there's a crucial
-difference: while its waiting for the future to resolve it executes other work
+difference: while it's waiting for the future to resolve it executes other work
 on the event loop rather than just blocking the thread. As we saw in the
 [previous section](../streams-and-sinks), that other work includes tasks that
 were spawned onto the event loop.
