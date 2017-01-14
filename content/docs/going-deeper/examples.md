@@ -24,7 +24,7 @@ update this list!
   interoperate together.
 
 * [Examples in `tokio-core` itself][tokio-core-examples] should be well
-  documented and self contained to play around with the abstractions in
+  documented and self-contained to play around with the abstractions in
   [`tokio-core`]. These examples range from a [chat server] to a small
   [`nc`-like program].
 

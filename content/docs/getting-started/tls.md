@@ -145,7 +145,7 @@ The [`and_then`] combinator is doing some heavy lifting behind the
 scenes here by ensuring that it executes futures in the right order
 and keeping track of the futures in flight. Even better, the value
 returned from [`and_then`] itself implements [`Future`], so we can
-keep chaining computation!
+keep chaining computations!
 
 Next up, we issue our HTTP request:
 
