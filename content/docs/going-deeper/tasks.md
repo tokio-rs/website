@@ -158,7 +158,7 @@ future.
 [`park`]: https://docs.rs/futures/0.1/futures/task/fn.park.html
 [`thread::park`]: https://doc.rust-lang.org/std/thread/fn.park.html
 
-That concludes the initial whirlwhind tour of the [`spawn`] method and the
+That concludes the initial whirlwind tour of the [`spawn`] method and the
 [`Unpark`] trait, lynchpins of the execution model of futures. We've seen how
 the [`wait`] method leverages these functions to create a task and then
 immediately call the future's [`poll`] function until it returns its ready. The
@@ -269,7 +269,7 @@ fn execute(&self, run: Run) {
 }
 ```
 
-Aha looks like it does exactly what we'd expect! The thread pool has an
+Aha, it looks like it does exactly what we'd expect! The thread pool has an
 internal `queue` which can be concurrently pushed on to. Each time we're
 requested to run a unit of work we push an appropriate message onto the queue.
 To get an idea of when the work is actually run, let's take a look at the code
@@ -317,7 +317,7 @@ that once a future returns that it's not ready we simply return from the `run`
 function (modulo some synchronization).
 
 When `unpark` is called then it will attempt to resubmit work to the executor.
-These calls are synchronized to enusre that the future is submitted only once.
+These calls are synchronized to ensure that the future is submitted only once.
 
 And with all that we've now also completed our tour of how [`CpuPool`] works!
 We saw that we used [`spawn`] to create a task like [`wait`], but then we
@@ -365,8 +365,8 @@ just wake up the task!
 
 For events related to futures the [`tokio-core`] event loop then just polls the
 appropriate future (according to the token [`mio`] provides). If the future is
-done then resources with it are deallocate and otherwise it's register to
-reawaken the event loop when it's ready.
+done then resources with it are deallocated, and otherwise the future is
+registered to reawaken the event loop when it's ready.
 
 As an executor the [`Core`] type is responsible for providing an implementation
 of [`Unpark`] when polling futures. This implementation just needs to wake up
@@ -395,7 +395,7 @@ extra work on the next [`poll`].
 Now with only two futures the extra work here may not matter much. If this is
 scaled to thousands or millions, however, it can be quite significant!
 Essentially what we need is the ability to communicate which sub-future woke
-up and cause a re-poll. This is precisely what unpark events are!
+up and caused a re-poll. This is precisely what unpark events are!
 
 Unpark events are primarily used through [`with_unpark_event`]:
 
@@ -410,7 +410,7 @@ This function takes an [`UnparkEvent`] and a closure to execute. While the
 closure is executing if [`park`] is called then a special [`Task`] handle is
 returned. [`Task`] handles returned in the scope of a [`with_unpark_event`] call
 will do extra work on an `unpark`, specifically running all unpark events before
-calling the inner [`Unpark`] itself. This "exta work" is defined by the
+calling the inner [`Unpark`] itself. This "extra work" is defined by the
 [`UnparkEvent`], which is constructed with an [`EventSet`] and a `usize`.
 Essentially when a task is unparked, it will take all unpark events and call
 [`insert`] with the [`EventSet`] and `usize` specified.
@@ -445,7 +445,7 @@ fn poll(&mut self) -> Poll<(A::Item, B::Item), A::Error> {
 Here we see a few crucial pieces of using unpark events. First and foremost
 they're used in the implementation of [`poll`] methods. Next we see that calls
 to [`poll`] of inner futures are always guarded. We don't actually poll inner
-futures it their token isn't in our current "event set".
+futures if their token isn't in our current "event set".
 
 If it is, however, then we *always* poll the future inside of a
 `with_unpark_event` block. This means that tasks created by [`park`] during
