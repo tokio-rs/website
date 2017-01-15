@@ -41,7 +41,7 @@ impl<T> Stream for IntTransport<T> where T: Io {
     type Error = io::Error;
 
     fn poll(&mut self) -> Poll<Option<u32>, io::Error> {
-        let mut buf = [0, 1];
+        let mut buf = [0; 1];
 
         let n = match self.io.read(&mut buf) {
             Err(e) => {
