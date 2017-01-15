@@ -151,7 +151,14 @@ call park, if an unpark happens it'll store `true` to `ready` (as we saw above
 in `Unpark for ThreadUnpark`). If this hasn't happened, though, then we block
 the current thread. The current thread will then get reawoken once the future's
 task is unparked, through the `ThreadUnpark` instance associated with this
-future.
+future. This must be done from another thread that is not parked. Some futures
+need a `Core` to be running in some thread to proceed, or some other trigger
+they registered into. Obviously a different one than which we block with `wait`.
+
+If you remember the
+[example with prime verification](../getting-started/futures#adding-a-timeout),
+it can work only because both the computation and the timeout run in separate
+threads, waking up the waiting future.
 
 [`poll_future`]: https://docs.rs/futures/0.1/futures/executor/struct.Spawn.html#method.poll_future
 [`poll`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#tymethod.poll
@@ -325,7 +332,7 @@ leveraged the new [`execute`] method to run the future instead. This method is
 more restrictive on the types of futures that it can accept, but it works by
 essentially submitting work to an executor whenever it's available. Futures that
 block will be resubmitted to the queue once they've been unblocked through the
-`unpark` method.
+`unpark` method, for example by an event loop in another thread.
 
 ## [Executors in `tokio-core`](#tokio-core) {#tokio-core}
 

@@ -205,6 +205,8 @@ use std::time::Duration;
 
 use futures::Future;
 use futures_cpupool::CpuPool;
+// There's also a tokio_core::reactor::Timeout, but it needs an event loop
+// to run on.
 use tokio_timer::Timer;
 
 # const BIG_PRIME: u64 = 1;
