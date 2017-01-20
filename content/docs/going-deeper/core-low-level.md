@@ -168,9 +168,9 @@ implement `Read` and `Write`. The underlying implementation must be nonblocking
 and [`PollEvented`] will layer task management on top so all you need to do is
 call `read` and `write`.
 
-If you're working objects that don't implement `Read` and `Write`, like UDP
-sockets, then the raw methods to work with are [`poll_read`][pe-pr] and
-[`need_read`]. (similarly for writes). To see an example of how to use these
+If you're working with objects that don't implement `Read` and `Write`, like UDP
+sockets, then the raw methods to use are [`poll_read`][pe-pr] and
+[`need_read`], (similarly for writes). To see an example of how to use these
 let's take a look at the implementation of [`UdpSocket::recv_from`]
 
 ```rust,ignore
@@ -189,9 +189,9 @@ pub fn recv_from(&self, buf: &mut [u8]) -> io::Result<(usize, SocketAddr)> {
 }
 ```
 
-First we are required to call [`poll_read`]. This will register our interested
-consuming read readiness on the underlying object and this will also implicitly
-register our task to get unparked if we're not readable yet. After
+First we are required to call [`poll_read`]. This will register our interest in
+consuming the read readiness of the underlying object. This will also implicitly
+register our task to get unparked if we're not yet readable. After
 [`poll_read`] returns `Ready` we can access the underlying object with
 [`get_ref`] and call the actual nonblocking operation.
 
@@ -218,8 +218,8 @@ well because [`mio`] is the backbone of [`tokio-core`].
 ## [Wakeup semantics](#wakeup-semantics) {#wakeup-semantics}
 
 When working directly with [`PollEvented`] it's important to understand how
-tasks are actually woken up. A mistaken call to a method like [`need_read`]
-could accidentally block your program forever otherwise!
+tasks are actually woken up. Otherwise, a mistaken call to a method like [`need_read`]
+could accidentally block your program forever!
 
 The [`need_read`] method (and the write version) have a special requirement that
 they will not operate correctly unless the I/O object was previously witnessed

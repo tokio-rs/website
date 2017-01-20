@@ -294,7 +294,7 @@ If you're familiar with interfaces like
 something missing from the `park`/`unpark` model: it provides no way for a task
 to know *why* it was woken up.
 
-That can be a problem for certain kinds futures that involve polling a large
+That can be a problem for certain kinds of futures that involve polling a large
 number of other futures concurrently—you don't want to have to re-poll
 *everything* to discover which sub-future is actually able to make progress.
 
@@ -346,7 +346,7 @@ type StartSend<T, E> = Result<AsyncSink<T>, E>;
 
 enum AsyncSink<T> {
     /// The `start_send` attempt succeeded, so the sending process has
-    /// *started*; you muse use `Sink::poll_complete` to drive the send
+    /// *started*; you must use `Sink::poll_complete` to drive the send
     /// to completion.
     Ready,
 
