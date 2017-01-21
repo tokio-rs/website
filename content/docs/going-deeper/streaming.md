@@ -184,11 +184,11 @@ impl Codec for LineCodec {
                 // includes a streaming body is an empty string.
                 assert!(message.is_empty() == body);
 
-                buf.extend_from_slice(message.as_bytes());
+                buf.extend(message.as_bytes());
             }
             Frame::Body { chunk } => {
                 if let Some(chunk) = chunk {
-                    buf.extend_from_slice(chunk.as_bytes());
+                    buf.extend(chunk.as_bytes());
                 }
             }
             Frame::Error { error } => {
