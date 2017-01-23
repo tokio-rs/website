@@ -252,7 +252,9 @@ Here, we're using a couple of additional methods on futures:
 While this example is simplistic, it gives some sense for how futures scale
 up. Once you have a number of basic "events" set up as futures, you can combine
 them in complex ways, and the futures library takes care of tracking all of the
-relevant state and synchronization.
+relevant state and synchronization. For example here we're behind the scenes
+managing concurrent execution of `is_prime` on a thread pool, the timer thread
+managed by `Timer`, and the main thread calling `wait` all at once.
 
 ##### [Whence I/O?](#whence-io) {#whence-io}
 
