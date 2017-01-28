@@ -124,7 +124,7 @@ fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
     }
 }
 #
-#   fn encode(&mut self, out: String, buf: &mut Vec<u8>) -> io::Result<()> {
+#   fn encode(&mut self, out: Self::Out, buf: &mut Vec<u8>) -> io::Result<()> {
 #       Ok(())
 #   }
 #
@@ -227,7 +227,7 @@ use tokio_core::io::{Io, Framed};
 #       Ok(None)
 #   }
 #
-#   fn encode(&mut self, out: String, buf: &mut Vec<u8>) -> io::Result<()> {
+#   fn encode(&mut self, out: Self::Out, buf: &mut Vec<u8>) -> io::Result<()> {
 #       Ok(())
 #   }
 # }
@@ -357,7 +357,7 @@ use tokio_proto::TcpServer;
 #       Ok(None)
 #   }
 #
-#   fn encode(&mut self, out: String, buf: &mut Vec<u8>) -> io::Result<()> {
+#   fn encode(&mut self, out: Self::Out, buf: &mut Vec<u8>) -> io::Result<()> {
 #       Ok(())
 #   }
 # }
