@@ -40,7 +40,7 @@ Now we'll write a server that can host an arbitrary service over this protocol:
 #       Ok(None)
 #   }
 #
-#   fn encode(&mut self, out: String, buf: &mut Vec<u8>) -> io::Result<()> {
+#   fn encode(&mut self, out: Self::Out, buf: &mut Vec<u8>) -> io::Result<()> {
 #       Ok(())
 #   }
 # }
