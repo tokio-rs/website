@@ -247,7 +247,7 @@ front.
 
 ## [Futures at scale](#at-scale) {#at-scale}
 
-We've seen the basics mechanics of futures, but there are a number of concerns
+We've seen the basic mechanics of futures, but there are a number of concerns
 about *robustness* that we also want to cover. It turns out that these concerns
 are addressed naturally by the demand-driven `poll` model. Let's take a look at
 a few of the most important.
