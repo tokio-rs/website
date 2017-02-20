@@ -64,7 +64,7 @@ fn serve<S>(s: S) -> io::Result<()>
     let connections = listener.incoming();
     let server = connections.for_each(move |(socket, _peer_addr)| {
         let (writer, reader) = socket.framed(LineCodec).split();
-        let mut service = s.new_service()?;
+        let service = s.new_service()?;
 
         let responses = reader.and_then(move |req| service.call(req));
         let server = writer.send_all(responses)
