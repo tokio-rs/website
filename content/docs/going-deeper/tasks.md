@@ -231,7 +231,7 @@ future `f` and the `tx` sender. This struct is itself a future which simply runs
 
 After we've created the `sender` then we see our familiar executor [`spawn`]
 method.  We just saw that this is where we tie off a future and a task is
-created.  Unlike before, however, we then see a new method called,
+created.  Unlike before, however, we then see a new method called
 [`execute`]. This method consumes ownership of the [`Spawn`] and will run it to
 completion on an instance of the [`Executor`] trait provided; it automatically
 takes care of the unpark details we mentioned before.
@@ -299,7 +299,7 @@ just approach it at a high level here instead of going through all the
 nitty-gritty details.
 
 The [`execute`] method has an instance of a spawned future, [`Spawn`] in
-addition to an executor (specifically an `Arc<Executor>`). It's purpose is then
+addition to an executor (specifically an `Arc<Executor>`). Its purpose is then
 to execute the future to completion on the executor by submitting work to it via
 the executor's sole method.
 
@@ -425,14 +425,14 @@ pseudo-code of how you might use this in join:
 ```rust,ignore
 fn poll(&mut self) -> Poll<(A::Item, B::Item), A::Error> {
     if !self.left.is_done() && self.set.contains(1) {
-        let event = UnparkEvent::net(self.set.clone(), 1);
+        let event = UnparkEvent::new(self.set.clone(), 1);
         task::with_unpark_event(event, || {
             self.left.poll();
         });
     }
 
     if !self.right.is_done() && self.set.contains(2) {
-        let event = UnparkEvent::net(self.set.clone(), 2);
+        let event = UnparkEvent::new(self.set.clone(), 2);
         task::with_unpark_event(event, || {
             self.right.poll();
         });
