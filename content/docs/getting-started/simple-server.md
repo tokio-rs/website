@@ -449,7 +449,7 @@ impl Service for EchoRev {
 # fn main() {}
 ```
 
-Not too shabby. And now, if we serve `EchoRev` instead of `Echo`, we'll see:
+Not too shabby. And now, if we replace `Echo` with `EchoRev` in the line `server.serve(|| Ok(Echo));`, we'll see:
 
 ```shell
 ~ $ telnet localhost 12345
