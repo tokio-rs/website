@@ -203,7 +203,7 @@ impl Service for Echo {
     type Error = io::Error;
     type Future = BoxFuture<Self::Response, Self::Error>;
 
-    fn call(&mut self, req: Self::Request) -> Self::Future {
+    fn call(&self, req: Self::Request) -> Self::Future {
         future::ok(req).boxed()
     }
 }
