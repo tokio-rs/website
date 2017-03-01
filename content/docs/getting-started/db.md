@@ -45,25 +45,26 @@ pools.
 [`postgres`]: https://github.com/sfackler/rust-postgres
 [crates.io]: https://crates.io
 
-With a general layout in mind, let's pull in our dependencies:
+With a general layout in mind, let's pull in our dependencies through
+`Cargo.toml`'s `[dependencies]` section:
 
-```rust
-// basic dependencies from echo server before
-extern crate futures;
-extern crate tokio_proto;
-extern crate tokio_service;
+```toml
+# basic dependencies from echo server before
+futures = "0.1"
+tokio-proto = "0.1"
+tokio-service = "0.1"
 
-// our toy HTTP implementation
-extern crate tokio_minihttp;
+# our toy HTTP implementation
+tokio-minihttp = { git = "https://github.com/tokio-rs/tokio-minihttp" }
 
-// database support with connection pooling
-extern crate r2d2;
-extern crate r2d2_postgres;
+# database support with connection pooling
+r2d2 = "0.7"
+r2d2_postgres = "0.11"
 
-// misc support for thread pools, random numbers, and json
-extern crate futures_cpupool;
-extern crate rand;
-extern crate rustc_serialize;
+# misc support for thread pools, random numbers, and json
+futures-cpupool = "0.1"
+rand = "0.3"
+rustc-serialize = "0.3"
 ```
 
 Next up, let's get through the boilerplate of setting up our server:
