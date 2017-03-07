@@ -115,6 +115,7 @@ let tls_handshake = socket.and_then(|socket| {
     })
 });
 ```
+[`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
 
 Here, we use the [`and_then`] method on the [`Future`] trait to continue
 building on the future returned by [`TcpStream::connect`]. The [`and_then`] method
