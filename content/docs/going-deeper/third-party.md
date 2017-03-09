@@ -27,6 +27,7 @@ of Tokio itself, however, filling in more functionality!
 * [`tk-sendfile`] allows using the `sendfile` syscall with Tokio
 * [`tokio-postgres`] is an asynchronous PostgreSQL driver
 * [`tokio-retry`] provides extensible asynchronous retry behaviours
+* [`couchbase`] is an asynchronous driver for Couchbase, exposing Futures and Streams as first class response types.
 
 If you've got your own crate or know of others that should be present on this
 list, please feel free to send a PR!
@@ -51,3 +52,4 @@ list, please feel free to send a PR!
 [`tokio-postgres`]: https://crates.io/crates/tokio-postgres
 [`thrussh`]: https://crates.io/crates/thrussh
 [`tokio-retry`]: https://github.com/srijs/rust-tokio-retry
+[`couchbase`]: https://crates.io/crates/couchbase
