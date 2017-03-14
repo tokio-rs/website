@@ -1,6 +1,6 @@
 +++
 title = "High-level I/O using core"
-description = "Future, stream and sink-based APIs from tokio-core"
+description = "Future, stream and sink-based APIs from tokio-io and tokio-core"
 menu = "getting_started"
 weight = 6
 +++
@@ -8,10 +8,10 @@ weight = 6
 At this point, we've got a pretty solid grasp of what event loops are and how
 [`Core`] allows us to work with futures on an event loop. Let's get down to
 business and do some I/O! In this section, we'll cover "high-level" I/O with
-`tokio-core`, where we'll work with futures, streams and sinks. A
-[later section](../../going-deeper/core-low-level) will explain how to work at
-the lowest level with [`tokio-core`], which gives you maximal control over things
-like buffering strategy.
+`tokio-io` using the primitives from `tokio-core` as futures, streams and
+sinks. A [later section](../../going-deeper/core-low-level) will explain how to
+work at the lowest level with [`tokio-core`], which gives you maximal control
+over things like buffering strategy.
 
 ### [Concrete I/O types](#concrete-io) {#concrete-io}
 
@@ -26,47 +26,73 @@ servers and should look very similar to their [standard library
 counterparts][`std::net`].
 
 The main difference between [`tokio_core::net`] and [`std::net`] is that the
-Tokio versions are all *non-blocking*. The [`Read`]/[`Write`] trait implementations
-are not blocking and will return a "would block" error instead of blocking (see
-the [low-level I/O section](../../going-deeper/core-low-level) for more).
-Similarly types are also enhanced with futures-aware methods such as
-[`TcpStream::connect`] returning a future or [`TcpListener::incoming`] returning
-a stream.
+Tokio versions are all *non-blocking*. The [`Read`]/[`Write`] trait
+implementations are not blocking and will return a "would block" error instead
+of blocking (see the [low-level I/O section](../../going-deeper/core-low-level)
+for more).  Similarly types are also enhanced with futures-aware methods such
+as [`TcpStream::connect`] returning a future or [`TcpListener::incoming`]
+returning a stream.
+
+Finally we'll note that the concrete [`TcpStream`] type also implements the
+[`AsyncRead`] and [`AsyncWrite`] traits from the [tokio-io] crate to gain access
+to those combinators and such.
+
+[`AsyncRead`]: https://docs.rs/tokio-io/0.1/tokio_io/trait.AsyncRead.html
+[`AsyncWrite`]: https://docs.rs/tokio-io/0.1/tokio_io/trait.AsyncWrite.html
+[tokio-io]: https://crates.io/crates/tokio-io
 
 ### [I/O helpers](#io-helpers) {#io-helpers}
 
-In addition to the concrete networking types, [`tokio-core`] also provides a
-number of utilities in the [`tokio_core::io`] module for working with I/O
-objects. When using these utilities, it's important to remember a few points:
+The Tokio ecosystem comes with a [tokio-io] crate which provides abstractions
+for I/O independent of the underlying runtime. This crate primarily defines two
+traits, [`AsyncRead`] and [`AsyncWrite`], which serve as the foundation for
+streaming byte I/O throughout the rest of the ecosystem.
 
-* They only work with "futures aware" and non-blocking
-  implementations of [`Read`]/[`Write`], although this should be the default if Tokio
-  types are used internally.
+The [`AsyncRead`] and [`AsyncWrite`] traits are intended to be similar to their
+std counterparts (and inherit from them) but also clearly demarcate "futures
+aware" I/O types. This means that they follow the tokio-io mandated properties:
+
+* Calls to `read` or `write` are **nonblocking**, they never block the calling
+  thread.
+* If a call would otherwise block then an error is returned with the kind of
+  `WouldBlock`. If this happens then the current future's task is scheduled to
+  receive a notification (an unpark) when the I/O is ready again.
+
+We'll explore these facets in more detail in [later
+sections](../../going-deeper/core-low-level), but for now we can look at some of
+the other goodies that these traits give us. First we'll notice the
+[`read_buf`] and [`write_buf`] functions which allow easy integration with the
+[`bytes`] crate and multiple buffering strategies. The
+[`split`][`AsyncRead::split`] method also assists in working with "halves" of a
+stream independently. This method essentially takes an `AsyncRead + AsyncWrite`
+object and returns two objects that implement [`AsyncRead`] and [`AsyncWrite`],
+respectively. This can often be convenient when working with futures to ensure
+ownership is managed correctly.
+
+[`read_buf`]: https://docs.rs/tokio-io/0.1/tokio_io/trait.AsyncRead.html#method.read_buf
+[`write_buf`]: https://docs.rs/tokio-io/0.1/tokio_io/trait.AsyncWrite.html#method.write_buf
+[`bytes`]: https://crates.io/crates/bytes
+[`AsyncRead::split`]: https://docs.rs/tokio-io/0.1/tokio_io/trait.AsyncRead.html#method.split
+
+The [`tokio_io::io`] module also provides a number of utilities and helpers for
+working with I/O objects as futures. When using these utilities, it's important
+to remember a few points:
+
+[`tokio_io::io`]: https://docs.rs/tokio-io/0.1/tokio_io/io/index.html
+
+* They only work with "futures aware" objects that implement [`AsyncRead`] and
+  [`AsyncWrite`].
 * They are intended to be *helpers*. For your particular use case they may not
   always be the most efficient. The helpers are intended to help you hit the
   ground running and can easily be replaced with application-specific logic in
   the future if necessary.
 
-The [`tokio_core::io`] module provides a suite of helper functions to express
-I/O operations as futures, such as [`read_to_end`] or [`write_all`]. The
-functions take the I/O object, and any relevant buffers, by value. The resulting
-futures then yield back ownership of these values, so you can continue using
-them.  Threading ownership in this way is necessary in part because futures are
-often required to be `'static`, making borrowing impossible.
-
-In addition to these functions, the module includes an [`Io`] trait. This trait
-expresses the concept of an I/O object which implements both [`Read`] and
-[`Write`]. [`Io`] currently doesn't have any required methods, but two methods
-with default implementations are of particular note.
-
-The [`Io::split`] method assists in working with "halves" of a stream
-independently. This method essentially takes a `Read + Write` objects and
-returns two objects that implement [`Read`] and [`Write`], respectively. This can
-often be convenient when working with futures to ensure ownership is
-managed correctly.
-
-The second method, [`Io::framed`], is important enough that we'll give it a
-whole section!
+The [`tokio_io::io`] module provides a suite of helper functions to express I/O
+operations as futures, such as [`read_to_end`] or [`write_all`]. The functions
+take the I/O object, and any relevant buffers, by value. The resulting futures
+then yield back ownership of these values, so you can continue using them.
+Threading ownership in this way is necessary in part because futures are often
+required to be `'static`, making borrowing impossible.
 
 ### [I/O codecs and framing](#io-codecs) {#io-codecs}
 
@@ -75,32 +101,47 @@ especially in an asynchronous context. Additionally, many protocols aren't
 really byte-oriented but rather have a higher level "framing" they're using.
 Often this means that abstractions like [`Stream`] and [`Sink`] from the
 [`futures`] crate are a perfect fit for a protocol, and you just need to somehow
-get a stream of bytes into a [`Stream`] and [`Sink`]. Thankfully, [`tokio-core`]
-helps you do exactly this with the last method of the [`Io`] trait,
-[`Io::framed`].
+get a stream of bytes into a [`Stream`] and [`Sink`]. Thankfully, [`tokio-io`]
+helps you do exactly this with a method of the [`AsyncRead`] trait,
+[`AsyncRead::framed`].
 
-The [`Io::framed`] method takes a [`Codec`] which defines how to take a stream
-and sink of bytes to a literal [`Stream`] and [`Sink`] implementation. This
-method will return a [`Framed`] which implements the [`Sink`] and [`Stream`]
-traits, using the [`Codec`] provided to decode and encode frames. Note that a
+[`AsyncRead::framed`]: https://docs.rs/tokio-io/0.1/tokio_io/trait.AsyncRead.html#method.framed
+
+The [`AsyncRead::framed`] method takes a type which implements the [`Encoder`]
+and [`Decoder`] traits.  which defines how to take a stream and sink of bytes
+to a literal [`Stream`] and [`Sink`] implementation. This method will return a
+[`Framed`] which implements the [`Sink`] and [`Stream`] traits, using the
+[`Encoder`] and [`Decoder`] provided to decode and encode frames. Note that a
 [`Framed`] can be split with [`Stream::split`] into two halves (like
-[`Io::split`]) if necessary.
+[`AsyncRead::split`]) if necessary.
 
-As we saw [much earlier](../simple-server), a [`Codec`] defines how to decode
-data received on the I/O stream, as well as how to encode frames back into the
-I/O stream. This sort of operation requires some level of buffering, which is
-typically quite a tricky topic in asynchronous I/O handling. The [`Codec`] trait
-provides an [`EasyBuf`] for decoding, which is essentially a reference-counted
-owned list of bytes. This allows efficient extraction of slices of the buffer
-through [`EasyBuf::drain_to`]. For encoding a [`Codec`] simply append bytes to
-the provided `Vec`.
+[`Encoder`]: https://docs.rs/tokio-io/0.1/tokio_io/codec/trait.Encoder.html
+[`Decoder`]: https://docs.rs/tokio-io/0.1/tokio_io/codec/trait.Decoder.html
+[`Framed`]: https://docs.rs/tokio-io/0.1/tokio_io/codec/struct.Framed.html
 
-As with other helpers in [`tokio_core::io`] the [`Codec`] trait may not
-perfectly suit your application, particularly with respect to buffering
-strategies. Fear not, though, as the [`Io::framed`] method is just meant to get
-you up and running quickly. Crates like [`tokio-proto`] work with a [`Stream`]
-and a [`Sink`] directly, so you can swap out [`Io::framed`] with your own
-implementation if it becomes a bottleneck.
+As we saw [much earlier](../simple-server), a [`Decoder`] defines how to decode
+data received on the I/O stream and [`Encoder`] how to encode frames back into
+the I/O stream. This sort of operation requires some level of buffering, which
+is typically quite a tricky topic in asynchronous I/O handling. The [`Decoder`]
+trait provides an [`BytesMut`] for decoding, which is essentially a
+reference-counted owned list of bytes. This allows efficient extraction of
+slices of the buffer through [`BytesMut::split_to`]. For [`Encoder`]
+simply append bytes to the provided [`BytesMut`].
+
+[`BytesMut`]: https://docs.rs/bytes/0.4/bytes/struct.BytesMut.html
+[`BytesMut::split_to`]: https://docs.rs/bytes/0.4/bytes/struct.BytesMut.html#method.split_to
+
+As with other helpers in [`tokio_io::io`] the [`Encoder`] and [`Decoder`]
+traits may not perfectly suit your application, particularly with respect to
+buffering strategies. Fear not, though, as the [`AsyncRead::framed`] method is
+just meant to get you up and running quickly. Crates like [`tokio-proto`] work
+with a [`Stream`] and a [`Sink`] directly (also referred to as [transports]), so
+you can swap out [`AsyncRead::framed`] with your own implementation if it
+becomes a bottleneck.  You can even add complex protocol feature handling such
+as ping / pong behavior.  This is described in [working with transports].
+
+[transports]: /docs/going-deeper/transports
+[working with transports]: /docs/going-deeper/transports
 
 ### [Datagrams](#datagrams) {#datagrams}
 
@@ -112,10 +153,10 @@ also provides a number of methods for working with it conveniently:
   an error if the entire datagram couldn't be sent at once.
 * [`recv_dgram`] expresses reading a datagram into a buffer, yielding both the
   buffer and the address it came from.
-* [`framed`][`UdpSocket::framed`] acts similarly to [`Io::framed`] in easing the
-  transformation of a [`UdpSocket`] to a [`Stream`] and a [`Sink`]. Note that
-  this method takes a [`UdpCodec`] which differs from [`Codec`] to better suit
-  datagrams instead of byte streams.
+* [`framed`][`UdpSocket::framed`] acts similarly to [`AsyncRead::framed`] in
+  easing the transformation of a [`UdpSocket`] to a [`Stream`] and a [`Sink`].
+  Note that this method takes a [`UdpCodec`] which differs from [`Encoder`] and
+  [`Decoder`] to better suit datagrams instead of byte streams.
 
 [IOCP]: https://www.freebsd.org/cgi/man.cgi?query=kqueue&sektion=2
 [`Core::handle`]: https://docs.rs/tokio-core/0.1/tokio_core/reactor/struct.Core.html#method.handle
@@ -144,21 +185,13 @@ also provides a number of methods for working with it conveniently:
 [`std::net`]: https://doc.rust-lang.org/std/net/
 [`TcpStream::connect`]: https://docs.rs/tokio-core/0.1/tokio_core/net/struct.TcpStream.html#method.connect
 [`TcpListener::incoming`]: https://docs.rs/tokio-core/0.1/tokio_core/net/struct.Incoming.html
-[`tokio_core::io`]: https://docs.rs/tokio-core/0.1/tokio_core/io/
-[`read_to_end`]: https://docs.rs/tokio-core/0.1/tokio_core/io/fn.read_to_end.html
-[`write_all`]: https://docs.rs/tokio-core/0.1/tokio_core/io/fn.write_all.html
-[`Io`]: https://docs.rs/tokio-core/0.1/tokio_core/io/trait.Io.html
-[`Io::split`]: https://docs.rs/tokio-core/0.1/tokio_core/io/trait.Io.html#method.split
-[`Io::framed`]: https://docs.rs/tokio-core/0.1/tokio_core/io/trait.Io.html#method.framed
-[`Codec`]: https://docs.rs/tokio-core/0.1/tokio_core/io/trait.Codec.html
-[`Framed`]: https://docs.rs/tokio-core/0.1/tokio_core/io/struct.Framed.html
+[`read_to_end`]: https://docs.rs/tokio-io/0.1/tokio_io/io/fn.read_to_end.html
+[`write_all`]: https://docs.rs/tokio-io/0.1/tokio_io/io/fn.write_all.html
 [`Read`]: https://doc.rust-lang.org/std/io/trait.Read.html
 [`Write`]: https://doc.rust-lang.org/std/io/trait.Write.html
 [`Stream`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html
 [`Sink`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html
 [`Stream::split`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.split
-[`EasyBuf`]: https://docs.rs/tokio-core/0.1.1/tokio_core/io/struct.EasyBuf.html
-[`EasyBuf::drain_to`]: https://docs.rs/tokio-core/0.1.1/tokio_core/io/struct.EasyBuf.html#method.drain_to
 [`tokio-proto`]: https://github.com/tokio-rs/tokio-proto
 [`send_dgram`]: https://docs.rs/tokio-core/0.1.1/tokio_core/net/struct.UdpSocket.html#method.send_dgram
 [`recv_dgram`]: https://docs.rs/tokio-core/0.1.1/tokio_core/net/struct.UdpSocket.html#method.recv_dgram

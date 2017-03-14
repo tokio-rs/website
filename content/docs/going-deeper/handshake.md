@@ -17,15 +17,42 @@ This guide will build off of the [simple line-based
 protocol]({{< relref "simple-server.md" >}}) we saw earlier. Let's look at the
 protocol specification again:
 
-```rust,ignore
+```rust
+# extern crate tokio_io;
+# extern crate tokio_proto;
+# extern crate bytes;
+
+use tokio_io::{AsyncRead, AsyncWrite};
+use tokio_io::codec::{Framed, Encoder, Decoder};
 use tokio_proto::pipeline::ServerProto;
+use std::io;
 
 struct LineProto;
+#
+# use bytes::BytesMut;
+# struct LineCodec;
+# impl Encoder for LineCodec {
+#   type Item = String;
+#   type Error = io::Error;
+#
+#   fn encode(&mut self, out: Self::Item, buf: &mut BytesMut) -> io::Result<()> {
+#       Ok(())
+#   }
+# }
+# impl Decoder for LineCodec {
+#   type Item = String;
+#   type Error = io::Error;
+#
+#   fn decode(&mut self, buf: &mut BytesMut) -> io::Result<Option<Self::Item>> {
+#       Ok(None)
+#   }
+# }
+#
 
-impl<T: Io + 'static> ServerProto<T> for LineProto {
+impl<T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for LineProto
+{
     type Request = String;
     type Response = String;
-    type Error = io::Error;
 
     // `Framed<T, LineCodec>` is the return value of
     // `io.framed(LineCodec)`
@@ -36,6 +63,7 @@ impl<T: Io + 'static> ServerProto<T> for LineProto {
         Ok(io.framed(LineCodec))
     }
 }
+# pub fn main() {}
 ```
 
 The [`BindTransport`] associated type, returned from the `bind_transport`
@@ -57,24 +85,68 @@ is then expected to close the socket.
 
 The server implementation of the handshake looks like this:
 
-```rust,ignore
-// Construct the line-based transport
-let transport = io.framed(LineCodec);
-
-// The handshake requires that the client sends `You ready?`, so wait to
-// receive that line. If anything else is sent, error out the connection
+```rust
+# extern crate tokio_io;
+# extern crate tokio_proto;
+# extern crate bytes;
+# extern crate futures;
+#
+# use tokio_io::{AsyncRead, AsyncWrite};
+# use tokio_io::codec::{Framed, Encoder, Decoder};
+# use tokio_proto::pipeline::ServerProto;
+# use futures::{future, Stream, Future, Sink};
+# use std::io;
+#
+# struct LineProto;
+#
+# use bytes::BytesMut;
+# struct LineCodec;
+# impl Encoder for LineCodec {
+#   type Item = String;
+#   type Error = io::Error;
+#
+#   fn encode(&mut self, out: Self::Item, buf: &mut BytesMut) -> io::Result<()> {
+#       Ok(())
+#   }
+# }
+# impl Decoder for LineCodec {
+#   type Item = String;
+#   type Error = io::Error;
+#
+#   fn decode(&mut self, buf: &mut BytesMut) -> io::Result<Option<Self::Item>> {
+#       Ok(None)
+#   }
+# }
+#
+# impl<T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for LineProto {
+#     type Request = String;
+#     type Response = String;
+#
+#     // `Framed<T, LineCodec>` is the return value of
+#     // `io.framed(LineCodec)`
+#     type Transport = Framed<T, LineCodec>;
+#     type BindTransport = Box<Future<Item = Self::Transport, Error = io::Error>>;
+#
+#     fn bind_transport(&self, io: T) -> Self::BindTransport {
+#         // Construct the line-based transport
+#         let transport = io.framed(LineCodec);
+#
+#         // The handshake requires that the client sends `You ready?`, so wait to
+#         // receive that line. If anything else is sent, error out the connection
+#         Box::new(
 transport.into_future()
     // If the transport errors out, we don't care about the transport
     // anymore, so just keep the error
     .map_err(|(e, _)| e)
     .and_then(|(line, transport)| {
-        // A line has been received, check to see if it is the handshake
+        // A line has been received, check to see if
+        // it is the handshake
         match line {
             Some(ref msg) if msg == "You ready?" => {
                 println!("SERVER: received client handshake");
                 // Send back the acknowledgement
                 Box::new(transport.send("Bring it!".to_string()))
-                    as Self::BindTransport
+#                     as Self::BindTransport
             }
             _ => {
                 // The client sent an unexpected handshake, error out
@@ -82,13 +154,18 @@ transport.into_future()
                 println!("SERVER: client handshake INVALID");
                 let err = io::Error::new(io::ErrorKind::Other,
                                          "invalid handshake");
-                Box::new(future::err(err)) as Self::BindTransport
+                Box::new(future::err(err))
+# as Self::BindTransport
             }
         }
     })
+# )
+#     }
+# }
+# pub fn main() {}
 ```
 
-The transport returned by `Io::framed` is a value implementing [`Stream`] +
+The transport returned by `AsyncRead::framed` is a value implementing [`Stream`] +
 [`Sink`] over the frame type. In our case, the frame type is `String`, so we can
 use the transport directly in order to implement our handshake logic.
 
@@ -104,53 +181,85 @@ The next step is to update the `bind_transport` function in our protocol
 specification. Instead of returning the transport directly, we will perform the
 handshake shown above. Here's the full code:
 
-```rust,ignore
-impl<T: Io + 'static> ServerProto<T> for ServerLineProto {
+```rust
+# extern crate tokio_io;
+# extern crate tokio_proto;
+# extern crate bytes;
+# extern crate futures;
+#
+# use tokio_io::{AsyncRead, AsyncWrite};
+# use tokio_io::codec::{Framed, Encoder, Decoder};
+# use tokio_proto::pipeline::ServerProto;
+# use futures::{future, Stream, Future, Sink};
+# use std::io;
+#
+# struct LineProto;
+#
+# use bytes::BytesMut;
+# struct LineCodec;
+# impl Encoder for LineCodec {
+#   type Item = String;
+#   type Error = io::Error;
+#
+#   fn encode(&mut self, out: Self::Item, buf: &mut BytesMut) -> io::Result<()> {
+#       Ok(())
+#   }
+# }
+# impl Decoder for LineCodec {
+#   type Item = String;
+#   type Error = io::Error;
+#
+#   fn decode(&mut self, buf: &mut BytesMut) -> io::Result<Option<Self::Item>> {
+#       Ok(None)
+#   }
+# }
+#
+impl<T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for LineProto
+{
     type Request = String;
     type Response = String;
-    type Error = io::Error;
 
     // `Framed<T, LineCodec>` is the return value of
     // `io.framed(LineCodec)`
-    type Transport = Framed<T, line::LineCodec>;
+    type Transport = Framed<T, LineCodec>;
     type BindTransport = Box<Future<Item = Self::Transport,
-                                    Error = io::Error>>;
+                                   Error = io::Error>>;
 
     fn bind_transport(&self, io: T) -> Self::BindTransport {
         // Construct the line-based transport
-        let transport = io.framed(line::LineCodec);
+        let transport = io.framed(LineCodec);
 
-        // The handshake requires that the client sends `You ready?`, so
-        // wait to receive that line. If anything else is sent, error out
-        // the connection
-        let handshake = transport.into_future()
-            // If the transport errors out, we don't care about the
-            // transport anymore, so just keep the error
+        // The handshake requires that the client sends `You ready?`,
+        // so wait to receive that line. If anything else is sent,
+        // error out the connection
+        Box::new(transport.into_future()
+            // If the transport errors out, we don't care about
+            // the transport anymore, so just keep the error
             .map_err(|(e, _)| e)
             .and_then(|(line, transport)| {
-                // A line has been received, check to see if it is the
-                // handshake
+                // A line has been received, check to see if it
+                // is the handshake
                 match line {
                     Some(ref msg) if msg == "You ready?" => {
                         println!("SERVER: received client handshake");
                         // Send back the acknowledgement
-                        Box::new(transport.send("Bring it!".to_string()))
-                            as Self::BindTransport
+                        let ret = transport.send("Bring it!".into());
+                        Box::new(ret) as Self::BindTransport
                     }
                     _ => {
-                        // The client sent an unexpected handshake, error
-                        // out the connection
+                        // The client sent an unexpected handshake,
+                        // error out the connection
                         println!("SERVER: client handshake INVALID");
                         let err = io::Error::new(io::ErrorKind::Other,
                                                  "invalid handshake");
-                        Box::new(future::err(err)) as Self::BindTransport
+                        let ret = future::err(err);
+                        Box::new(ret) as Self::BindTransport
                     }
                 }
-            });
-
-        Box::new(handshake)
+            }))
     }
 }
+# pub fn main() {}
 ```
 
 Then, if we use `TcpServer` to start a server with our `ServerLineProto`, the

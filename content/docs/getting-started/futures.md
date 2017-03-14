@@ -85,7 +85,7 @@ Here we'll bring in futures and a couple additional tools on top:
 [dependencies]
 futures = "0.1"
 futures-cpupool = "0.1"
-tokio-timer = { git = "https://github.com/tokio-rs/tokio-timer" }
+tokio-timer = "0.1"
 ```
 
 For our lengthy computation, we'll inefficiently confirm that a large prime

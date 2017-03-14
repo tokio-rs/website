@@ -32,7 +32,7 @@ parts:
 
 - A **transport**, which manages serialization of Rust request and response
   types to the underlying socket. In this guide, we will implement this using
-  the `Codec` helper, just as before.
+  the `framed` helper, just as before.
 
 - A **protocol specification**, which puts together a codec and some basic
   information about the protocol.
@@ -82,29 +82,30 @@ The `T` here represents the request or response type used for the `Service`.
 `tokio-proto` will use the `RequestId` in the frame to match oustanding requests
 with responses.
 
-We will use `Codec` and the `Io::framed` helper to help us go from a `TcpStream`
-to a `Stream + Sink` for our frame type:
+We will use `Encoder`/`Decoder` traits and the `AsyncRead::framed` helper to
+help us go from a `TcpStream` to a `Stream + Sink` for our frame type:
 
 ```rust
 # extern crate tokio_core;
 # extern crate tokio_proto;
-# extern crate byteorder;
+# extern crate bytes;
+# extern crate tokio_io;
 #
 # use std::io;
 # use std::str;
 #
-# use tokio_core::io::{EasyBuf, Codec};
 # use tokio_proto::multiplex::RequestId;
-# use byteorder::{BigEndian, ByteOrder};
+# use bytes::{Buf, BigEndian, BytesMut, BufMut, IntoBuf};
+# use tokio_io::codec::{Encoder, Decoder};
 #
 struct LineCodec;
 
-impl Codec for LineCodec {
-    type In = (RequestId, String);
-    type Out = (RequestId, String);
+impl Decoder for LineCodec {
+    type Item = (RequestId, String);
+    type Error = io::Error;
 
-    fn decode(&mut self, buf: &mut EasyBuf)
-             -> Result<Option<(RequestId, String)>, io::Error>
+    fn decode(&mut self, buf: &mut BytesMut)
+             -> io::Result<Option<(RequestId, String)>>
     {
         // At least 5 bytes are required for a frame: 4 byte
         // head + one byte '\n'
@@ -115,19 +116,19 @@ impl Codec for LineCodec {
 
         // Check to see if the frame contains a new line, skipping
         // the first 4 bytes which is the request ID
-        let newline = buf.as_ref()[4..].iter().position(|b| *b == b'\n');
+        let newline = buf[4..].iter().position(|b| *b == b'\n');
         if let Some(n) = newline {
             // remove the serialized frame from the buffer.
-            let line = buf.drain_to(n + 4);
+            let mut line = buf.split_to(n + 4);
 
             // Also remove the '\n'
-            buf.drain_to(1);
+            buf.split_to(1);
 
             // Deserialize the request ID
-            let id = BigEndian::read_u32(&line.as_ref()[0..4]);
+            let id = line.split_to(4).into_buf().get_u32::<BigEndian>();
 
             // Turn this data into a UTF string and return it in a Frame.
-            return match str::from_utf8(&line.as_ref()[4..]) {
+            return match str::from_utf8(&line[4..]) {
                 Ok(s) => Ok(Some((id as RequestId, s.to_string()))),
                 Err(_) => Err(io::Error::new(io::ErrorKind::Other,
                                              "invalid string")),
@@ -137,18 +138,21 @@ impl Codec for LineCodec {
         // No `\n` found, so we don't have a complete message
         Ok(None)
     }
+}
 
-    fn encode(&mut self, msg: (RequestId, String),
-              buf: &mut Vec<u8>) -> io::Result<()>
+impl Encoder for LineCodec {
+    type Item = (RequestId, String);
+    type Error = io::Error;
+
+    fn encode(&mut self,
+              msg: (RequestId, String),
+              buf: &mut BytesMut) -> io::Result<()>
     {
         let (id, msg) = msg;
 
-        let mut encoded_id = [0; 4];
-        BigEndian::write_u32(&mut encoded_id, id as u32);
-
-        buf.extend(&encoded_id);
-        buf.extend(msg.as_bytes());
-        buf.push(b'\n');
+        buf.put_u32::<BigEndian>(id as u32);
+        buf.put(msg.as_bytes());
+        buf.put("\n");
 
         Ok(())
     }
@@ -170,7 +174,7 @@ use tokio_proto::multiplex::ServerProto;
 
 struct LineProto;
 
-impl<T: Io + 'static> ServerProto<T> for LineProto {
+impl<T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for LineProto {
     type Request = String;
     type Response = String;
 

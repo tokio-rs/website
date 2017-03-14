@@ -94,42 +94,38 @@ two principles of non-blocking and "futures aware" apply to all I/O that
 [`tokio-core`] performs. This includes other examples such as accepting TCP
 sockets from a listener or sending a datagram on a UDP socket.
 
-## [Other I/O methods](#other-methods) {#other-methods}
+## [`AsyncRead` and `AsyncWrite`](#async-read-write) {#async-read-write}
 
-In addition to methods like `read` and `write` which actually perform an action,
-[`tokio-core`] there are a number of other methods which interact with I/O objects.
+While some implementations of `Read` and `Write` provide the required properties
+described above, not all do. For example, none of the file I/O operations in std
+will work on the event loop even though they implement `Read` and `Write`.
+However, `tokio-io` provides [`AsyncRead`] and [`AsyncWrite`] traits which
+extend `Read` and `Write` respectively. Implementations of these traits
+guarantee that they satisfy the required properties to work with the event loop.
 
-All I/O primitives in [`tokio-core`] also provide a `poll_*` method to learn
-about whether an operation is likely to succeed. For example [`poll_read`] will
-return `Async::Ready` if `read` is likely to return data and not a `WouldBlock`
-error. (note that this is not *guaranteed*, it's just likely). If
-`Async::NotReady` is returned then like with futures the current task will be
-scheduled to receive a notification when the TCP stream is readable again.
-These `poll_*` variants can help I/O defer work until everything is ready and
-then actually allocate buffers and such.
+So, looking at `tokio_core::net::TcpStream` again, you will also see:
 
-[`poll_read`]: https://docs.rs/tokio-core/0.1/tokio_core/net/struct.TcpStream.html#method.poll_read
+```rust,ignore
+impl AsyncRead for TcpStream
+impl AsyncWrite for TcpStream
+```
 
-Types like UDP sockets and TCP listeners have `poll_*` as methods on the object,
-whereas byte streams like TCP streams providing polling methods via the [`Io`]
-trait. The [`Io`] trait also provides a convenient method to go from a stream of
-bytes to a `Sink + Stream` implementation through [`framed`].
+Besides just indicating that they work with the event loop, they also provide a
+number of additional helper functions, some of which we have seen before. See
+the full [API documentation] for more details.
 
-[`Io`]: https://docs.rs/tokio-core/0.1/tokio_core/io/trait.Io.html#method.framed
+[`AsyncRead`]: https://docs.rs/tokio-io/0.1/tokio_io/trait.AsyncRead.html
+[`AsyncWrite`]: https://docs.rs/tokio-io/0.1/tokio_io/trait.AsyncWrite.html
+[API documentation]: https://docs.rs/tokio-io/0.1/tokio_io/
 
 ## [Buffering strategies](#buffering) {#buffering}
 
 The core types in [`tokio-core`] do not bake in any particular buffering
 strategy and should be amenable to working with whatever's appropriate for your
 application. All methods that read and write bytes work over slices which can be
-used to get as close to the raw syscalls as possible.
-
-The [`tokio-core`] crate does provide an [`EasyBuf`] abstraction which is
-similar to `Arc<[u8]>`, but this is primarily intended to be used with the
-[`framed`] method and isn't necessarily suitable for all applications.
-
-[`EasyBuf`]: https://docs.rs/tokio-core/0.1/tokio_core/io/struct.EasyBuf.html
-[`framed`]: https://docs.rs/tokio-core/0.1/tokio_core/io/trait.Io.html#method.framed
+used to get as close to the raw syscalls as possible. There are also `read_buf`
+and `write_buf` functions which are generic over [`Buf`] and [`BufMut`],
+allowing for various buffering strategies to interopt.
 
 Further buffering strategies can be found in the [`bytes`] crate on [crates.io]
 which should compose well with the slice-taking methods of [`tokio-core`]. Note
@@ -140,6 +136,8 @@ necessary.
 
 [`bytes`]: https://github.com/carllerche/bytes
 [crates.io]: https://crates.io
+[`Buf`]: https://docs.rs/bytes/0.4/bytes/trait.Buf.html
+[`BufMut`]: https://docs.rs/bytes/0.4/bytes/trait.BufMut.html
 
 ## [Creating your own I/O object](#custom-io) {#custom-io}
 
@@ -164,9 +162,9 @@ and then pass it to `PollEvented::new`.
 
 The [`PollEvented`] type provides two ways to interact with it. First, if the
 underlying type implements `Read` and/or `Write` then `PollEvented<E>` will also
-implement `Read` and `Write`. The underlying implementation must be nonblocking
-and [`PollEvented`] will layer task management on top so all you need to do is
-call `read` and `write`.
+implement `Read`, `AsyncRead`, `Write`, and `AsyncWrite`. The underlying
+implementation **must** be nonblocking and [`PollEvented`] will layer task
+management on top so all you need to do is call `read` and `write`.
 
 If you're working with objects that don't implement `Read` and `Write`, like UDP
 sockets, then the raw methods to use are [`poll_read`][pe-pr] and

@@ -195,13 +195,11 @@ types of the future to be `()` as it's run concurrently.
 [`std::net`]: https://doc.rust-lang.org/std/net/
 [`TcpStream::connect`]: https://docs.rs/tokio-core/0.1/tokio_core/net/struct.TcpStream.html#method.connect
 [`TcpListener::incoming`]: https://docs.rs/tokio-core/0.1/tokio_core/net/struct.Incoming.html
-[`tokio_core::io`]: https://docs.rs/tokio-core/0.1/tokio_core/io/
 [`read_to_end`]: https://docs.rs/tokio-core/0.1/tokio_core/io/fn.read_to_end.html
 [`write_all`]: https://docs.rs/tokio-core/0.1/tokio_core/io/fn.write_all.html
 [`Io`]: https://docs.rs/tokio-core/0.1/tokio_core/io/trait.Io.html
 [`Io::split`]: https://docs.rs/tokio-core/0.1/tokio_core/io/trait.Io.html#method.split
 [`Io::framed`]: https://docs.rs/tokio-core/0.1/tokio_core/io/trait.Io.html#method.framed
-[`Codec`]: https://docs.rs/tokio-core/0.1/tokio_core/io/trait.Codec.html
 [`Framed`]: https://docs.rs/tokio-core/0.1/tokio_core/io/struct.Framed.html
 [`Read`]: https://doc.rust-lang.org/std/io/trait.Read.html
 [`Write`]: https://doc.rust-lang.org/std/io/trait.Write.html

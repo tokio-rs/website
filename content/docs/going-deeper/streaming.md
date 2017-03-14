@@ -25,7 +25,7 @@ parts:
 
 - A **transport**, which manages serialization of Rust request and response
   types to the underlying socket. In this guide, we will implement this using
-  the `Codec` helper.
+  the `framed` helper.
 
 - A **protocol specification**, which puts together a codec and some basic
   information about the protocol.
@@ -85,97 +85,96 @@ Here, `T` represents the request or response head type and `B` represents the
 type of each stream chunk. `E` is not used as part of this guide, but it
 represents the type of an error frame. We will just set it to `io::Error`.
 
-By having our `Codec` yield frames of this type, `tokio-proto` is able to
+By having our `Decoder` yield frames of this type, `tokio-proto` is able to
 dispatch the streaming body frames appropriately.
 
-Again, we will use `Codec` and the `Io::framed` helper to help us go from a
-`TcpStream` to a `Stream + Sink` for our frame type. Unlike previous examples,
-our codec will retain some state for parsing (which is typical for streaming
-protocols):
+Again, we will use `Encoder`, `Decoder` and the `AsyncRead::framed` helper to
+help us go from a `TcpStream` to a `Stream + Sink` for our frame type. Unlike
+previous examples, our codec will retain some state for parsing (which is
+typical for streaming protocols):
 
 ```rust
-# extern crate tokio_core;
+# extern crate bytes;
+# extern crate tokio_io;
 # extern crate tokio_proto;
-# extern crate byteorder;
 #
 # use std::io;
 # use std::str;
 #
-# use tokio_core::io::{EasyBuf, Codec};
+# use bytes::{BytesMut, IntoBuf, Buf, BufMut};
+# use tokio_io::codec::{Encoder, Decoder};
 # use tokio_proto::streaming::pipeline::Frame;
 #
 pub struct LineCodec {
     decoding_head: bool,
 }
 
-impl Codec for LineCodec {
-    type In = Frame<String, String, io::Error>;
-    type Out = Frame<String, String, io::Error>;
+impl Decoder for LineCodec {
+    type Item = Frame<String, String, io::Error>;
+    type Error = io::Error;
 
-    fn decode(&mut self, buf: &mut EasyBuf)
-        -> Result<Option<Self::In>, io::Error>
+    fn decode(&mut self, buf: &mut BytesMut)
+        -> Result<Option<Self::Item>, io::Error>
     {
-        // Find the position of the next newline character
-        let pos = buf.as_ref().iter().position(|b| *b == b'\n');
+        // Find the position of the next newline character and split off the
+        // line if we find it.
+        let line = match buf.iter().position(|b| *b == b'\n') {
+            Some(n) => buf.split_to(n),
+            None => return Ok(None),
+        };
 
-        // Check to see if the frame contains a new line
-        if let Some(n) = pos {
-            // remove the serialized frame from the buffer.
-            let line = buf.drain_to(n);
+        // Also remove the '\n'
+        buf.split_to(1);
 
-            // Also remove the '\n'
-            buf.drain_to(1);
+        // Turn this data into a string and return it in a Frame
+        let s = try!(str::from_utf8(&line).map_err(|e| {
+            io::Error::new(io::ErrorKind::Other, e)
+        }));
 
-            // Turn this data into a string and return it in a Frame
-            return match str::from_utf8(&line.as_ref()) {
-                Ok(s) => {
-                    // Got an empty line, which means that the state
-                    // should be toggled.
-                    if s == "" {
-                        let decoding_head = self.decoding_head;
-                        // Toggle the state
-                        self.decoding_head = !decoding_head;
+        // Got an empty line, which means that the state
+        // should be toggled.
+        if s == "" {
+            let decoding_head = self.decoding_head;
+            // Toggle the state
+            self.decoding_head = !decoding_head;
 
-                        if decoding_head {
-                            Ok(Some(Frame::Message {
-                                // The message head is an empty line
-                                message: s.to_string(),
-                                // We will be streaming a body next
-                                body: true,
-                            }))
-                        } else {
-                            // The streaming body termination frame,
-                            // is represented as `None`.
-                            Ok(Some(Frame::Body {
-                                chunk: None
-                            }))
-                        }
-                    } else {
-                        if self.decoding_head {
-                            // This is a "oneshot" message with no
-                            // streaming body
-                            Ok(Some(Frame::Message {
-                                message: s.to_string(),
-                                body: false,
-                            }))
-                        } else {
-                            // Streaming body line chunk
-                            Ok(Some(Frame::Body {
-                                chunk: Some(s.to_string()),
-                            }))
-                        }
-                    }
-                }
-                Err(e) => {
-                  Err(io::Error::new(io::ErrorKind::Other, e))
-                }
+            if decoding_head {
+                Ok(Some(Frame::Message {
+                    // The message head is an empty line
+                    message: s.to_string(),
+                    // We will be streaming a body next
+                    body: true,
+                }))
+            } else {
+                // The streaming body termination frame,
+                // is represented as `None`.
+                Ok(Some(Frame::Body {
+                    chunk: None
+                }))
+            }
+        } else {
+            if self.decoding_head {
+                // This is a "oneshot" message with no
+                // streaming body
+                Ok(Some(Frame::Message {
+                    message: s.to_string(),
+                    body: false,
+                }))
+            } else {
+                // Streaming body line chunk
+                Ok(Some(Frame::Body {
+                    chunk: Some(s.to_string()),
+                }))
             }
         }
-
-        Ok(None)
     }
+}
 
-    fn encode(&mut self, msg: Self::Out, buf: &mut Vec<u8>)
+impl Encoder for LineCodec {
+    type Item = Frame<String, String, io::Error>;
+    type Error = io::Error;
+
+    fn encode(&mut self, msg: Self::Item, buf: &mut BytesMut)
         -> io::Result<()>
     {
         match msg {
@@ -195,12 +194,12 @@ impl Codec for LineCodec {
                 // Our protocol does not support error frames, so
                 // this results in a connection level error, which
                 // will terminate the socket.
-                return Err(error);
+                return Err(error)
             }
         }
 
         // Push the new line
-        buf.push(b'\n');
+        buf.extend(b"\n");
 
         Ok(())
     }
@@ -219,33 +218,41 @@ between the message head and a body chunk.
 The next step is to define the protocol details:
 
 ```rust
-# extern crate tokio_core;
 # extern crate tokio_proto;
+# extern crate tokio_io;
+# extern crate bytes;
 #
 # use std::io;
 #
-# use tokio_core::io::{Io, Framed, Codec, EasyBuf};
+# use bytes::BytesMut;
+# use tokio_io::{AsyncRead, AsyncWrite};
+# use tokio_io::codec::{Encoder, Decoder, Framed};
 # use tokio_proto::streaming::pipeline::{Frame, ServerProto};
 #
 # pub struct LineCodec {
 #     decoding_head: bool,
 # }
 #
-# impl Codec for LineCodec {
-#     type In = Frame<String, String, io::Error>;
-#     type Out = Frame<String, String, io::Error>;
+# impl Decoder for LineCodec {
+#     type Item = Frame<String, String, io::Error>;
+#     type Error = io::Error;
 #
-#     fn decode(&mut self, buf: &mut EasyBuf) -> Result<Option<Self::In>, io::Error> {
+#     fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<Self::Item>, io::Error> {
 #         unimplemented!();
 #     }
+# }
 #
-#     fn encode(&mut self, msg: Self::Out, buf: &mut Vec<u8>) -> io::Result<()> {
+# impl Encoder for LineCodec {
+#     type Item = Frame<String, String, io::Error>;
+#     type Error = io::Error;
+#
+#     fn encode(&mut self, msg: Self::Item, buf: &mut BytesMut) -> io::Result<()> {
 #         unimplemented!();
 #     }
 # }
 struct LineProto;
 
-impl<T: Io + 'static> ServerProto<T> for LineProto {
+impl<T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for LineProto {
     type Request = String;
     type RequestBody = String;
     type Response = String;
@@ -302,40 +309,47 @@ This step is similar to the
 the change in types for the `Service`, which allows working with body streams:
 
 ```rust,no_run
-extern crate futures;
-extern crate tokio_core;
-extern crate tokio_proto;
-extern crate tokio_service;
-
-use futures::{future, Future, Stream};
-use tokio_service::Service;
-
+# extern crate futures;
+# extern crate tokio_io;
+# extern crate tokio_proto;
+# extern crate tokio_service;
+# extern crate bytes;
+#
+# use futures::{future, Future, Stream};
+# use tokio_service::Service;
+#
 # use std::io;
 #
-# use tokio_core::io::{Io, Framed, Codec, EasyBuf};
+# use tokio_io::{AsyncRead, AsyncWrite};
+# use tokio_io::codec::{Framed, Encoder, Decoder};
 # use tokio_proto::TcpServer;
 # use tokio_proto::streaming::{Message, Body};
 # use tokio_proto::streaming::pipeline::{Frame, ServerProto};
+# use bytes::{BytesMut};
 #
 # pub struct LineCodec {
 #     decoding_head: bool,
 # }
 #
-# impl Codec for LineCodec {
-#     type In = Frame<String, String, io::Error>;
-#     type Out = Frame<String, String, io::Error>;
+# impl Decoder for LineCodec {
+#     type Item = Frame<String, String, io::Error>;
+#     type Error = io::Error;
 #
-#     fn decode(&mut self, buf: &mut EasyBuf) -> Result<Option<Self::In>, io::Error> {
+#     fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<Self::Item>, io::Error> {
 #         unimplemented!();
 #     }
+# }
+# impl Encoder for LineCodec {
+#     type Item = Frame<String, String, io::Error>;
+#     type Error = io::Error;
 #
-#     fn encode(&mut self, msg: Self::Out, buf: &mut Vec<u8>) -> io::Result<()> {
+#     fn encode(&mut self, msg: Self::Item, buf: &mut BytesMut) -> io::Result<()> {
 #         unimplemented!();
 #     }
 # }
 # struct LineProto;
 #
-# impl<T: Io + 'static> ServerProto<T> for LineProto {
+# impl<T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for LineProto {
 #     type Request = String;
 #     type RequestBody = String;
 #     type Response = String;
