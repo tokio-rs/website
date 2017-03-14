@@ -159,7 +159,7 @@ impl Service for Server {
     type Error = io::Error;
     type Future = BoxFuture<Response, io::Error>;
 
-    fn call(&mut self, req: Request) -> Self::Future {
+    fn call(&self, req: Request) -> Self::Future {
         // ...
     }
 }
