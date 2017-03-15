@@ -81,9 +81,11 @@ use tokio_core::reactor::Core;
 use tokio_core::net::TcpListener;
 
 fn main() {
-    let mut core = Core::new().unwrap();
-    let address = "0.0.0.0:12345".parse().unwrap();
-    let listener = TcpListener::bind(&address, &core.handle()).unwrap();
+    let mut core = Core::new()
+        .expect("Encountered IO error when creating reactor core");
+    let address = "0.0.0.0:12345".parse().expect("Failed to parse address");
+    let listener = TcpListener::bind(&address, &core.handle())
+        .expect("Failed to bind listener to local port");
 
     let connections = listener.incoming();
     let welcomes = connections.and_then(|(socket, _peer_addr)| {
@@ -93,14 +95,15 @@ fn main() {
         Ok(())
     });
 
-    core.run(server).unwrap();
+    core.run(server).expect("Running server failed");
 }
 ```
 
 That was easy! Let's pick apart a few key lines. First, there's the *reactor setup*:
 
 ```rust,ignore
-let mut core = Core::new().unwrap();
+let mut core = Core::new()
+    .expect("Encountered IO error when creating reactor core");
 ```
 
 We'll cover reactors (aka *event loops*) in detail in the next section. For now,
@@ -111,7 +114,8 @@ here we're working at a lower level.
 We then set up an async TCP listener, associated with that reactor:
 
 ```rust,ignore
-let listener = TcpListener::bind(&address, &core.handle()).unwrap();
+let listener = TcpListener::bind(&address, &core.handle())
+    .expect("Failed to bind listener to local port");
 ```
 
 Our first encounter with streams is the `incoming` stream:
@@ -176,7 +180,7 @@ up the reactor. We do both in a single step, by using the server as the *primary
 future* of the reactor:
 
 ```rust,ignore
-core.run(server).unwrap();
+core.run(server).expect("Running server failed");
 ```
 
 The reactor's event loop will keep running on the current thread until the

@@ -6,9 +6,11 @@ use tokio_core::reactor::Core;
 use tokio_core::net::TcpListener;
 
 fn main() {
-    let mut core = Core::new().unwrap();
-    let address = "0.0.0.0:12345".parse().unwrap();
-    let listener = TcpListener::bind(&address, &core.handle()).unwrap();
+    let mut core = Core::new()
+        .expect("Encountered IO error when creating reactor core");
+    let address = "0.0.0.0:12345".parse().expect("Failed to parse address");
+    let listener = TcpListener::bind(&address, &core.handle())
+        .expect("Failed to bind listener to local port");
 
     let handle = core.handle();
     let server = listener.incoming().for_each(|(socket, _peer_addr)| {
@@ -18,5 +20,5 @@ fn main() {
         Ok(())
     });
 
-    core.run(server).unwrap();
+    core.run(server).expect("Running server failed");
 }

@@ -54,12 +54,14 @@ use tokio_core::reactor::Core;
 
 fn main() {
     // Create the event loop that will drive this server
-    let mut core = Core::new().unwrap();
+    let mut core = Core::new()
+      .expect("Encountered IO error when creating reactor core");
     let handle = core.handle();
 
     // Bind the server's socket
-    let addr = "127.0.0.1:12345".parse().unwrap();
-    let sock = TcpListener::bind(&addr, &handle).unwrap();
+    let addr = "127.0.0.1:12345".parse().expect("Failed to parse address");
+    let sock = TcpListener::bind(&addr, &handle)
+      .expect("Failed to bind listener to local port");
 
     // Pull out a stream of sockets for incoming connections
     let server = sock.incoming().for_each(|(sock, _)| {
@@ -85,7 +87,7 @@ fn main() {
     });
 
     // Spin up the server on the event loop
-    core.run(server).unwrap();
+    core.run(server).expect("Running server failed");
 }
 </code>
         </pre>

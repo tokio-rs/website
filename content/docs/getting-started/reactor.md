@@ -71,9 +71,12 @@ use tokio_core::net::TcpListener;
 use tokio_core::reactor::Core;
 
 fn main() {
-    let mut core = Core::new().unwrap();
-    let listener = TcpListener::bind(&"127.0.0.1:8080".parse().unwrap(),
-                                     &core.handle()).unwrap();
+    let mut core = Core::new()
+        .expect("Encountered IO error when creating reactor core");
+    let addr = "127.0.0.1:8080".parse(i)
+                               .expect("Failed to parse address");
+    let listener = TcpListener::bind(&addr, &core.handle())
+            .expect("Failed to bind listener to local port");
 
     let server = listener.incoming().for_each(|(client, client_addr)| {
         // process `client` by spawning a new task ...
@@ -81,7 +84,7 @@ fn main() {
         Ok(()) // keep accepting connections
     });
 
-    core.run(server).unwrap();
+    core.run(server).expect("Running server failed");
 }
 ```
 
@@ -90,7 +93,7 @@ futures or otherwise one-off tasks. Some pseudo-code for this could look like:
 
 ```rust,ignore
 let my_request = http::get("https://www.rust-lang.org");
-let my_response = my_context.core.run(my_request).unwrap();
+let my_response = my_context.core.run(my_request).expect("Running server failed");
 ```
 
 The [`Core`] could be stashed in a local context which is used whenever

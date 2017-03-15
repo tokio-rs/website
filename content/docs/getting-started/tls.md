@@ -29,11 +29,18 @@ use tokio_core::reactor::Core;
 use tokio_tls::TlsConnectorExt;
 
 fn main() {
-    let mut core = Core::new().unwrap();
+    let mut core = Core::new()
+        .expect("Encountered IO error when creating reactor core");
     let handle = core.handle();
-    let addr = "www.rust-lang.org:443".to_socket_addrs().unwrap().next().unwrap();
+    let addr = "www.rust-lang.org:443".to_socket_addrs()
+                                      .expect("Parsing address failed")
+                                      .next()
+                                      .expect("Should have parsed single address");
 
-    let cx = TlsConnector::builder().unwrap().build().unwrap();
+    let cx = TlsConnector::builder()
+        .expect("Constructing TlsConnector failed")
+        .build()
+        .expect("Constructing TlsConnector failed");
     let socket = TcpStream::connect(&addr, &handle);
 
     let tls_handshake = socket.and_then(|socket| {
@@ -53,7 +60,8 @@ fn main() {
         tokio_core::io::read_to_end(socket, Vec::new())
     });
 
-    let (_socket, data) = core.run(response).unwrap();
+    let (_socket, data) = core.run(response)
+        .expect("Running server failed");
     println!("{}", String::from_utf8_lossy(&data));
 }
 ```
@@ -62,9 +70,13 @@ There's a lot to digest here, though, so let's walk through it
 line-by-line. First up in `main()`:
 
 ```rust,ignore
-let mut core = Core::new().unwrap();
+let mut core = Core::new()
+    .expect("Encountered IO error when creating reactor core");
 let handle = core.handle();
-let addr = "www.rust-lang.org:443".to_socket_addrs().unwrap().next().unwrap();
+let addr = "www.rust-lang.org:443".to_socket_addrs()
+                                  .expect("Parsing address failed")
+                                  .next()
+                                  .expect("Should have parsed single address");
 ```
 
 This is our standard version of creating an event loop and adding a handle to it.
@@ -78,7 +90,10 @@ asynchronous DNS queries in the ecosystem.
 Next up we see:
 
 ```rust,ignore
-let cx = TlsConnector::builder().unwrap().build().unwrap();
+let cx = TlsConnector::builder()
+    .expect("Constructing TlsConnector failed")
+    .build()
+    .expect("Constructing TlsConnector failed");
 let socket = TcpStream::connect(&addr, &handle);
 ```
 
@@ -201,7 +216,8 @@ To actually execute our future and drive it to completion we'll need to run the
 event loop:
 
 ```rust,ignore
-let (_socket, data) = core.run(response).unwrap();
+let (_socket, data) = core.run(response)
+    .expect("Running server failed");
 println!("{}", String::from_utf8_lossy(&data));
 ```
 
