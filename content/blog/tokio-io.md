@@ -1,7 +1,7 @@
 +++
-date = "2017-03-16"
+date = "2017-03-17"
 title = "Announcing the tokio-io Crate"
-description = "16 March 2017"
+description = "17 March 2017"
 menu = "blog"
 +++
 
