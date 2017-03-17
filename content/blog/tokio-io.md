@@ -5,7 +5,7 @@ description = "17 March 2017"
 menu = "blog"
 +++
 
-Today we're happy to announce a new crates and several new tools to work with
+Today we're happy to announce a new crate and several new tools to work with
 in the Tokio stack. This represents the culmination of a number of parallel
 updates to various bits and pieces, they just happened to conveniently land all
 around the same time! In a nutshell the improvements are:
@@ -79,7 +79,7 @@ now.
 In addition to traits to abstract over many kinds of buffers the [bytes] crate
 comes with two high-quality implementations of these traits, the [`Bytes`] and
 [`BytesMut`] type (implementing the [`Buf`] and [`BufMut`] traits respectively).
-In a nutshell these types represent reference-counted buffers which allows
+In a nutshell these types represent reference-counted buffers which allow
 zero-copy extraction of slices of data in an efficient fashion. To boot they
 also support a wide array of common operations such as tiny buffers (inline
 storage), single owners (can use a `Vec` internally), shared owners with
@@ -192,7 +192,7 @@ With the foundations of [tokio-core], [tokio-io], [tokio-service], and
 and implementing more ambitious protocols such as HTTP/2. We're working closely
 with [@seanmonstar][sean] and [Hyper] to develop these foundational HTTP
 libraries as well. Finally we're looking to expand the middleware story in the
-near future both with relation to HTTP and generic [tokio-service]
+near future with relation to both HTTP and generic [tokio-service]
 implementations. More on this coming soon!
 
 [`AsyncWrite::shutdown`]: https://docs.rs/tokio-io/0.1/tokio_io/trait.AsyncWrite.html#tymethod.shutdown
