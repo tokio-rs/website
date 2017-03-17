@@ -60,7 +60,7 @@ Framing is done with Tokio by first defining a frame type, usually an
 transport handles encoding and decoding the frame values to the raw
 stream of bytes. This can either be done
 [manually](/docs/going-deeper/transports/#implementing) or using a
-helper like [`Codec`]({{< relref "core.md#io-codecs" >}}).
+helper like [`framed`]({{< relref "core.md#io-codecs" >}}).
 
 Later sections cover [working with transports](../transports) and
 [handshakes in particular](../handshake).

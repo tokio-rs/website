@@ -16,7 +16,7 @@ section.
 ## [Implementing a transport](#implementing) {#implementing}
 
 The easiest way to implement a transport is to use the
-[`Codec`](/docs/getting-started/core/#io-codecs) helper. If that isn't
+[`framed`](/docs/getting-started/core/#io-codecs) helper. If that isn't
 sufficient, then it is also possible to implement `Stream` + `Sink` directly for
 a custom type.
 
@@ -118,7 +118,7 @@ implemented as part of our [first server](/docs/getting-started/simple-server)
 could also be used in a streaming fashion. Let's imagine that we have a server
 that wishes to open up a connection to a remote host and stream log messages.
 This use case does not really have a request / response structure, but we can
-still reuse the `Codec` we implemented:
+still reuse the codec we implemented:
 
 ```rust,ignore
 // Connect to a remote address

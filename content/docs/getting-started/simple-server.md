@@ -17,17 +17,19 @@ We'll need to add dependencies on the Tokio stack:
 
 ```toml
 [dependencies]
+bytes = "0.4"
 futures = "0.1"
-tokio-core = "0.1"
-tokio-service = "0.1"
+tokio-io = "0.1"
 tokio-proto = "0.1"
+tokio-service = "0.1"
 ```
 
 and bring them into scope in `main.rs`:
 
 ```rust
+extern crate bytes;
 extern crate futures;
-extern crate tokio_core;
+extern crate tokio_io;
 extern crate tokio_proto;
 extern crate tokio_service;
 ```
@@ -38,7 +40,7 @@ A server in `tokio-proto` is made up of three distinct parts:
 
 - A **transport**, which manages serialization of Rust request and response
   types to the underlying socket. In this guide, we will implement this using
-  the `Codec` helper.
+  the `framed` helper.
 
 - A **protocol specification**, which puts together a codec and some basic
   information about the protocol (is it
@@ -57,13 +59,15 @@ Let's see how it's done.
 
 We'll start by implementing a codec for a simple line-based protocol,
 where messages are arbitrary byte sequences delimited by `'\n'`. To do
-this, we'll need a couple of tools from `tokio-core`:
+this, we'll need a couple of tools from `tokio-io`:
 
 ```rust
-# extern crate tokio_core;
+# extern crate bytes;
+# extern crate tokio_io;
 use std::io;
 use std::str;
-use tokio_core::io::{Codec, EasyBuf};
+use bytes::{BytesMut, BufMut};
+use tokio_io::codec::{Encoder, Decoder};
 # fn main() {}
 ```
 
@@ -75,16 +79,28 @@ though:
 pub struct LineCodec;
 ```
 
-Codecs in Tokio implement the  [`Codec` trait]({{< api-url "core"
->}}/io/trait.Codec.html), which implements message encoding and decoding.
-To start with, we'll need to specify the message type. `In` gives the types of
-incoming messages *after decoding*, while `Out` gives the type of outgoing
-messages *prior to encoding*:
+Codecs in Tokio implement the [`Encoder`] and [`Decoder`] traits from
+[tokio-io], which implements message encoding and decoding.  To start with,
+we'll need to specify the message type:
+
+[`Encoder`]: https://docs.rs/tokio-io/0.1/tokio_io/codec/trait.Encoder.html
+[`Decoder`]: https://docs.rs/tokio-io/0.1/tokio_io/codec/trait.Decoder.html
+[tokio-io]: https://crates.io/crates/tokio-io
 
 ```rust,ignore
-impl Codec for LineCodec {
-    type In = String;
-    type Out = String;
+impl Decoder for LineCodec {
+    type Item = String;
+    type Error = io::Error;
+
+    // ...
+}
+
+impl Encoder for LineCodec {
+    type Item = String;
+    type Error = io::Error;
+
+    // ...
+}
 ```
 
 We'll use `String` to represent lines, meaning that we'll require UTF-8 encoding
@@ -93,90 +109,87 @@ for this line protocol.
 For our line-based protocol, decoding is straightforward:
 
 ```rust
-# extern crate tokio_core;
+# extern crate bytes;
+# extern crate tokio_io;
 #
 # use std::io;
 # use std::str;
-# use tokio_core::io::{Codec, EasyBuf};
+# use bytes::BytesMut;
+# use tokio_io::codec::{Encoder, Decoder};
 #
 # struct LineCodec;
 #
-# impl Codec for LineCodec {
-#   type In = String;
-#   type Out = String;
-#
-fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
-    if let Some(i) = buf.as_slice().iter().position(|&b| b == b'\n') {
-        // remove the serialized frame from the buffer.
-        let line = buf.drain_to(i);
+impl Decoder for LineCodec {
+    type Item = String;
+    type Error = io::Error;
 
-        // Also remove the '\n'
-        buf.drain_to(1);
+    fn decode(&mut self, buf: &mut BytesMut) -> io::Result<Option<String>> {
+        if let Some(i) = buf.iter().position(|&b| b == b'\n') {
+            // remove the serialized frame from the buffer.
+            let line = buf.split_to(i);
 
-        // Turn this data into a UTF string and return it in a Frame.
-        match str::from_utf8(line.as_slice()) {
-            Ok(s) => Ok(Some(s.to_string())),
-            Err(_) => Err(io::Error::new(io::ErrorKind::Other,
-                                         "invalid UTF-8")),
+            // Also remove the '\n'
+            buf.split_to(1);
+
+            // Turn this data into a UTF string and return it in a Frame.
+            match str::from_utf8(&line) {
+                Ok(s) => Ok(Some(s.to_string())),
+                Err(_) => Err(io::Error::new(io::ErrorKind::Other,
+                                             "invalid UTF-8")),
+            }
+        } else {
+            Ok(None)
         }
-    } else {
-        Ok(None)
     }
 }
-#
-#   fn encode(&mut self, out: Self::Out, buf: &mut Vec<u8>) -> io::Result<()> {
-#       Ok(())
-#   }
-#
-# }
 # fn main() {}
 ```
 
-The [`EasyBuf` type]({{< api-url "core" >}}/io/struct.EasyBuf.html) used here
-provides simple but efficient buffer management; you can think of it like
-`Arc<[u8]>`, a reference-counted immutable slice of bytes, with all the details
-handled for you. Outgoing messages from the server use `Result` in order to
-convey service errors on the Rust side.
+The [`BytesMut`] used here provides simple but efficient buffer management; you
+can think of it like `Arc<[u8]>`, a reference-counted slice of bytes, with all
+the details handled for you. Outgoing messages from the server use `Result` in
+order to convey service errors on the Rust side.
 
-When [decoding]({{< api-url "core" >}}/io/trait.Codec.html#tymethod.decode), we
-are given an input `EasyBuf` that contains a chunk of unprocessed data, and we
-must try to extract the first complete message, if there is one. If the buffer
-doesn't contain a complete message, we return `None`, and the server will
-automatically fetch more data before trying to decode again. The [`drain_to` method]({{< api-url "core"
->}}/io/struct.EasyBuf.html#method.drain_to) on `EasyBuf` splits the buffer in
-two at the given index, returning a new `EasyBuf` instance corresponding to the
-prefix ending at the index, and updating the existing `EasyBuf` to contain only
-the suffix. It's the typical way to remove one complete message from the input
-buffer.
+[`BytesMut`]: https://docs.rs/bytes/0.4/bytes/struct.BytesMut.html
 
-Encoding is even easier: you're given mutable access to a `Vec<u8>`,
+When [decoding], we are given an input [`BytesMut`] that contains a chunk of
+unprocessed data, and we must try to extract the first complete message, if
+there is one. If the buffer doesn't contain a complete message, we return
+`None`, and the server will automatically fetch more data before trying to
+decode again. The [`split_to`] method on [`BytesMut`] splits the buffer in two
+at the given index, returning a new [`BytesMut`] instance corresponding to the
+prefix ending at the index, and updating the existing [`BytesMut`] to contain
+only the suffix. It's the typical way to remove one complete message from the
+input buffer.
+
+[decoding]: https://docs.rs/tokio-io/0.1/tokio_io/codec/trait.Decoder.html#tymethod.decode
+[`split_to`]: https://docs.rs/bytes/0.4/bytes/struct.BytesMut.html#method.split_to
+
+Encoding is even easier: you're given mutable access to a [`BytesMut`],
 into which you serialize your output data. To keep things simple,
 we won't provide support for error responses:
 
 ```rust
-# extern crate tokio_core;
+# extern crate bytes;
+# extern crate tokio_io;
 #
 # use std::io;
-# use tokio_core::io::{Codec, EasyBuf};
+# use std::str;
+# use bytes::{BytesMut, BufMut};
+# use tokio_io::codec::{Encoder, Decoder};
 #
 # struct LineCodec;
 #
-# impl Codec for LineCodec {
-#   type In = String;
-#   type Out = String;
-#
-#    fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
-#        Ok(None)
-#    }
-#
-fn encode(&mut self, msg: String, buf: &mut Vec<u8>)
-         -> io::Result<()>
-{
-    buf.extend(msg.as_bytes());
-    buf.push(b'\n');
-    Ok(())
+impl Encoder for LineCodec {
+    type Item = String;
+    type Error = io::Error;
+
+    fn encode(&mut self, msg: String, buf: &mut BytesMut) -> io::Result<()> {
+        buf.extend(msg.as_bytes());
+        buf.extend(b"\n");
+        Ok(())
+    }
 }
-# }
 # fn main() {}
 ```
 
@@ -209,32 +222,40 @@ chosen protocol style with the codec that we've built:
 
 ```rust
 # extern crate tokio_proto;
-# extern crate tokio_core;
+# extern crate tokio_io;
+# extern crate bytes;
 #
 # use std::io;
 #
 # use tokio_proto::pipeline::ServerProto;
-use tokio_core::io::{Io, Framed};
-# use tokio_core::io::{EasyBuf, Codec};
+use tokio_io::{AsyncRead, AsyncWrite};
+use tokio_io::codec::Framed;
+# use bytes::BytesMut;
+# use tokio_io::codec::{Encoder, Decoder};
 #
 # struct LineCodec;
 #
-# impl Codec for LineCodec {
-#   type In = String;
-#   type Out = String;
+# impl Decoder for LineCodec {
+#   type Item = String;
+#   type Error = io::Error;
 #
-#   fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
+#   fn decode(&mut self, buf: &mut BytesMut) -> io::Result<Option<String>> {
 #       Ok(None)
 #   }
+# }
 #
-#   fn encode(&mut self, out: Self::Out, buf: &mut Vec<u8>) -> io::Result<()> {
+# impl Encoder for LineCodec {
+#   type Item = String;
+#   type Error = io::Error;
+#
+#   fn encode(&mut self, data: String, buf: &mut BytesMut) -> io::Result<()> {
 #       Ok(())
 #   }
 # }
 #
 # struct LineProto;
 
-impl<T: Io + 'static> ServerProto<T> for LineProto {
+impl<T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for LineProto {
     /// For this protocol style, `Request` matches the codec `In` type
     type Request = String;
 
@@ -293,12 +314,10 @@ what future we actually use inside---more on those tradeoffs later!
 
 ```rust
 # extern crate tokio_service;
-# extern crate tokio_core;
 # extern crate futures;
 #
 # use std::io;
 # use tokio_service::Service;
-# use tokio_core::io::EasyBuf;
 # use futures::future;
 # use futures::{Future, BoxFuture};
 #
@@ -335,36 +354,45 @@ builder:
 ```rust,no_run
 # extern crate tokio_proto;
 # extern crate tokio_core;
+# extern crate tokio_io;
 # extern crate futures;
 # extern crate tokio_service;
+# extern crate bytes;
 #
 # use std::io;
 #
 # use futures::future;
 # use futures::{Future, BoxFuture};
-# use tokio_core::io::{EasyBuf, Codec, Framed, Io};
+# use tokio_io::{AsyncRead, AsyncWrite};
+# use tokio_io::codec::{Framed, Encoder, Decoder};
+# use bytes::BytesMut;
 use tokio_proto::TcpServer;
 # use tokio_proto::pipeline::ServerProto;
 # use tokio_service::Service;
 #
 # struct LineCodec;
 #
-# impl Codec for LineCodec {
-#   type In = String;
-#   type Out = String;
+# impl Encoder for LineCodec {
+#   type Item = String;
+#   type Error = io::Error;
 #
-#   fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
-#       Ok(None)
-#   }
-#
-#   fn encode(&mut self, out: Self::Out, buf: &mut Vec<u8>) -> io::Result<()> {
+#   fn encode(&mut self, out: Self::Item, buf: &mut BytesMut) -> io::Result<()> {
 #       Ok(())
+#   }
+# }
+#
+# impl Decoder for LineCodec {
+#   type Item = String;
+#   type Error = io::Error;
+#
+#   fn decode(&mut self, buf: &mut BytesMut) -> io::Result<Option<Self::Item>> {
+#       Ok(None)
 #   }
 # }
 #
 # struct LineProto;
 #
-# impl<T: Io + 'static> ServerProto<T> for LineProto {
+# impl<T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for LineProto {
 #     type Request = String;
 #     type Response = String;
 #     type Transport = Framed<T, LineCodec>;
@@ -421,12 +449,10 @@ service that echos its input in reverse:
 
 ```rust
 # extern crate tokio_service;
-# extern crate tokio_core;
 # extern crate futures;
 #
 # use std::io;
 # use tokio_service::Service;
-# use tokio_core::io::EasyBuf;
 # use futures::future;
 # use futures::{Future, BoxFuture};
 #

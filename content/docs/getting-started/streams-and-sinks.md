@@ -75,6 +75,7 @@ greater depth in the next section.)
 ```rust,no_run
 extern crate futures;
 extern crate tokio_core;
+extern crate tokio_io;
 
 use futures::stream::Stream;
 use tokio_core::reactor::Core;
@@ -87,7 +88,7 @@ fn main() {
 
     let connections = listener.incoming();
     let welcomes = connections.and_then(|(socket, _peer_addr)| {
-        tokio_core::io::write_all(socket, b"Hello, world!\n")
+        tokio_io::io::write_all(socket, b"Hello, world!\n")
     });
     let server = welcomes.for_each(|(_socket, _welcome)| {
         Ok(())
@@ -130,7 +131,7 @@ the [`Stream`] trait to manipulate the stream:
 
 ```rust,ignore
 let welcomes = connections.and_then(|(socket, _peer_addr)| {
-    tokio_core::io::write_all(socket, b"Hello, world!\n")
+    tokio_io::io::write_all(socket, b"Hello, world!\n")
 });
 ```
 
@@ -144,7 +145,7 @@ the stream, a bit like `and_then` on `Result`, except that the closure we give
 - When that future completes, return the item it produced as the next item of
   the `welcomes` stream.
 
-The future we use is [`write_all`] from the `tokio-core` crate. It
+The future we use is [`write_all`] from the `tokio-io` crate. It
 asynchronously writes the entire buffer to the socket provided, then returns
 the socket and ownership of that buffer. So `welcomes` is again a stream that
 includes one socket for each connection, with `Hello, world!` written to them.
@@ -167,7 +168,7 @@ with streams, to ultimately "bottom things out" into a single future that
 represents fully processing the stream.
 
 [`for_each`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.for_each
-[`write_all`]: https://tokio-rs.github.io/tokio-core/tokio_core/io/fn.write_all.html
+[`write_all`]: https://docs.rs/tokio-io/0.1/tokio_io/io/fn.write_all.html
 [stream-and-then]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.and_then
 
 There's one final step: we need to consume the `server` future, which is
@@ -200,7 +201,7 @@ reactor's ability to "spawn" additional work:
 ```rust,ignore
 let handle = core.handle();
 let server = connections.for_each(|(socket, _peer_addr)| {
-    let serve_one = tokio_core::io::write_all(socket, b"Hello, world!\n")
+    let serve_one = tokio_io::io::write_all(socket, b"Hello, world!\n")
             .then(|_| Ok(()));
     handle.spawn(serve_one);
     Ok(())
@@ -258,7 +259,10 @@ trait Sink {
     // The analog to `poll`, used for sending and then flushing items.
     fn start_send(&mut self, item: Self::SinkItem)
                   -> StartSend<Self::SinkItem, Self::SinkError>;
+
     fn poll_complete(&mut self) -> Poll<(), Self::SinkError>;
+
+    fn close(&mut self) -> Poll<(), Self::SinkError>;
 
     // ... and lots of default methods, as usual
 }

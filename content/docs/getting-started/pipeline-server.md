@@ -13,9 +13,14 @@ We'll re-use the codec from the [initial server example](../simple-server):
 
 ```rust,ignore
 pub struct LineCodec;
-impl Codec for LineCodec {
-    type In = String;
-    type Out = String;
+
+impl Decoder for LineCodec {
+    type Item = String;
+    ...
+}
+
+impl Encoder for LineCodec {
+    type Item = String;
     ...
 }
 ```
@@ -23,25 +28,33 @@ impl Codec for LineCodec {
 Now we'll write a server that can host an arbitrary service over this protocol:
 
 ```rust,no_run
+# extern crate tokio_io;
 # extern crate tokio_core;
 # extern crate tokio_service;
 # extern crate futures;
+# extern crate bytes;
 #
 # use std::io;
-# use tokio_core::io::{Io, Codec, EasyBuf};
+# use tokio_io::{AsyncRead, AsyncWrite};
+# use tokio_io::codec::{Encoder, Decoder};
+# use bytes::{BytesMut};
 #
 # pub struct LineCodec;
 #
-# impl Codec for LineCodec {
-#   type In = String;
-#   type Out = String;
+# impl Encoder for LineCodec {
+#   type Item = String;
+#   type Error = io::Error;
 #
-#   fn decode(&mut self, buf: &mut EasyBuf) -> io::Result<Option<Self::In>> {
-#       Ok(None)
-#   }
-#
-#   fn encode(&mut self, out: Self::Out, buf: &mut Vec<u8>) -> io::Result<()> {
+#   fn encode(&mut self, out: Self::Item, buf: &mut BytesMut) -> io::Result<()> {
 #       Ok(())
+#   }
+# }
+# impl Decoder for LineCodec {
+#   type Item = String;
+#   type Error = io::Error;
+#
+#   fn decode(&mut self, buf: &mut BytesMut) -> io::Result<Option<Self::Item>> {
+#       Ok(None)
 #   }
 # }
 #
@@ -96,12 +109,12 @@ produce services.
 [`new_service`]: https://tokio-rs.github.io/tokio-service/tokio_service/trait.NewService.html#tymethod.new_service
 
 More interesting is the body of the server, where we put `tokio-core`'s
-high-level APIs into use. First, we use the [`Io::framed`] method to work with
+high-level APIs into use. First, we use the [`AsyncRead::framed`] method to work with
 the socket using our codec; what we get back is a *transport*---an object that
 is both a `Stream` and a `Sink`. The [`Stream::split`] method then breaks this
 object into separate stream and sink objects:
 
-[`Io::framed`]: https://docs.rs/tokio-core/0.1/tokio_core/io/trait.Io.html#method.framed
+[`AsyncRead::framed`]: https://docs.rs/tokio-io/0.1/tokio_io/trait.AsyncRead.html#method.framed
 [`Stream::split`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.split
 
 ```rust,ignore

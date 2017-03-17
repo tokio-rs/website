@@ -43,12 +43,12 @@
       <div class="tk-content">
         <pre>
 <code>// A tiny async echo server with tokio-core
-
 extern crate futures;
 extern crate tokio_core;
+extern crate tokio_io;
 
 use futures::{Future, Stream};
-use tokio_core::io::{copy, Io};
+use tokio_io::{io, AsyncRead};
 use tokio_core::net::TcpListener;
 use tokio_core::reactor::Core;
 
@@ -59,21 +59,19 @@ fn main() {
 
     // Bind the server's socket
     let addr = "127.0.0.1:12345".parse().unwrap();
-    let sock = TcpListener::bind(&addr, &handle).unwrap();
+    let tcp = TcpListener::bind(&addr, &handle).unwrap();
 
-    // Pull out a stream of sockets for incoming connections
-    let server = sock.incoming().for_each(|(sock, _)| {
-        // Split up the reading and writing parts of the
-        // socket
-        let (reader, writer) = sock.split();
+    // Iterate incoming connections
+    let server = tcp.incoming().for_each(|(tcp, _)| {
+        // Split up the read and write halves
+        let (reader, writer) = tcp.split();
 
-        // A future that echos the data and returns how
-        // many bytes were copied...
-        let bytes_copied = copy(reader, writer);
+        // Future of the copy
+        let bytes_copied = io::copy(reader, writer);
 
         // ... after which we'll print what happened
-        let handle_conn = bytes_copied.map(|amt| {
-            println!("wrote {} bytes", amt)
+        let handle_conn = bytes_copied.map(|(n, _, _)| {
+            println!("wrote {} bytes", n)
         }).map_err(|err| {
             println!("IO error {:?}", err)
         });
