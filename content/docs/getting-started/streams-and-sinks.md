@@ -233,7 +233,7 @@ So we end up multiplexing all connection handling onto a single event loop
 thread. That thread will make progress on all outstanding futures with I/O ready
 to be performed, and will not be blocked by any future that has stalled waiting
 for a socket. For a server as simple as this one, handling concurrency by
-multiplexing onto a single thread is a performance big win compared to
+multiplexing onto a single thread is a big performance win compared to
 coordinating multiple threads. In other cases, we might use a `CpuPool` for
 CPU-heavy work, and use the event loop primarily for I/O-heavy work, to try to
 maximize locality and parallelism.
