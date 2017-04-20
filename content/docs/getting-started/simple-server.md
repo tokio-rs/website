@@ -2,7 +2,7 @@
 title = "Example: an echo server using proto"
 description = ""
 menu = "getting_started"
-weight = 1
+weight = 101
 +++
 
 To kick off our tour of Tokio, we'll build a simple line-based echo server using

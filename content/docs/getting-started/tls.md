@@ -1,7 +1,7 @@
 +++
 title = "Example: a toy HTTP+TLS client using core"
 menu = "getting_started"
-weight = 8
+weight = 108
 +++
 
 Much of the functionality throughout the Tokio stack is generic, so as to be as

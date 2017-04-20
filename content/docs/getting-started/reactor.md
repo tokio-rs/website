@@ -2,7 +2,7 @@
 title = "Understanding event loops"
 description = "The heart of asynchronous processing"
 menu = "getting_started"
-weight = 5
+weight = 105
 +++
 
 Now we'll take a bit more of a dive into `tokio-core`. Keep in mind that this

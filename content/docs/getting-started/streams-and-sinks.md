@@ -2,7 +2,7 @@
 title = "Streams and sinks"
 description = "High-level async programming"
 menu = "getting_started"
-weight = 4
+weight = 104
 +++
 
 We've now seen a few examples of futures, which represent a *one-time*
