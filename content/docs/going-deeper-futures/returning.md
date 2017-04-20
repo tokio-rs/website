@@ -1,8 +1,8 @@
 +++
 title = "Returning futures"
 description = ""
-menu = "going_deeper"
-weight = 101
+menu = "going_deeper_futures"
+weight = 201
 +++
 
 [`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html

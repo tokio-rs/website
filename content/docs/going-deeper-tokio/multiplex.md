@@ -1,8 +1,8 @@
 +++
 title = "Multiplexed protocols"
 description = "An introduction to implementing a server for a multiplexed protocol"
-menu = "going_deeper"
-weight = 102
+menu = "going_deeper_tokio"
+weight = 302
 +++
 
 A *multiplexed* socket connection is one that allows many concurrent requests to

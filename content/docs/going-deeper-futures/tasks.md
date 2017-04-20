@@ -1,8 +1,8 @@
 +++
 title = "Tasks and executors"
 description = "The guts of the task system"
-menu = "going_deeper"
-weight = 108
+menu = "going_deeper_futures"
+weight = 208
 +++
 
 The concepts of a tasks for futures were introduced in [the futures model in
