@@ -3,6 +3,9 @@ title = "Third-party crates"
 description = ""
 menu = "going_deeper_tokio"
 weight = 310
+aliases = [
+  "/docs/going-deeper/third-party/"
+]
 +++
 
 Currently the [`futures`], [`tokio-core`], [`tokio-service`], and [`tokio-proto`] crates provide

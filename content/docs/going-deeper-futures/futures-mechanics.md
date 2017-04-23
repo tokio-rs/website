@@ -3,6 +3,9 @@ title = "Essential combinators"
 description = "Common APIs for futures and stream programming"
 menu = "going_deeper_futures"
 weight = 200
+aliases = [
+  "/docs/going-deeper/futures-mechanics/"
+]
 +++
 
 We saw a few of the most important combinators in the

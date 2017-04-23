@@ -3,6 +3,9 @@ title = "Returning futures"
 description = ""
 menu = "going_deeper_futures"
 weight = 201
+aliases = [
+  "/docs/going-deeper/returning/"
+]
 +++
 
 [`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html

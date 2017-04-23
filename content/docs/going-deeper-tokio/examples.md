@@ -3,6 +3,9 @@ title = "Larger examples"
 description = ""
 menu = "going_deeper_tokio"
 weight = 309
+aliases = [
+  "/docs/going-deeper/examples/"
+]
 +++
 
 Often times when learning a new framework or if you're just getting your feet

@@ -3,6 +3,9 @@ title = "Streaming protocols"
 description = "An introduction to implementing a server for a streaming protocol"
 menu = "going_deeper_tokio"
 weight = 303
+aliases = [
+  "/docs/going-deeper/streaming/"
+]
 +++
 
 All of the previous guides used protocols that where requests and responses were

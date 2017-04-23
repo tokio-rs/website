@@ -3,6 +3,9 @@ title = "The futures model in depth"
 description = "Understanding how futures, streams and sinks work"
 menu = "going_deeper_futures"
 weight = 205
+aliases = [
+  "/docs/going-deeper/futures-model/"
+]
 +++
 
 At this point, we're ready to dig into the implementation details for futures,

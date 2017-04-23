@@ -3,6 +3,9 @@ title = "Working with transports"
 description = "How to implement, use, and augment transports in Tokio"
 menu = "going_deeper_tokio"
 weight = 307
+aliases = [
+  "/docs/going-deeper/transports/"
+]
 +++
 
 A transport in Tokio is a full duplex channel of frame values. The transport is

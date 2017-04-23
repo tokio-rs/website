@@ -3,6 +3,9 @@ title = "Connection handshakes"
 description = "How to handle initial steps in a protocol"
 menu = "going_deeper_tokio"
 weight = 304
+aliases = [
+  "/docs/going-deeper/handshake/"
+]
 +++
 
 Some protocols require some setup before they can start accepting requests. For
