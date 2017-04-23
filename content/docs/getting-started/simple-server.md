@@ -66,7 +66,7 @@ this, we'll need a couple of tools from `tokio-io`:
 # extern crate tokio_io;
 use std::io;
 use std::str;
-use bytes::{BytesMut, BufMut};
+use bytes::BytesMut;
 use tokio_io::codec::{Encoder, Decoder};
 # fn main() {}
 ```
@@ -175,7 +175,7 @@ we won't provide support for error responses:
 #
 # use std::io;
 # use std::str;
-# use bytes::{BytesMut, BufMut};
+# use bytes::BytesMut;
 # use tokio_io::codec::{Encoder, Decoder};
 #
 # struct LineCodec;
