@@ -256,10 +256,10 @@ use tokio_io::codec::Framed;
 # struct LineProto;
 
 impl<T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for LineProto {
-    /// For this protocol style, `Request` matches the codec `In` type
+    /// For this protocol style, `Request` matches the `Item` type of the codec's `Encoder`
     type Request = String;
 
-    /// For this protocol style, `Response` matches the coded `Out` type
+    /// For this protocol style, `Response` matches the `Item` type of the codec's `Decoder`
     type Response = String;
 
     /// A bit of boilerplate to hook in the codec:
