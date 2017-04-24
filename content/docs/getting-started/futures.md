@@ -2,7 +2,7 @@
 title = "Futures"
 description = "A productive, zero-cost approach to asynchrony"
 menu = "getting_started"
-weight = 2
+weight = 102
 +++
 
 Tokio is fundamentally based on *asynchronous I/O*. While you don't need to have

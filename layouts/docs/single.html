@@ -28,12 +28,26 @@
           </div>
 
           <br/>
-          <h5>Going deeper</h5>
+          <h5>Going deeper: Futures</h5>
           <hr/>
 
           <div class="" id="">
             <ul class="nav">
-              {{ range .Site.Menus.going_deeper }}
+              {{ range .Site.Menus.going_deeper_futures }}
+              <li class="active">
+                <a href="{{ .URL }}" {{ if not (eq $currentURL .URL) }}class="text-muted"{{ end }}>{{ .Name }}</a>
+              </li>
+              {{ end }}
+            </ul>
+          </div>
+
+          <br/>
+          <h5>Going deeper: Tokio</h5>
+          <hr/>
+
+          <div class="" id="">
+            <ul class="nav">
+              {{ range .Site.Menus.going_deeper_tokio }}
               <li class="active">
                 <a href="{{ .URL }}" {{ if not (eq $currentURL .URL) }}class="text-muted"{{ end }}>{{ .Name }}</a>
               </li>

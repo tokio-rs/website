@@ -1,7 +1,7 @@
 +++
 title = "Example: a simple pipelined server using core"
 menu = "getting_started"
-weight = 7
+weight = 107
 +++
 
 Now that we've seen the basics of [high-level I/O using `tokio-core`](../core),

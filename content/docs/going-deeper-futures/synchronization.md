@@ -1,8 +1,11 @@
 +++
 title = "Synchronization"
 description = "Coordinating concurrent futures"
-menu = "going_deeper"
-weight = 104
+menu = "going_deeper_futures"
+weight = 204
+aliases = [
+  "/docs/going-deeper/synchronization/"
+]
 +++
 
 The `futures` crate comes equipped with a small *futures-aware
