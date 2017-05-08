@@ -261,7 +261,7 @@ we can return it.
 ```rust,no_run
 # #![deny(warnings)]
 # #![allow(bad_style)]
-#
+
 #[macro_use]
 extern crate serde_derive;
 
