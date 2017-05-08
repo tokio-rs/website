@@ -62,7 +62,6 @@ r2d2 = "0.7"
 r2d2_postgres = "0.11"
 
 # json
-#[macro_use]
 serde_derive = "1.0"
 serde = "1.0"
 serde_json = "1.0"
