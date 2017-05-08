@@ -61,12 +61,15 @@ tokio-minihttp = { git = "https://github.com/tokio-rs/tokio-minihttp" }
 r2d2 = "0.7"
 r2d2_postgres = "0.11"
 
-# misc support for thread pools, random numbers, and json
+# json
+#[macro_use]
+serde_derive = "1.0"
+serde = "1.0"
+serde_json = "1.0"
+
+# misc support for thread pools, random numbers
 futures-cpupool = "0.1"
 rand = "0.3"
-serde = "1.0"
-serde_derive = "1.0"
-serde_json = "1.0"
 ```
 
 Next up, let's get through the boilerplate of setting up our server:
