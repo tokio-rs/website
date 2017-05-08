@@ -291,7 +291,7 @@ struct Server {
     db_pool: r2d2::Pool<r2d2_postgres::PostgresConnectionManager>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize)]
 struct Message {
     id: i32,
     randomNumber: i32,
