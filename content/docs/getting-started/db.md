@@ -64,7 +64,9 @@ r2d2_postgres = "0.11"
 # misc support for thread pools, random numbers, and json
 futures-cpupool = "0.1"
 rand = "0.3"
-rustc-serialize = "0.3"
+serde = "1.0"
+serde_derive = "1.0"
+serde_json = "1.0"
 ```
 
 Next up, let's get through the boilerplate of setting up our server:
@@ -232,7 +234,7 @@ our implementation of `Service::call` let's take a look at the last piece:
 
 ```rust,ignore
 msg.map(|msg| {
-    let json = rustc_serialize::json::encode(&msg).unwrap();
+    let json = serde_json::to_string(&msg).unwrap();
     let mut response = Response::new();
     response.header("Content-Type", "application/json");
     response.body(&json);
@@ -257,12 +259,16 @@ we can return it.
 # #![deny(warnings)]
 # #![allow(bad_style)]
 #
+#[macro_use]
+extern crate serde_derive;
+
 extern crate futures;
 extern crate futures_cpupool;
 extern crate r2d2;
 extern crate r2d2_postgres;
 extern crate rand;
-extern crate rustc_serialize;
+extern crate serde;
+extern crate serde_json;
 extern crate tokio_minihttp;
 extern crate tokio_proto;
 extern crate tokio_service;
@@ -282,7 +288,7 @@ struct Server {
     db_pool: r2d2::Pool<r2d2_postgres::PostgresConnectionManager>,
 }
 
-#[derive(RustcEncodable)]
+#[derive(Serialize, Deserialize)]
 struct Message {
     id: i32,
     randomNumber: i32,
@@ -315,7 +321,7 @@ impl Service for Server {
         });
 
         msg.map(|msg| {
-            let json = rustc_serialize::json::encode(&msg).unwrap();
+            let json = serde_json::to_string(&msg).unwrap();
             let mut response = Response::new();
             response.header("Content-Type", "application/json");
             response.body(&json);
