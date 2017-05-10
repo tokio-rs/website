@@ -240,7 +240,22 @@ use tokio_io::codec::Framed;
 #   type Error = io::Error;
 #
 #   fn decode(&mut self, buf: &mut BytesMut) -> io::Result<Option<String>> {
-#       Ok(None)
+#       if let Some(i) = buf.iter().position(|&b| b == b'\n') {
+#           // remove the serialized frame from the buffer.
+#           let line = buf.split_to(i);
+#
+#           // Also remove the '\n'
+#           buf.split_to(1);
+#
+#           // Turn this data into a UTF string and return it in a Frame.
+#           match std::str::from_utf8(&line) {
+#               Ok(s) => Ok(Some(s.to_string())),
+#               Err(_) => Err(io::Error::new(io::ErrorKind::Other,
+#                                            "invalid UTF-8")),
+#           }
+#       } else {
+#           Ok(None)
+#       }
 #   }
 # }
 #
@@ -248,7 +263,9 @@ use tokio_io::codec::Framed;
 #   type Item = String;
 #   type Error = io::Error;
 #
-#   fn encode(&mut self, data: String, buf: &mut BytesMut) -> io::Result<()> {
+#   fn encode(&mut self, msg: String, buf: &mut BytesMut) -> io::Result<()> {
+#       buf.extend(msg.as_bytes());
+#       buf.extend(b"\n");
 #       Ok(())
 #   }
 # }
@@ -376,7 +393,9 @@ use tokio_proto::TcpServer;
 #   type Item = String;
 #   type Error = io::Error;
 #
-#   fn encode(&mut self, out: Self::Item, buf: &mut BytesMut) -> io::Result<()> {
+#   fn encode(&mut self, msg: String, buf: &mut BytesMut) -> io::Result<()> {
+#       buf.extend(msg.as_bytes());
+#       buf.extend(b"\n");
 #       Ok(())
 #   }
 # }
@@ -385,8 +404,23 @@ use tokio_proto::TcpServer;
 #   type Item = String;
 #   type Error = io::Error;
 #
-#   fn decode(&mut self, buf: &mut BytesMut) -> io::Result<Option<Self::Item>> {
-#       Ok(None)
+#   fn decode(&mut self, buf: &mut BytesMut) -> io::Result<Option<String>> {
+#       if let Some(i) = buf.iter().position(|&b| b == b'\n') {
+#           // remove the serialized frame from the buffer.
+#           let line = buf.split_to(i);
+#
+#           // Also remove the '\n'
+#           buf.split_to(1);
+#
+#           // Turn this data into a UTF string and return it in a Frame.
+#           match std::str::from_utf8(&line) {
+#               Ok(s) => Ok(Some(s.to_string())),
+#               Err(_) => Err(io::Error::new(io::ErrorKind::Other,
+#                                            "invalid UTF-8")),
+#           }
+#       } else {
+#           Ok(None)
+#       }
 #   }
 # }
 #
