@@ -521,3 +521,9 @@ hello, world!
 echo
 ohce
 ```
+
+## Backpressure
+
+This example does not implement backpressure. This means if requests are flowing into the server faser than it can process them, server starts piling up them, slowing down and potentially running out of memory. This means you should not base production code that should gracefully handle overload on this example.
+
+See [pipelined server](../pipeline-server) example for other approach that also does better backpressure handling.
