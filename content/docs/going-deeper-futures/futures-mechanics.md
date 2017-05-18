@@ -13,7 +13,7 @@ We saw a few of the most important combinators in the
 [streams](../../getting-started/streams-and-sinks) overviews. Here we'll take a
 look at a few more. It's also worth spending some time with the trait
 documentation to familiarize yourself with the full range of combinators
-available.
+available ([cheatsheet](/img/diagrams/cheatsheet-for-futures.html)).
 
 ### [Some concrete futures and streams](#concrete) {#concrete}
 
