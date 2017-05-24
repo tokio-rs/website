@@ -255,6 +255,24 @@ we can return it.
 [`CpuFuture`]: https://docs.rs/futures-cpupool/0.1/futures_cpupool/struct.CpuFuture.html
 [`boxed`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.boxed
 
+
+Finally before we run the example, we need to set up the database to have a `greetings` table that we can query from. Run the following queries in psql to create and populate the table:
+
+```sql,ignore
+CREATE TABLE greetings (
+    id serial,
+    body text
+);
+
+INSERT INTO greetings (body) VALUES
+    ('Hello'),
+    ('안녕하세요'),
+    ('Bonjour'),
+    ('好'),
+    ('Здравствуйте');
+```
+
+
 ### [Complete example](#complete) {#complete}
 
 ```rust,no_run
