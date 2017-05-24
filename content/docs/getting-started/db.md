@@ -177,7 +177,8 @@ flexibly define the future internally.
 [`BoxFuture`]: https://docs.rs/futures/0.1/futures/future/type.BoxFuture.html
 
 
-Well also need a `Message` struct that we can use to serialize the row that we will be getting from the database into json using `serde`:
+Well also need a `Message` struct that we can use to serialize the row that we
+will be getting from the database into json using `serde`:
 
 ```rust,ignore
 #[derive(Serialize)]
@@ -186,6 +187,7 @@ struct Message {
     body: String,
 }
 ```
+
 
 Next up, let's start implementing `call`. First we can verify that the HTTP
 request is indeed `/db`:
@@ -267,7 +269,9 @@ we can return it.
 [`boxed`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.boxed
 
 
-Finally before we run the example, we need to set up the database to have a `greetings` table that we can query from. Run the following queries in psql to create and populate the table:
+Finally before we run the example, we need to set up the database to have a
+`greetings` table that we can query from. Run the following queries within the
+`psql` command to create and populate the table:
 
 ```sql,ignore
 CREATE TABLE greetings (
