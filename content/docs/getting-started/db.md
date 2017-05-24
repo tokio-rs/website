@@ -214,13 +214,13 @@ Once we've got a database connection, we can now use [`postgres`] to load a row
 with the `random_id` we generated earlier:
 
 ```rust,ignore
-let stmt = conn.prepare_cached("SELECT * FROM World WHERE id = $1")?;
+let stmt = conn.prepare_cached("SELECT * FROM greeting WHERE id = $1")?;
 let rows = stmt.query(&[&random_id])?;
 let row = rows.get(0);
 
 Ok(Message {
     id: row.get("id"),
-    randomNumber: row.get("randomNumber"),
+    body: row.get("body"),
 })
 ```
 
@@ -311,7 +311,7 @@ struct Server {
 #[derive(Serialize)]
 struct Message {
     id: i32,
-    randomNumber: i32,
+    body: i32,
 }
 
 impl Service for Server {
@@ -330,13 +330,13 @@ impl Service for Server {
                 io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e))
             })?;
 
-            let stmt = conn.prepare_cached("SELECT * FROM World WHERE id = $1")?;
+            let stmt = conn.prepare_cached("SELECT * FROM greetings WHERE id = $1")?;
             let rows = stmt.query(&[&random_id])?;
             let row = rows.get(0);
 
             Ok(Message {
                 id: row.get("id"),
-                randomNumber: row.get("randomNumber"),
+                body: row.get("body"),
             })
         });
 
