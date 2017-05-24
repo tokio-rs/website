@@ -176,6 +176,17 @@ flexibly define the future internally.
 
 [`BoxFuture`]: https://docs.rs/futures/0.1/futures/future/type.BoxFuture.html
 
+
+Well also need a `Message` struct that we can use to serialize the row that we will be getting from the database into json using `serde`:
+
+```rust,ignore
+#[derive(Serialize)]
+struct Message {
+    id: i32,
+    body: String,
+}
+```
+
 Next up, let's start implementing `call`. First we can verify that the HTTP
 request is indeed `/db`:
 
@@ -303,15 +314,15 @@ use tokio_minihttp::{Request, Response};
 use tokio_proto::TcpServer;
 use tokio_service::Service;
 
-struct Server {
-    thread_pool: CpuPool,
-    db_pool: r2d2::Pool<r2d2_postgres::PostgresConnectionManager>,
-}
-
 #[derive(Serialize)]
 struct Message {
     id: i32,
     body: String,
+}
+
+struct Server {
+    thread_pool: CpuPool,
+    db_pool: r2d2::Pool<r2d2_postgres::PostgresConnectionManager>,
 }
 
 impl Service for Server {
