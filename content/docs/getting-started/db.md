@@ -188,7 +188,7 @@ just panic if you request a different path. Next up let's generate the id of
 the row that we're going to look up:
 
 ```rust,ignore
-let random_id = rand::thread_rng().gen_range(0, 5);
+let random_id = rand::thread_rng().gen_range(1, 5);
 ```
 
 And now with this in hand comes the real meat. Let's start executing our
@@ -323,7 +323,7 @@ impl Service for Server {
     fn call(&self, req: Request) -> Self::Future {
         assert_eq!(req.path(), "/db");
 
-        let random_id = rand::thread_rng().gen_range(0, 5);
+        let random_id = rand::thread_rng().gen_range(1, 5);
         let db = self.db_pool.clone();
         let msg = self.thread_pool.spawn_fn(move || {
             let conn = db.get().map_err(|e| {
