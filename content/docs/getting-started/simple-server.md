@@ -20,6 +20,7 @@ We'll need to add dependencies on the Tokio stack:
 bytes = "0.4"
 futures = "0.1"
 tokio-io = "0.1"
+tokio-core = "0.1"
 tokio-proto = "0.1"
 tokio-service = "0.1"
 ```
