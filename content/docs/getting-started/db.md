@@ -176,6 +176,19 @@ flexibly define the future internally.
 
 [`BoxFuture`]: https://docs.rs/futures/0.1/futures/future/type.BoxFuture.html
 
+
+Well also need a `Message` struct that we can use to serialize the row that we
+will be getting from the database into json using `serde`:
+
+```rust,ignore
+#[derive(Serialize)]
+struct Message {
+    id: i32,
+    body: String,
+}
+```
+
+
 Next up, let's start implementing `call`. First we can verify that the HTTP
 request is indeed `/db`:
 
@@ -188,7 +201,7 @@ just panic if you request a different path. Next up let's generate the id of
 the row that we're going to look up:
 
 ```rust,ignore
-let random_id = rand::thread_rng().gen_range(0, 10_000);
+let random_id = rand::thread_rng().gen_range(1, 5);
 ```
 
 And now with this in hand comes the real meat. Let's start executing our
@@ -214,13 +227,13 @@ Once we've got a database connection, we can now use [`postgres`] to load a row
 with the `random_id` we generated earlier:
 
 ```rust,ignore
-let stmt = conn.prepare_cached("SELECT * FROM World WHERE id = $1")?;
+let stmt = conn.prepare_cached("SELECT * FROM greeting WHERE id = $1")?;
 let rows = stmt.query(&[&random_id])?;
 let row = rows.get(0);
 
 Ok(Message {
     id: row.get("id"),
-    randomNumber: row.get("randomNumber"),
+    body: row.get("body"),
 })
 ```
 
@@ -255,6 +268,26 @@ we can return it.
 [`CpuFuture`]: https://docs.rs/futures-cpupool/0.1/futures_cpupool/struct.CpuFuture.html
 [`boxed`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.boxed
 
+
+Finally before we run the example, we need to set up the database to have a
+`greetings` table that we can query from. Run the following queries within the
+`psql` command to create and populate the table:
+
+```sql,ignore
+CREATE TABLE greetings (
+    id serial,
+    body text
+);
+
+INSERT INTO greetings (body) VALUES
+    ('Hello'),
+    ('안녕하세요'),
+    ('Bonjour'),
+    ('好'),
+    ('Здравствуйте');
+```
+
+
 ### [Complete example](#complete) {#complete}
 
 ```rust,no_run
@@ -285,15 +318,15 @@ use tokio_minihttp::{Request, Response};
 use tokio_proto::TcpServer;
 use tokio_service::Service;
 
-struct Server {
-    thread_pool: CpuPool,
-    db_pool: r2d2::Pool<r2d2_postgres::PostgresConnectionManager>,
-}
-
 #[derive(Serialize)]
 struct Message {
     id: i32,
-    randomNumber: i32,
+    body: String,
+}
+
+struct Server {
+    thread_pool: CpuPool,
+    db_pool: r2d2::Pool<r2d2_postgres::PostgresConnectionManager>,
 }
 
 impl Service for Server {
@@ -305,20 +338,20 @@ impl Service for Server {
     fn call(&self, req: Request) -> Self::Future {
         assert_eq!(req.path(), "/db");
 
-        let random_id = rand::thread_rng().gen_range(0, 10_000);
+        let random_id = rand::thread_rng().gen_range(1, 5);
         let db = self.db_pool.clone();
         let msg = self.thread_pool.spawn_fn(move || {
             let conn = db.get().map_err(|e| {
                 io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e))
             })?;
 
-            let stmt = conn.prepare_cached("SELECT * FROM World WHERE id = $1")?;
+            let stmt = conn.prepare_cached("SELECT * FROM greetings WHERE id = $1")?;
             let rows = stmt.query(&[&random_id])?;
             let row = rows.get(0);
 
             Ok(Message {
                 id: row.get("id"),
-                randomNumber: row.get("randomNumber"),
+                body: row.get("body"),
             })
         });
 
