@@ -18,10 +18,6 @@ in depth:
 * [On a thread pool](#futures-cpupool)
 * [On an event loop](#tokio-core)
 
-Finally we'll explore the concept of [unpark events](#unpark-events) in depth if
-you're curious about more than the [high level overview]({{< relref
-"futures-model.md#wakeup-cause" >}}).
-
 **This material is mostly relevant for those wishing to build their own executors
 (e.g., custom thread pools)**, but understanding it can be helpful for
 internalizing the futures model more deeply.
@@ -64,7 +60,7 @@ method, so let's take a look at that:
 fn wait_future(&mut self) -> Result<F::Item, F::Error> {
     let unpark = Arc::new(ThreadUnpark::new(thread::current()));
     loop {
-	match try!(self.poll_future(unpark.clone())) {
+	match try!(self.poll_future_notify(&unpark, 0)) {
 	    Async::NotReady => unpark.park(),
 	    Async::Ready(e) => return Ok(e),
 	}
@@ -78,35 +74,38 @@ There's going to be a few new concepts here, so we'll go line-by-line:
 let unpark = Arc::new(ThreadUnpark::new(thread::current()));
 ```
 
-First we create an instance of the [`Unpark`] trait, in this case
-`Arc<ThreadUnpark>`. Recall that "unpark" for a future's task is akin to
-unblocking it, similar to how [`Thread::unpark`] in the standard library will
-wake up that thread. In fact, that's the exact implementation of `Unpark for
-ThreadUnpark`:
+First we're creating an object that will eventually be converted into a
+[`NotifyHandle`], in this case `Arc<ThreadUnpark>`. This handle will later be
+used in the implementation of `Task::notify` which is similar to
+[`Thread::unpark`] in the standard library to how it wakes up a thread.  In
+fact, that's the exact implementation of `Unpark for ThreadUnpark`:
+
+[`NotifyHandle`]: https://docs.rs/futures/0.1/futures/executor/struct.NotifyHandle.html
 
 ```rust,ignore
-impl Unpark for ThreadUnpark {
-    fn unpark(&self) {
+impl Notify for ThreadUnpark {
+    fn notify(&self) {
         self.ready.store(true, Ordering::SeqCst);
         self.thread.unpark()
     }
 }
 ```
 
-In general, [`Unpark`] is used to notify a task that it should be woken, which
-in this case means waking up the thread running [`wait_future`]. As we'll see,
-other executors have other ways of "waking up" a task.
+In general, [`Notify`] is used to indicate to an executor that that a task's
+future is ready to be polled again, which in this case means waking up the
+thread running [`wait_future`] \(out "executor" is `wait_future` above). As
+we'll see, other executors have other ways of "waking up" a task.
 
-The [`Unpark`] implementation has some extra state to resolve races (the
+The `ThreadUnpark` structure has some extra state to resolve races (the
 `ready` flag), and we'll see more of that in a moment. In the meantime let's
 take a look at the remaining lines of the [`wait_future`] method:
 
-[`Unpark`]: https://docs.rs/futures/0.1/futures/executor/trait.Unpark.html
+[`Notify`]: https://docs.rs/futures/0.1/futures/executor/trait.Notify.html
 [`Thread::unpark`]: https://doc.rust-lang.org/std/thread/struct.Thread.html#method.unpark
 
 ```rust,ignore
 loop {
-    match try!(self.poll_future(unpark.clone())) {
+    match try!(self.poll_future_notify(&unpark, 0)) {
 	Async::NotReady => unpark.park(),
 	Async::Ready(e) => return Ok(e),
     }
@@ -114,31 +113,34 @@ loop {
 ```
 
 This is the main loop which is going to drive the future forward. We will
-continually poll the future through the [`poll_future`] method on [`Spawn`].
-Internally this method will call the [`poll`] method, but set things up so that
-calls to [`park`] within the future will correctly tie in to our [`Unpark`]
-implementation (this is done using a thread local). The [`poll_future`] method
-is the main way to "enter a task".
+continually poll the future through the [`poll_future_notify`] method on
+[`Spawn`].  Internally this method will call the [`poll`] method, but set
+things up so that calls to [`current`] within the future will correctly tie in
+to our [`ThreadUnpark`] instance (this is done using a thread local). The
+[`poll_future_notify`] method is the main way to "enter a task".
 
-The [`poll_future`] method takes one argument: an `Arc<Unpark>`. We previously
-created an instance which will unblock our thread. This means that on each
-iteration of the loop we just pass in a clone of this instance.
+The [`poll_future_notify`] method takes two arguments: an object that can be
+converted to a [`NotifyHandle`] and an unpark id. We previously created an
+instance of `ThreadUnpark` which will unblock our thread. This means that on
+each iteration of the loop we just pass in a reference to this instance. The
+`Arc<T>` type where `T: Notify` is an example of a type that can be converted
+into a [`NotifyHandle`]. The id here is unused, so we simply pass 0.
 
 Take note while we're here that this is where the "one allocation required"
-guarantee comes into play we saw before. The `Arc<Unpark>` is the only
+guarantee comes into play we saw before. The `Arc<ThreadUnpark>` is the only
 allocation necessary for this entire method, and otherwise we're not allocating
-any memory. Crucially we're **reusing the same instance of `Unpark` for all
+any memory. Crucially we're **reusing the same instance of `ThreadUnpark` for all
 calls to `poll`**, and this same instance is used for the entire lifetime of the
 future. This reuse allows us to have a very efficient implementation of
 [`wait_future`].
 
-Finally after [`poll_future`] returns we'll have a `Poll<T, E>` on our hands
-returned from the future itself. We propagate errors through `try!` and
-immediately return `Ready` values. The interesting bit happens on the `NotReady`
-portion. Recall that we're just blocking the current thread until the future is
-finished, so we're just going to call [`thread::park`] here from the standard
-library. To get a better idea, let's take a look at the `ThreadUnpark::park`
-function we're calling:
+Finally after [`poll_future_notify`] returns we'll have a `Poll<T, E>` on our
+hands returned from the future itself. We propagate errors through `try!` and
+immediately return `Ready` values. The interesting bit happens on the
+`NotReady` portion. Recall that we're just blocking the current thread until
+the future is finished, so we're just going to call [`thread::park`] here from
+the standard library. To get a better idea, let's take a look at the
+`ThreadUnpark::park` function we're calling:
 
 ```rust,ignore
 fn park(&self) {
@@ -162,14 +164,14 @@ future.
 [`thread::park`]: https://doc.rust-lang.org/std/thread/fn.park.html
 
 That concludes the initial whirlwind tour of the [`spawn`] method and the
-[`Unpark`] trait, lynchpins of the execution model of futures. We've seen how
+[`Notify`] trait, lynchpins of the execution model of futures. We've seen how
 the [`wait`] method leverages these functions to create a task and then
 immediately call the future's [`poll`] function until it returns its ready. The
 "executor" in this case is the current thread, so all code for the future runs
 on the current thread. Additionally the [`Task`] handles returned from
-[`park`] while the future is being polled contain an embedded reference to our
-instance of [`Unpark`], which we've configured to wake up the thread if it's
-blocking.
+[`current`] while the future is being polled contain an embedded reference to
+our instance of `ThreadUnpark` through the [`NotifyHandle`] type, which we've
+configured to wake up the thread if it's blocking.
 
 [`Task`]: https://docs.rs/futures/0.1/futures/task/struct.Task.html
 
@@ -237,7 +239,7 @@ method.  We just saw that this is where we tie off a future and a task is
 created.  Unlike before, however, we then see a new method called
 [`execute`]. This method consumes ownership of the [`Spawn`] and will run it to
 completion on an instance of the [`Executor`] trait provided; it automatically
-takes care of the unpark details we mentioned before.
+takes care of the notify details we mentioned before.
 
 [`execute`]: https://docs.rs/futures/0.1/futures/executor/struct.Spawn.html#method.execute
 [`Executor`]: https://docs.rs/futures/0.1/futures/executor/trait.Executor.html
@@ -314,12 +316,12 @@ called we'll poll the future. If the future is ready, then we're done! Unlike
 
 If the future is not ready, however, then the real magic happens. While the
 future was being polled the [`execute`] method configures a custom instance of
-[`Unpark`] to be available. This instance transitively contains a reference to
+[`Notify`] to be available. This instance transitively contains a reference to
 the executor, and may also contain a reference to the future itself. This means
 that once a future returns that it's not ready we simply return from the `run`
 function (modulo some synchronization).
 
-When `unpark` is called then it will attempt to resubmit work to the executor.
+When `notify` is called then it will attempt to resubmit work to the executor.
 These calls are synchronized to ensure that the future is submitted only once.
 
 And with all that we've now also completed our tour of how [`CpuPool`] works!
@@ -328,7 +330,7 @@ leveraged the new [`execute`] method to run the future instead. This method is
 more restrictive on the types of futures that it can accept, but it works by
 essentially submitting work to an executor whenever it's available. Futures that
 block will be resubmitted to the queue once they've been unblocked through the
-`unpark` method.
+`notify` method.
 
 ## [Executors in `tokio-core`](#tokio-core) {#tokio-core}
 
@@ -351,7 +353,7 @@ to happen, and then executing some code based on what event happened. Both
 the thread calling [`wait`] and the other in a pool of threads when there's no
 more work to do. Event loops, however, block waiting for any one of a number of
 events to occur. In the context of an event loop for futures we're going to
-interpret events here as either I/O events or as unpark requests from futures on
+interpret events here as either I/O events or as notify requests from futures on
 the event loop.
 
 The event loop that [`tokio-core`] builds on, [`mio`], supports arbitrary event
@@ -360,106 +362,23 @@ Tokio this is leveraged to assign each future its own "token" in addition to all
 I/O sources having a unique token. That way we can literally use the [`mio`]
 event loop to block for a list of events related to either futures or I/O.
 
-All I/O events in [`tokio-core`] are associated with a parked task. We saw
-[earlier]({{< relref "core-low-level.md" >}}) that when a future performs I/O it
-will implicitly park the task and register that with an I/O object when the I/O
-returns "would block". This makes our dispatch for I/O events pretty easy, we
-just wake up the task!
+All I/O events in [`tokio-core`] are associated with a task. We saw
+[earlier]({{< relref "core-low-level.md" >}}) that when a future performs I/O
+it will implicitly acquire the task and register that with an I/O object when
+the I/O returns "would block". This makes our dispatch for I/O events pretty
+easy, we just wake up the task!
 
 For events related to futures the [`tokio-core`] event loop then just polls the
 appropriate future (according to the token [`mio`] provides). If the future is
 done then resources with it are deallocated, and otherwise the future is
 registered to reawaken the event loop when it's ready.
 
-As an executor the [`Core`] type is responsible for providing an implementation
-of [`Unpark`] when polling futures. This implementation just needs to wake up
-the event loop, so for all futures it's just the [`SetReadiness`] type that
+As an executor the [`Core`] type is responsible for providing a
+[`NotifyHandle`] when polling futures. This implementation just needs to wake
+up the event loop, so for all futures it's just the [`SetReadiness`] type that
 [`mio`] provides. This type, when set to ready, will wake up the event loop and
 notify which future needs to get polled.
 
 [`mio`]: https://github.com/carllerche/mio
 [`Registration`]: https://docs.rs/mio/0.6/mio/struct.Registration.html
 [`SetReadiness`]: https://docs.rs/mio/0.6/mio/struct.SetReadiness.html
-
-## [Unpark Events](#unpark-events) {#unpark-events}
-
-Earlier when diving into the futures model we [saw a brief mention]({{< relref
-"futures-model.md#wakeup-cause" >}}) of "unpark events". These structures allow
-futures to communicate precisely what happens during an unpark to allow finer
-granularity of inspecting many sources of events.
-
-For example, let's consider how the `join` combinator works. Currently it simply
-polls the two futures it contains when it itself is polled. During this
-operation both futures register interest in their event sources, and eventually
-one of them will be woken up. When we re-poll the `join` combinator, though,
-we'll poll both futures again! Despite only one future being ready we did some
-extra work on the next [`poll`].
-
-Now with only two futures the extra work here may not matter much. If this is
-scaled to thousands or millions, however, it can be quite significant!
-Essentially what we need is the ability to communicate which sub-future woke
-up and caused a re-poll. This is precisely what unpark events are!
-
-Unpark events are primarily used through [`with_unpark_event`]:
-
-[`with_unpark_event`]: https://docs.rs/futures/0.1/futures/task/fn.with_unpark_event.html
-
-```rust,ignore
-fn with_unpark_event<F, R>(event: UnparkEvent, f: F) -> R
-    where F: FnOnce() -> R
-```
-
-This function takes an [`UnparkEvent`] and a closure to execute. While the
-closure is executing if [`park`] is called then a special [`Task`] handle is
-returned. [`Task`] handles returned in the scope of a [`with_unpark_event`] call
-will do extra work on an `unpark`, specifically running all unpark events before
-calling the inner [`Unpark`] itself. This "extra work" is defined by the
-[`UnparkEvent`], which is constructed with an [`EventSet`] and a `usize`.
-Essentially when a task is unparked, it will take all unpark events and call
-[`insert`] with the [`EventSet`] and `usize` specified.
-
-[`UnparkEvent`]: https://docs.rs/futures/0.1/futures/task/struct.UnparkEvent.html
-[`EventSet`]: https://docs.rs/futures/0.1/futures/task/trait.EventSet.html
-[`insert`]: https://docs.rs/futures/0.1/futures/task/trait.EventSet.html#tymethod.insert
-
-To get a better idea of how you might use this, let's take a look at some
-pseudo-code of how you might use this in join:
-
-```rust,ignore
-fn poll(&mut self) -> Poll<(A::Item, B::Item), A::Error> {
-    if !self.left.is_done() && self.set.contains(1) {
-        let event = UnparkEvent::new(self.set.clone(), 1);
-        task::with_unpark_event(event, || {
-            self.left.poll();
-        });
-    }
-
-    if !self.right.is_done() && self.set.contains(2) {
-        let event = UnparkEvent::new(self.set.clone(), 2);
-        task::with_unpark_event(event, || {
-            self.right.poll();
-        });
-    }
-
-    // ...
-}
-```
-
-Here we see a few crucial pieces of using unpark events. First and foremost
-they're used in the implementation of [`poll`] methods. Next we see that calls
-to [`poll`] of inner futures are always guarded. We don't actually poll inner
-futures if their token isn't in our current "event set".
-
-If it is, however, then we *always* poll the future inside of a
-`with_unpark_event` block. This means that tasks created by [`park`] during
-these blocks will insert the specified token into our set when unparked. Also
-note that the usage of `Arc` here means that only one allocation is made for the
-entire lifetime of the future.
-
-Your own usage of unpark events may be a little more complicated than this,
-however. You may want to take a look at their usage in the [`buffer_unordered`
-combinator] or the [`futures_unordered` combinator] which handle many of the
-subtleties of working with unpark events.
-
-[`buffer_unordered` combinator]: https://github.com/alexcrichton/futures-rs/blob/master/src/stream/buffer_unordered.rs
-[`futures_unordered` combinator]: https://github.com/alexcrichton/futures-rs/blob/master/src/stream/futures_unordered.rs

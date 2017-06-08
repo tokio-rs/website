@@ -339,7 +339,7 @@ impl<S: Stream> Stream for SplitStream<S> {
 Here we can see the [`poll_lock`] method in action. This method is similar to
 [`try_lock`] on mutexes where it will not block but it attempts to acquire the
 lock. The [`poll_lock`] method, however, is "futures aware" which means that
-it interacts with the task system, namely calling [`task::park`].
+it interacts with the task system, namely calling [`task::current`].
 
 The [`Async`] return value indicates whether the lock was acquired or whether
 the lock is already held by the other owner (remember there can only be one
@@ -354,7 +354,7 @@ propagate `NotReady` outwards as we're unable to make progress at this time.
 
 [`poll_lock`]: https://docs.rs/futures/0.1/futures/sync/struct.BiLock.html#method.poll_lock
 [`try_lock`]: https://doc.rust-lang.org/std/sync/struct.Mutex.html#method.try_lock
-[`task::park`]: https://docs.rs/futures/0.1/futures/task/fn.park.html
+[`task::current`]: https://docs.rs/futures/0.1/futures/task/fn.current.html
 [`Async`]: https://docs.rs/futures/0.1/futures/enum.Async.html
 [`BiLockGuard`]: https://docs.rs/futures/0.1/futures/sync/struct.BiLockGuard.html
 [`MutexGuard`]: https://doc.rust-lang.org/std/sync/struct.MutexGuard.html

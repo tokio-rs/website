@@ -127,8 +127,8 @@ thread would block. Tasks provide an equivalent to this model: the task "blocks"
 by yielding back to its executor, **after installing itself as a callback for
 the events it's waiting on**.
 
-[`park`]: https://docs.rs/futures/0.1/futures/task/fn.park.html
-[`unpark`]: https://docs.rs/futures/0.1/futures/task/fn.park.html
+[`current`]: https://docs.rs/futures/0.1/futures/task/fn.current.html
+[`notify`]: https://docs.rs/futures/0.1/futures/task/struct.Task.html#method.notify
 [`Task`]: https://docs.rs/futures/0.1/futures/task/struct.Task.html
 
 Returning to the example of reading from a socket, on a `NotReady` result the
@@ -137,24 +137,25 @@ up when the socket becomes ready, at which point it will re-`poll` its future.
 Crucially, though, the task instance stays fixed for the lifetime of the future
 it is executing—**so no allocation is needed to create or install this callback**.
 
-Completing the analogy with threads, tasks provide a [`park`]/[`unpark`] API for
+Completing the analogy with threads, tasks provide a [`current`]/[`notify`] API for
 "blocking" and wakeup:
 
 ```rust,ignore
-/// Returns a handle to the current task to call unpark at a later date.
-fn park() -> Task;
+/// Returns a handle to the current task to call notify at a later date.
+fn current() -> Task;
 
 impl Task {
     /// Indicate that the task should attempt to poll its future in a timely fashion.
-    fn unpark(&self);
+    fn notify(&self);
 }
 ```
 
-Blocking a future is a matter of using [`park`] to get a handle to its task,
+Blocking a future is a matter of using [`current`] to get a handle to its task,
 putting the resulting [`Task`] in some wakeup queue for the event of interest,
-and returning `NotReady`. When the event of interest occurs, the [`Task`] handle
-can be used to wake back up the task, e.g. by rescheduling it for execution on a
-thread pool. The precise mechanics of [`park`]/[`unpark`] vary by task executor.
+and returning `NotReady`. When the event of interest occurs, the [`Task`]
+handle can be used to wake back up the task, e.g. by rescheduling it for
+execution on a thread pool. The precise mechanics of [`notify`] vary by task
+executor.
 
 In a way, the task model is an instance of "green" (aka lightweight) threading:
 we schedule a potentially large number of asynchronous tasks onto a much smaller
@@ -220,15 +221,15 @@ represent subtasks running in parallel on a thread pool. When those subtasks are
 still running, `poll`ing their futures will return `NotReady`, effectively
 "blocking" the `Join` future, while stashing a handle to the ambient `Task` for
 waking it back up when they finish. The two subtasks can then race to *wake up*
-the `Task`, but that's fine: **the `unpark` method for waking a task is
+the `Task`, but that's fine: **the `notify` method for waking a task is
 threadsafe, and guarantees that the task will `poll` its future at least once
-after any `unpark` call**. Thus, synchronization is handled once and for all at
+after any `notify` call**. Thus, synchronization is handled once and for all at
 the task level, without requiring combinators like `join` to allocate or handle
 synchronization themselves.
 
 * You may have noticed that `poll` takes `&mut self`, which means that a given
   future cannot be `poll`ed concurrently—the future has unique access to its
-  contents while polling. The `unpark` synchronization guarantees it.
+  contents while polling. The `notify` synchronization guarantees it.
 
 One final point. Combinators like `join` embody "small" state machines, but
 because some of those states involve additional futures, they allow additional
@@ -294,22 +295,21 @@ cascades are a natural consequence of the demand-driven model.
 
 If you're familiar with interfaces like
 [epoll](http://man7.org/linux/man-pages/man7/epoll.7.html), you may have noticed
-something missing from the `park`/`unpark` model: it provides no way for a task
-to know *why* it was woken up.
+something missing from the `notify` model: it provides no way for a task to
+know *why* it was woken up.
 
 That can be a problem for certain kinds of futures that involve polling a large
 number of other futures concurrently—you don't want to have to re-poll
 *everything* to discover which sub-future is actually able to make progress.
 
-To deal with this problem, the library offers a kind of "epoll for everyone":
-the ability to associate "unpark events" with a given `Task` handle. That is,
-there may be various handles to the same task floating around, all of which can
-be used to wake the task up, but each of which carries different unpark events.
-When woken, the future within the task can inspect these unpark events to
-determine what happened. See [`with_unpark_event`] or [tasks in more depth]({{<
-relref "tasks.md#unpark-events" >}}) for more detail.
+Historically the [`futures`] crate provided an API, [`with_unpark_event`], to
+learn about the cause of a wakeup. This has since been deprecated, however, in
+favor of the [`FuturesUnordered`] type which provides an efficient mechanism to
+execute a list of futures. If, however, the [`FuturesUnordered`] type is not
+sufficient for your use case please let us know!
 
 [`with_unpark_event`]: https://docs.rs/futures/0.1/futures/task/fn.with_unpark_event.html
+[`FuturesUnordered`]: https://docs.rs/futures/0.1/futures/stream/struct.FuturesUnordered.html
 
 ## [Streams and sinks](#streams-and-sinks) {#streams-and-sinks}
 
