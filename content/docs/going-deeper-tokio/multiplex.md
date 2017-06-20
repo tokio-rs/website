@@ -131,7 +131,7 @@ impl Decoder for LineCodec {
             let id = line.split_to(4).into_buf().get_u32::<BigEndian>();
 
             // Turn this data into a UTF string and return it in a Frame.
-            return match str::from_utf8(&line[4..]) {
+            return match str::from_utf8(&line[..]) {
                 Ok(s) => Ok(Some((id as RequestId, s.to_string()))),
                 Err(_) => Err(io::Error::new(io::ErrorKind::Other,
                                              "invalid string")),
