@@ -49,7 +49,9 @@ A server in `tokio-proto` is made up of three distinct parts:
 [streaming]({{< relref "streaming.md" >}})?).
 
 - A **service**, which says how to produce a response given a request. A
-  service is basically an asynchronous function.
+  service is basically an asynchronous function. A service will contain 
+  the stateful bits of a server like configuration information or a pool
+  of database connections.
 
 Each part can vary independently, so once you've implemented a protocol
 (like HTTP), you can pair it with a number different services.
