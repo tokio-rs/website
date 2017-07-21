@@ -82,8 +82,8 @@ type MyMultiplexedFrame<T> = (RequestId, T);
 ```
 
 The `T` here represents the request or response type used for the `Service`.
-`tokio-proto` will use the `RequestId` in the frame to match oustanding requests
-with responses.
+`tokio-proto` will use the `RequestId` in the frame to match outstanding
+requests with responses.
 
 We will use `Encoder`/`Decoder` traits and the `AsyncRead::framed` helper to
 help us go from a `TcpStream` to a `Stream + Sink` for our frame type:
