@@ -91,7 +91,7 @@ impl Notify for ThreadUnpark {
 }
 ```
 
-In general, [`Notify`] is used to indicate to an executor that that a task's
+In general, [`Notify`] is used to indicate to an executor that a task's
 future is ready to be polled again, which in this case means waking up the
 thread running [`wait_future`] \(out "executor" is `wait_future` above). As
 we'll see, other executors have other ways of "waking up" a task.
