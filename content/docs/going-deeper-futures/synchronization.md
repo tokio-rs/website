@@ -43,7 +43,7 @@ fn main() {
     let (tx, rx) = oneshot::channel();
 
     thread::spawn(move || {
-        tx.complete(expensive_computation());
+        tx.send(expensive_computation()).unwrap();
     });
 
     let rx = rx.map(|x| x + 3);
