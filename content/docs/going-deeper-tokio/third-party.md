@@ -49,6 +49,7 @@ list, please feel free to send a PR!
 [`tokio-dns`]: https://github.com/sbstp/tokio-dns
 [`tokio-inotify`]: https://github.com/dermesser/tokio-inotify
 [`tokio-signal`]: https://github.com/alexcrichton/tokio-signal
+[`tokio-serial`]: https://github.com/berkowski/tokio-serial/
 [`tokio-process`]: https://github.com/alexcrichton/tokio-process
 [`trust-dns`]: http://trust-dns.org/
 [`capnproto-rust`]: https://github.com/dwrensha/capnproto-rust
