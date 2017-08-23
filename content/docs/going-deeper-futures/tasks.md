@@ -227,7 +227,7 @@ fn spawn<F>(&self, f: F) -> CpuFuture<F::Item, F::Error>
 ```
 
 Here we're creating a [oneshot channel] to bridge the thread pool and the
-returned future. On the thread pool we'll complete the `tx` and and the `rx` end
+returned future. On the thread pool we'll complete the `tx` and the `rx` end
 is the returned [`CpuFuture`]. A small wrapper, `Sender` is created to own the
 future `f` and the `tx` sender. This struct is itself a future which simply runs
 `f` to completion, sending the completed value on `tx`.
