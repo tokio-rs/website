@@ -55,7 +55,7 @@ fn main() {
 Here we can see that the [`oneshot::channel`] function returns two halves (like
 [`mpsc::channel` in the standard library][mpsc-std]). The first half, `tx`
 ("transmitter"), is of type [`Sender`] and is used to provide a value to the
-future on the other end. The [`Sender::complete`] method will transmit the
+future on the other end. The [`Sender::send`] method will transmit the
 value to the receiving end.
 
 The second half, `rx` ("receiver"), is of type [`Receiver`] which
@@ -66,7 +66,7 @@ type of the oneshot.  The `Error` type is [`Canceled`], which happens when the
 [`oneshot::channel`]: https://docs.rs/futures/0.1/futures/sync/oneshot/fn.channel.html
 [mpsc-std]: https://doc.rust-lang.org/std/sync/mpsc/fn.channel.html
 [`Sender`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Sender.html
-[`Sender::complete`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Sender.html#method.complete
+[`Sender::send`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Sender.html#method.send
 [`Receiver`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Receiver.html
 [`Canceled`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Canceled.html
 
