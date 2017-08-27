@@ -1,3 +1,4 @@
+#!/bin/sh
 set -ex
 
 if [ ! -d tmp ]; then
@@ -24,8 +25,8 @@ EOF
   cargo build --manifest-path tmp/Cargo.toml
 fi
 
-rand=`ls tmp/target/debug/deps/librand-*.rlib`
-for f in `git ls-files | grep 'md$'`; do
-  echo $f
-  rustdoc --test $f -L tmp/target/debug/deps --extern rand=$rand
+rand=$(ls tmp/target/debug/deps/librand-*.rlib)
+for f in $(git ls-files | grep 'md$'); do
+  echo "$f"
+  rustdoc --test "$f" -L tmp/target/debug/deps --extern "rand=$rand"
 done
