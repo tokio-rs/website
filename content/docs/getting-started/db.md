@@ -279,7 +279,7 @@ INSERT INTO greetings (body) VALUES
     ('Hello'),
     ('안녕하세요'),
     ('Bonjour'),
-    ('好'),
+    ('你好'),
     ('Здравствуйте');
 ```
 
