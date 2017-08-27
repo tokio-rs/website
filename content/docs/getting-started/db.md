@@ -161,7 +161,7 @@ impl Service for Server {
     type Request = Request;
     type Response = Response;
     type Error = io::Error;
-    type Future = BoxFuture<Response, io::Error>;
+    type Future = Box<Future<Item = Response, Error = io::Error>>;;
 
     fn call(&self, req: Request) -> Self::Future {
         // ...
@@ -170,12 +170,9 @@ impl Service for Server {
 ```
 
 We saw `Request` and `Response` types from before, but here we're also filling
-out that we're using `io::Error` as our error value and our future will be the
-[`BoxFuture`] type alias for a boxed future (trait object). This allows us to
-flexibly define the future internally.
-
-[`BoxFuture`]: https://docs.rs/futures/0.1/futures/future/type.BoxFuture.html
-
+out that we're using `io::Error` as our error value and our future will be a
+boxed future (trait object). This allows us to flexibly define the future
+internally.
 
 Well also need a `Message` struct that we can use to serialize the row that we
 will be getting from the database into json using `serde`:
@@ -248,26 +245,25 @@ from [`spawn_fn`] which will complete the future that it returned. To finish up
 our implementation of `Service::call` let's take a look at the last piece:
 
 ```rust,ignore
-msg.map(|msg| {
+Box::new(msg.map(|msg| {
     let json = serde_json::to_string(&msg).unwrap();
     let mut response = Response::new();
+
     response.header("Content-Type", "application/json");
     response.body(&json);
     response
-}).boxed()
+}))
 ```
 
 The [`spawn_fn`] function returned a [`CpuFuture`] representing the loaded row
 (`Message`) above. Our service will take this loaded instance of `Message` and
 then transform it to an HTTP response by serializing it to JSON and filling
-out a [`Response`] from the [`tokio-minihttp`] crate. Finally we see the
-[`boxed`] method is used to package up this whole future into a trait object so
+out a [`Response`] from the [`tokio-minihttp`] crate. Finally, we see that a
+`Box::new` is used to package up this whole future into a trait object so
 we can return it.
 
 [`spawn_fn`]: https://docs.rs/futures-cpupool/0.1/futures_cpupool/struct.CpuPool.html#method.spawn_fn
 [`CpuFuture`]: https://docs.rs/futures-cpupool/0.1/futures_cpupool/struct.CpuFuture.html
-[`boxed`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.boxed
-
 
 Finally before we run the example, we need to set up the database to have a
 `greetings` table that we can query from. Run the following queries within the
@@ -310,9 +306,9 @@ extern crate tokio_service;
 
 use std::io;
 
-use futures::{BoxFuture, Future};
+use futures::Future;
 use futures_cpupool::CpuPool;
-use r2d2_postgres::{TlsMode, PostgresConnectionManager};
+use r2d2_postgres::{PostgresConnectionManager, TlsMode};
 use rand::Rng;
 use tokio_minihttp::{Request, Response};
 use tokio_proto::TcpServer;
@@ -333,7 +329,7 @@ impl Service for Server {
     type Request = Request;
     type Response = Response;
     type Error = io::Error;
-    type Future = BoxFuture<Response, io::Error>;
+    type Future = Box<Future<Item = Response, Error = io::Error>>;
 
     fn call(&self, req: Request) -> Self::Future {
         assert_eq!(req.path(), "/db");
@@ -355,14 +351,14 @@ impl Service for Server {
             })
         });
 
-        msg.map(|msg| {
+        Box::new(msg.map(|msg| {
             let json = serde_json::to_string(&msg).unwrap();
             let mut response = Response::new();
 
             response.header("Content-Type", "application/json");
             response.body(&json);
             response
-        }).boxed()
+        }))
     }
 }
 
@@ -382,4 +378,5 @@ fn main() {
         })
     })
 }
+
 ```
