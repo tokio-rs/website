@@ -28,6 +28,7 @@ take a look at an example:
 [`oneshot`]: https://docs.rs/futures/0.1/futures/sync/oneshot/index.html
 
 ```rust
+# #![deny(deprecated)]
 extern crate futures;
 
 use std::thread;
@@ -89,13 +90,13 @@ to receive such a notification. For example:
 [`Sender::poll_cancel`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Sender.html#method.poll_cancel
 
 ```rust
+# #![deny(deprecated)]
 extern crate futures;
 
 use std::thread;
 use std::time::Duration;
 
-use futures::Future;
-use futures::future;
+use futures::{Future, future};
 use futures::sync::oneshot;
 
 fn main() {
@@ -142,16 +143,16 @@ values. Let's take a look how this might be used by creating a helper function
 that uses a worker thread to create a stream of lines on stdin:
 
 ```rust
+# #![deny(deprecated)]
 extern crate futures;
 
 use std::io::{self, BufRead};
 use std::thread;
 
 use futures::{Stream, Sink, Future};
-use futures::stream::BoxStream;
 use futures::sync::mpsc;
 
-fn stdin() -> BoxStream<String, io::Error> {
+fn stdin() -> Box<Stream<Item = String, Error = io::Error>> {
     let (mut tx, rx) = mpsc::channel(1);
 
     thread::spawn(|| {
@@ -164,7 +165,7 @@ fn stdin() -> BoxStream<String, io::Error> {
         }
     });
 
-    rx.then(|r| r.unwrap()).boxed()
+    Box::new(rx.then(|r| r.unwrap()))
 }
 #
 # fn main() {}
@@ -284,6 +285,7 @@ implementation of the [`Stream::split`] method:
 [`Stream::split`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.split
 
 ```rust
+# #![deny(deprecated)]
 # extern crate futures;
 # use futures::sync::BiLock;
 # use futures::Sink;
@@ -314,6 +316,7 @@ and [`Sink`] on these types. Let's take a look at the [`Stream`] implementation
 for `SplitStream`:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate futures;
 #
 # use futures::{Stream, Async, Poll};

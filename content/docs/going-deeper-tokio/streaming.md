@@ -97,6 +97,7 @@ previous examples, our codec will retain some state for parsing (which is
 typical for streaming protocols):
 
 ```rust
+# #![deny(deprecated)]
 # extern crate bytes;
 # extern crate tokio_io;
 # extern crate tokio_proto;
@@ -221,6 +222,7 @@ between the message head and a body chunk.
 The next step is to define the protocol details:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate tokio_proto;
 # extern crate tokio_io;
 # extern crate bytes;
@@ -312,6 +314,7 @@ This step is similar to the
 the change in types for the `Service`, which allows working with body streams:
 
 ```rust,no_run
+# #![deny(deprecated)]
 # extern crate futures;
 # extern crate tokio_io;
 # extern crate tokio_proto;

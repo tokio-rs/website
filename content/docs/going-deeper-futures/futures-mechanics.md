@@ -65,11 +65,12 @@ object and return a new, wrapped one. For futures, you can use adapters to:
   [`or_else`])
 * Figure out which of two futures resolves first ([`select`])
 * Wait for two futures to both complete ([`join`])
-* Convert to a trait object ([`boxed`])
+* Convert to a trait object ([`Box::new`])
 * Convert unwinding into errors ([`catch_unwind`])
 
 [`Iterator`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html
 [`Box`]: https://doc.rust-lang.org/std/boxed/struct.Box.html
+[`Box::new`]: https://doc.rust-lang.org/std/boxed/struct.Box.html#method.new
 [`map`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.map
 [`map_err`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.map_err
 [`then`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.then
@@ -77,7 +78,6 @@ object and return a new, wrapped one. For futures, you can use adapters to:
 [`or_else`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.or_else
 [`select`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.select
 [`join`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.join
-[`boxed`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.boxed
 [`catch_unwind`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.catch_unwind
 
 For streams, there are a large set of adapters, including:

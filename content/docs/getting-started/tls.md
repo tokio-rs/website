@@ -14,6 +14,7 @@ Let's take a look at what a simple fetch of `https://www.rust-lang.org/` might
 look like:
 
 ```rust
+# #![deny(deprecated)]
 extern crate futures;
 extern crate native_tls;
 extern crate tokio_core;

@@ -63,6 +63,7 @@ connection-handling future, as we also saw before. To recap, the basic structure
 looks as follows:
 
 ```rust,no_run
+# #![deny(deprecated)]
 extern crate futures;
 extern crate tokio_core;
 

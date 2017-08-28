@@ -26,6 +26,7 @@ There are several options, listed from most to least ergonomic:
 First, you always have the option of returning a boxed [trait object]:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate futures;
 # use std::io;
 # use futures::Future;
@@ -42,19 +43,6 @@ the method as *any* type of future can be returned as an opaque, boxed `Future`.
 
 [`Box`]: https://doc.rust-lang.org/std/boxed/struct.Box.html
 
-Note that the [`boxed`] method returns a `BoxFuture`, which is a type alias for
-`Box<Future + Send>`:
-
-```rust
-# extern crate futures;
-# use futures::{Future, BoxFuture};
-# use futures::future;
-# fn main() {}
-fn foo() -> BoxFuture<u32, u32> {
-    future::ok(1).boxed()
-}
-```
-
 The downside of this approach is that it requires a runtime allocation when the
 future is constructed, and dynamic dispatch when using that future. The `Box`
 needs to be allocated on the heap and the future itself is then placed
@@ -66,7 +54,6 @@ chain of futures you want to return, which entails only a single allocation and
 dynamic dispatch for the entire chain.
 
 [trait object]: https://doc.rust-lang.org/book/trait-objects.html
-[`boxed`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.boxed
 
 ### [`impl Trait`](#impl-trait) {#impl-trait}
 [return-impl-trait]: #impl-trait
@@ -111,6 +98,7 @@ If you wouldn't like to return a `Box` and want to stick with stable Rust, anoth
 option is to write the return type directly:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate futures;
 # use futures::Future;
 # use futures::future::Map;

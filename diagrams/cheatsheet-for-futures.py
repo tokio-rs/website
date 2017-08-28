@@ -37,7 +37,6 @@ fn select_ok      (IntoIterator<IntoFuture<T, E>>) -> Future<(T, Vec<Future<T, E
 // Utility
 fn lazy         (FnOnce() -> IntoFuture<T, E>)             -> Future<T, E>
 fn loop_fn      (S, FnMut(S) -> IntoFuture<Loop<T, S>, E>) -> Future<T, E>
-fn Future::boxed(Future<T, E>+Send+'static)                -> Future<T, E>+Send+'static
 
 // Miscellaneous
 fn Future::into_stream   (Future<T, E>)            -> Stream<T, E>

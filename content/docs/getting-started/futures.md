@@ -130,6 +130,7 @@ Now let's use futures and a thread pool to launch the computation
 asynchronously:
 
 ```rust
+# #![deny(deprecated)]
 extern crate futures;
 extern crate futures_cpupool;
 
@@ -165,6 +166,7 @@ Even though futures are asynchronous, you always have the option of treating
 them synchronously, by *waiting* for completion:
 
 ```rust
+# #![deny(warnings)]
 # extern crate futures;
 # fn main() {
 # use futures::Future;
@@ -197,6 +199,7 @@ work with thread pools. But one strength of futures is their ability to
 timeout future:
 
 ```rust
+# #![deny(deprecated)]
 extern crate futures;
 extern crate futures_cpupool;
 extern crate tokio_timer;

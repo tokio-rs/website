@@ -73,6 +73,7 @@ then hangs up. (We'll use `tokio-core` in this example, which is covered in
 greater depth in the next section.)
 
 ```rust,no_run
+# #![deny(deprecated)]
 extern crate futures;
 extern crate tokio_core;
 extern crate tokio_io;

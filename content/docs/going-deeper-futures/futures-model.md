@@ -31,6 +31,7 @@ Let's take another look at the core definition of the `Future` trait, this time
 paying more attention to the required `poll` method:
 
 ```rust
+# #![deny(deprecated)]
 trait Future {
     // The type of value that the future yields on successful completion.
     type Item;

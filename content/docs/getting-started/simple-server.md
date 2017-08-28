@@ -28,6 +28,7 @@ tokio-service = "0.1"
 and bring them into scope in `main.rs`:
 
 ```rust
+# #![deny(deprecated)]
 extern crate bytes;
 extern crate futures;
 extern crate tokio_io;
@@ -49,7 +50,7 @@ A server in `tokio-proto` is made up of three distinct parts:
 [streaming]({{< relref "streaming.md" >}})?).
 
 - A **service**, which says how to produce a response given a request. A
-  service is basically an asynchronous function. A service will contain 
+  service is basically an asynchronous function. A service will contain
   the stateful bits of a server like configuration information or a pool
   of database connections.
 
@@ -65,6 +66,7 @@ where messages are arbitrary byte sequences delimited by `'\n'`. To do
 this, we'll need a couple of tools from `tokio-io`:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate bytes;
 # extern crate tokio_io;
 use std::io;
@@ -112,6 +114,7 @@ for this line protocol.
 For our line-based protocol, decoding is straightforward:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate bytes;
 # extern crate tokio_io;
 #
@@ -173,6 +176,7 @@ into which you serialize your output data. To keep things simple,
 we won't provide support for error responses:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate bytes;
 # extern crate tokio_io;
 #
@@ -208,6 +212,7 @@ protocol, though, we'll use the simplest style: a pipelined, non-streaming
 protocol:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate tokio_proto;
 use tokio_proto::pipeline::ServerProto;
 # fn main() {}
@@ -224,6 +229,7 @@ Setting up a protocol requires just a bit of boilerplate, tying together our
 chosen protocol style with the codec that we've built:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate tokio_proto;
 # extern crate tokio_io;
 # extern crate bytes;
@@ -300,6 +306,7 @@ protocol, we need to pair it with a *service* that says how to respond to reques
 The `tokio-service` crate provides a `Service` trait for just this purpose:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate tokio_service;
 use tokio_service::Service;
 # fn main() {}
@@ -320,8 +327,9 @@ for asynchronous code, through the `Future` trait. You can think of a future as
 an asynchronous version of `Result`. Let's bring the basics into scope:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate futures;
-use futures::{future, Future, BoxFuture};
+use futures::{future, Future};
 # fn main() {}
 ```
 
@@ -329,17 +337,17 @@ For our echo service, we don't need to do any I/O to produce a response for a
 request. So we use `future::ok` to make a future that immediately returns a
 value---in this case, returning the request immediately back as a successful
 response. To keep things simple, we'll also box the future into a trait object,
-which allows us to use the `BoxFuture` trait to define our service, no matter
+which allows us to use a trait object type to define our service, no matter
 what future we actually use inside---more on those tradeoffs later!
 
 ```rust
+# #![deny(deprecated)]
 # extern crate tokio_service;
 # extern crate futures;
 #
 # use std::io;
 # use tokio_service::Service;
-# use futures::future;
-# use futures::{Future, BoxFuture};
+# use futures::{future, Future};
 #
 # struct Echo;
 #
@@ -352,12 +360,12 @@ impl Service for Echo {
     type Error = io::Error;
 
     // The future for computing the response; box it for simplicity.
-    type Future = BoxFuture<Self::Response, Self::Error>;
+    type Future = Box<Future<Item = Self::Response, Error =  Self::Error>>;
 
     // Produce a future for computing a response from a request.
     fn call(&self, req: Self::Request) -> Self::Future {
         // In this case, the response is immediate.
-        future::ok(req).boxed()
+        Box::new(future::ok(req))
     }
 }
 #
@@ -372,6 +380,7 @@ actually configure and launch the server, which we'll do using the `TcpServer`
 builder:
 
 ```rust,no_run
+# #![deny(deprecated)]
 # extern crate tokio_proto;
 # extern crate tokio_core;
 # extern crate tokio_io;
@@ -381,8 +390,7 @@ builder:
 #
 # use std::io;
 #
-# use futures::future;
-# use futures::{Future, BoxFuture};
+# use futures::{future, Future};
 # use tokio_io::{AsyncRead, AsyncWrite};
 # use tokio_io::codec::{Framed, Encoder, Decoder};
 # use bytes::BytesMut;
@@ -445,10 +453,10 @@ use tokio_proto::TcpServer;
 #     type Request = String;
 #     type Response = String;
 #     type Error = io::Error;
-#     type Future = BoxFuture<Self::Response, Self::Error>;
+#     type Future = Box<Future<Item = Self::Response, Error = Self::Error>>;
 #
 #     fn call(&self, req: Self::Request) -> Self::Future {
-#         future::ok(req).boxed()
+#         Box::new(future::ok(req))
 #     }
 # }
 
@@ -485,13 +493,13 @@ did---the protocol specification---is reusable. To prove it, let's build a
 service that echos its input in reverse:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate tokio_service;
 # extern crate futures;
 #
 # use std::io;
 # use tokio_service::Service;
-# use futures::future;
-# use futures::{Future, BoxFuture};
+# use futures::{future, Future};
 #
 struct EchoRev;
 
@@ -499,13 +507,13 @@ impl Service for EchoRev {
     type Request = String;
     type Response = String;
     type Error = io::Error;
-    type Future = BoxFuture<Self::Response, Self::Error>;
+    type Future = Box<Future<Item = Self::Response, Error = Self::Error>>;
 
     fn call(&self, req: Self::Request) -> Self::Future {
         let rev: String = req.chars()
             .rev()
             .collect();
-        future::ok(rev).boxed()
+        Box::new(future::ok(rev))
     }
 }
 #
