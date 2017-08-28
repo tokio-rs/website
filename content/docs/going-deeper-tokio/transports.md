@@ -27,6 +27,7 @@ This is what a transport that encodes and decodes single byte numbers as `u32`
 might look like:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate futures;
 # extern crate tokio_core;
 #
