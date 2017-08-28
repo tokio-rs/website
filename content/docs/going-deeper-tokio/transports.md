@@ -30,17 +30,18 @@ might look like:
 # #![deny(deprecated)]
 # extern crate futures;
 # extern crate tokio_core;
+# extern crate tokio_io;
 #
 # use std::io::{self, Read, Write};
 #
 # use futures::{Sink, Stream, Poll, Async, AsyncSink, StartSend};
-# use tokio_core::io::Io;
+# use tokio_io::{AsyncRead, AsyncWrite};
 #
 pub struct IntTransport<T> {
     io: T,
 }
 
-impl<T> Stream for IntTransport<T> where T: Io {
+impl<T> Stream for IntTransport<T> where T: AsyncRead {
     type Item = u32;
     type Error = io::Error;
 
@@ -65,7 +66,7 @@ impl<T> Stream for IntTransport<T> where T: Io {
     }
 }
 
-impl<T> Sink for IntTransport<T> where T: Io {
+impl<T> Sink for IntTransport<T> where T: AsyncWrite {
     type SinkItem = u32;
     type SinkError = io::Error;
 
