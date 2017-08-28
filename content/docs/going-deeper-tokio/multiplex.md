@@ -89,6 +89,7 @@ We will use `Encoder`/`Decoder` traits and the `AsyncRead::framed` helper to
 help us go from a `TcpStream` to a `Stream + Sink` for our frame type:
 
 ```rust
+# #![deny(deprecated)]
 # extern crate tokio_core;
 # extern crate tokio_proto;
 # extern crate bytes;
@@ -208,10 +209,10 @@ impl Service for Echo {
     type Request = String;
     type Response = String;
     type Error = io::Error;
-    type Future = BoxFuture<Self::Response, Self::Error>;
+    type Future = Box<Future<Item = Self::Response, Error =  Self::Error>>;
 
     fn call(&self, req: Self::Request) -> Self::Future {
-        future::ok(req).boxed()
+        Box::new(future::ok(req))
     }
 }
 
