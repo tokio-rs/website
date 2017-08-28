@@ -28,6 +28,7 @@ impl Encoder for LineCodec {
 Now we'll write a server that can host an arbitrary service over this protocol:
 
 ```rust,no_run
+# #![deny(deprecated)]
 # extern crate tokio_io;
 # extern crate tokio_core;
 # extern crate tokio_service;
@@ -176,7 +177,7 @@ sink, flushing only at the end.
 To complete the example, let's build one final echo service and plug them together:
 
 ```rust,ignore
-use futures::{BoxFuture, future}
+use futures::{Future, future}
 
 struct EchoService;
 
@@ -184,9 +185,9 @@ impl Service for EchoService {
     type Request = String;
     type Response = String;
     type Error = io::Error;
-    type Future = BoxFuture<String, io::Error>;
+    type Future = Box<Future<Item = String, Error = io::Error>>;
     fn call(&self, input: String) -> Self::Future {
-        future::ok(input).boxed()
+        Box::new(future::ok(input))
     }
 }
 
