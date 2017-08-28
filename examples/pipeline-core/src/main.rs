@@ -1,3 +1,4 @@
+ # #![deny(deprecated)]
 extern crate futures;
 extern crate tokio_core;
 extern crate tokio_service;
@@ -67,9 +68,9 @@ impl Service for EchoService {
     type Request = EasyBuf;
     type Response = EasyBuf;
     type Error = io::Error;
-    type Future = BoxFuture<EasyBuf, io::Error>;
+    type Future = Box<Future<Item = EasyBuf, Error = io::Error>>;
     fn call(&mut self, input: EasyBuf) -> Self::Future {
-        future::ok(input).boxed()
+        Box::new(future::ok(input))
     }
 }
 
