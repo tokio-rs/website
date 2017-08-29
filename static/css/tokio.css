@@ -66,6 +66,25 @@ img {
   text-align: right;
 }
 
+.github-edit .fa {
+  font-family: inherit;
+}
+
+.github-edit .fa:before {
+  font-family: "FontAwesome";
+  display: inline-block;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  text-decoration: inherit;
+}
+
+.github-edit {
+  text-align: right;
+  padding-bottom: 1rem;
+}
+
+
 /*
  *
  * ===== Navbar =====

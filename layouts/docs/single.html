@@ -84,6 +84,9 @@
     </div>
     <div class="col-md-9">
       <div class="tk-content">
+        <div class="github-edit">
+            <a class="fa fa-github" href="https://github.com/tokio-rs/website/tree/master/content/{{ .File.Path }}"> Edit on GitHub</a>
+        </div>
         {{ .Content }}
         <!-- Yes, we have to use *Prev* to get the next content, because the
         weights are sorted inversely to how they are actually displayed... -->
