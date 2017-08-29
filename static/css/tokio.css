@@ -95,8 +95,9 @@ img {
    display: flex;
  }
 
- .navbar-nav .nav-item + .nav-item {
-   margin-left: 2rem;
+ .navbar-nav .nav-item {
+   margin-left: 1rem;
+   margin-right: 1rem;
  }
 
 .navbar-nav .nav-link {
@@ -164,6 +165,16 @@ img {
 
 .in .navbar-nav .nav-item {
   text-align: left;
+}
+
+.navbar-toggleable-md .navbar-nav {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+.navbar-toggleable-md .navbar-brand {
+  margin-top: 0;
 }
 
 /*
@@ -448,15 +459,6 @@ h5:hover a {
  *
  */
 
- @media (max-width: 991px) {
-   .navbar-toggleable-md .navbar-nav {
-     margin-top: 0;
-     margin-bottom: 0;
-   }
-   .navbar-toggleable-md .navbar-brand {
-     margin-top: 0;
-   }
- }
 
  @media (min-width: 768px) {
    .bootstrap-vertical-nav .navbar .navbar-collapse {
