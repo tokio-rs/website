@@ -2,6 +2,8 @@
 
 The website for the Tokio project. Lives at [https://tokio.rs](https://tokio.rs).
 
+[![Build Status](https://travis-ci.org/tokio-rs/website.svg?branch=master)](https://travis-ci.org/tokio-rs/website)
+
 ## Getting Started
 
 Building the website depends on [Hugo](http://gohugo.io). So, first make sure
