@@ -78,7 +78,7 @@ First we're creating an object that will eventually be converted into a
 [`NotifyHandle`], in this case `Arc<ThreadUnpark>`. This handle will later be
 used in the implementation of `Task::notify` which is similar to
 [`Thread::unpark`] in the standard library to how it wakes up a thread.  In
-fact, that's the exact implementation of `Unpark for ThreadUnpark`:
+fact, that's the exact implementation of `Notify for ThreadUnpark`:
 
 [`NotifyHandle`]: https://docs.rs/futures/0.1/futures/executor/struct.NotifyHandle.html
 
@@ -153,7 +153,7 @@ fn park(&self) {
 Here we check to see if `ready` is still `false`. If so, we call
 [`thread::park`]. This means that if after receiving a `NotReady` and before we
 call park, if an unpark happens it'll store `true` to `ready` (as we saw above
-in `Unpark for ThreadUnpark`). If this hasn't happened, though, then we block
+in `Notify for ThreadUnpark`). If this hasn't happened, though, then we block
 the current thread. The current thread will then get reawoken once the future's
 task is unparked, through the `ThreadUnpark` instance associated with this
 future.
