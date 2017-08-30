@@ -53,11 +53,11 @@ quite different than their standard library counterparts. They are all
 *non-blocking*; rather than blocking the current thread for data to arrive or
 for there to be room to write, they will return `WouldBlock`.
 
-The second property though is a little more subtle. It transitively implies that
-**all Tokio I/O objects can only be used within the context of a task**, which
-generally means within `poll`-like methods. (This task context is tracked
-implicitly using thread-local storage; see the [section on tasks](../tasks) for
-more detail.)  With this property, though, we can get ergonomic and efficient
+The second property though is a little more subtle. It transitively implies
+that **all Tokio I/O objects can only be used within the context of a task**,
+which generally means within `poll`-like methods. (This task context is tracked
+implicitly using thread-local storage; see the [section on tasks]({{< relref "tasks.md" >}})
+for more detail.) With this property, though, we can get ergonomic and efficient
 management of "blocking" the current *task* waiting for I/O to complete. In
 other words, we get a lightweight threading model.
 
