@@ -2,6 +2,7 @@
 title = "Announcing Tokio 0.1"
 description = "10 January 2017"
 menu = "blog"
+weight = 100
 +++
 
 Today we are publishing the preliminary version of the Tokio stack, 0.1!
