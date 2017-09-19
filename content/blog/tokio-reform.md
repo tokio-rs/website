@@ -2,6 +2,7 @@
 title = "An RFC for a Tokio revamp"
 description = "19 September 2017"
 menu = "blog"
+weight = 103
 +++
 
 Hi there, Tokio community!
