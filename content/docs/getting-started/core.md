@@ -107,8 +107,8 @@ helps you do exactly this with a method of the [`AsyncRead`] trait,
 
 [`AsyncRead::framed`]: https://docs.rs/tokio-io/0.1/tokio_io/trait.AsyncRead.html#method.framed
 
-The [`AsyncRead::framed`] method takes a type which implements the [`Encoder`]
-and [`Decoder`] traits.  which defines how to take a stream and sink of bytes
+The [`AsyncRead::framed`] method takes a type, which implements the [`Encoder`]
+and [`Decoder`] traits, and defines how to take a stream and sink of bytes
 to a literal [`Stream`] and [`Sink`] implementation. This method will return a
 [`Framed`] which implements the [`Sink`] and [`Stream`] traits, using the
 [`Encoder`] and [`Decoder`] provided to decode and encode frames. Note that a
