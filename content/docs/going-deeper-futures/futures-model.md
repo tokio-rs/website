@@ -48,10 +48,10 @@ trait Future {
 type Poll<T, E> = Result<Async<T>, E>;
 
 enum Async<T> {
-    /// Represents that a value is immediately ready.
+    // Represents that a value is immediately ready.
     Ready(T),
 
-    /// Represents that a value is not ready yet, but may be so later.
+    // Represents that a value is not ready yet, but may be so later.
     NotReady,
 }
 ```
@@ -142,11 +142,11 @@ Completing the analogy with threads, tasks provide a [`current`]/[`notify`] API 
 "blocking" and wakeup:
 
 ```rust,ignore
-/// Returns a handle to the current task to call notify at a later date.
+// Returns a handle to the current task to call notify at a later date.
 fn current() -> Task;
 
 impl Task {
-    /// Indicate that the task should attempt to poll its future in a timely fashion.
+    // Indicate that the task should attempt to poll its future in a timely fashion.
     fn notify(&self);
 }
 ```
@@ -349,14 +349,14 @@ trait Sink {
 type StartSend<T, E> = Result<AsyncSink<T>, E>;
 
 enum AsyncSink<T> {
-    /// The `start_send` attempt succeeded, so the sending process has
-    /// *started*; you must use `Sink::poll_complete` to drive the send
-    /// to completion.
+    // The `start_send` attempt succeeded, so the sending process has
+    // *started*; you must use `Sink::poll_complete` to drive the send
+    // to completion.
     Ready,
 
-    /// The `start_send` attempt failed due to the sink being full. The
-    /// value being sent is returned, and the current `Task` will be
-    /// automatically notified again once the sink has room.
+    // The `start_send` attempt failed due to the sink being full. The
+    // value being sent is returned, and the current `Task` will be
+    // automatically notified again once the sink has room.
     NotReady(T),
 }
 ```
