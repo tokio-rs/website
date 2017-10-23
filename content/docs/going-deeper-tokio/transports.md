@@ -176,7 +176,7 @@ struct PingPong<T> {
     upstream: T,
 }
 
-/// Implement `Stream` for our transport ping / pong middleware
+// Implement `Stream` for our transport ping / pong middleware
 impl<T> Stream for PingPong<T>
     where T: Stream<Item = String, Error = io::Error>,
           T: Sink<SinkItem = String, SinkError = io::Error>,
