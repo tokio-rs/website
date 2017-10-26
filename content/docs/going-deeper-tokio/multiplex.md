@@ -44,7 +44,7 @@ parts:
   service is basically an asynchronous function.
 
 Each part can vary independently, so once you've implemented a protocol
-(like HTTP), you can pair it with a number different services.
+(like HTTP), you can pair it with a number of different services.
 
 This guide specifically covers implementing a **simple** multiplexed protocol.
 The [next section](../streaming) will show how to implement a streaming protocol.
