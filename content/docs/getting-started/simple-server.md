@@ -55,7 +55,7 @@ A server in `tokio-proto` is made up of three distinct parts:
   of database connections.
 
 Each part can vary independently, so once you've implemented a protocol
-(like HTTP), you can pair it with a number different services.
+(like HTTP), you can pair it with a number of different services.
 
 Let's see how it's done.
 
