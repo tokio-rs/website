@@ -200,6 +200,8 @@ reactor's ability to "spawn" additional work:
 [`spawn`]: https://tokio-rs.github.io/tokio-core/tokio_core/reactor/struct.Handle.html#method.spawn
 
 ```rust,ignore
+use futures::Future;
+
 let handle = core.handle();
 let server = connections.for_each(|(socket, _peer_addr)| {
     let serve_one = tokio_io::io::write_all(socket, b"Hello, world!\n")
