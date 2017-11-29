@@ -161,7 +161,7 @@ impl Service for Server {
     type Request = Request;
     type Response = Response;
     type Error = io::Error;
-    type Future = Box<Future<Item = Response, Error = io::Error>>;;
+    type Future = Box<Future<Item = Response, Error = io::Error>>;
 
     fn call(&self, req: Request) -> Self::Future {
         // ...
