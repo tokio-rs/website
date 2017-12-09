@@ -172,7 +172,7 @@ responses if they are available. The key is that [`Sink::send_all`] eager
 pulls as many elements from the stream as it can, writing them all into the
 sink, flushing only at the end.
 
-[`Stream::and_then`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.send_all
+[`Stream::and_then`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.and_then
 [`Sink::send_all`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html#method.send_all
 
 To complete the example, let's build one final echo service and plug them together:
