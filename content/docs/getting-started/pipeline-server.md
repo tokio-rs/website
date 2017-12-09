@@ -166,13 +166,14 @@ handle.spawn(server);
 ```
 
 And that's it---we've built a general-purpose server for a line-based
-protocol. By using the built-in framing and [`Stream::send_all`] method, we also
+protocol. By using the built-in framing and [`Sink::send_all`] method, we also
 get a pretty efficient server: it will batch up handling multiple requests and
-responses if they are available. The key is that [`Stream::send_all`] eager
+responses if they are available. The key is that [`Sink::send_all`] eager
 pulls as many elements from the stream as it can, writing them all into the
 sink, flushing only at the end.
 
 [`Stream::and_then`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.send_all
+[`Sink::send_all`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html#method.send_all
 
 To complete the example, let's build one final echo service and plug them together:
 
