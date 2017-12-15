@@ -160,7 +160,7 @@ a [`spawn`][`Remote::spawn`] method. Unlike [`Handle::spawn`], [`Remote::spawn`]
 takes a *closure* that creates a future and must be `Send` (i.e. it can be sent
 across threads).
 
-When the closure is run, it is yielded a [`Handle`] as proof that it's running
+When the closure is run, it must yield a [`Handle`] as proof that it's running
 on the same thread as the event loop. This handle can then be used to create and
 work with I/O objects. The created future is spawned onto the event loop to be
 executed locally.
