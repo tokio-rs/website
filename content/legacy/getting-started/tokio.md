@@ -1,7 +1,5 @@
 +++
 title = "What is Tokio?"
-menu = "getting_started"
-weight = 100
 +++
 
 ##### Tokio is a platform for writing fast networking code in Rust.

@@ -1,11 +1,6 @@
 +++
 title = "The futures model in depth"
 description = "Understanding how futures, streams and sinks work"
-menu = "going_deeper_futures"
-weight = 205
-aliases = [
-  "/docs/going-deeper/futures-model/"
-]
 +++
 
 At this point, we're ready to dig into the implementation details for futures,
@@ -31,7 +26,6 @@ Let's take another look at the core definition of the `Future` trait, this time
 paying more attention to the required `poll` method:
 
 ```rust
-# #![deny(deprecated)]
 trait Future {
     // The type of value that the future yields on successful completion.
     type Item;

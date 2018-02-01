@@ -1,8 +1,6 @@
 +++
 title = "Example: an echo server using proto"
 description = ""
-menu = "getting_started"
-weight = 101
 +++
 
 To kick off our tour of Tokio, we'll build a simple line-based echo server using
@@ -28,7 +26,6 @@ tokio-service = "0.1"
 and bring them into scope in `main.rs`:
 
 ```rust
-# #![deny(deprecated)]
 extern crate bytes;
 extern crate futures;
 extern crate tokio_io;
@@ -66,7 +63,6 @@ where messages are arbitrary byte sequences delimited by `'\n'`. To do
 this, we'll need a couple of tools from `tokio-io`:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate bytes;
 # extern crate tokio_io;
 use std::io;
@@ -114,7 +110,6 @@ for this line protocol.
 For our line-based protocol, decoding is straightforward:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate bytes;
 # extern crate tokio_io;
 #
@@ -176,7 +171,6 @@ into which you serialize your output data. To keep things simple,
 we won't provide support for error responses:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate bytes;
 # extern crate tokio_io;
 #
@@ -212,7 +206,6 @@ protocol, though, we'll use the simplest style: a pipelined, non-streaming
 protocol:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate tokio_proto;
 use tokio_proto::pipeline::ServerProto;
 # fn main() {}
@@ -229,7 +222,6 @@ Setting up a protocol requires just a bit of boilerplate, tying together our
 chosen protocol style with the codec that we've built:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate tokio_proto;
 # extern crate tokio_io;
 # extern crate bytes;
@@ -306,7 +298,6 @@ protocol, we need to pair it with a *service* that says how to respond to reques
 The `tokio-service` crate provides a `Service` trait for just this purpose:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate tokio_service;
 use tokio_service::Service;
 # fn main() {}
@@ -327,7 +318,6 @@ for asynchronous code, through the `Future` trait. You can think of a future as
 an asynchronous version of `Result`. Let's bring the basics into scope:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate futures;
 use futures::{future, Future};
 # fn main() {}
@@ -341,7 +331,6 @@ which allows us to use a trait object type to define our service, no matter
 what future we actually use inside---more on those tradeoffs later!
 
 ```rust
-# #![deny(deprecated)]
 # extern crate tokio_service;
 # extern crate futures;
 #
@@ -380,7 +369,6 @@ actually configure and launch the server, which we'll do using the `TcpServer`
 builder:
 
 ```rust,no_run
-# #![deny(deprecated)]
 # extern crate tokio_proto;
 # extern crate tokio_core;
 # extern crate tokio_io;
@@ -493,7 +481,6 @@ did---the protocol specification---is reusable. To prove it, let's build a
 service that echos its input in reverse:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate tokio_service;
 # extern crate futures;
 #

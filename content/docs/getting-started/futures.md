@@ -1,313 +1,356 @@
 +++
 title = "Futures"
-description = "A productive, zero-cost approach to asynchrony"
+description = ""
 menu = "getting_started"
-weight = 102
+weight = 130
 +++
 
-Tokio is fundamentally based on *asynchronous I/O*. While you don't need to have
-a deep understanding of async I/O to use Tokio, it's good to have the basic picture.
+Futures, hinted at earlier in the guide, are the building block used to manage
+asynchronous logic. They are the foundation of a Tokio based application.
 
-Let's start with a simple piece of I/O you might want to perform: reading a
-certain number of bytes from a socket. Rust's standard library provides a
-function,
-[`read_exact`](https://static.rust-lang.org/doc/master/std/io/trait.Read.html#method.read_exact),
-to do this:
+## [What Are Futures?](#what-are-futures) {#what-are-futures}
 
-```rust,ignore
-// reads 4096 bytes into `my_vec`
-socket.read_exact(&mut my_vec[..4096]);
-```
+A future is a value that represents the completion of an asynchronous
+computation. Usually, the future _completes_ due to an event that happens
+elsewhere in the system. While we’ve been looking at things from the perspective
+of basic I/O, you can use a future to represent a wide range of events, e.g.:
 
-**Quick quiz**: what happens if the socket hasn't received 4096 bytes yet?
+* **A database query** that’s executing in a thread pool. When the query
+  finishes, the future is completed, and its value is the result of the query.
 
-Since the standard library is based on *synchronous* I/O, the answer is that the
-calling thread is blocked, sleeping until more bytes are available. While that
-works well in some contexts, it can be a problem for scaling up servers: if we
-want to serve a large number of clients concurrently, but each request might
-involve blocking a thread, then we're going to need a large number of threads.
+* **An RPC invocation** to a server. When the server replies, the future is
+  completed, and its value is the server’s response.
 
-In the asynchronous world, instead of blocking until requests can be completed,
-we register that we *want* to perform a certain request, and are later notified
-when that request can be fulfilled. That means that we can use a single thread
-to manage an arbitrary number of connections, with each connection using minimal
-resources.
-
-Somehow, though, we've got to manage all of those in-flight requests. It'd be
-nice if we could write code in terms of individual connections and operations,
-and have all of that tracking and dispatching taken care of for us.
-
-That's where futures come in.
-
-## [Futures](#futures) {#futures}
-
-A future is a value that's in the process of being computed, but might not be
-ready yet. Usually, the future becomes *complete* (the value is ready) due to an
-event happening somewhere else. While we've been looking at things from the
-perspective of basic I/O, you can use a future to represent a wide range of
-events, e.g.:
-
-- **A database query** that's executing in a thread pool. When the query finishes,
-  the future is completed, and its value is the result of the query.
-
-- **An RPC invocation** to a server. When the server replies, the future is
-  completed, and its value is the server's response.
-
-- **A timeout**. When time is up, the future is completed, and its value is
+* **A timeout**. When time is up, the future is completed, and its value is
   `()`.
 
-- **A long-running CPU-intensive task**, running on a thread pool. When the task
+* **A long-running CPU-intensive task**, running on a thread pool. When the task
   finishes, the future is completed, and its value is the return value of the
   task.
 
-- **Reading bytes from a socket**. When the bytes are ready, the future is completed
--- and depending on the buffering strategy, the bytes might be returned
-directly, or written as a side-effect into some existing buffer.
+* **Reading bytes from a socket**. When the bytes are ready, the future is
+  completed – and depending on the buffering strategy, the bytes might be
+  returned directly, or written as a side-effect into some existing buffer.
 
-In short, futures are applicable to asynchronous events of all shapes and
-sizes. The asynchrony is reflected in the fact that you get a *future* right
-away, without blocking, even though the *value* the future represents will
-become ready only at some unknown time in the... future.
+The entire point of the future abstraction is to allow asynchronous functions,
+i.e., functions that cannot immediately return a value, to be able to return
+**something**.
 
-#### [A simple example](#simple-example) {#simple-example}
+For example, an asynchronous HTTP client could provide a `get` function that
+looks like this:
 
-Let's make this concrete with an example: we'll take a long-running computation
-and add a timeout to it using futures.
-
-```shell
-cargo new --bin prime-timeout
-cd prime-timeout
+```rust,ignore
+pub fn get(&self, uri: &str) -> ResponseFuture { ... }
 ```
 
-Here we'll bring in futures and a couple additional tools on top:
+Then, the user of the library would use the function as so:
 
-```toml
-[dependencies]
-futures = "0.1"
-futures-cpupool = "0.1"
-tokio-timer = "0.1"
+```rust,ignore
+let response_future = client.get("https://www.example.com");
 ```
 
-For our lengthy computation, we'll inefficiently confirm that a large prime
-number is prime:
+Now, the `response_future` isn't the actual response. It is a future that will
+complete once the response is received. However, since the caller has a concrete
+**thing** (the future), they can start to use it. For example, they may chain
+computations to perform once the response is received or they might pass the
+future to a function.
 
-```rust
-const BIG_PRIME: u64 = 15485867;
-
-// checks whether a number is prime, slowly
-fn is_prime(num: u64) -> bool {
-    for i in 2..num {
-        if num % i == 0 { return false }
-    }
-    true
-}
-```
-
-##### [Synchronous version](#synchronous-version) {#synchronous-version}
-
-Before we use futures, here's how we'd run this computation synchronously---we
-just call the function:
-
-```rust
-# const BIG_PRIME: u64 = 1;
-# fn is_prime(num: u64) -> bool { true }
-// Synchronous version
-fn main() {
-    if is_prime(BIG_PRIME) {
-        println!("Prime");
-    } else {
-        println!("Not prime");
-    }
-}
-```
-
-The effect is that the main thread is blocked until the computation finishes,
-and then it prints out the result.
-
-##### [Asynchronous version](#asynchronous-version) {#asynchronous-version}
-
-Now let's use futures and a thread pool to launch the computation
-asynchronously:
-
-```rust
-# #![deny(deprecated)]
-extern crate futures;
-extern crate futures_cpupool;
-
-use futures::Future;
-use futures_cpupool::CpuPool;
-
-# const BIG_PRIME: u64 = 1;
-# fn is_prime(num: u64) -> bool { true }
-
-fn main() {
-    // set up a thread pool
-    let pool = CpuPool::new_num_cpus();
-
-    // spawn our computation, getting back a *future* of the answer
-    let prime_future = pool.spawn_fn(|| {
-        let prime = is_prime(BIG_PRIME);
-
-        // For reasons we'll see later, we need to return a Result here
-        let res: Result<bool, ()> = Ok(prime);
-        res
+```rust,ignore
+let response_is_ok = response_future
+    .map(|response| {
+        response.status().is_ok()
     });
 
-    println!("Created the future");
-}
+track_response_success(response_is_ok);
 ```
 
-This version of the code pushes work onto a thread pool, and *immediately*
-returns a future, `prime_future`. Thus, we'll see `Created the future` on the
-console right away, while the primality test is done in the background. Of
-course, this isn't so useful---we've thrown away the answer!
+All of those actions taken with the future don't immediately perform any work.
+They cannot because they don't have the actual HTTP response. Instead, they
+define the work to be done when the response future completes.
 
-Even though futures are asynchronous, you always have the option of treating
-them synchronously, by *waiting* for completion:
+Both the [`futures`] crate and Tokio come with a collection of combinator
+functions that can be used to work with futures.
 
-```rust
-# #![deny(warnings)]
-# extern crate futures;
-# fn main() {
-# use futures::Future;
-// ...
+## [Implementing `Future`](#implementing) {#implementing}
 
-println!("Created the future");
+Implementing the `Future` is pretty common when using Tokio, so it is important
+to be comfortable with it.
 
-// unwrap here since we know the result is Ok
-# let prime_future = futures::future::ok::<bool, ()>(true);
-if prime_future.wait().unwrap() {
-    println!("Prime");
-} else {
-    println!("Not prime");
-}
-# }
-```
+As discussed in the previous section, Rust futures are poll based. This is a
+unique aspect of the Rust future library. Most future libraries for other
+programming languages use a push based model where callbacks are supplied to the
+future and the computation invokes the callback immediately with the computation
+result.
 
-While
-[`wait`](https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.wait)
-isn't very commonly used in practice, it's a nice illustration of the difference
-between a future (like `prime_future`) and the value it produces; the future is
-returned right away, allowing you to do additional work concurrently (like
-printing a message, here), and retrieve the value later on.
+Using a poll based model offers [many advantages], including being a zero cost
+abstraction, i.e., using Rust futures has no added overhead compared to writing
+the asynchronous code by hand.
 
-##### [Adding a timeout](#adding-a-timeout) {#adding-a-timeout}
+[many advantages]: https://aturon.github.io/blog/2016/09/07/futures-design/
 
-So far this example isn't terribly interesting, since there are simpler ways to
-work with thread pools. But one strength of futures is their ability to
-*combine*. We'll show this off by combining the thread pool future with a
-timeout future:
-
-```rust
-# #![deny(deprecated)]
-extern crate futures;
-extern crate futures_cpupool;
-extern crate tokio_timer;
-
-use std::time::Duration;
-
-use futures::Future;
-use futures_cpupool::CpuPool;
-use tokio_timer::Timer;
-
-# const BIG_PRIME: u64 = 1;
-# fn is_prime(num: u64) -> bool { true }
-
-fn main() {
-    let pool = CpuPool::new_num_cpus();
-    let timer = Timer::default();
-
-    // a future that resolves to Err after a timeout
-    let timeout = timer.sleep(Duration::from_millis(750))
-        .then(|_| Err(()));
-
-    // a future that resolves to Ok with the primality result
-    let prime = pool.spawn_fn(|| {
-        Ok(is_prime(BIG_PRIME))
-    });
-
-    // a future that resolves to one of the above values -- whichever
-    // completes first!
-    let winner = timeout.select(prime).map(|(win, _)| win);
-
-    // now block until we have a winner, then print what happened
-    match winner.wait() {
-        Ok(true) => println!("Prime"),
-        Ok(false) => println!("Not prime"),
-        Err(_) => println!("Timed out"),
-    }
-}
-```
-
-Here, we're using a couple of additional methods on futures:
-
-- [`then`](https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.then),
-  which in general allows you to sequence one future to run after getting the
-  value of another. In this case, we're just using it to change the value
-  returned from the timeout future to `Err(())`.
-
-- [`select`](https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.select),
-  which combines two futures of the same type, allowing them to "race" to
-  completion. It yields a pair, where the first component is the value produced
-  by the first future to complete, and the second gives you the other future
-  back. Here, we just take the winning value.
-
-While this example is simplistic, it gives some sense for how futures scale
-up. Once you have a number of basic "events" set up as futures, you can combine
-them in complex ways, and the futures library takes care of tracking all of the
-relevant state and synchronization. For example here we're behind the scenes
-managing concurrent execution of `is_prime` on a thread pool, the timer thread
-managed by `Timer`, and the main thread calling `wait` all at once.
-
-##### [Whence I/O?](#whence-io) {#whence-io}
-
-We haven't shown how to work directly with I/O events as futures. That's because
-I/O is a bit more complicated, and you often end up working with sibling
-abstractions to futures: streams and sinks. These are all covered in subsequent
-guides.
-
-## [The `Future` trait](#the-future-trait) {#the-future-trait}
-
-At this point, we've seen just a tiny bit of the futures API---but what actually
-*is* a future?
-
-In the `futures` library, a future is anything that implements the
-[`Future` trait](https://docs.rs/futures/0.1/futures/future/trait.Future.html),
-which has a lot of similarities to the
-[`Iterator` trait](https://static.rust-lang.org/doc/master/std/iter/trait.Iterator.html)
-in the standard library:
+The `Future` trait is as follows:
 
 ```rust,ignore
 trait Future {
-    // The type of value that the future yields on successful completion.
+    /// The type of the value returned when the future completes.
     type Item;
 
-    // The type of value that the future yields on failure.
+    /// The type representing errors that occured while processing the
+    /// computation.
     type Error;
 
-    // The only required method, which attempts to complete the future.
-    fn poll(&mut self) -> Poll<Self::Item, Self::Error>;
-
-    // Blocks until completion.
-    fn wait(self) -> Result<Self::Item, Self::Error> { ... }
-
-    // Transforms the result of the future using the given closure.
-    fn map<F, U>(self, f: F) -> Map<Self, F>
-        where F: FnOnce(Self::Item) -> U { ... }
-
-    // ... and many, many more provided methods
+    fn poll(&mut self) -> Result<Async<Self::Item>, Self::Error>;
 }
 ```
 
-Since futures are primarily motivated by I/O, error handling is an important
-concern baked in to the trait and its methods.
+You may notice that this is the exact same trait that was used to implement an
+asynchronous task. This is because asynchronous tasks are "just" futures that
+complete with a value of `()` once the computation has completed.
 
-The `poll` method is the heart of the futures trait---it's how futures actually
-do their work. However, it's not generally called directly. Instead, you tend to
-work through the other methods of the `Future` trait (which are all default
-methods).  You can find an in-depth explanation of `poll` in [the futures model
-in depth]({{< relref "futures-model.md" >}}).
+Usually, when you implement a `Future`, you will be defining a computation that
+is a composition of sub (or inner) futures. In this case, the future implementation tries
+to call the inner future(s) and returns `NotReady` if the inner futures are not
+ready.
 
-So that's the quick tour. In the next section, we'll look at a more involved
-example: hooking up a database to the [line-based protocol](../simple-server) we
-developed earlier.
+The following example is a future that is composed of another future that
+returns a `usize` and will double that value:
+
+```rust
+# #![deny(deprecated)]
+# extern crate futures;
+# use futures::*;
+pub struct Doubler<T> {
+    inner: T,
+}
+
+pub fn double<T>(inner: T) -> Doubler<T> {
+    Doubler { inner }
+}
+
+impl<T> Future for Doubler<T>
+where T: Future<Item = usize>
+{
+    type Item = usize;
+    type Error = T::Error;
+
+    fn poll(&mut self) -> Result<Async<usize>, T::Error> {
+        match self.inner.poll()? {
+            Async::Ready(v) => Ok(Async::Ready(v * 2)),
+            Async::NotReady => Ok(Async::NotReady),
+        }
+    }
+}
+# pub fn main() {}
+```
+
+When the `Doubler` future is polled, it polls its inner future. If the inner
+future is not ready, the `Doubler` future returns `NotReady`. If the inner
+future is ready, then the `Doubler` future doubles the return value and returns
+`Ready`.
+
+Because the matching pattern above is common, the [`futures`] crate provides a
+macro: `try_ready!`. It is similar to `try!` or `?`, but it also returns on
+`NotReady`. The above `poll` function can be rewriten using `try_ready!` as
+follows:
+
+```rust
+# #![deny(deprecated)]
+# #[macro_use]
+# extern crate futures;
+# use futures::*;
+# pub struct Doubler<T> {
+#     inner: T,
+# }
+#
+# impl<T> Future for Doubler<T>
+# where T: Future<Item = usize>
+# {
+#     type Item = usize;
+#     type Error = T::Error;
+#
+fn poll(&mut self) -> Result<Async<usize>, T::Error> {
+    let v = try_ready!(self.inner.poll());
+    Ok(Async::Ready(v * 2))
+}
+# }
+# pub fn main() {}
+```
+
+## [Returning `NotReady`](#returning-not-ready) {#returning-not-ready}
+
+The last section handwaved a bit and said that when a task returns `NotReady`,
+once it transitioned to the ready state, the executor is notifed. This enables
+the executor to be efficient in scheduling tasks.
+
+When a function returns `Async::NotReady`, it is critical that the executor is
+notified when the state transitions to "ready". Otherwise, the task will hang
+infinitely, never getting run again.
+
+For most future implementations, this is done transitively. When a future
+implementation is a combination of sub futures, the outer future only returns
+`NotReady` when at least one inner future returned `NotReady`. Thus, the outer
+future will transition to a ready state once the inner future transitions to a
+ready state. In this case, the `NotReady` contract is already satisfied as the
+inner future will notify the executor when it becomes ready.
+
+Innermost futures, sometimes called "resources", are the ones responsible for
+notifying the executor. This is done by calling [`notify`] on the task returned
+by [`task::current()`].
+
+Before an executor calls `poll` on a task, it sets the task context to a
+thread-local variable. The inner most future then accesses the context from the
+thread-local so that it is able to notify the task once its readiness state
+changes.
+
+We will be exploring implementing resources and the task system in more depth in
+a later section. The key take away here is **do not return `NotReady` unless you
+got `NotReady` from an inner future`.
+
+## [A More Complicated Future](#more-completed) {#more-complicated}
+
+Lets look at a slightly more complicated future implementation. In this case, we
+will implement a future that takes a host name, does DNS resolution, then
+establishes a connection to the remote host. We assume a `resolve` function
+exists that looks like this:
+
+```rust,ignore
+pub fn resolve(host: &str) -> ResolveFuture;
+```
+
+where `ResolveFuture` is a future returning a `SocketAddr`.
+
+The steps to implement the future are:
+
+1. Call `resolve` to get a `ResolveFuture` instance.
+2. Call `ResolveFuture::poll` until it returns a `SocketAddr`.
+3. Pass the `SocketAddr` to `TcpStream::connect`.
+4. Call `ConnectFuture::poll` until it returns the `TcpStream`.
+5. Complete the outer future with the `TcpStream`.
+
+We will use an `enum` to track the state of the future as it advances through
+these steps.
+
+```rust
+# extern crate tokio;
+# use tokio::net::ConnectFuture;
+# pub struct ResolveFuture;
+enum State {
+    // Currently resolving the host name
+    Resolving(ResolveFuture),
+
+    // Establishing a TCP connection to the remote host
+    Connecting(ConnectFuture),
+}
+# pub fn main() {}
+```
+
+And the `ResolveAndConnect` future is defined as:
+
+```rust
+# pub struct State;
+pub struct ResolveAndConnect {
+    state: State,
+}
+```
+
+Now, the implementation:
+
+```rust
+# #![deny(deprecated)]
+# #[macro_use]
+# extern crate futures;
+# extern crate tokio;
+# use tokio::net::{ConnectFuture, TcpStream};
+# use futures::prelude::*;
+# use std::io;
+# pub struct ResolveFuture;
+# enum State {
+#     Resolving(ResolveFuture),
+#     Connecting(ConnectFuture),
+# }
+# fn resolve(host: &str) -> ResolveFuture { unimplemented!() }
+# impl Future for ResolveFuture {
+#     type Item = ::std::net::SocketAddr;
+#     type Error = io::Error;
+#     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
+#         unimplemented!();
+#     }
+# }
+#
+# pub struct ResolveAndConnect {
+#     state: State,
+# }
+pub fn resolve_and_connect(host: &str) -> ResolveAndConnect {
+    let state = State::Resolving(resolve(host));
+    ResolveAndConnect { state }
+}
+
+impl Future for ResolveAndConnect {
+    type Item = TcpStream;
+    type Error = io::Error;
+
+    fn poll(&mut self) -> Result<Async<TcpStream>, io::Error> {
+        use self::State::*;
+
+        loop {
+            let addr = match self.state {
+                Resolving(ref mut fut) => {
+                    try_ready!(fut.poll())
+                }
+                Connecting(ref mut fut) => {
+                    return fut.poll();
+                }
+            };
+
+            let connecting = TcpStream::connect(&addr);
+            self.state = Connecting(connecting);
+        }
+    }
+}
+# pub fn main() {}
+```
+
+This illustrates how `Future` implementations are state machines. This future
+can be in either of two states:
+
+1. Resolving
+2. Connecting
+
+Each time `poll` is called, we try to advance the state machine to the next
+state.
+
+Now, the future we just implemented is basically [`AndThen`], so we would
+probably just use that combinator instead of re-implementing it.
+
+```rust
+# #![deny(deprecated)]
+# #[macro_use]
+# extern crate futures;
+# extern crate tokio;
+# use tokio::net::{ConnectFuture, TcpStream};
+# use futures::prelude::*;
+# use std::io;
+# pub struct ResolveFuture;
+# fn resolve(host: &str) -> ResolveFuture { unimplemented!() }
+# impl Future for ResolveFuture {
+#     type Item = ::std::net::SocketAddr;
+#     type Error = io::Error;
+#     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
+#         unimplemented!();
+#     }
+# }
+# pub fn dox(my_host: &str) {
+# let _ =
+resolve(my_host)
+    .and_then(|addr| TcpStream::connect(&addr))
+# ;
+# }
+# pub fn main() {}
+```
+
+which is much shorter.
+
+[`futures`]: {{< api-url "futures" >}}
+[`notify`]: {{< api-url "futures" >}}/executor/trait.Notify.html#tymethod.notify
+[`task::current()`]: {{< api-url "futures" >}}/task/fn.current.html
+[`AndThen`]: {{< api-url "futures" >}}/future/struct.AndThen.html

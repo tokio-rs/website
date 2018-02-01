@@ -1,11 +1,6 @@
 +++
 title = "Architecture overview"
 description = "An overview of Tokio's components and how they fit together"
-menu = "going_deeper_tokio"
-weight = 301
-aliases = [
-  "/docs/going-deeper/architecture/"
-]
 +++
 
 Most networking applications are structured in a layered fashion.

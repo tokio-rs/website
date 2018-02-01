@@ -27,27 +27,12 @@
             </ul>
           </div>
 
-          <br/>
-          <h5>Going deeper: Futures</h5>
+          <h5>Going Deeper</h5>
           <hr/>
 
           <div class="" id="">
             <ul class="nav">
-              {{ range .Site.Menus.going_deeper_futures }}
-              <li class="active">
-                <a href="{{ .URL }}" {{ if not (eq $currentURL .URL) }}class="text-muted"{{ end }}>{{ .Name }}</a>
-              </li>
-              {{ end }}
-            </ul>
-          </div>
-
-          <br/>
-          <h5>Going deeper: Tokio</h5>
-          <hr/>
-
-          <div class="" id="">
-            <ul class="nav">
-              {{ range .Site.Menus.going_deeper_tokio }}
+              {{ range .Site.Menus.going_deeper }}
               <li class="active">
                 <a href="{{ .URL }}" {{ if not (eq $currentURL .URL) }}class="text-muted"{{ end }}>{{ .Name }}</a>
               </li>
@@ -62,19 +47,10 @@
           <div class="" id="">
             <ul class="nav">
               <li class="active">
-                <a href="https://docs.rs/futures" class="text-muted">futures</a>
+                <a href="https://docs.rs/tokio" class="text-muted"><code>tokio</code> API docs</a>
               </li>
               <li class="active">
-                <a href="https://docs.rs/tokio-core" class="text-muted">tokio-core</a>
-              </li>
-              <li class="active">
-                <a href="https://docs.rs/tokio-io" class="text-muted">tokio-io</a>
-              </li>
-              <li class="active">
-                <a href="https://docs.rs/tokio-proto" class="text-muted">tokio-proto</a>
-              </li>
-              <li class="active">
-                <a href="https://docs.rs/tokio-service" class="text-muted">tokio-service</a>
+                <a href="https://docs.rs/futures" class="text-muted"><code>futures</code> API docs</a>
               </li>
             </ul>
           </div>

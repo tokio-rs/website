@@ -1,11 +1,6 @@
 +++
 title = "Multiplexed protocols"
 description = "An introduction to implementing a server for a multiplexed protocol"
-menu = "going_deeper_tokio"
-weight = 302
-aliases = [
-  "/docs/going-deeper/multiplex/"
-]
 +++
 
 A *multiplexed* socket connection is one that allows many concurrent requests to
@@ -89,7 +84,6 @@ We will use `Encoder`/`Decoder` traits and the `AsyncRead::framed` helper to
 help us go from a `TcpStream` to a `Stream + Sink` for our frame type:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate tokio_core;
 # extern crate tokio_proto;
 # extern crate bytes;

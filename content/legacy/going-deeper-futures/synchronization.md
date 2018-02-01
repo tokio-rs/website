@@ -1,11 +1,6 @@
 +++
 title = "Synchronization"
 description = "Coordinating concurrent futures"
-menu = "going_deeper_futures"
-weight = 204
-aliases = [
-  "/docs/going-deeper/synchronization/"
-]
 +++
 
 The `futures` crate comes equipped with a small *futures-aware
@@ -28,7 +23,6 @@ take a look at an example:
 [`oneshot`]: https://docs.rs/futures/0.1/futures/sync/oneshot/index.html
 
 ```rust
-# #![deny(deprecated)]
 extern crate futures;
 
 use std::thread;
@@ -90,7 +84,6 @@ to receive such a notification. For example:
 [`Sender::poll_cancel`]: https://docs.rs/futures/0.1/futures/sync/oneshot/struct.Sender.html#method.poll_cancel
 
 ```rust
-# #![deny(deprecated)]
 extern crate futures;
 
 use std::thread;
@@ -143,7 +136,6 @@ values. Let's take a look how this might be used by creating a helper function
 that uses a worker thread to create a stream of lines on stdin:
 
 ```rust
-# #![deny(deprecated)]
 extern crate futures;
 
 use std::io::{self, BufRead};
@@ -285,7 +277,6 @@ implementation of the [`Stream::split`] method:
 [`Stream::split`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.split
 
 ```rust
-# #![deny(deprecated)]
 # extern crate futures;
 # use futures::sync::BiLock;
 # use futures::Sink;
@@ -316,7 +307,6 @@ and [`Sink`] on these types. Let's take a look at the [`Stream`] implementation
 for `SplitStream`:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate futures;
 #
 # use futures::{Stream, Async, Poll};
