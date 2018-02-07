@@ -1,9 +1,9 @@
 +++
 date = "2018-02-07"
 title = "Tokio Reform is Shipped and the Road to 0.2"
-description = "19 September 2017"
+description = "07 February 2018"
 menu = "blog"
-weight = 102
+weight = 103
 +++
 
 Hi all!
