@@ -1,7 +1,5 @@
 +++
 title = "Example: a simple pipelined server using core"
-menu = "getting_started"
-weight = 107
 +++
 
 Now that we've seen the basics of [high-level I/O using `tokio-core`](../core),
@@ -28,7 +26,6 @@ impl Encoder for LineCodec {
 Now we'll write a server that can host an arbitrary service over this protocol:
 
 ```rust,no_run
-# #![deny(deprecated)]
 # extern crate tokio_io;
 # extern crate tokio_core;
 # extern crate tokio_service;

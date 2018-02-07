@@ -1,11 +1,6 @@
 +++
 title = "Working with transports"
 description = "How to implement, use, and augment transports in Tokio"
-menu = "going_deeper_tokio"
-weight = 307
-aliases = [
-  "/docs/going-deeper/transports/"
-]
 +++
 
 A transport in Tokio is a full duplex channel of frame values. The transport is
@@ -27,7 +22,6 @@ This is what a transport that encodes and decodes single byte numbers as `u32`
 might look like:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate futures;
 # extern crate tokio_core;
 # extern crate tokio_io;

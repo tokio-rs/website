@@ -5,7 +5,10 @@ canonifyURLs = "true"
 googleAnalytics = "UA-90234741-1"
 
 [params]
+tokioDocsURL = "https://docs.rs/tokio/0.1/tokio"
+tokioIoDocsURL = "https://docs.rs/tokio-io/0.1.4/tokio_io"
 futuresDocsURL = "https://docs.rs/futures/0.1/futures"
 coreDocsURL = "https://docs.rs/tokio-core/0.1/tokio_core"
 protoDocsURL = "https://tokio-rs.github.io/tokio-proto/tokio_proto"
 serviceDocsURL = "https://tokio-rs.github.io/tokio-service/tokio_service"
+bytesDocsURL = "https://docs.rs/bytes/0.4/bytes"

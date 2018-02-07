@@ -1,8 +1,6 @@
 +++
 title = "Understanding event loops"
 description = "The heart of asynchronous processing"
-menu = "getting_started"
-weight = 105
 +++
 
 Now we'll take a bit more of a dive into `tokio-core`. Keep in mind that this
@@ -63,7 +61,6 @@ connection-handling future, as we also saw before. To recap, the basic structure
 looks as follows:
 
 ```rust,no_run
-# #![deny(deprecated)]
 extern crate futures;
 extern crate tokio_core;
 

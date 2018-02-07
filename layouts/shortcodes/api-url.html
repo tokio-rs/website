@@ -1,4 +1,10 @@
-{{- if eq (.Get 0) "core" -}}
+{{- if eq (.Get 0) "tokio" -}}
+{{- .Site.Params.tokioDocsURL -}}
+{{- else if eq (.Get 0) "tokio-io" -}}
+{{- .Site.Params.tokioIoDocsURL -}}
+{{- else if eq (.Get 0) "bytes" -}}
+{{- .Site.Params.bytesDocsURL -}}
+{{- else if eq (.Get 0) "core" -}}
 {{- .Site.Params.coreDocsURL -}}
 {{- else if eq (.Get 0) "futures" -}}
 {{- .Site.Params.futuresDocsURL -}}

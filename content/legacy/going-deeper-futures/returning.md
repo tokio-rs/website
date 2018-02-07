@@ -1,11 +1,6 @@
 +++
 title = "Returning futures"
 description = ""
-menu = "going_deeper_futures"
-weight = 201
-aliases = [
-  "/docs/going-deeper/returning/"
-]
 +++
 
 [`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
@@ -26,7 +21,6 @@ There are several options, listed from most to least ergonomic:
 First, you always have the option of returning a boxed [trait object]:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate futures;
 # use std::io;
 # use futures::Future;
@@ -98,7 +92,6 @@ If you wouldn't like to return a `Box` and want to stick with stable Rust, anoth
 option is to write the return type directly:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate futures;
 # use futures::Future;
 # use futures::future::Map;

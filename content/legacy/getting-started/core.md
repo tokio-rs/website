@@ -1,8 +1,6 @@
 +++
 title = "High-level I/O using core"
 description = "Future, stream and sink-based APIs from tokio-io and tokio-core"
-menu = "getting_started"
-weight = 106
 +++
 
 At this point, we've got a pretty solid grasp of what event loops are and how

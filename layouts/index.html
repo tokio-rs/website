@@ -4,7 +4,7 @@
   <div class="tk-jumbotron">
     <img src="/img/logo-large.png" class="align-middle tk-logo" alt="">
     <p class="lead">A platform for writing fast networking code with Rust.</p>
-    <a href="{{ ref . "docs/getting-started/tokio.md" }}" class="btn call-to-action" role="button" aria-pressed="true">Get Started</a>
+    <a href="{{ ref . "docs/getting-started/hello-world.md" }}" class="btn call-to-action" role="button" aria-pressed="true">Get Started</a>
   </div>
 </div>
 
@@ -42,48 +42,50 @@
     <div class="col-md-7">
       <div class="tk-content">
         <pre>
-<code>// A tiny async echo server with tokio-core
+<code>// A tiny async echo server with Tokio
 extern crate futures;
-extern crate tokio_core;
+extern crate tokio;
 extern crate tokio_io;
 
 use futures::{Future, Stream};
+use tokio::executor::current_thread;
+use tokio::net::TcpListener;
 use tokio_io::{io, AsyncRead};
-use tokio_core::net::TcpListener;
-use tokio_core::reactor::Core;
 
 fn main() {
-    // Create the event loop that will drive this server
-    let mut core = Core::new().unwrap();
-    let handle = core.handle();
-
     // Bind the server's socket
     let addr = "127.0.0.1:12345".parse().unwrap();
-    let tcp = TcpListener::bind(&addr, &handle).unwrap();
+    let tcp = TcpListener::bind(&addr).unwrap();
 
     // Iterate incoming connections
-    let server = tcp.incoming().for_each(|(tcp, _)| {
+    let server = tcp.incoming().for_each(|tcp| {
         // Split up the read and write halves
         let (reader, writer) = tcp.split();
 
-        // Future of the copy
-        let bytes_copied = io::copy(reader, writer);
-
-        // ... after which we'll print what happened
-        let handle_conn = bytes_copied.map(|(n, _, _)| {
-            println!("wrote {} bytes", n)
-        }).map_err(|err| {
-            println!("IO error {:?}", err)
-        });
+        // Copy the data back to the client
+        let conn = io::copy(reader, writer)
+            // print what happened
+            .map(|(n, _, _)| {
+                println!("wrote {} bytes", n)
+            })
+            // Handle any errors
+            .map_err(|err| {
+                println!("IO error {:?}", err)
+            });
 
         // Spawn the future as a concurrent task
-        handle.spawn(handle_conn);
+        current_thread::spawn(conn);
 
         Ok(())
+    })
+    .map_err(|err| {
+        println!("server error {:?}", err);
     });
 
     // Spin up the server on the event loop
-    core.run(server).unwrap();
+    current_thread::run(|_| {
+        current_thread::spawn(server);
+    });
 }
 </code>
         </pre>

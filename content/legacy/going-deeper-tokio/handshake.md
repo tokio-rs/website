@@ -1,11 +1,6 @@
 +++
 title = "Connection handshakes"
 description = "How to handle initial steps in a protocol"
-menu = "going_deeper_tokio"
-weight = 304
-aliases = [
-  "/docs/going-deeper/handshake/"
-]
 +++
 
 Some protocols require some setup before they can start accepting requests. For
@@ -21,7 +16,6 @@ protocol]({{< relref "simple-server.md" >}}) we saw earlier. Let's look at the
 protocol specification again:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate tokio_io;
 # extern crate tokio_proto;
 # extern crate bytes;
@@ -107,7 +101,6 @@ is then expected to close the socket.
 The server implementation of the handshake looks like this:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate tokio_io;
 # extern crate tokio_proto;
 # extern crate bytes;
@@ -221,7 +214,6 @@ specification. Instead of returning the transport directly, we will perform the
 handshake shown above. Here's the full code:
 
 ```rust
-# #![deny(deprecated)]
 # extern crate tokio_io;
 # extern crate tokio_proto;
 # extern crate bytes;

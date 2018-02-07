@@ -1,11 +1,6 @@
 +++
 title = "Low-level I/O using core"
 description = ""
-menu = "going_deeper_tokio"
-weight = 306
-aliases = [
-  "/docs/going-deeper/core-low-level/"
-]
 +++
 
 We've seen some examples of [high level I/O]({{< relref "core.md" >}}) with

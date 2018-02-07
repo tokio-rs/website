@@ -1,8 +1,6 @@
 +++
 title = "Streams and sinks"
 description = "High-level async programming"
-menu = "getting_started"
-weight = 104
 +++
 
 We've now seen a few examples of futures, which represent a *one-time*
@@ -73,7 +71,6 @@ then hangs up. (We'll use `tokio-core` in this example, which is covered in
 greater depth in the next section.)
 
 ```rust,no_run
-# #![deny(deprecated)]
 extern crate futures;
 extern crate tokio_core;
 extern crate tokio_io;

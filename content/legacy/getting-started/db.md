@@ -1,8 +1,6 @@
 +++
 title = "Example: serving database content using proto"
 description = "Writing a `fortune` server using proto"
-menu = "getting_started"
-weight = 103
 +++
 
 In our previous example, an echo server, we didn't leverage the fact that a

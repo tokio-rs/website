@@ -1,7 +1,5 @@
 +++
 title = "Example: a toy HTTP+TLS client using core"
-menu = "getting_started"
-weight = 108
 +++
 
 Much of the functionality throughout the Tokio stack is generic, so as to be as
@@ -14,7 +12,6 @@ Let's take a look at what a simple fetch of `https://www.rust-lang.org/` might
 look like:
 
 ```rust
-# #![deny(deprecated)]
 extern crate futures;
 extern crate native_tls;
 extern crate tokio_core;
