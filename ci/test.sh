@@ -5,7 +5,7 @@ if [ ! -d tmp ]; then
   cargo new tmp
   cat >> tmp/Cargo.toml <<-EOF
 futures = "0.1"
-tokio = { git = "https://github.com/tokio-rs/tokio", branch = "vendor-current-thread" }
+tokio = "0.1"
 tokio-io = "0.1"
 
 # Legacy deps

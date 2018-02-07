@@ -1,5 +1,4 @@
-# baseurl = "https://tokio.rs"
-baseurl = "http://tokio-priv.s3-website-us-east-1.amazonaws.com"
+baseurl = "https://tokio.rs"
 title = "Tokio"
 languageCode = "en-us"
 canonifyURLs = "true"
