@@ -102,12 +102,12 @@ Combinator functions are used to define asynchronous tasks. The call to
 `listener.incoming()` returns a [`Stream`] of accepted connections. A [`Stream`]
 is kind of like an asynchronous iterator.
 
-Each comabinator function takes ownership of necessary state as well as the
+Each combinator function takes ownership of necessary state as well as the
 callback to perform and returns a new `Future` or `Stream` that has the
 additional "step" sequenced.
 
 Returned futures and streams are lazy, i.e., no work is performed when calling
-the comabinator. Instead, once all the asynchronous steps are sequenced, the
+the combinator. Instead, once all the asynchronous steps are sequenced, the
 final `Future` (representing the task) is spawned on an executor. This is when
 the work that was previously defined starts getting run.
 
