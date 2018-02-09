@@ -71,7 +71,7 @@ This function returns an `Async<Widget>` where [`Async`] is an enum of
 crate and is one of the building blocks of the polling model.
 
 Now, lets define an asynchronous task without combinators that uses this
-`poll_wdiget` function. The task will do the following:
+`poll_widget` function. The task will do the following:
 
 1. Acquire a widget.
 2. Print the widget to STDOUT.
