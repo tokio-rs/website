@@ -179,4 +179,4 @@ also provides a number of methods for working with it conveniently:
 [`send_dgram`]: {{< api-url "tokio" >}}/net/struct.UdpSocket.html#method.send_dgram
 [`recv_dgram`]: {{< api-url "tokio" >}}/net/struct.UdpSocket.html#method.recv_dgram
 [Mio]: https://docs.rs/mio/
-[reactor]: {{< api-url "tokio" >}}/reactor
+[reactor]: {{< api-url "tokio" >}}/reactor/index.html
