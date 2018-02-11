@@ -217,7 +217,7 @@ concurrently, there is no guarantee that the cache updating task will have
 written the first value to the cache by the time the other task tries to read
 from the cache.
 
-This is a prefect situation to use message pasing. The cache updating task can
+This is a perfect situation to use message pasing. The cache updating task can
 send a message notifying the other task that it has primed the cache with an
 initial value.
 
