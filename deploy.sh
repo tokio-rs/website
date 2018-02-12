@@ -1,7 +1,7 @@
 set -e -x
 
 # Sync the website
-aws s3 sync public s3://tokio.rs --acl public-read --delete
+aws s3 sync $TRAVIS_BUILD_DIR/public s3://tokio.rs --acl public-read --delete
 
 # Create a cloudfront invalidation
 echo -n '{"Paths": {"Items": ["/*"], "Quantity": 1}, "CallerReference":"' >> payload.json &&
