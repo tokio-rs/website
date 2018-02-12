@@ -10,9 +10,6 @@ install:
 script:
   - ci/test.sh
   - ./hugo_0.18.1_linux_amd64/hugo_0.18.1_linux_amd64
-  - pwd
-  - ls -l public
-  - echo "TRAVIS_BUILD_DIR = $TRAVIS_BUILD_DIR"
 
 env:
   global:
@@ -24,6 +21,7 @@ env:
 deploy:
   provider: script
   script: bash deploy.sh
+  skip_cleanup: true
   on:
     branch: master
     condition: $TRAVIS_PULL_REQUEST = "false"
