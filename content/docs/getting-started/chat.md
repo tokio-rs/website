@@ -790,7 +790,7 @@ The full code can be found [here][full-code].
 [message passing]: {{< relref "docs/getting-started/tasks.md#message-passing" >}}
 [mpsc]: {{< api-url "futures" >}}/sync/mpsc/index.html
 [`BytesMut`]: {{< api-url "bytes" >}}/struct.BytesMut.html
-[`Future`]: {{< api-url "futures" >}}/trait.Future.html
+[`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
 [`Stream`]: {{< api-url "futures" >}}/stream/trait.Stream.html
 [`bytes`]: {{< api-url "bytes" >}}
 [`split`]: {{< api-url "tokio-io" >}}/trait.AsyncRead.html#method.split

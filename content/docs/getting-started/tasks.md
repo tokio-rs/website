@@ -417,7 +417,7 @@ spawn a new task.
 
 [Go's goroutine]: https://www.golang-book.com/books/intro/10
 [Erlang's process]: http://erlang.org/doc/reference_manual/processes.html
-[`Future`]: {{< api-url "futures" >}}/trait.Future.html
+[`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
 [executors]: #
 [`futures`]: {{< api-url "futures" >}}
 [`tokio`]: {{< api-url "tokio" >}}

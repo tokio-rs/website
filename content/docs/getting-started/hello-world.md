@@ -231,7 +231,7 @@ You can find the full example [here](#)
 We've only dipped our toes in Tokio and its asynchronous model. The next page in
 the guide, will start digging deeper into the Tokio runtime model.
 
-[`Future`]: {{< api-url "futures" >}}/trait.Future.html
+[`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
 [`Stream`]: {{< api-url "futures" >}}/stream/trait.Stream.html
 [`current_thread`]: {{< api-url "tokio" >}}/executor/current_thread/index.html
 [`io::write_all`]: {{< api-url "tokio-io" >}}/io/fn.write_all.html
