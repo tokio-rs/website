@@ -224,6 +224,6 @@ core of the [`futures`] task model. We will be digging more into that shortly.
 [`ErrorKind::WouldBlock`]: https://doc.rust-lang.org/std/io/enum.ErrorKind.html#variant.WouldBlock
 [`TcpStream`]: {{< api-url "tokio" >}}/net/struct.TcpStream.html
 [`Async`]: {{< api-url "futures" >}}/enum.Async.html
-[`Future`]: {{< api-url "futures" >}}/trait.Future.html
+[`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
 [`current_thread`]: {{< api-url "tokio" >}}/executor/current_thread/index.html
 [`CpuPool`]: http://docs.rs/futures-cpupool
