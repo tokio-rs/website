@@ -3,7 +3,7 @@ sudo: false
 
 install:
   - curl -L https://github.com/spf13/hugo/releases/download/v0.18.1/hugo_0.18.1_Linux-64bit.tar.gz |
-      tar xzf -
+      tar xzvf -
   - pip install --user awscli
   - ~/.local/bin/aws configure set preview.cloudfront true
 
@@ -21,6 +21,7 @@ env:
 deploy:
   provider: script
   script: bash deploy.sh
+  skip_cleanup: true
   on:
     branch: master
     condition: $TRAVIS_PULL_REQUEST = "false"
