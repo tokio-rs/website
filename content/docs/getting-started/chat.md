@@ -35,7 +35,7 @@ Next, add the necessary dependencies:
 ```toml
 [dependencies]
 tokio = "0.1"
-tokio_io = "0.1"
+tokio-io = "0.1"
 futures = "0.1"
 bytes = "0.4"
 ```
