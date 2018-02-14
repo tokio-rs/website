@@ -204,7 +204,7 @@ changes.
 
 We will be exploring implementing resources and the task system in more depth in
 a later section. The key take away here is **do not return `NotReady` unless you
-got `NotReady` from an inner future`.
+got `NotReady` from an inner future**.
 
 ## [A More Complicated Future](#more-completed) {#more-complicated}
 
