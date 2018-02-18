@@ -178,5 +178,11 @@ also provides a number of methods for working with it conveniently:
 [`UdpSocket`]: {{< api-url "tokio" >}}/net/struct.UdpSocket.html
 [`send_dgram`]: {{< api-url "tokio" >}}/net/struct.UdpSocket.html#method.send_dgram
 [`recv_dgram`]: {{< api-url "tokio" >}}/net/struct.UdpSocket.html#method.recv_dgram
+[`incoming`]: {{< api-url "tokio" >}}/net/struct.TcpListener.html#method.incoming
+[`read_exact`]: {{< api-url "tokio-io" >}}/io/fn.read_exact.html
+[`read_to_end`]: {{< api-url "tokio-io" >}}/io/fn.read_to_end.html
+[`write_all`]: {{< api-url "tokio-io" >}}/io/fn.write_all.html
+[`copy`]: {{< api-url "tokio-io" >}}/io/fn.copy.html
+[`tokio_io::io`]: {{< api-url "tokio-io" >}}/io/index.html
 [Mio]: https://docs.rs/mio/
 [reactor]: {{< api-url "tokio" >}}/reactor/index.html

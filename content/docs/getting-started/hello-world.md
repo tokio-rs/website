@@ -224,7 +224,7 @@ Note that `res` is a `Result` that contains the original socket. This allows us
 to sequence additional reads or writes on the same socket. However, we have
 nothing more to do, so we just drop the socket, which closes it.
 
-You can find the full example [here](#)
+You can find the full example [here][full-code]
 
 ## [Next steps](#next-steps) {#next-steps}
 
@@ -235,3 +235,4 @@ the guide, will start digging deeper into the Tokio runtime model.
 [`Stream`]: {{< api-url "futures" >}}/stream/trait.Stream.html
 [`current_thread`]: {{< api-url "tokio" >}}/executor/current_thread/index.html
 [`io::write_all`]: {{< api-url "tokio-io" >}}/io/fn.write_all.html
+[full-code]:https://github.com/tokio-rs/tokio/blob/master/examples/hello_world.rs
