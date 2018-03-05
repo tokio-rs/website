@@ -6,7 +6,11 @@ weight = 130
 +++
 
 Futures, hinted at earlier in the guide, are the building block used to manage
-asynchronous logic. They are the foundation of a Tokio based application.
+asynchronous logic. They are the underlying asynchronous abstraction used by
+Tokio.
+
+The future implementation is provided by the [`futures`] crate. However, for
+convenience, Tokio re-exports a number of the types.
 
 ## [What Are Futures?](#what-are-futures) {#what-are-futures}
 
