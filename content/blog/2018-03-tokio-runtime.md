@@ -52,6 +52,33 @@ strategy as Go, Erlang, .NET, Java (the ForkJoin pool), etc... The
 implementation provided by Tokio is designed for use cases where many
 **unrelated** tasks are multiplexed on a single thread pool.
 
+## Using the Tokio Runtime
+
+As illustrated in the example above, the easiest way to use the Tokio runtime
+is with two functions:
+
+* `tokio::run`
+* `tokio::spawn`.
+
+The first function takes a future to seed the application and starts the
+runtime. Roughly, it does the following:
+
+1) Start the reactor.
+2) Start the thread pool.
+3) Spawn the future onto the thread pool.
+4) Blocks the thread until the runtime becomes idle.
+
+The runtime becomes idle once **all** spawned futures have completed and **all**
+I/O resources bound to the reactor are dropped.
+
+From within the context of a runtime. The application may spawn additional
+futures onto the thread pool using `tokio::spawn`.
+
+Alternatively, the [`Runtime`] type can be used directly. This allows for more
+flexibility around setting up and using the runtime.
+
+[`Runtime`]: #
+
 ## Future improvements
 
 This is just the initial release of the Tokio runtime. Upcoming releases will
