@@ -13,7 +13,7 @@ iteration of the Tokio Runtime.
 
 This is how a multi-threaded Tokio based server is now written:
 
-```rust
+```rust,ignore
 extern crate tokio;
 
 use tokio::net::TcpListener;
