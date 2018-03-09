@@ -31,6 +31,15 @@ let server = listener.incoming()
 tokio::run(server);
 ```
 
+where `process` represents a user defined function that takes a socket and
+returns a future that process it. In the case of an echo server, that might be
+reading all data from the socket and writing it back to the same socket.
+
+The [guides] and [examples] have been updated to use the runtime.
+
+[guides]: https://tokio.rs/docs/getting-started/hello-world/
+[examples]: https://github.com/tokio-rs/tokio/tree/master/examples
+
 ## What is the Tokio Runtime?
 
 The Rust asynchronous stack is evolving to a set of loosely coupled components.
