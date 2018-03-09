@@ -63,10 +63,10 @@ is with two functions:
 The first function takes a future to seed the application and starts the
 runtime. Roughly, it does the following:
 
-1) Start the reactor.
-2) Start the thread pool.
-3) Spawn the future onto the thread pool.
-4) Blocks the thread until the runtime becomes idle.
+1. Start the reactor.
+2. Start the thread pool.
+3. Spawn the future onto the thread pool.
+4. Blocks the thread until the runtime becomes idle.
 
 The runtime becomes idle once **all** spawned futures have completed and **all**
 I/O resources bound to the reactor are dropped.
