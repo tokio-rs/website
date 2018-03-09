@@ -132,9 +132,9 @@ This is the job of an executor.
 
 Executors are responsible for repeatedly calling `poll` on a task until `Ready`
 is returned. There are many different ways to do this. For example, the
-[`current_thread`] executor will block the current thread and loop through all
-spawned tasks, calling poll on them. [`CpuPool`] schedules tasks across a thread
-pool.
+[`CurrentThread`] executor will block the current thread and loop through all
+spawned tasks, calling poll on them. [`ThreadPool`] schedules tasks across a thread
+pool. This is also the default executor used by the [runtime][rt].
 
 All tasks **must** be spawned on an executor or no work will be performed.
 
@@ -225,5 +225,6 @@ core of the [`futures`] task model. We will be digging more into that shortly.
 [`TcpStream`]: {{< api-url "tokio" >}}/net/struct.TcpStream.html
 [`Async`]: {{< api-url "futures" >}}/enum.Async.html
 [`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
-[`current_thread`]: {{< api-url "tokio" >}}/executor/current_thread/index.html
-[`CpuPool`]: http://docs.rs/futures-cpupool
+[`CurrentThread`]: {{< api-url "tokio" >}}/executor/current_thread/index.html
+[`ThreadPool`]: http://docs.rs/tokio-threadpool
+[rt]: {{< api-url "tokio" >}}/runtime/index.html

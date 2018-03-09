@@ -44,26 +44,21 @@ and the crates and types into scope in `main.rs`:
 
 ```rust
 # #![deny(deprecated)]
-#[macro_use]
-extern crate futures;
 extern crate tokio;
 #[macro_use]
-extern crate tokio_io;
+extern crate futures;
 extern crate bytes;
 
-use tokio::executor::current_thread;
+use tokio::io;
 use tokio::net::{TcpListener, TcpStream};
-use tokio_io::{AsyncRead};
-use futures::prelude::*;
+use tokio::prelude::*;
 use futures::sync::mpsc;
 use futures::future::{self, Either};
 use bytes::{BytesMut, Bytes, BufMut};
 
-use std::io::{self, Write};
-use std::cell::RefCell;
 use std::collections::HashMap;
 use std::net::SocketAddr;
-use std::rc::Rc;
+use std::sync::{Arc, Mutex};
 
 /// Shorthand for the transmit half of the message channel.
 type Tx = mpsc::UnboundedSender<Bytes>;
@@ -78,7 +73,7 @@ that were used as part of the [Hello World!] example:
 
 * Bind a `TcpListener` to a local port.
 * Define a task that accepts inbound connections and processes them.
-* Start the `current_thread` executor.
+* Start the Tokio runtime
 * Spawn the server task.
 
 Again, no work actually happens until the server task is spawned on the
@@ -87,13 +82,10 @@ executor.
 ```rust
 # #![deny(deprecated)]
 # extern crate tokio;
-# extern crate tokio_io;
 # extern crate futures;
 #
-# use tokio::executor::current_thread;
+# use tokio::prelude::*;
 # use tokio::net::TcpListener;
-# use tokio_io::io;
-# use futures::{Future, Stream};
 fn main() {
     let addr = "127.0.0.1:6142".parse().unwrap();
     let listener = TcpListener::bind(&addr).unwrap();
@@ -107,18 +99,18 @@ fn main() {
         println!("accept error = {:?}", err);
     });
 
-    // Start the executor and spawn the server task.
-# /*
-    current_thread::run(|_| {
-# */ current_thread::run(|ctx| {
-        current_thread::spawn(server);
-# ctx.cancel_all_spawned();
+    println!("server running on localhost:6142");
+# let server = server.select(futures::future::ok(())).then(|_| Ok(()));
 
-        println!("server running on localhost:6142");
-
-        // The `current_thread::run` function will now block
-        // until *all* spawned tasks complete.
-    });
+    // Start the server
+    //
+    // This does a few things:
+    //
+    // * Start the Tokio runtime (reactor, threadpool, etc...)
+    // * Spawns the `server` task onto the runtime.
+    // * Blocks the current thread until the runtime becomes idle, i.e. all
+    //   spawned tasks have completed.
+    tokio::run(server);
 }
 ```
 
@@ -156,10 +148,9 @@ connections.
 
 ```rust
 # #![deny(deprecated)]
-# use std::cell::RefCell;
-# use std::rc::Rc;
+# use std::sync::{Arc, Mutex};
 # type Shared = String;
-let state = Rc::new(RefCell::new(Shared::new()));
+let state = Arc::new(Mutex::new(Shared::new()));
 ```
 
 Now we can handle processing incoming connections. The server task is updated to
@@ -196,20 +187,24 @@ this:
 # use futures::future;
 # use tokio::net::TcpStream;
 # use tokio::executor::current_thread;
-# use std::cell::RefCell;
-# use std::rc::Rc;
+# use std::sync::{Arc, Mutex};
 # type Shared = String;
-fn process(socket: TcpStream, state: Rc<RefCell<Shared>>) {
+fn process(socket: TcpStream, state: Arc<Mutex<Shared>>) {
     // Define the task that processes the connection.
 # /*
     let task = unimplemented!();
 # */ let task = future::ok(());
 
     // Spawn the task
-    current_thread::spawn(task);
+    tokio::spawn(task);
 }
 # fn main() {}
 ```
+
+The call to `tokio::spawn` will spawn a new task onto the current Tokio runtime.
+All the worker threads keep a reference to the current runtime stored in a
+thread-local variable. Note, attempting to call `tokio::spawn` from outside of
+the Tokio runtime will result in a panic.
 
 The connection processing logic has to be able to do is to understand the
 protocol. The protocol is line-based, terminated by `\r\n`.  Instead of working
@@ -263,14 +258,13 @@ This is how the read half is implemented:
 # #![deny(deprecated)]
 # extern crate bytes;
 # extern crate tokio;
-# extern crate tokio_io;
 # #[macro_use]
 # extern crate futures;
+# #[macro_use]
 # use bytes::BytesMut;
-# use futures::prelude::*;
+# use tokio::io;
 # use tokio::net::TcpStream;
-# use tokio_io::AsyncRead;
-# use std::io;
+# use tokio::prelude::*;
 # struct Lines {
 #     socket: TcpStream,
 #     rd: BytesMut,
@@ -351,14 +345,13 @@ Now, for the write half.
 ```rust
 # #![deny(deprecated)]
 # extern crate tokio;
-# #[macro_use]
-# extern crate tokio_io;
 # extern crate bytes;
+# #[macro_use]
 # extern crate futures;
+# use tokio::io;
 # use tokio::net::TcpStream;
+# use tokio::prelude::*;
 # use bytes::{BytesMut, BufMut};
-# use futures::prelude::*;
-# use std::io::{self, Write};
 struct Lines {
     socket: TcpStream,
     rd: BytesMut,
@@ -372,16 +365,11 @@ impl Lines {
         self.wr.put(line);
     }
 
-    /// Flush the write buffer to the socket
-    fn poll_flush(&mut self) -> Result<Async<()>, io::Error> {
+    fn poll_flush(&mut self) -> Poll<(), io::Error> {
         // As long as there is buffered data to write, try to write it.
         while !self.wr.is_empty() {
-            // `try_nb` is kind of like `try_ready`, but for operations that
-            // return `io::Result` instead of `Async`.
-            //
-            // In the case of `io::Result`, an error of `WouldBlock` is
-            // equivalent to `Async::NotReady.
-            let n = try_nb!(self.socket.write(&self.wr));
+            // Try to read some bytes from the socket
+            let n = try_ready!(self.socket.poll_write(&self.wr));
 
             // As long as the wr is not empty, a successful write should
             // never write 0 bytes.
@@ -411,14 +399,12 @@ And the `Lines` codec is used in the `process` function as such:
 ```rust
 # #![deny(deprecated)]
 # extern crate tokio;
-# extern crate futures;
 # extern crate bytes;
 # use tokio::net::TcpStream;
+# use tokio::prelude::*;
 # use bytes::BytesMut;
-# use futures::prelude::*;
-# use std::cell::RefCell;
-# use std::rc::Rc;
 # use std::io;
+# use std::sync::{Arc, Mutex};
 # type Shared = String;
 # struct Lines;
 # impl Lines {
@@ -429,7 +415,7 @@ And the `Lines` codec is used in the `process` function as such:
 #     type Error = io::Error;
 #     fn poll(&mut self) -> Poll<Option<Self::Item>, io::Error> { unimplemented!() }
 # }
-fn process(socket: TcpStream, state: Rc<RefCell<Shared>>) {
+fn process(socket: TcpStream, state: Arc<Mutex<Shared>>) {
     // Wrap the socket with the `Lines` codec that we wrote above.
     let lines = Lines::new(socket);
 
@@ -483,9 +469,8 @@ Here is the definition of the future that processes the broadcast logic for a
 connection:
 
 ```rust
-# use std::cell::RefCell;
-# use std::rc::Rc;
 # use std::net::SocketAddr;
+# use std::sync::{Arc, Mutex};
 # type BytesMut = ();
 # type Lines = ();
 # type Shared = ();
@@ -498,7 +483,7 @@ struct Peer {
     lines: Lines,
 
     /// Handle to the shared chat state.
-    state: Rc<RefCell<Shared>>,
+    state: Arc<Mutex<Shared>>,
 
     /// Receive half of the message channel.
     ///
@@ -525,14 +510,14 @@ And a `Peer` instance is created as such:
 # use bytes::{BytesMut, Bytes};
 # use futures::sync::mpsc;
 # use tokio::net::TcpStream;
-# use std::cell::RefCell;
-# use std::rc::Rc;
+# use tokio::prelude::*;
 # use std::net::SocketAddr;
 # use std::collections::HashMap;
+# use std::sync::{Arc, Mutex};
 # struct Peer {
 #     name: BytesMut,
 #     lines: Lines,
-#     state: Rc<RefCell<Shared>>,
+#     state: Arc<Mutex<Shared>>,
 #     rx: Rx,
 #     addr: SocketAddr,
 # }
@@ -546,7 +531,7 @@ And a `Peer` instance is created as such:
 # type Rx = mpsc::UnboundedReceiver<Bytes>;
 impl Peer {
     fn new(name: BytesMut,
-           state: Rc<RefCell<Shared>>,
+           state: Arc<Mutex<Shared>>,
            lines: Lines) -> Peer
     {
         // Get the client socket address
@@ -556,7 +541,8 @@ impl Peer {
         let (tx, rx) = mpsc::unbounded();
 
         // Add an entry for this `Peer` in the shared state map.
-        state.borrow_mut().peers.insert(addr, tx);
+        state.lock().unwrap()
+            .peers.insert(addr, tx);
 
         Peer {
             name,
@@ -576,12 +562,11 @@ into the peers map. This entry is removed in the drop implementation for
 `Peer`.
 
 ```rust
-# use std::cell::RefCell;
-# use std::rc::Rc;
 # use std::net::SocketAddr;
 # use std::collections::HashMap;
+# use std::sync::{Arc, Mutex};
 # struct Peer {
-#     state: Rc<RefCell<Shared>>,
+#     state: Arc<Mutex<Shared>>,
 #     addr: SocketAddr,
 # }
 # struct Shared {
@@ -589,7 +574,7 @@ into the peers map. This entry is removed in the drop implementation for
 # }
 impl Drop for Peer {
     fn drop(&mut self) {
-        self.state.borrow_mut().peers
+        self.state.lock().unwrap().peers
             .remove(&self.addr);
     }
 }
@@ -602,18 +587,17 @@ And here is the implementation.
 # extern crate tokio;
 # extern crate futures;
 # extern crate bytes;
-# use futures::prelude::*;
+# use tokio::io;
+# use tokio::prelude::*;
 # use futures::sync::mpsc;
 # use bytes::{Bytes, BytesMut, BufMut};
-# use std::io;
-# use std::cell::RefCell;
-# use std::rc::Rc;
 # use std::net::SocketAddr;
 # use std::collections::HashMap;
+# use std::sync::{Arc, Mutex};
 # struct Peer {
 #     name: BytesMut,
 #     lines: Lines,
-#     state: Rc<RefCell<Shared>>,
+#     state: Arc<Mutex<Shared>>,
 #     rx: Rx,
 #     addr: SocketAddr,
 # }
@@ -677,7 +661,7 @@ impl Future for Peer {
                 let line = line.freeze();
 
                 // Now, send the line to all other peers
-                for (addr, tx) in &self.state.borrow().peers {
+                for (addr, tx) in &self.state.lock().unwrap().peers {
                     // Don't send the message to ourselves
                     if *addr != self.addr {
                         // The send only fails if the rx half has been
@@ -712,10 +696,11 @@ this, the client connection task (defined in the `process` function) is extended
 to use `Peer`.
 
 ```rust
+# extern crate tokio;
 # extern crate futures;
-# use futures::prelude::*;
+# use tokio::io;
+# use tokio::prelude::*;
 # use futures::future::{self, Either};
-# use std::io;
 # type Lines = Box<Stream<Item = (), Error = io::Error>>;
 # struct Peer;
 # impl Peer {

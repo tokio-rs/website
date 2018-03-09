@@ -23,8 +23,6 @@ Next, add the necessary dependencies:
 ```toml
 [dependencies]
 tokio = "0.1"
-tokio-io = "0.1"
-futures = "0.1"
 ```
 
 and the crates and types into scope in `main.rs`:
@@ -32,13 +30,10 @@ and the crates and types into scope in `main.rs`:
 ```rust
 # #![deny(deprecated)]
 extern crate tokio;
-extern crate tokio_io;
-extern crate futures;
 
-use tokio::executor::current_thread;
+use tokio::io;
 use tokio::net::TcpListener;
-use tokio_io::io;
-use futures::{Future, Stream};
+use tokio::prelude::*;
 # fn main() {}
 ```
 
@@ -50,13 +45,10 @@ The first step is to bind a `TcpListener` to a local port. We use the
 ```rust
 # #![deny(deprecated)]
 # extern crate tokio;
-# extern crate tokio_io;
-# extern crate futures;
 #
-# use tokio::executor::current_thread;
+# use tokio::io;
 # use tokio::net::TcpListener;
-# use tokio_io::io;
-# use futures::{Future, Stream};
+# use tokio::prelude::*;
 fn main() {
     let addr = "127.0.0.1:6142".parse().unwrap();
     let listener = TcpListener::bind(&addr).unwrap();
@@ -71,13 +63,10 @@ connections on the bound listener and process each accepted connection.
 ```rust
 # #![deny(deprecated)]
 # extern crate tokio;
-# extern crate tokio_io;
-# extern crate futures;
 #
-# use tokio::executor::current_thread;
+# use tokio::io;
 # use tokio::net::TcpListener;
-# use tokio_io::io;
-# use futures::{Future, Stream};
+# use tokio::prelude::*;
 # fn main() {
 #     let addr = "127.0.0.1:6142".parse().unwrap();
 #     let listener = TcpListener::bind(&addr).unwrap();
@@ -117,50 +106,33 @@ We will be digging into futures and streams later on.
 
 Executors are responsible for scheduling asynchronous tasks, driving them to
 completion. There are a number of executor implementations to choose from, each have
-different pros and cons. In this example, we will use the [`current_thread`]
-executor.
+different pros and cons. In this example, we will use the [Tokio runtime][rt].
 
-The [`current_thread`] executor multiplexes all spawned tasks on the current
-thread.
+The Tokio runtime is a pre-configured runtime for asynchronous applications. It
+includes a thread pool as the default executor. This thread pool is tuned for
+usage in asynchronous applications.
 
 ```rust
 # #![deny(deprecated)]
 # extern crate tokio;
-# extern crate tokio_io;
 # extern crate futures;
 #
-# use tokio::executor::current_thread;
+# use tokio::io;
 # use tokio::net::TcpListener;
-# use tokio_io::io;
-# use futures::{Future, Stream};
+# use tokio::prelude::*;
+# use futures::future;
 # fn main() {
-#     let addr = "127.0.0.1:6142".parse().unwrap();
-#     let listener = TcpListener::bind(&addr).unwrap();
-# let server = listener.incoming().for_each(|socket| {
-#     Ok(())
-# })
-# .map_err(|_| ());
-# /*
-current_thread::run(|_| {
-# */ current_thread::run(|ctx| {
-    // Now, the server task is spawned.
-    current_thread::spawn(server);
-# ctx.cancel_all_spawned();
+# let server = future::ok(());
 
-    println!("server running on localhost:6142");
-});
+println!("server running on localhost:6142");
+tokio::run(server);
 # }
 ```
 
-`current_thread::run` starts the executor, blocking the current thread until
-all spawned tasks have completed. Spawning a task using [`current_thread`]
-**must** happen from within the context of a running [`current_thread`]
-executor.
-
-`current_thread::run` takes a closure that allows initializing the executor with
-tasks. In our case, this is the `server` task. When the closure returns (right
-after the `println!` statement), the thread will be blocked until all tasks are
-complete.
+`tokio::run` starts the runtime, blocking the current thread until
+all spawned tasks have completed and all resources (like TCP sockets) have been
+dropped. Spawning a task using [`tokio::spawn`] **must** happen from within the
+context of a [runtime][rt].
 
 So far, we only have a single task running on the executor, so the `server` task
 is the only one blocking `run` from returning.
@@ -178,13 +150,10 @@ Going back to the `incoming().for_each` block.
 ```rust
 # #![deny(deprecated)]
 # extern crate tokio;
-# extern crate tokio_io;
-# extern crate futures;
 #
-# use tokio::executor::current_thread;
+# use tokio::io;
 # use tokio::net::TcpListener;
-# use tokio_io::io;
-# use futures::{Future, Stream};
+# use tokio::prelude::*;
 # fn main() {
 #     let addr = "127.0.0.1:6142".parse().unwrap();
 #     let listener = TcpListener::bind(&addr).unwrap();
@@ -198,7 +167,7 @@ let server = listener.incoming().for_each(|socket| {
         });
 
     // Spawn a new task that processes the socket:
-    current_thread::spawn(connection);
+    tokio::spawn(connection);
 
     Ok(())
 })
@@ -206,13 +175,13 @@ let server = listener.incoming().for_each(|socket| {
 # }
 ```
 
-Again, we are defining an asynchrous task. This task will take ownership of the
+We are defining another asynchrous task. This task will take ownership of the
 socket, write the message on that socket, then complete. The `connection`
 variable holds the final task. Again, no work has yet been performed.
 
-`current_thread::spawn` is used to spawn the task on the executor. Because the
-`server` future is running on a `current_thread` executor, we are able to spawn
-further tasks on the same executor.
+`tokio::spawn` is used to spawn the task on the runtime. Because the
+`server` future is running on the runtime, we are able to spawn further tasks.
+`tokio::spawn` will panic if called from outside of the runtime.
 
 The [`io::write_all`] function takes ownership of `socket`, returning a
 [`Future`] that completes once the entire message has been written to the
@@ -233,6 +202,7 @@ the guide, will start digging deeper into the Tokio runtime model.
 
 [`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
 [`Stream`]: {{< api-url "futures" >}}/stream/trait.Stream.html
-[`current_thread`]: {{< api-url "tokio" >}}/executor/current_thread/index.html
+[rt]: {{< api-url "tokio" >}}/runtime/index.html
 [`io::write_all`]: {{< api-url "tokio-io" >}}/io/fn.write_all.html
+[`tokio::spawn`]: {{< api-url "tokio" >}}/fn.spawn.html
 [full-code]:https://github.com/tokio-rs/tokio/blob/master/examples/hello_world.rs

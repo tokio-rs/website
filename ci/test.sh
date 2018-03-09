@@ -4,9 +4,8 @@ set -ex
 if [ ! -d tmp ]; then
   cargo new tmp
   cat >> tmp/Cargo.toml <<-EOF
-futures = "0.1"
-tokio = "0.1"
-tokio-io = "0.1"
+futures = "0.1.18"
+tokio = "0.1.2"
 
 # Legacy deps
 

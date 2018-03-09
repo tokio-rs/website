@@ -302,15 +302,12 @@ tasks. Here is the basic structure of a server:
 ```rust
 # #![deny(deprecated)]
 # extern crate tokio;
-# extern crate tokio_io;
-# extern crate futures;
 #
-# use tokio::executor::current_thread;
+# use tokio::io;
 # use tokio::net::{TcpListener, TcpStream};
-# use tokio_io::io;
-# use futures::{Future, Stream};
+# use tokio::prelude::*;
 #
-# pub fn process(socket: TcpStream) -> Box<Future<Item = (), Error = ()>> {
+# pub fn process(socket: TcpStream) -> Box<Future<Item = (), Error = ()> + Send> {
 # unimplemented!();
 # }
 #
@@ -319,15 +316,13 @@ tasks. Here is the basic structure of a server:
 #     let listener = TcpListener::bind(&addr).unwrap();
 let server = listener.incoming().for_each(|socket| {
     // Spawn a task to process the connection
-    current_thread::spawn(process(socket));
+    tokio::spawn(process(socket));
 
     Ok(())
 })
 .map_err(|_| ()); // Just drop the error
 
-current_thread::run(|_| {
-    current_thread::spawn(server);
-});
+tokio::run(server);
 # }
 # pub fn main() {}
 ```
@@ -345,9 +340,9 @@ connections on the same socket:
 # use std::io;
 pub struct Server {
     listener: TcpListener,
-    connections: Vec<Box<Future<Item = (), Error = io::Error>>>,
+    connections: Vec<Box<Future<Item = (), Error = io::Error> + Send>>,
 }
-# pub fn process(socket: TcpStream) -> Box<Future<Item = (), Error = io::Error>> {
+# pub fn process(socket: TcpStream) -> Box<Future<Item = (), Error = io::Error> + Send> {
 # unimplemented!();
 # }
 
@@ -358,17 +353,12 @@ impl Future for Server {
     fn poll(&mut self) -> Result<Async<()>, io::Error> {
         // First, accept all new connections
         loop {
-            match self.listener.accept() {
-                Ok((socket, _)) => {
+            match self.listener.poll_accept()? {
+                Async::Ready((socket, _)) => {
                     let connection = process(socket);
                     self.connections.push(connection);
                 }
-                Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {
-                    break;
-                }
-                Err(e) => {
-                    return Err(e);
-                }
+                Async::NotReady => break,
             }
         }
 

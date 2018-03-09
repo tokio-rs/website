@@ -33,7 +33,7 @@ These helpers include:
 
 A lot of these functions / helpers are generic over the [`AsyncRead`] and
 [`AsyncWrite`] traits. These traits are similar to [`Read`] and [`Write`] from
-[`std`], but are only for types that are "future aware", i.e. follow the
+`std`, but are only for types that are "future aware", i.e. follow the
 mandated properties:
 
 * Calls to `read` or `write` are **nonblocking**, they never block the calling
@@ -42,19 +42,19 @@ mandated properties:
   `WouldBlock`. If this happens then the current future's task is scheduled to
   receive a notification (an unpark) when the I/O is ready again.
 
+Note that users of [`AsyncRead`] and [`AsyncWrite`] types should use
+[`poll_read`] and [`poll_write`] instead of directly calling [`read`] and [`write`].
+
 For example, here is how to accept connections, read 5 bytes from them, then
 write the 5 bytes back to the socket:
 
 ```rust
 # #![deny(deprecated)]
 # extern crate tokio;
-# extern crate tokio_io;
-# extern crate futures;
 #
-# use tokio::executor::current_thread;
+# use tokio::io;
 # use tokio::net::TcpListener;
-# use tokio_io::io;
-# use futures::{Future, Stream};
+# use tokio::prelude::*;
 # fn main() {
 #     let addr = "127.0.0.1:6142".parse().unwrap();
 #     let listener = TcpListener::bind(&addr).unwrap();
@@ -70,25 +70,13 @@ let server = listener.incoming().for_each(|socket| {
         .then(|_| Ok(())); // Just discard the socket and buffer
 
     // Spawn a new task that processes the socket:
-    current_thread::spawn(connection);
+    tokio::spawn(connection);
 
     Ok(())
 })
 # ;
 # }
 ```
-
-[`incoming`]: #
-[`read_exact`]: #
-[`read_to_end`]: #
-[`write_all`]: #
-[`copy`]: #
-[`AsyncRead`]: #
-[`AsyncWrite`]: #
-[`Read`]: #
-[`Write`]: #
-[`std`]: #
-[`tokio_io::io`]: #
 
 ## [Using the Poll API](#poll-based) {#poll-based}
 
@@ -103,13 +91,12 @@ For example, this is how the `read_exact` future could be implemented for a
 # #![deny(deprecated)]
 # extern crate tokio;
 # #[macro_use]
-# extern crate tokio_io;
 # extern crate futures;
+# use tokio::io;
+# use tokio::prelude::*;
 #
 # use tokio::net::TcpStream;
-# use futures::prelude::*;
 # use std::mem;
-# use std::io::{self, Read};
 pub struct ReadExact {
     state: State,
 }
@@ -135,9 +122,9 @@ impl Future for ReadExact {
                 ref mut pos
             } => {
                 while *pos < buf.len() {
-                    // try_nb! is a macro similar to `try_ready!` but
-                    // for I/O types.
-                    let n = try_nb!(stream.read(&mut buf[*pos..]));
+                    let n = try_ready!({
+                        stream.poll_read(&mut buf[*pos..])
+                    });
                     *pos += n;
                     if n == 0 {
                         let err = io::Error::new(
@@ -152,7 +139,9 @@ impl Future for ReadExact {
         }
 
         match mem::replace(&mut self.state, State::Empty) {
-            State::Reading { stream, buf, .. } => Ok((stream, buf).into()),
+            State::Reading { stream, buf, .. } => {
+                Ok((stream, buf).into())
+            }
             State::Empty => panic!(),
         }
     }
@@ -179,10 +168,16 @@ also provides a number of methods for working with it conveniently:
 [`send_dgram`]: {{< api-url "tokio" >}}/net/struct.UdpSocket.html#method.send_dgram
 [`recv_dgram`]: {{< api-url "tokio" >}}/net/struct.UdpSocket.html#method.recv_dgram
 [`incoming`]: {{< api-url "tokio" >}}/net/struct.TcpListener.html#method.incoming
-[`read_exact`]: {{< api-url "tokio-io" >}}/io/fn.read_exact.html
-[`read_to_end`]: {{< api-url "tokio-io" >}}/io/fn.read_to_end.html
-[`write_all`]: {{< api-url "tokio-io" >}}/io/fn.write_all.html
-[`copy`]: {{< api-url "tokio-io" >}}/io/fn.copy.html
-[`tokio_io::io`]: {{< api-url "tokio-io" >}}/io/index.html
+[`read_exact`]: {{< api-url "tokio" >}}/io/fn.read_exact.html
+[`read_to_end`]: {{< api-url "tokio" >}}/io/fn.read_to_end.html
+[`write_all`]: {{< api-url "tokio" >}}/io/fn.write_all.html
+[`copy`]: {{< api-url "tokio" >}}/io/fn.copy.html
+[`tokio_io::io`]: {{< api-url "tokio" >}}/io/index.html
 [Mio]: https://docs.rs/mio/
 [reactor]: {{< api-url "tokio" >}}/reactor/index.html
+[`AsyncRead`]: {{< api-url "tokio" >}}/io/trait.AsyncRead.html
+[`AsyncWrite`]: {{< api-url "tokio" >}}/io/trait.AsyncWrite.html
+[`Read`]: https://doc.rust-lang.org/std/io/trait.Read.html
+[`Write`]: https://doc.rust-lang.org/std/io/trait.Write.html
+[`poll_read`]: {{< api-url "tokio" >}}/io/trait.AsyncRead.html#method.poll_read
+[`poll_write`]: {{< api-url "tokio" >}}/io/trait.AsyncWrite.html#method.poll_write

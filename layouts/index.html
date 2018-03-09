@@ -43,14 +43,11 @@
       <div class="tk-content">
         <pre>
 <code>// A tiny async echo server with Tokio
-extern crate futures;
 extern crate tokio;
-extern crate tokio_io;
 
-use futures::{Future, Stream};
-use tokio::executor::current_thread;
+use tokio::io;
 use tokio::net::TcpListener;
-use tokio_io::{io, AsyncRead};
+use tokio::prelude::*;
 
 fn main() {
     // Bind the server's socket
@@ -74,7 +71,7 @@ fn main() {
             });
 
         // Spawn the future as a concurrent task
-        current_thread::spawn(conn);
+        tokio::spawn(conn);
 
         Ok(())
     })
@@ -82,10 +79,8 @@ fn main() {
         println!("server error {:?}", err);
     });
 
-    // Spin up the server on the event loop
-    current_thread::run(|_| {
-        current_thread::spawn(server);
-    });
+    // Start the runtime and spin up the server
+    tokio::run(server);
 }
 </code>
         </pre>
