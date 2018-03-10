@@ -335,7 +335,7 @@ utilities for working with byte sequences in a networking context. The
 line.
 
 As always, the key to implementing a function that returns `Async` is to never
-return `Async::NotReady` unless the function impelmentation received an
+return `Async::NotReady` unless the function implementation received an
 `Async::NotReady` itself. In this example, `NotReady` is only returned if
 `fill_read_buf` returns `NotReady` and `fill_read_buf` only returns `NotReady`
 if `TcpStream::read_buf` returns `NotReady`.
