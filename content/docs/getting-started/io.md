@@ -140,7 +140,7 @@ impl Future for ReadExact {
 
         match mem::replace(&mut self.state, State::Empty) {
             State::Reading { stream, buf, .. } => {
-                Ok((stream, buf).into())
+                Ok(Async::Ready((stream, buf)))
             }
             State::Empty => panic!(),
         }
