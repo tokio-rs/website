@@ -45,7 +45,7 @@ fn main() {
 
 The above example creates a new `Delay` instance that will complete 100
 milliseconds in the future. The `new` function takes an `Instant`, so we compute
-`when` to be the intant 100 milliseconds from now.
+`when` to be the instant 100 milliseconds from now.
 
 Once the instant is reached, the `Delay` future completes, resulting in the
 `and_then` block to be executed.
@@ -53,7 +53,7 @@ Once the instant is reached, the `Delay` future completes, resulting in the
 As with all futures, `Delay` is lazy. Simply creating a new `Delay` instance
 does nothing. The instance must be used on a task that is spawned onto the Tokio
 [runtime]. The [runtime] comes preconfigured with a timer implementation to
-drive the `Delay` instance to completion. In the example abovce, this is done by
+drive the `Delay` instance to completion. In the example above, this is done by
 passing the task to `tokio::run`. Using `tokio::spawn` would also work.
 
 ## [Timing out a long running operation](#deadline) {#deadline}
