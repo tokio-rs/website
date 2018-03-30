@@ -83,12 +83,13 @@ fn read_four_bytes(socket: TcpStream)
     let when = Instant::now() + Duration::from_secs(5);
 
     let buf = vec![0; 4];
-    let fut = io::read_exact(socket)
+    let fut = io::read_exact(socket, buf)
         .deadline(when)
         .map_err(|_| println!("failed to read 4 bytes by deadline"));
 
     Box::new(fut)
 }
+# pub fn main() {}
 ```
 
 The above function takes a socket and returns a future that completes when 4
@@ -131,7 +132,7 @@ fn main() {
             println!("fire; instant={:?}", instant);
             Ok(())
         })
-        .map_err(|e| panic!("interval errored; err={:?}", e))
+        .map_err(|e| panic!("interval errored; err={:?}", e));
 
     tokio::run(task);
 }
