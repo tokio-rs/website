@@ -15,7 +15,7 @@ First, generate a new crate.
 
 ```shell
 $ cargo new --bin hello-world
-cd hello-world
+$ cd hello-world
 ```
 
 Next, add the necessary dependencies:
