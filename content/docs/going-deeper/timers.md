@@ -156,7 +156,7 @@ a hierarchical hashed timer wheel implementation, which provides efficient
 constant time complexity when creating, canceling, and firing timeouts.
 
 The Tokio runtime includes one timer instance **per worker thread**. This means
-that, if the the runtime starts 4 worker threads, there will be 4 timer
+that, if the runtime starts 4 worker threads, there will be 4 timer
 instances. This allows avoiding synchronization in most cases since the task,
 when working with a timer, will be operating on state located on the current
 thread.
