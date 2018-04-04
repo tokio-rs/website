@@ -144,8 +144,9 @@ first fire).
 
 By default, an `Instant` stream is unbounded, i.e., it will continue yielding at
 the requested interval forever. The example uses `Stream::take` to limit the
-number of times `Interval` yields to 10. So, the example will run for 0.9 seconds
-since the first of 10 values is yielded immediately.
+number of times `Interval` yields, here limiting to a sequence of 10 events.
+So, the example will run for 0.9 seconds since the first of 10 values is yielded
+immediately.
 
 ## [Notes on the timer](#timer) {#timer}
 
