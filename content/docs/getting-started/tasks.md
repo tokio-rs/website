@@ -107,7 +107,7 @@ let url = "https://example.com";
 let response = cache_get(url)
   .and_then(|resp| {
       // `Either` is a utility provided by the `futures` crate
-      // that enables returing different futures from a single
+      // that enables returning different futures from a single
       // closure without boxing.
       match resp {
           Some(resp) => Either::A(future::ok(resp)),
