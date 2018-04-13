@@ -28,4 +28,4 @@ with the guide as well.
 
 [`tokio-proto`]: https://docs.rs/tokio-proto
 [`tokio-core`]: https://docs.rs/tokio-core
-[`futures`]: https://docs.rs/futures
+[`futures`]: https://docs.rs/futures/0.1
