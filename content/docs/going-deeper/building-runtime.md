@@ -88,6 +88,9 @@ let timer_handle = timer.handle();
 let mut executor = CurrentThread::new_with_park(timer);
 # Ok(())
 # }
+# fn main() {
+#      run(futures::future::lazy(|| Ok(()))).unwrap();
+# }
 ```
 
 This way, if they are futures to execute, they'll get executed first. Then once
@@ -153,6 +156,9 @@ let result = tokio_reactor::with_default(
     )
 );
 # Ok(())
+# }
+# fn main() {
+#      run(futures::future::lazy(|| Ok(()))).unwrap();
 # }
 ```
 
