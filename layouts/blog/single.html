@@ -15,7 +15,7 @@
       <nav class="leftnav">
         <div class="" id="">
           <ul class="nav">
-            {{ range .Site.Menus.blog.ByWeight.Reverse }}
+            {{ range .Site.Menus.blog }}
             <li class="active">
               <a href="{{ .URL }}" {{ if not (eq $currentURL .URL) }}class="text-muted"{{ end }}>{{ .Name }}</a>
             </li>

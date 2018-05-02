@@ -3,7 +3,7 @@ date = "2017-03-17"
 title = "Announcing the tokio-io Crate"
 description = "17 March 2017"
 menu = "blog"
-weight = 101
+weight = 998
 +++
 
 Today we're happy to announce a new crate and several new tools to work with
