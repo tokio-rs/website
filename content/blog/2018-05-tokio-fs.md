@@ -38,7 +38,7 @@ used in much the same way that a TCP socket would be used from Tokio.
 
 As of today, the filesystem APIs are pretty minimal. There are many other APIs
 that need to be implemented to bring the Tokio filesystem APIs in line with
-`std`., but those are left as an exercise to the reader to submit as PRs!
+`std`, but those are left as an exercise to the reader to submit as PRs!
 
 \* Yes, there are some operating systems that provide fully asynchronous
 filesystem APIs, but these are either incomplete or not portable.
