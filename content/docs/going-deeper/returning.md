@@ -88,8 +88,8 @@ change return types from `Box` to [`impl Trait`].
 ### [Named types](#named-types) {#named-types}
 [return-named-types]: #named-types
 
-If you wouldn't like to return a `Box` and want to stick with stable Rust, another
-option is to write the return type directly:
+If you wouldn't like to return a `Box` and want to stick with older versions of 
+Rust, another option is to write the return type directly:
 
 ```rust
 # extern crate futures;
@@ -109,7 +109,7 @@ function returns the [`Map`] struct which internally contains the future and the
 function to perform the map.
 
 The upside to this approach is that it doesn't have the runtime overhead of
-`Box` from before, and works on stable Rust.
+`Box` from before, and works on Rust versions pre-1.26.
 
 The downside, however, is that it's often quite difficult to name the type.
 Sometimes the types can get quite large or be unnameable altogether. Here we're
