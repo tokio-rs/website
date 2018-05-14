@@ -77,15 +77,13 @@ necessary, it's maximally flexible to future implementations as the actual
 return type is hidden, and it's ergonomic to write as it's similar to the nice
 `Box` example above.
 
-The downside to this approach is only that it's not on stable Rust yet. As of
-the time of this writing [`impl Trait`] is available on nightly, but will likely
-take some time to stabilize. You can track the progress of this feature at
-[rust-lang/rust#34511]. The good news, however, is that as soon as `impl
-Trait` hits stable Rust, all crates using futures can immediately benefit. It
-should be a backwards-compatible extension to change return types from `Box` to
-[`impl Trait`].
-
-[rust-lang/rust#34511]: https://github.com/rust-lang/rust/issues/34511
+The downside to this approach is only that it's only on versions of Rust later
+than 1.26 (released May 7th, 2018), and using a `Box` is still more flexible --
+if you might return two different types of `Future`, then you must still return
+`Box<Future<Item = F::Item, Error = F::Error>` instead of 
+`impl Future<Item = F::Item, Error = F::Error>`.  The good news however is that
+this case is rare; in general, it should be a backwards-compatible extension to 
+change return types from `Box` to [`impl Trait`].
 
 ### [Named types](#named-types) {#named-types}
 [return-named-types]: #named-types
