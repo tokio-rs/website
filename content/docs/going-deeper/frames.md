@@ -1,6 +1,6 @@
 +++
 title = "Working with framed streams"
-description = "How to work with streams that contain frames."
+description = "Understanding tokio helpers for framed streams"
 menu = "going_deeper"
 weight = 230
 +++
