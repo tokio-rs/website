@@ -51,6 +51,16 @@ keep growing.
 Let's look at how `Decoder::decode` is implemented for `LinesCodec`.
 
 ```rust
+# extern crate bytes;
+# extern crate tokio_io;
+# use std::io;
+# use std::str;
+# use bytes::BytesMut;
+# use tokio_io::codec::*;
+# struct LinesCodec { next_index: usize };
+# impl Decoder for LinesCodec {
+#    type Item = String;
+#    type Error = io::Error;
 fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<String>, io::Error> {
     // Look for a byte with the value '\n' in buf. Start searching from the search start index.
     if let Some(newline_offset) = buf[self.next_index..].iter().position(|b| *b == b'\n')
@@ -88,6 +98,7 @@ fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<String>, io::Error> {
         Ok(None)
     }
 }
+# }
 ```
 
 The `Encoder::encode` method is called when a frame must be written to the
@@ -98,6 +109,16 @@ stream as it becomes ready to send the data.
 Let's now look at how `Encoder::encode` is implemented for `LinesCodec`.
 
 ```rust
+# extern crate bytes;
+# extern crate tokio_io;
+# use std::io;
+# use std::str;
+# use bytes::*;
+# use tokio_io::codec::*;
+# struct LinesCodec { next_index: usize };
+# impl Encoder for LinesCodec {
+#    type Item = String;
+#    type Error = io::Error;
 fn encode(&mut self, line: String, buf: &mut BytesMut) -> Result<(), io::Error> {
     // It's important to reserve the amount of space needed. The `bytes` API
     // does not grow the buffers implicitly.
@@ -114,6 +135,7 @@ fn encode(&mut self, line: String, buf: &mut BytesMut) -> Result<(), io::Error> 
     // Return ok to signal that no error occured.
     Ok(())
 }
+# }
 ```
 
 It's often simpler to encode information. Here we simply reserve the space
@@ -129,7 +151,15 @@ You can create a `Framed` struct using any type that implement the `AsyncRead`
 and `AsyncWrite` traits using the `AsyncRead::framed` method.
 
 ```rust
-TcpStream::connect(...).and_then(|sock| {
+# extern crate futures;
+# extern crate tokio;
+# extern crate tokio_io;
+# use futures::prelude::*;
+# use tokio::net::TcpStream;
+# use tokio_io::AsyncRead;
+# use tokio_io::codec::LinesCodec;
+# let addr = "127.0.0.1:5000".parse().expect("invalid socket address");
+TcpStream::connect(&addr).and_then(|sock| {
     let framed_sock = sock.framed(LinesCodec::new());
     framed_sock.for_each(|line| {
         println!("Received line {}", line);
