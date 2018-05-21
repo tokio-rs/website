@@ -192,6 +192,7 @@ let update_cache = Interval::new(Duration::from_secs(60))
 my_executor.spawn(update_cache);
 
 // Now, only get from the cache.
+// (NB: see next section about ensuring the cache is up to date.)
 let response = cache_get(url);
 let task = Timeout::new(response, Duration::from_secs(20));
 
