@@ -112,8 +112,8 @@ impl Future for MyTask {
 # }
 ```
 
-> **Important**: Returning `Async::NotReady` has special meaning. See the next
-> section for more details.
+> **Important**: Returning `Async::NotReady` has special meaning. See the [next
+> section] for more details.
 
 The key thing to note is, when `MyTask::poll` is called, it immediately tries to
 get the widget. If the call to `poll_widget` returns `NotReady`, then the task
@@ -228,3 +228,4 @@ core of the [`futures`] task model. We will be digging more into that shortly.
 [`CurrentThread`]: {{< api-url "tokio" >}}/executor/current_thread/index.html
 [`ThreadPool`]: http://docs.rs/tokio-threadpool
 [rt]: {{< api-url "tokio" >}}/runtime/index.html
+[next section]: {{< relref "docs/getting-started/futures.md#returning-not-ready" >}}
