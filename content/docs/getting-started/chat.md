@@ -206,7 +206,7 @@ All the worker threads keep a reference to the current runtime stored in a
 thread-local variable. Note, attempting to call `tokio::spawn` from outside of
 the Tokio runtime will result in a panic.
 
-The connection processing logic has to be able to do is to understand the
+All the connection processing logic has to be able to do is understand the
 protocol. The protocol is line-based, terminated by `\r\n`.  Instead of working
 at the byte stream level, it is much easier to work at the frame level, i.e.
 working with values that represent atomic messages.
