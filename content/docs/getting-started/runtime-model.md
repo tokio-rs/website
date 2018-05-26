@@ -6,7 +6,7 @@ weight = 120
 +++
 
 Now we will go over the Tokio / futures runtime model. Tokio is built on top of
-the [`futures`] crate and uses its runtime model. This allows it to interopt
+the [`futures`] crate and uses its runtime model. This allows it to interop
 with other libraries also using the [`futures`] crate.
 
 **Note**: This runtime model is very different than async libraries found in
