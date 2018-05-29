@@ -185,6 +185,6 @@ also `executor.run` which can be executed afterwards.
 [runtime `Builder`]: {{< api-url "tokio" >}}/runtime/struct.Builder.html
 [`Park`]: {{< api-url "tokio-executor" >}}/park/trait.Park.html
 [`Reactor`]: {{< api-url "tokio" >}}/reactor/struct.Reactor.html
-[mio]: https://crates.io/crates/mio.
+[mio]: https://crates.io/crates/mio
 [`CurrentThread`]: {{< api-url "tokio" >}}/executor/current_thread/struct.CurrentThread.html
 [`Timer`]: {{< api-url "tokio-timer" >}}/timer/struct.Timer.html
