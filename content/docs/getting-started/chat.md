@@ -249,8 +249,8 @@ impl Lines {
 ```
 
 Data read from the socket is buffered into `rd`. When a full line is read, it is
-is returned to the caller. Lines submitted by the caller to write to the socket
-are buffered into `wr`, then flushed.
+returned to the caller. Lines submitted by the caller to write to the socket are
+buffered into `wr`, then flushed.
 
 This is how the read half is implemented:
 
