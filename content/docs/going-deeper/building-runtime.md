@@ -17,7 +17,7 @@ more complex, but there are more moving parts around. Knowing the details here
 can be a stepping stone to reading the code of the default runtime.
 
 A complete, working example of things discussed here can be found in the
-[git repository](https://github.com/tokio-rs/tokio/tree/master/examples/single-threaded.rs).
+[git repository](https://github.com/tokio-rs/tokio/tree/master/examples/manual-runtime.rs).
 
 ## The `Park` trait
 
@@ -93,7 +93,7 @@ let mut executor = CurrentThread::new_with_park(timer);
 # }
 ```
 
-This way, if they are futures to execute, they'll get executed first. Then once
+This way, if there are futures to execute, they'll get executed first. Then once
 it runs out of ready futures, it'll look for timeouts to fire. This may generate
 some more ready futures (which would get executed next). If no timeouts fire,
 the timer computes for how long the reactor can safely block and lets it wait
