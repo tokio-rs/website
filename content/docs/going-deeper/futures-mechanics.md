@@ -100,8 +100,8 @@ For streams, there are a large set of adapters, including:
 [`merge`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.merge
 [stream-select]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.select
 
-The `Sink` trait currently has fewer adapters; the most important ones were
-covered in [the introduction](../../getting-started/streams-and-sinks).
+The `Sink` trait currently has fewer adapters<!--TODO: fix this link; the most important ones were
+covered in [the introduction](../../getting-started/streams-and-sinks).-->
 
 Finally, an object that is both a stream and a sink can be broken into separate
 stream and sink objects using the [`split`] adapter.
