@@ -16,9 +16,9 @@ a stream of line delimited messages with tokio.
 
 ## Writing a codec
 
-The codec implements the `tokio_io::codec::Decoder` and
-`tokio_io::codec::Encoder` traits. Its job is to convert a frame to and from
-bytes. Those traits are used in conjunction with the `tokio_io::codec::Framed`
+The codec implements the `tokio_codec::Decoder` and
+`tokio_codec::Encoder` traits. Its job is to convert a frame to and from
+bytes. Those traits are used in conjunction with the `tokio_codec::Framed`
 struct to provide buffering, decoding and encoding of byte streams.
 
 Let's look at a simplified version of the `LinesCodec` struct, which implements
