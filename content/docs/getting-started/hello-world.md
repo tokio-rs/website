@@ -175,7 +175,7 @@ let server = listener.incoming().for_each(|socket| {
 # }
 ```
 
-We are defining another asynchrous task. This task will take ownership of the
+We are defining another asynchronous task. This task will take ownership of the
 socket, write the message on that socket, then complete. The `connection`
 variable holds the final task. Again, no work has yet been performed.
 
