@@ -5,7 +5,7 @@ menu = "going_deeper"
 weight = 230
 +++
 
-Tokio has helpers to transform a stream of bytes into a stream frames. Examples
+Tokio has helpers to transform a stream of bytes into a stream of frames. Examples
 of byte streams include TCP connections, pipes, file objects and the standard
 input and output file descriptors. In Rust, streams are easily identified
 because they implement the `Read` and `Write` traits.
