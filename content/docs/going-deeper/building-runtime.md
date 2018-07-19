@@ -41,7 +41,7 @@ things onto each other.
 We definitely need a [`Reactor`] to accept external events (like network sockets
 being readable) from the OS. It does so by blocking on `epoll`, `kqueue` or
 other OS-dependent primitive, through the [mio] crate. This can't delegate the
-waiting to anything else, so reactor goes to the bottom of our stack.
+waiting to anything else, so the reactor goes to the bottom of our stack.
 
 The reactor is able to notify our futures of data coming over the network and
 similar events, but we need an executor to actually run them. We'll be using the
@@ -162,7 +162,7 @@ let result = tokio_reactor::with_default(
 # }
 ```
 
-There are few things of note. First, the `enter` thing just ensures that we
+There are a few things of note. First, the `enter` thing just ensures that we
 don't run multiple executors on the same thread at the same time. Running
 multiple executors would get one of them blocked, which would act in a very not
 useful way, therefore this is footgun prevention.
