@@ -5,12 +5,12 @@ menu = "going_deeper"
 weight = 230
 +++
 
-Tokio has helpers to transform a stream of bytes into a stream frames. Examples
+Tokio has helpers to transform a stream of bytes into a stream of frames. Examples
 of byte streams include TCP connections, pipes, file objects and the standard
 input and output file descriptors. In Rust, streams are easily identified
 because they implement the `Read` and `Write` traits.
 
-One of the simplest form of framed message is the line delimited message.
+One of the simplest forms of framed message is the line delimited message.
 Each message ends with a `\n` character. Let's look at how one would implement
 a stream of line delimited messages with tokio.
 
@@ -147,7 +147,7 @@ around a codec that implements automatic buffering. The `Framed` struct is both
 a `Stream` and a `Sink`. Thus, you can receive frames from it and send frames
 to it.
 
-You can create a `Framed` struct using any type that implement the `AsyncRead`
+You can create a `Framed` struct using any type that implements the `AsyncRead`
 and `AsyncWrite` traits using the `AsyncRead::framed` method.
 
 ```rust
