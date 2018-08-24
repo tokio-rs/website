@@ -56,13 +56,13 @@ does nothing. The instance must be used on a task that is spawned onto the Tokio
 drive the `Delay` instance to completion. In the example above, this is done by
 passing the task to `tokio::run`. Using `tokio::spawn` would also work.
 
-## [Timing out a long running operation](#deadline) {#deadline}
+## [Timing out a long running operation](#timeout) {#timeout}
 
 When writing robust networking applications, it's critical to ensure that
 operations complete within reasonable amounts of time. This is especially true
 when waiting for data from external, potentially untrusted, sources.
 
-The [`Deadline`][deadline] type ensures that an operation completes by fixed
+The [`Timeout`][timeout] type ensures that an operation completes by a specified
 instant in time.
 
 ```rust
@@ -78,14 +78,10 @@ use std::time::{Duration, Instant};
 fn read_four_bytes(socket: TcpStream)
     -> Box<Future<Item = (TcpStream, Vec<u8>), Error = ()>>
 {
-    // The instant at which the read will be aborted if
-    // it has not yet completed.
-    let when = Instant::now() + Duration::from_secs(5);
-
     let buf = vec![0; 4];
     let fut = io::read_exact(socket, buf)
-        .deadline(when)
-        .map_err(|_| println!("failed to read 4 bytes by deadline"));
+        .timeout(Duration::from_secs(5))
+        .map_err(|_| println!("failed to read 4 bytes by timeout"));
 
     Box::new(fut)
 }
@@ -94,15 +90,15 @@ fn read_four_bytes(socket: TcpStream)
 
 The above function takes a socket and returns a future that completes when 4
 bytes have been read from the socket. The read must complete within 5 seconds.
-This is ensured by calling `deadline` on the read future with an instant that is
-5 seconds in the future.
+This is ensured by calling `timeout` on the read future with a duration of 5
+seconds.
 
-The [`deadline`] function is defined by [`FutureExt`][ext] and is included in the
+The [`timeout`] function is defined by [`FutureExt`][ext] and is included in the
 prelude. As such, `use tokio::prelude::*` imports [`FutureExt`][ext] as well, so
-we can call [`deadline`] on all futures in order to require them to complete by
+we can call [`timeout`] on all futures in order to require them to complete by
 the specified instant.
 
-If the deadline is reached without the read completing, the read operation is
+If the timeout is reached without the read completing, the read operation is
 automatically canceled. This happens when the future returned by
 `io::read_exact` is dropped. Because of the lazy runtime model, dropping a
 future results in the operation being canceled.
@@ -167,8 +163,8 @@ any thread.
 
 [timer]: {{< api-url "tokio" >}}/timer/index.html
 [delay]: {{< api-url "tokio" >}}/timer/struct.Delay.html
-[deadline]: {{< api-url "tokio" >}}/timer/struct.Deadline.html
+[timeout]: {{< api-url "tokio" >}}/timer/struct.Timeout.html
 [interval]: {{< api-url "tokio" >}}/timer/struct.Interval.html
 [runtime]: {{< api-url "tokio" >}}/runtime/index.html
 [ext]: {{< api-url "tokio" >}}/util/trait.FutureExt.html
-[`deadline`]: {{< api-url "tokio" >}}/util/trait.FutureExt.html#method.deadline
+[`timeout`]: {{< api-url "tokio" >}}/util/trait.FutureExt.html#method.timeout

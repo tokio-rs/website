@@ -186,7 +186,6 @@ this:
 # extern crate futures;
 # use futures::future;
 # use tokio::net::TcpStream;
-# use tokio::executor::current_thread;
 # use std::sync::{Arc, Mutex};
 # type Shared = String;
 fn process(socket: TcpStream, state: Arc<Mutex<Shared>>) {
