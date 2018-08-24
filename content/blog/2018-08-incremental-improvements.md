@@ -149,6 +149,8 @@ So, a big thanks to [all of you have have contributed][contrib] to Tokio to date
 [@stjepang]: https://github.com/stjepang
 [@kpp]: https://github.com/kpp
 [@vorner]: https://github.com/vorner
+[@sdroege]: https://github.com/sdroege
+[@jonhoo]: https://github.com/jonhoo
 [#340]: https://github.com/tokio-rs/tokio/issues/340
 [#459]: https://github.com/tokio-rs/tokio/issues/459
 [#470]: https://github.com/tokio-rs/tokio/issues/470
