@@ -9,7 +9,8 @@ weight = 992
 It took a bit longer than I had initially hoped (as it always does), but a new
 Tokio version has been released. This release includes, among other features, a
 new [set of APIs][fs] that allow performing filesystem operations from an
-asynchronous context, concurrency improvements, timer improvements, and more.
+asynchronous context, concurrency improvements, timer improvements, and more
+(including bug fixes, so be sure to update!).
 
 It has been a little bit since thee last post. There haven't been any big
 feature releases, but that doesn't mean that we have been idle. New crates have
@@ -128,9 +129,9 @@ impl Cache {
 ## Many other small improvements
 
 Besides what has been listed above, Tokio has received many small improvements
-across most of the crates. These have been provided by our amazing community.
-I'm hoping that over time, more and more people will join the effort of building
-Tokio and help it continue to evolve.
+and bug fixes across most of the crates. These have been provided by our amazing
+community.  I'm hoping that over time, more and more people will join the effort
+of building Tokio and help it continue to evolve.
 
 So, a big thanks to [all of you have have contributed][contrib] to Tokio to date.
 
