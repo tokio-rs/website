@@ -12,7 +12,7 @@ new [set of APIs][fs] that allow performing filesystem operations from an
 asynchronous context, concurrency improvements, timer improvements, and more
 (including bug fixes, so be sure to update!).
 
-It has been a little bit since thee last post. There haven't been any big
+It has been a little bit since the last post. There haven't been any big
 feature releases, but that doesn't mean that we have been idle. New crates have
 been released with many incremental improvements over the past few months. Many
 of these improvements have been contributed by the community, so I thought a
