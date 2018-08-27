@@ -137,7 +137,7 @@ we can use an array that looks stack allocated (it actually ends up in the
 heap).
 
 Note that `TcpStream` has `read_async` and `write_all_async` functions. These
-functions perfom the same logic as the synchronous equivalents that exist on the
+functions perform the same logic as the synchronous equivalents that exist on the
 `Read` and `Write` traits in `std`. The difference, they return futures that can
 be awaited on.
 
@@ -151,7 +151,7 @@ There even is one using [hyper].
 ## Some notes
 
 First, the `tokio-async-await` crate only provides compatibility for `async` /
-`await` syntax. It does **not** provide suport for the `futures` 0.3 crate. It
+`await` syntax. It does **not** provide support for the `futures` 0.3 crate. It
 is expected that users continue using futures 0.1 to remain compatible with
 Tokio.
 
