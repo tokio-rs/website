@@ -2,14 +2,14 @@ language: rust
 sudo: false
 
 install:
-  - curl -L https://github.com/spf13/hugo/releases/download/v0.18.1/hugo_0.18.1_Linux-64bit.tar.gz |
+  - curl -L https://github.com/gohugoio/hugo/releases/download/v0.47.1/hugo_0.47.1_Linux-64bit.tar.gz |
       tar xzvf -
   - pip install --user awscli
   - ~/.local/bin/aws configure set preview.cloudfront true
 
 script:
   - ci/test.sh
-  - ./hugo_0.18.1_linux_amd64/hugo_0.18.1_linux_amd64
+  - ./hugo
 
 env:
   global:
