@@ -54,8 +54,8 @@ dynamic dispatch for the entire chain.
 ### [`impl Trait`](#impl-trait) {#impl-trait}
 [return-impl-trait]: #impl-trait
 
-In an ideal world, however, we can have our cake and eat it too with a new
-language feature called [`impl Trait`]. This language feature will allow, for
+If you are using a version of Rust greater than 1.26, then you can use the
+language feature [`impl Trait`]. This language feature will allow, for
 example:
 
 [`impl Trait`]: https://github.com/rust-lang/rfcs/blob/master/text/1522-conservative-impl-trait.md
@@ -77,13 +77,12 @@ necessary, it's maximally flexible to future implementations as the actual
 return type is hidden, and it's ergonomic to write as it's similar to the nice
 `Box` example above.
 
-The downside to this approach is only that it's only on versions of Rust later
-than 1.26 (released May 7th, 2018), and using a `Box` is still more flexible --
-if you might return two different types of `Future`, then you must still return
-`Box<Future<Item = F::Item, Error = F::Error>` instead of 
-`impl Future<Item = F::Item, Error = F::Error>`.  The good news however is that
-this case is rare; in general, it should be a backwards-compatible extension to 
-change return types from `Box` to [`impl Trait`].
+The downside to this approach is only that using a `Box` is still more
+flexible -- if you might return two different types of `Future`, then you
+must still return `Box<Future<Item = F::Item, Error = F::Error>` instead of
+`impl Future<Item = F::Item, Error = F::Error>`. The good news however is
+that this case is rare; in general, it should be a backwards-compatible
+extension to change return types from `Box` to [`impl Trait`].
 
 ### [Named types](#named-types) {#named-types}
 [return-named-types]: #named-types
