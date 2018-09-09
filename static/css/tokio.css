@@ -177,6 +177,34 @@ img {
   margin-top: 0;
 }
 
+.navbar-nav .language-selector {
+  position: relative;
+}
+
+.navbar-nav .language-selector ul.subitem {
+  display: none;
+  position: absolute;
+  right: 0;
+}
+
+.navbar-nav .language-selector:hover .subitem {
+  margin: 0;
+  padding: 0;
+  display: block;
+  background-color: #dcfaf7;
+}
+
+.navbar-nav .language-selector ul li {
+  padding: 0;
+  margin: 0;
+  height: auto;
+  line-height: 1;
+}
+ .navbar-nav .language-selector ul li a {
+  display: block;
+  padding: 1em;
+}
+
 /*
  *
  * ===== Page header =====
