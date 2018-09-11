@@ -1,9 +1,11 @@
-+++
-title = "Hello World!"
-description = ""
-menu = "getting_started"
-weight = 110
-+++
+---
+title: "Hello World!"
+description: ""
+menu:
+  docs:
+    parent: getting_started
+    weight : 110
+---
 
 To kick off our tour of Tokio, we will start with the obligatory "hello world"
 example. This server will listen for incoming connections. Once a connection is

@@ -1,9 +1,11 @@
-+++
-title = "Tasks"
-description = ""
-menu = "getting_started"
-weight = 140
-+++
+---
+title: "Tasks"
+description: ""
+menu:
+  docs:
+    parent: getting_started
+    weight : 140
+---
 
 Tasks are the application's "unit of logic". They are similar to [Go's
 goroutine] and [Erlang's process], but asynchronous. In other words, tasks are

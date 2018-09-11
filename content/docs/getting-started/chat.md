@@ -1,9 +1,11 @@
-+++
-title = "Example: A Chat Server"
-description = ""
-menu = "getting_started"
-weight = 160
-+++
+---
+title: "Example: A Chat Server"
+description: ""
+menu:
+  docs:
+    parent: getting_started
+    weight : 160
+---
 
 We're going to use what has been covered so far to build a chat server. This is
 a non-trivial Tokio server application.

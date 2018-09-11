@@ -4,6 +4,12 @@ languageCode = "en-us"
 canonifyURLs = "true"
 googleAnalytics = "UA-90234741-1"
 
+[[menu.docs]]
+name = "Getting started"
+identifier = "getting_started"
+weight = 1
+url = "/getting-started/"
+
 [params]
 tokioDocsURL = "https://docs.rs/tokio/0.1/tokio"
 tokioExecutorDocsURL = "https://docs.rs/tokio-executor/0.1/tokio_executor"
