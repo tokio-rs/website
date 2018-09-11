@@ -228,4 +228,4 @@ core of the [`futures`] task model. We will be digging more into that shortly.
 [`CurrentThread`]: {{< api-url "tokio" >}}/executor/current_thread/index.html
 [`ThreadPool`]: http://docs.rs/tokio-threadpool
 [rt]: {{< api-url "tokio" >}}/runtime/index.html
-[next section]: {{< relref "docs/getting-started/futures.md#returning-not-ready" >}}
+[next section]: {{< ref "/docs/getting-started/futures.md#returning-not-ready" >}}
