@@ -20,91 +20,21 @@ img {
 
 /*
  *
- * ===== Content ====
- *
- */
-
-  /*
-.tk-content {
-  max-width: 600px;
-  line-height: 1.75rem;
-}
-
-.tk-content h1 {
-  margin-top: 2rem;
-  margin-bottom: 1.5rem;
-}
-
-.tk-content h1:first-child {
-  margin-top: 0;
-}
-
-.tk-content h2, .tk-content h3 {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-}
-
-.tk-content hr {
-  margin: 2rem 0;
-}
-
-.tk-content figure {
-  margin: 2.5rem auto;
-  max-width: 80%;
-}
-
-.tk-content figure figcaption {
-  font-size: 90%;
-  color: #818a91;
-  text-align: right;
-}
-
-.tk-content figure img {
-  max-width: 100%;
-}
-
-.tk-next {
-  text-align: right;
-}
-
-.github-edit .fa {
-  font-family: inherit;
-}
-
-.github-edit .fa:before {
-  font-family: "FontAwesome";
-  display: inline-block;
-  font-style: normal;
-  font-weight: normal;
-  line-height: 1;
-  text-decoration: inherit;
-}
-
-.github-edit {
-  text-align: right;
-  padding-bottom: 1rem;
-}
-*/
-
-/*
- *
  * ===== Navbar =====
  *
  */
 
 .navbar-brand {
-  margin-right: 10px;
-  margin-left: 5px;
-  padding-top: 5px;
-  padding-bottom: 5px;
   width: 44px;
   height: auto;
 }
 
 .tk-navbar {
   background-color: #774466;
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.05),inset 0 -1px 0 rgba(0,0,0,.1);
   position: -webkit-sticky;
   position: sticky;
+  min-height: 4rem;
   top: 0;
   z-index: 1071;
 }
@@ -119,93 +49,6 @@ img {
 .tk-navbar .nav-link.active {
   font-weight: 500;
 }
-
-  /*
- .navbar-nav {
-   display: flex;
- }
-
- .navbar-nav .nav-item {
-   margin-left: 1rem;
-   margin-right: 1rem;
- }
-
-.navbar-nav .nav-link {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.navbar-brand {
-  margin-right: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  width: 44px;
-  height: auto;
-}
-
-.navbar-toggle {
-  padding: .25rem .75rem;
-  font-size: 1.25rem;
-  line-height: 1;
-  background: 0 0;
-  border: 1px solid transparent;
-  border-radius: .25rem;
-}
-
-.navbar-light .navbar-toggle {
-  border-color: rgba(0, 0, 0, 0.1);
-  color: rgba(0, 0, 0, 0.9);
-  margin-top: 4px;
-}
-
-.navbar-light .navbar-toggle:focus {
-  outline: 1px auto #774466;
-  border: 0;
-}
-
-.navbar-toggler-icon {
-  display: inline-block;
-  width: 1.5em;
-  height: 1.5em;
-  vertical-align: middle;
-  content: "";
-  background: no-repeat center center;
-  -webkit-background-size: 100% 100%;
-  background-size: 100% 100%;
-}
-
-.navbar-light .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
-}
-
-.navbar-nav li {
-  line-height: 60px;
-  height: 60px;
-  padding-top: 0;
-}
-
-.leftnav li {
-  margin: 1.25rem 0rem;
-}
-
-.leftnav a {
-  font-weight: 600;
-}
-
-.in .navbar-nav .nav-item {
-  text-align: left;
-}
-
-.navbar-toggleable-md .navbar-nav {
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-left: auto;
-  margin-right: auto;
-}
-.navbar-toggleable-md .navbar-brand {
-  margin-top: 0;
-}
-*/
 
 /*
  *
@@ -280,12 +123,81 @@ img {
   order: 1;
 }
 
+.tk-content,
+.tk-content h1
+{
+  color: #333;
+}
+
+.tk-content h1 {
+  font-size: 2rem;
+}
+.tk-content h2 {
+  font-size: 1.75rem;
+}
+.tk-content h3 {
+  font-size: 1.5rem;
+}
+.tk-content h4 {
+  font-size: 1.25rem;
+}
+.tk-content h5 {
+  font-size: 1rem;
+}
+
+.tk-content > h1:not(:first-child) {
+  margin-top: 2rem;
+}
+
+.tk-content p {
+  max-width: 80%;
+}
+
+/*
+ * Offsets anchor links to avoid the sticky header
+ */
+.tk-content > h1[id]::before,
+.tk-content > h2[id]::before,
+.tk-content > h3[id]::before,
+.tk-content > h4[id]::before
+{
+	display: block;
+	height: 6rem;
+	margin-top: -6rem;
+	visibility: hidden;
+	content: "";
+}
+
 .tk-toc {
   position: sticky;
   top: 4rem;
   height: calc(100vh - 4rem);
   overflow-y: auto;
+  -ms-flex-order: 2;
   order: 2;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  font-size: .875rem;
+}
+
+.tk-toc li {
+  display: block;
+}
+.tk-toc a {
+	display: block;
+	padding: .125rem 1.5rem;
+	color: #99979c;
+}
+
+.section-nav {
+	padding-left: 0;
+	border-left: 1px solid #eee;
+}
+.section-nav ul {
+	padding-left: 1rem;
+}
+.section-nav > ul {
+  padding-left: 0;
 }
 
 .tk-toc-item.active:not(:first-child) {
