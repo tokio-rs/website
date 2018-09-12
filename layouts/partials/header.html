@@ -22,7 +22,7 @@
     <!-- Blog feed link -->
     <link rel="alternate" type="application/rss+xml" href="https://tokio.rs/blog/index.xml" />
 
-    <title>{{ .Title }}</title>
+    <title>{{ .Title }} · Tokio</title>
   </head>
   <body>
     <header class="navbar navbar-expand navbar-dark flex-column flex-md-row tk-navbar">
@@ -32,17 +32,21 @@
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link " href="/">Home</a>
+            <a class="nav-link {{ if .IsHome }} active {{ end }}" href="/">Home</a>
           </li>
           <li class="nav-item">
-            <!--  active class -->
-            <a class="nav-link active" href="{{ ref . "/docs/getting-started/hello-world.md" }}">Documentation</a>
+            {{ $docs := index (.Site.Menus.docs) 0 }}
+            {{ $docHome := index ($docs.Children) 0 }}
+            {{ $isDocs := hasPrefix .URL "/docs" }}
+            <a class="nav-link {{ if $isDocs }} active {{ end }}" href="{{ $docHome.URL }}">Documentation</a>
           </li>
           <li class="nav-item">
             <a class="nav-link " href="{{ ref . "/community/index.md" }}">Community</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ ref . "/blog/2018-08-async-await.md" }}">Blog</a>
+            {{ $blog := index (.Site.Menus.blog) 0 }}
+            {{ $isBlog := hasPrefix .URL "/blog" }}
+            <a class="nav-link {{ if $isBlog }} active {{ end }}" href="{{ $blog.URL }}">Blog</a>
           </li>
         </ul>
       </div>

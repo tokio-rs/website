@@ -1,6 +1,5 @@
 ---
 title: "Hello World!"
-description: ""
 menu:
   docs:
     parent: getting_started
@@ -15,7 +14,7 @@ Let's get started.
 
 First, generate a new crate.
 
-```shell
+```bash
 $ cargo new --bin hello-world
 $ cd hello-world
 ```

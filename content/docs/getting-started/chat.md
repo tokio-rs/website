@@ -1,6 +1,5 @@
 ---
 title: "Example: A Chat Server"
-description: ""
 menu:
   docs:
     parent: getting_started
@@ -23,7 +22,7 @@ The full code can be found [here][full-code]. Note that Tokio provides some addi
 abstractions that have not yet been covered that would enable the chat server to
 be written with less code.
 
-## [Setup](#setup) {#setup}
+# Setup
 
 First, generate a new crate.
 
@@ -116,7 +115,7 @@ fn main() {
 }
 ```
 
-## [Chat State](#chat-state) {#chat-state}
+# Chat State
 
 A chat server requires that messages received from one client are broadcasted to
 all other connected clients. This will be done using [message passing] over
@@ -215,7 +214,7 @@ working with values that represent atomic messages.
 We implement a codec that holds the socket and exposes an API that takes and
 consumes lines.
 
-## [Line Codec](#line-codec) {#line-codec}
+# Line Codec
 
 A codec is a loose term for a type that takes a byte stream type (`AsyncRead +
 AsyncWrite`) and exposes a read and write API at the frame level. The
@@ -449,7 +448,7 @@ fn process(socket: TcpStream, state: Arc<Mutex<Shared>>) {
 # fn main() {}
 ```
 
-## [Broadcasting Messages](#broadcasting-messages) {#broadcasting-messages}
+# Broadcasting Messages
 
 The next step is to implement the connection processing logic that handles the
 actual chat functionality, i.e. broadcasting messages from one client to all the
@@ -689,7 +688,7 @@ impl Future for Peer {
 # fn main() {}
 ```
 
-## [Final Touches](#final-touches) {#final-touches}
+# Final Touches
 
 All that remains is wiring up the `Peer` future that was just implemented. To do
 this, the client connection task (defined in the `process` function) is extended

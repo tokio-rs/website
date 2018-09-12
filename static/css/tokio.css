@@ -78,7 +78,8 @@ img {
   font-size: 90%;
 }
 
-.tk-sidebar .nav > li > a:link {
+.tk-sidebar .nav > li a
+{
   color: rgba(0,0,0,.65);
 }
 .tk-sidebar .nav > li > a:hover {
@@ -129,20 +130,35 @@ img {
   color: #333;
 }
 
+h1.tk-title {
+  font-size: 2.5rem !important;
+  font-weight: 400;
+  margin-top: 1rem;
+  margin-bottom: 2.25rem !important;
+  /* border-bottom: 1px solid rgba(0,0,0,.1); */
+  max-width: 80%;
+}
+
 .tk-content h1 {
   font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 0.75rem;
 }
 .tk-content h2 {
   font-size: 1.75rem;
+  font-weight: 400;
 }
 .tk-content h3 {
   font-size: 1.5rem;
+  font-weight: 400;
 }
 .tk-content h4 {
   font-size: 1.25rem;
+  font-weight: 400;
 }
 .tk-content h5 {
   font-size: 1rem;
+  font-weight: 400;
 }
 
 .tk-content > h1:not(:first-child) {

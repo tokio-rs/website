@@ -9,12 +9,14 @@ menu:
   docs:
     - identifier: "getting_started"
       name: "Getting started"
-      url: "/getting-started/"
       weight: 1
+    - identifier: "going_deeper"
+      name: "Going deeper"
+      weight: 2
     - identifier: "reference"
       name: "API documentation"
       url: "https://docs.rs/tokio"
-      weight: 2
+      weight: 3
 
 
 params:

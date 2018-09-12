@@ -1,6 +1,5 @@
 ---
 title: "Tasks"
-description: ""
 menu:
   docs:
     parent: getting_started
@@ -203,7 +202,7 @@ my_executor.spawn(task);
 # fn main() {}
 ```
 
-## [Message Passing](#message-passing) {#message-passing}
+# Message Passing
 
 Just as with Go and Erlang, tasks can communicate using message passing. In
 fact, it will be very common to use message passing to coordinate multiple
@@ -297,7 +296,7 @@ my_executor.spawn(task);
 # fn main() {}
 ```
 
-## [Task Notification](#task-notification) {#task-notification}
+# Task Notification
 
 An application built with Tokio is structured as a set of concurrently running
 tasks. Here is the basic structure of a server:
