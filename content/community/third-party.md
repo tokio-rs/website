@@ -1,6 +1,8 @@
 +++
 title = "Third-party crates"
 description = ""
+type = "single"
+url = "third-party"
 +++
 
 Currently the [`futures`], [`tokio-core`], [`tokio-service`], and [`tokio-proto`] crates provide

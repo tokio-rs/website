@@ -3,7 +3,7 @@ title: "Tasks"
 menu:
   docs:
     parent: getting_started
-    weight : 140
+    weight : 1040
 ---
 
 Tasks are the application's "unit of logic". They are similar to [Go's

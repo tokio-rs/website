@@ -7,16 +7,20 @@ googleAnalytics: "UA-90234741-1"
 
 menu:
   docs:
+    - identifier: "overview"
+      name: "Overview"
+      weight: 1
+      url: "/docs/overview"
     - identifier: "getting_started"
       name: "Getting started"
-      weight: 1
+      weight: 1000
     - identifier: "going_deeper"
       name: "Going deeper"
-      weight: 2
+      weight: 2000
     - identifier: "reference"
       name: "API documentation"
       url: "https://docs.rs/tokio"
-      weight: 3
+      weight: 9000
 
 
 params:

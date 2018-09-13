@@ -3,7 +3,7 @@ title: "Futures"
 menu:
   docs:
     parent: getting_started
-    weight : 130
+    weight : 1030
 ---
 
 Futures, hinted at earlier in the guide, are the building block used to manage

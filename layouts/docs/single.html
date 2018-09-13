@@ -53,84 +53,16 @@
       <h1 class="tk-title">{{ .Title }}</h1>
       <!-- <h1 class="tk-title" id="content">Navbar</h1> -->
       {{ .Content }}
+      <!-- Yes, we have to use *Prev* to get the next content, because the
+      weights are sorted inversely to how they are actually displayed... -->
+
+      {{ with .Next }}
+        <div class="tk-next">
+          <b>Next up</b>: <a href ="{{ .URL }}">{{ .Title }}</a>
+        </div>
+      {{ end }}
     </main>
   </div>
 </div>
-
-<!--
-<div class="tk-pageheader">
-  <div class="container">
-    <h1 class="display-4">{{ .Title }}</h1>
-    <p class="lead">{{ .Description }}</p>
-  </div>
-</div>
-
-<div class="container">
-  <div class="row">
-    <div class="col-md-3">
-
-      <nav class="leftnav">
-        <div class="" id="">
-          <h5>Getting started</h5>
-          <hr/>
-
-          <div class="" id="">
-            <ul class="nav">
-              {{ range .Site.Menus.getting_started }}
-              <li class="active">
-                <a href="{{ .URL }}" {{ if not (eq $currentURL .URL) }}class="text-muted"{{ end }}>{{ .Name }}</a>
-              </li>
-              {{ end }}
-            </ul>
-          </div>
-
-          <h5>Going Deeper</h5>
-          <hr/>
-
-          <div class="" id="">
-            <ul class="nav">
-              {{ range .Site.Menus.going_deeper }}
-              <li class="active">
-                <a href="{{ .URL }}" {{ if not (eq $currentURL .URL) }}class="text-muted"{{ end }}>{{ .Name }}</a>
-              </li>
-              {{ end }}
-            </ul>
-          </div>
-
-          <br/>
-          <h5>Reference</h5>
-          <hr/>
-
-          <div class="" id="">
-            <ul class="nav">
-              <li class="active">
-                <a href="https://docs.rs/tokio" class="text-muted"><code>tokio</code> API docs</a>
-              </li>
-              <li class="active">
-                <a href="https://docs.rs/futures/0.1" class="text-muted"><code>futures</code> API docs</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
-    </div>
-    <div class="col-md-9">
-      <div class="tk-content">
-        <div class="github-edit">
-            <a class="fa fa-github" href="https://github.com/tokio-rs/website/tree/master/content/{{ .File.Path }}"> Edit on GitHub</a>
-        </div>
-        {{ .Content }}
-        <!-- Yes, we have to use *Prev* to get the next content, because the
-        weights are sorted inversely to how they are actually displayed... -->
-        <!--
-        {{ with .PrevInSection }}<div class="tk-next"><b>Next up</b>: <a href = {{ .URL }}>{{ end }}
-        {{ with .PrevInSection }} {{ .Title }}</a></div>{{ end }}
-      </div>
-    </div>
-  </div>
-</div>
-
--->
 
 {{ partial "footer" . }}

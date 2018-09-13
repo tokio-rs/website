@@ -3,7 +3,7 @@ title: "Essential combinators"
 menu:
   docs:
     parent: going_deeper
-    weight: 210
+    weight: 2020
 ---
 
 We saw a few of the most important combinators in the

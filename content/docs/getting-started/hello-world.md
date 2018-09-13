@@ -3,7 +3,7 @@ title: "Hello World!"
 menu:
   docs:
     parent: getting_started
-    weight : 110
+    weight : 1010
 ---
 
 To kick off our tour of Tokio, we will start with the obligatory "hello world"

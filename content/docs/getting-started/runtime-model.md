@@ -3,7 +3,7 @@ title: "Runtime Model"
 menu:
   docs:
     parent: getting_started
-    weight : 120
+    weight : 1020
 ---
 
 Now we will go over the Tokio / futures runtime model. Tokio is built on top of

@@ -3,7 +3,7 @@ title: "Returning futures"
 menu:
   docs:
     parent: going_deeper
-    weight: 220
+    weight: 2030
 ---
 
 [`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html

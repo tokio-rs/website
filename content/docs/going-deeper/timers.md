@@ -3,7 +3,7 @@ title: "Timers"
 menu:
   docs:
     parent: going_deeper
-    weight: 205
+    weight: 2010
 ---
 
 When writing a network based application, it is common to need to perform

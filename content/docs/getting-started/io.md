@@ -3,7 +3,7 @@ title: "I/O with Tokio"
 menu:
   docs:
     parent: getting_started
-    weight : 150
+    weight : 1050
 ---
 
 The [`tokio`] crate comes with TCP and UDP networking types. Unlike the types in
