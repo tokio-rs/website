@@ -42,7 +42,7 @@
           </li>
           <li class="nav-item">
             {{ $isCommunity := hasPrefix .URL "/community" }}
-            <a class="nav-link {{ if $isCommunity }} active {{ end }}" href="{{ $docHome.URL }}" href="{{ ref . "/community.md" }}">Community</a>
+            <a class="nav-link {{ if $isCommunity }} active {{ end }}" href="{{ ref . "/community.md" }}">Community</a>
           </li>
           <li class="nav-item">
             {{ $blog := index (.Site.Menus.blog) 0 }}

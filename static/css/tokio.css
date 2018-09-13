@@ -196,6 +196,12 @@ img {
   max-width: 80%;
 }
 
+.tk-next {
+  text-align: right;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+}
+
 /*
  * Offsets anchor links to avoid the sticky header
  */
