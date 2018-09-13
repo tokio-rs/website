@@ -18,6 +18,22 @@ img {
   max-width: 100%;
 }
 
+.btn:not(:disabled):not(.disabled) {
+  cursor: pointer;
+}
+
+.btn-outline-primary {
+  color: #09569e;
+  background-color: transparent;
+  background-image: none;
+  border-color: #09569e;
+}
+.btn-outline-primary:hover {
+  color: #fff;
+  background-color: #09569e;
+  border-color: #09569e;
+}
+
 /*
  *
  * ===== Navbar =====
@@ -30,7 +46,9 @@ img {
 }
 
 .tk-navbar {
-  background-color: #774466;
+  background-color: #09569e;
+  /* background-color: #011426; */
+  /* background-color: #774466; */
   box-shadow: 0 .5rem 1rem rgba(0,0,0,.05),inset 0 -1px 0 rgba(0,0,0,.1);
   position: -webkit-sticky;
   position: sticky;
@@ -130,13 +148,22 @@ img {
   color: #333;
 }
 
-h1.tk-title {
-  font-size: 2.5rem !important;
+.tk-docs h1.tk-title {
+  font-size: 2.5rem;
   font-weight: 400;
   margin-top: 1rem;
-  margin-bottom: 2.25rem !important;
+  margin-bottom: 2.25rem;
   /* border-bottom: 1px solid rgba(0,0,0,.1); */
   max-width: 80%;
+}
+.tk-lead h1.tk-title {
+  font-size: 3rem;
+  font-weight: 300;
+}
+.tk-lead p {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 300;
 }
 
 .tk-content h1 {
@@ -235,113 +262,79 @@ h1.tk-title {
   color: rgba(0,0,0,.65);
 }
 
-/*
- *
- * ===== Page header =====
- *
- */
-
-  /*
-.tk-pageheader, .jumbotron {
-  background-color: #774466;
-  color: #fff;
-}
-
-.jumbotron {
-  border-radius: 0;
-  padding: 4rem 1rem;
-}
-
-.tk-jumbotron {
+.tk-single {
+  width: 80%;
   margin-left: auto;
   margin-right: auto;
-  max-width: 700px;
-  text-align: center;
 }
-
-.jumbotron .tk-logo {
-  max-height: 10rem;
-}
-
-.jumbotron .lead {
-  font-size: 1.5rem;
-  margin: 2.5rem 0;
-}
-
-.tk-pageheader {
-  padding: 2rem 1rem;
-  margin-bottom: 3rem;
-}
-
-.tk-pageheader .lead {
-  color: #DADADA;
-  font-size: 1.5rem;
-}
-
-@media (min-width: 576px) {
-  .tk-pageheader {
-    padding: 3.5rem 0rem;
-  }
-}
-
-.call-to-action {
-  color: #fff;
-  border-color: #fff;
-  padding: 1rem 2rem;
-  font-size: 1.25rem;
-  border-radius: 0.3rem;
-}
-
-.call-to-action:hover {
-  color: #479cea;
-  background-color: #fff;
-  border-color: #fff;
-}
-
-.call-to-action:focus {
-  color: #479cea;
-  background-color: #fff;
-  border-color: #fff;
-}
-
-.call-to-action:active {
-  color: #479cea;
-  background-color: #fff;
-  border-color: #fff;
-}
-*/
 
 /*
  *
- * ===== Home =====
+ * ===== Homepage masthead =====
  *
  */
 
-  /*
-.tk-home {
-  margin: 0 auto;
-  width: auto;
-  max-width: 900px;
+.tk-masthead {
+  position: relative;
+  padding: 3rem 15px;
 }
 
-.tk-features h2 {
-  font-size: 1.5rem;
-  margin-top: 2.25rem;
-  margin-bottom: 0.8rem;
+.tk-masthead {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  color: #323232;
 }
 
-.tk-features .fa {
-  margin-right: 1rem;
+.tk-masthead .container {
+  max-width: 1000px;
 }
 
-.tk-features p {
-  font-size: 1rem;
+.tk-masthead .tk-text-big {
+  font-size: 4rem;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+  /* color: #774466; */
 }
 
-.final-pitch {
-  text-align: center;
+.tk-masthead .tk-logo {
+  display: block;
+  max-height: 300px;
+  opacity: 0.8;
+  margin-left: auto;
+  margin-right: auto;
 }
-*/
+
+.tk-masthead .tk-action {
+  /* max-width: 300px; */
+}
+
+.tk-masthead .btn {
+  padding: .8rem 2rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.btn-tk-primary {
+  font-weight: 500;
+  color: #09569e;
+  border-color: #09569e;
+}
+
+.btn-tk-primary:active, .btn-tk-primary:hover {
+  color: #fff;
+  background-color: #09569e;
+  border-color: #09569e;
+}
+
+.masthead-followup .fa {
+  margin-right: 0.5rem;
+}
+
+.half-rule {
+    width: 6rem;
+    margin: 2.5rem 0;
+}
 
 /*
  *
@@ -350,13 +343,33 @@ h1.tk-title {
  */
 
 .tk-footer {
-  padding: 4rem 0;
-  margin-top: 4rem;
   font-size: 85%;
-  line-height: 35px;
-  background-color: #f5f5f5;
+  text-align: left;
+  background-color: #f7f7f7;
 }
 
+/*
+.tk-footer {
+  text-align: center;
+}
+*/
+
+.tk-footer-links {
+  padding-left: 0;
+  margin-bottom: 1rem;
+}
+.tk-footer-links li {
+  display: inline-block;
+}
+.tk-footer-links li + li {
+  margin-left: 1rem;
+}
+.tk-footer a {
+  font-weight: 500;
+  color: #495057;
+}
+
+/*
 .tk-footer-gray {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -370,6 +383,7 @@ h1.tk-title {
 .tk-footer-social a .fa-github {
   margin-left: 35px;
 }
+*/
 
 /*
  *

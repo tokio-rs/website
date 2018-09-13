@@ -1,6 +1,6 @@
 +++
 title = "The Tokio Community"
-description = "How to get help, discuss problems, and join the fun"
+description = "Get help, discuss problems, and join the fun"
 +++
 
 The Tokio community is most readily found on
