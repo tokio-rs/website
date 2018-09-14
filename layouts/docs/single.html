@@ -1,10 +1,10 @@
 {{ partial "header" . }}
 {{ $currentURL := .URL }}
 
-<div class="container-fluid">
+<div class="container-fluid tk-docs">
   <div class="row flex-xl-nowrap">
-    <div class="col-12 col-md-3 col-xl-2 tk-sidebar">
-      <!-- Doc search -->
+    <div class="col-12 col-md-3 col-xl-2 tk-sidebar" style="padding-top:2rem;">
+      <!--
       <form class="tk-search d-flex align-items-center">
         <span class="algolia-autocomplete algolia-autocomplete-left" style="position: relative; display: inline-block; direction: ltr;">
           <input class="form-control ds-input" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" style="position: relative; vertical-align: top;" dir="auto" type="search">
@@ -17,6 +17,7 @@
             <title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
         </button>
       </form>
+      -->
 
       <nav class="tk-links collapse" id="tk-docs-nav">
           {{ $currentPage := . }}

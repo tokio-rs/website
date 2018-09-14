@@ -119,6 +119,9 @@ img {
   margin-right: -15px;
   margin-left: -15px;
 }
+.tk-blog .tk-links {
+  padding-top: 2rem;
+}
 
 .tk-sidenav {
   display: none;
@@ -156,6 +159,7 @@ img {
   /* border-bottom: 1px solid rgba(0,0,0,.1); */
   max-width: 80%;
 }
+
 .tk-lead h1.tk-title {
   font-size: 3rem;
   font-weight: 300;
