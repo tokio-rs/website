@@ -1,6 +1,6 @@
 ---
 baseurl: "https://tokio.rs"
-title: "Tokio"
+title: "Tokio - The asynchronous run-time for the Rust programming language."
 languageCode: "en-us"
 canonifyURLs: "true"
 googleAnalytics: "UA-90234741-1"

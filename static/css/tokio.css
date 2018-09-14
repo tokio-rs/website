@@ -336,6 +336,9 @@ img {
 .masthead-followup .fa {
   margin-right: 0.5rem;
 }
+.masthead-followup h3 {
+  margin-bottom: 1rem;
+}
 
 .half-rule {
     width: 6rem;
