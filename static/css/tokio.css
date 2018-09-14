@@ -345,6 +345,27 @@ img {
     margin: 2.5rem 0;
 }
 
+.github-edit {
+  float: right;
+  margin-top: 2rem;
+  line-height: 2rem;
+}
+.github-edit a {
+  color: #99979c;
+}
+.github-edit .fa {
+  font-family: inherit;
+}
+
+.github-edit .fa:before {
+  font-family: "FontAwesome";
+  display: inline-block;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  text-decoration: inherit;
+}
+
 /*
  *
  * ===== Footer =====
@@ -356,12 +377,6 @@ img {
   text-align: left;
   background-color: #f7f7f7;
 }
-
-/*
-.tk-footer {
-  text-align: center;
-}
-*/
 
 .tk-footer-links {
   padding-left: 0;
@@ -377,22 +392,6 @@ img {
   font-weight: 500;
   color: #495057;
 }
-
-/*
-.tk-footer-gray {
-  padding-left: 1rem;
-  padding-right: 1rem;
-  margin: 0 auto;
-}
-
-.tk-footer-social a .fa {
-  font-size: 35px;
-}
-
-.tk-footer-social a .fa-github {
-  margin-left: 35px;
-}
-*/
 
 /*
  *
@@ -523,22 +522,6 @@ h5:hover a {
   }
 }
 
-
-/*
- *
- * ===== Utilities =====
- *
- */
-
-  /*
- .d-flex {
-   display: flex;
- }
-
- .justify-content-between {
-    justify-content: space-between;
- }
- */
 
  /*
  *

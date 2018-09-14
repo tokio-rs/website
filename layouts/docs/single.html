@@ -50,12 +50,11 @@
 
     </div>
     <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 tk-content tk-docs">
+      <div class="github-edit">
+        <a class="fa fa-github" href="https://github.com/tokio-rs/website/tree/master/content/{{ .File.Path }}"> Edit on GitHub</a>
+      </div>
       <h1 class="tk-title">{{ .Title }}</h1>
-      <!-- <h1 class="tk-title" id="content">Navbar</h1> -->
       {{ .Content }}
-      <!-- Yes, we have to use *Prev* to get the next content, because the
-      weights are sorted inversely to how they are actually displayed... -->
-
       {{ with .Next }}
         <div class="tk-next">
           <b>Next up</b>: <a href ="{{ .URL }}">{{ .Title }}</a>
