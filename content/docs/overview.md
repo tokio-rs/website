@@ -43,6 +43,8 @@ use tokio::io::copy;
 use tokio::net::TcpListener;
 
 fn main() {
+# }
+# fn hax() {
     // Bind the server's socket.
     let addr = "127.0.0.1:12345".parse().unwrap();
     let listener = TcpListener::bind(&addr)
