@@ -1,9 +1,10 @@
-+++
-title = "Tasks"
-description = ""
-menu = "getting_started"
-weight = 140
-+++
+---
+title: "Tasks"
+menu:
+  docs:
+    parent: getting_started
+    weight : 1040
+---
 
 Tasks are the application's "unit of logic". They are similar to [Go's
 goroutine] and [Erlang's process], but asynchronous. In other words, tasks are
@@ -201,7 +202,7 @@ my_executor.spawn(task);
 # fn main() {}
 ```
 
-## [Message Passing](#message-passing) {#message-passing}
+# Message Passing
 
 Just as with Go and Erlang, tasks can communicate using message passing. In
 fact, it will be very common to use message passing to coordinate multiple
@@ -295,7 +296,7 @@ my_executor.spawn(task);
 # fn main() {}
 ```
 
-## [Task Notification](#task-notification) {#task-notification}
+# Task Notification
 
 An application built with Tokio is structured as a set of concurrently running
 tasks. Here is the basic structure of a server:

@@ -1,9 +1,10 @@
-+++
-title = "Returning futures"
-description = ""
-menu = "going_deeper"
-weight = 220
-+++
+---
+title: "Returning futures"
+menu:
+  docs:
+    parent: going_deeper
+    weight: 2030
+---
 
 [`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
 [`Iterator`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html
@@ -17,7 +18,7 @@ There are several options, listed from most to least ergonomic:
 * [Named types][return-named-types]
 * [Custom types][return-custom-types]
 
-### [Trait objects](#trait-objects) {#trait-objects}
+# Trait objects
 [return-trait-objects]: #trait-objects
 
 First, you always have the option of returning a boxed [trait object]:
@@ -51,7 +52,7 @@ dynamic dispatch for the entire chain.
 
 [trait object]: https://doc.rust-lang.org/book/trait-objects.html
 
-### [`impl Trait`](#impl-trait) {#impl-trait}
+# `impl Trait`
 [return-impl-trait]: #impl-trait
 
 If you are using a version of Rust greater than 1.26, then you can use the
@@ -84,7 +85,7 @@ must still return `Box<Future<Item = F::Item, Error = F::Error>` instead of
 that this case is rare; in general, it should be a backwards-compatible
 extension to change return types from `Box` to [`impl Trait`].
 
-### [Named types](#named-types) {#named-types}
+# Named types
 [return-named-types]: #named-types
 
 If you wouldn't like to return a `Box` and want to stick with older versions of 
@@ -118,7 +119,7 @@ very verbose signatures, and leaks implementation details to clients.
 
 [`Map`]: https://docs.rs/futures/0.1/futures/future/struct.Map.html
 
-### [Custom types](#custom-types) {#custom-types}
+# Custom types
 [return-custom-types]: #custom-types
 
 Finally, you can wrap the concrete return type in a new type, and implement

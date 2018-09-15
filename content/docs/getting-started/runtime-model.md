@@ -1,9 +1,10 @@
-+++
-title = "Runtime Model"
-description = ""
-menu = "getting_started"
-weight = 120
-+++
+---
+title: "Runtime Model"
+menu:
+  docs:
+    parent: getting_started
+    weight : 1020
+---
 
 Now we will go over the Tokio / futures runtime model. Tokio is built on top of
 the [`futures`] crate and uses its runtime model. This allows it to interop
@@ -13,7 +14,7 @@ with other libraries also using the [`futures`] crate.
 other languages. While, at a high level, APIs can look similar, the way code
 gets executed differs.
 
-## [Synchronous Model](#synchronous) {#synchronous}
+# Synchronous Model
 
 First, let's talk briefly about the synchronous (or blocking) model. This is the
 model that the Rust [standard library] uses.
@@ -41,7 +42,7 @@ In order to perform reads on many different sockets concurrently, a thread per
 socket is required. Using a thread per socket does not scale up very well to
 large numbers of sockets. This is known as the [c10k] problem.
 
-## [Non-blocking sockets](#non-blocking) {#non-blocking}
+# Non-blocking sockets
 
 The way to avoid blocking a thread when performing an operation like read is to
 not block the thread! When the socket has no pending data in its receive buffer,
@@ -56,7 +57,7 @@ to know when that "later time" is.
 Another way to think about a non-blocking read is as "polling" the socket for
 data to read.
 
-## [Polling Model](#polling) {#polling}
+# Polling Model
 
 The strategy of polling a socket for data can be generalized to any operation.
 For example, a function to get a "widget" in the polling model would look
@@ -125,7 +126,7 @@ executor will call `MyTask::poll` again. `poll_widget` will be called again. If
 `poll_widget` is ready to return a widget, then the task, in turn, is ready to
 print the widget. The task can then complete by returning `Ready`.
 
-## [Executors](#executors) {#executors}
+# Executors
 
 In order for the task to make progress, something has to call `MyTask::poll`.
 This is the job of an executor.

@@ -1,9 +1,10 @@
-+++
-title = "Futures"
-description = ""
-menu = "getting_started"
-weight = 130
-+++
+---
+title: "Futures"
+menu:
+  docs:
+    parent: getting_started
+    weight : 1030
+---
 
 Futures, hinted at earlier in the guide, are the building block used to manage
 asynchronous logic. They are the underlying asynchronous abstraction used by
@@ -12,7 +13,7 @@ Tokio.
 The future implementation is provided by the [`futures`] crate. However, for
 convenience, Tokio re-exports a number of the types.
 
-## [What Are Futures?](#what-are-futures) {#what-are-futures}
+# What Are Futures?
 
 A future is a value that represents the completion of an asynchronous
 computation. Usually, the future _completes_ due to an event that happens
@@ -75,7 +76,7 @@ define the work to be done when the response future completes.
 Both the [`futures`] crate and Tokio come with a collection of combinator
 functions that can be used to work with futures.
 
-## [Implementing `Future`](#implementing) {#implementing}
+# Implementing `Future`
 
 Implementing the `Future` is pretty common when using Tokio, so it is important
 to be comfortable with it.
@@ -180,7 +181,7 @@ fn poll(&mut self) -> Result<Async<usize>, T::Error> {
 # pub fn main() {}
 ```
 
-## [Returning `NotReady`](#returning-not-ready) {#returning-not-ready}
+# Returning `NotReady`
 
 The last section handwaved a bit and said that when a task returns `NotReady`,
 once it transitioned to the ready state, the executor is notifed. This enables
@@ -210,7 +211,7 @@ We will be exploring implementing resources and the task system in more depth in
 a later section. The key take away here is **do not return `NotReady` unless you
 got `NotReady` from an inner future**.
 
-## [A More Complicated Future](#more-completed) {#more-complicated}
+# A More Complicated Future
 
 Lets look at a slightly more complicated future implementation. In this case, we
 will implement a future that takes a host name, does DNS resolution, then

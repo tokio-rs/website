@@ -1,75 +1,67 @@
 {{ partial "header" . }}
 {{ $currentURL := .URL }}
 
-<div class="tk-pageheader">
-  <div class="container">
-    <h1 class="display-4">{{ .Title }}</h1>
-    <p class="lead">{{ .Description }}</p>
-  </div>
-</div>
+<div class="container-fluid tk-docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 tk-sidebar" style="padding-top:2rem;">
+      <!--
+      <form class="tk-search d-flex align-items-center">
+        <span class="algolia-autocomplete algolia-autocomplete-left" style="position: relative; display: inline-block; direction: ltr;">
+          <input class="form-control ds-input" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" style="position: relative; vertical-align: top;" dir="auto" type="search">
+          <pre aria-hidden="true" style="position: absolute; visibility: hidden; white-space: pre; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; word-spacing: 0px; letter-spacing: normal; text-indent: 0px; text-rendering: optimizelegibility; text-transform: none;">w</pre>
+          <span class="ds-dropdown-menu ds-with-1" style="position: absolute; top: 100%; left: 0px; z-index: 100; right: auto; display: none;" role="listbox" id="algolia-autocomplete-listbox-0">
+            <div class="ds-dataset-1"></div>
+          </span>
+        </span>
+        <button class="btn btn-link tk-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#tk-docs-nav" aria-controls="tk-docs-nav" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false">
+            <title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+        </button>
+      </form>
+      -->
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-3">
-
-      <nav class="leftnav">
-        <div class="" id="">
-          <h5>Getting started</h5>
-          <hr/>
-
-          <div class="" id="">
-            <ul class="nav">
-              {{ range .Site.Menus.getting_started }}
-              <li class="active">
-                <a href="{{ .URL }}" {{ if not (eq $currentURL .URL) }}class="text-muted"{{ end }}>{{ .Name }}</a>
-              </li>
-              {{ end }}
-            </ul>
-          </div>
-
-          <h5>Going Deeper</h5>
-          <hr/>
-
-          <div class="" id="">
-            <ul class="nav">
-              {{ range .Site.Menus.going_deeper }}
-              <li class="active">
-                <a href="{{ .URL }}" {{ if not (eq $currentURL .URL) }}class="text-muted"{{ end }}>{{ .Name }}</a>
-              </li>
-              {{ end }}
-            </ul>
-          </div>
-
-          <br/>
-          <h5>Reference</h5>
-          <hr/>
-
-          <div class="" id="">
-            <ul class="nav">
-              <li class="active">
-                <a href="https://docs.rs/tokio" class="text-muted"><code>tokio</code> API docs</a>
-              </li>
-              <li class="active">
-                <a href="https://docs.rs/futures/0.1" class="text-muted"><code>futures</code> API docs</a>
-              </li>
-            </ul>
-          </div>
-        </div>
+      <nav class="tk-links collapse" id="tk-docs-nav">
+          {{ $currentPage := . }}
+          {{ range .Site.Menus.docs }}
+            {{ if .HasChildren }}
+              {{ $firstChild := index (.Children) 0 }}
+              <div class="tk-toc-item {{ if $currentPage.HasMenuCurrent "docs" . }}active{{ end }}">
+                <a class="tk-toc-link" href="{{ $firstChild.URL }}">
+                  {{ .Name }}
+                </a>
+                <ul class="nav tk-sidenav">
+                {{ range .Children }}
+                  <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+                {{ end }}
+                </ul>
+              </div>
+            {{ else }}
+              <div class="tk-toc-item">
+                <a class="tk-toc-link" href="{{ .URL }}">
+                  {{ .Name }}
+                </a>
+              </div>
+            {{ end }}
+          {{ end }}
       </nav>
+    </div>
+    <div class="d-none d-xl-block col-xl-2 tk-toc">
+      <div class="section-nav">
+        {{ .TableOfContents }}
+      </div>
 
     </div>
-    <div class="col-md-9">
-      <div class="tk-content">
-        <div class="github-edit">
-            <a class="fa fa-github" href="https://github.com/tokio-rs/website/tree/master/content/{{ .File.Path }}"> Edit on GitHub</a>
-        </div>
-        {{ .Content }}
-        <!-- Yes, we have to use *Prev* to get the next content, because the
-        weights are sorted inversely to how they are actually displayed... -->
-        {{ with .PrevInSection }}<div class="tk-next"><b>Next up</b>: <a href = {{ .URL }}>{{ end }}
-        {{ with .PrevInSection }} {{ .Title }}</a></div>{{ end }}
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 tk-content tk-docs">
+      <div class="github-edit">
+        <a class="fa fa-github" href="https://github.com/tokio-rs/website/tree/master/content/{{ .File.Path }}"> Edit on GitHub</a>
       </div>
-    </div>
+      <h1 class="tk-title">{{ .Title }}</h1>
+      {{ .Content }}
+      {{ with .Next }}
+        <div class="tk-next">
+          <b>Next up</b>: <a href ="{{ .URL }}">{{ .Title }}</a>
+        </div>
+      {{ end }}
+    </main>
   </div>
 </div>
 

@@ -1,9 +1,10 @@
-+++
-title = "Building a runtime"
-description = "How a runtime is constructed and customized"
-menu = "going_deeper"
-weight = 250
-+++
+---
+title: "Building a runtime"
+menu:
+  docs:
+    parent: going_deeper
+    weight: 2050
+---
 
 The runtime ‒ all the pieces needed to run an event driven application ‒ is
 already available. You don't *need* to know this if you want to just use tokio.
@@ -19,7 +20,7 @@ can be a stepping stone to reading the code of the default runtime.
 A complete, working example of things discussed here can be found in the
 [git repository](https://github.com/tokio-rs/tokio/tree/master/examples/manual-runtime.rs).
 
-## The `Park` trait
+# The `Park` trait
 
 The asynchronous world is inherently about *waiting* for something to happen
 (and being able to wait for multiple things at once). It is no surprise there's
@@ -36,7 +37,7 @@ thread. Other things implementing the trait only delegate the park calls to some
 underlying object they wrap (with some added functionality), allowing to stack
 things onto each other.
 
-## The usual components
+# The usual components
 
 We definitely need a [`Reactor`] to accept external events (like network sockets
 being readable) from the OS. It does so by blocking on `epoll`, `kqueue` or
@@ -99,7 +100,7 @@ some more ready futures (which would get executed next). If no timeouts fire,
 the timer computes for how long the reactor can safely block and lets it wait
 for external events.
 
-## Global state
+# Global state
 
 We've built the components that do the actual work. But we need a way to build
 and submit the work to them. We could do so through the handles, but to do that,

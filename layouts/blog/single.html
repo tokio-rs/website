@@ -1,39 +1,41 @@
 {{ partial "header" . }}
 {{ $currentURL := .URL }}
 
-<div class="tk-pageheader">
-  <div class="container">
-    <h1 class="display-4">{{ .Title }}</h1>
-    <p class="lead">{{ .Description }}</p>
-  </div>
-</div>
-
-<div class="container">
-  <div class="row">
-    <div class="col-md-3">
-
-      <nav class="leftnav">
-        <div class="" id="">
-          <ul class="nav">
-            {{ range .Site.Menus.blog }}
-            <li class="active">
-              <a href="{{ .URL }}" {{ if not (eq $currentURL .URL) }}class="text-muted"{{ end }}>{{ .Name }}</a>
-            </li>
-            {{ end }}
-          </ul>
-        </div>
+<div class="container-fluid tk-blog">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 tk-sidebar">
+      <nav class="tk-links collapse" id="tk-docs-nav">
+          <div class="tk-toc-item active">
+            <p class="tk-toc-link">
+              Blog Posts
+            </p>
+            <ul class="nav tk-sidenav">
+              {{ range .Site.Menus.blog }}
+                  <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+              {{ end }}
+            </ul>
+          </div>
       </nav>
+    </div>
+    <div class="d-none d-xl-block col-xl-2 tk-toc">
+      <div class="section-nav">
+        {{ .TableOfContents }}
+      </div>
 
     </div>
-    <div class="col-md-9">
-      <div class="tk-content">
-        {{ .Content }}
-        <!-- Yes, we have to use *Prev* to get the next content, because the
-             weights are sorted inversely to how they are actually displayed... -->
-        {{ with .PrevInSection }}<div class="tk-next"><b>Next up</b>: <a href = {{ .URL }}>{{ end }}
-        {{ with .PrevInSection }} {{ .Title }}</a></div>{{ end }}
-      </div>
-    </div>
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 tk-content tk-docs">
+      <h1 class="tk-title">{{ .Title }}</h1>
+      <!-- <h1 class="tk-title" id="content">Navbar</h1> -->
+      {{ .Content }}
+      <!-- Yes, we have to use *Prev* to get the next content, because the
+      weights are sorted inversely to how they are actually displayed... -->
+
+      {{ with .Next }}
+        <div class="tk-next">
+          <b>Next up</b>: <a href ="{{ .URL }}">{{ .Title }}</a>
+        </div>
+      {{ end }}
+    </main>
   </div>
 </div>
 

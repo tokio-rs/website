@@ -1,9 +1,10 @@
-+++
-title = "I/O with Tokio"
-description = ""
-menu = "getting_started"
-weight = 150
-+++
+---
+title: "I/O with Tokio"
+menu:
+  docs:
+    parent: getting_started
+    weight : 1050
+---
 
 The [`tokio`] crate comes with TCP and UDP networking types. Unlike the types in
 `std`, Tokio's networking types are based on the poll model and will notify the
@@ -18,7 +19,7 @@ The Tokio net types are powered by a [Mio] based reactor that, by default, is
 started up lazily on a background thread. See [reactor] documentation for more
 details.
 
-## [Using the Future API](#future-api) {#future-api}
+# Using the Future API
 
 We've already seen some of this earlier in the guide with the [`incoming`]
 function as well as the helpers found in [`tokio_io::io`].
@@ -78,7 +79,7 @@ let server = listener.incoming().for_each(|socket| {
 # }
 ```
 
-## [Using the Poll API](#poll-based) {#poll-based}
+# Using the Poll API
 
 The Poll based API is to be used when implementing `Future` by hand and you need
 to return `Async`. This is useful when you need to implement your own
@@ -149,7 +150,7 @@ impl Future for ReadExact {
 # pub fn main() {}
 ```
 
-## [Datagrams](#datagrams) {#datagrams}
+# Datagrams
 
 Note that most of this discussion has been around I/O or byte *streams*, which
 UDP importantly is not! To accommodate this, however, the [`UdpSocket`] type

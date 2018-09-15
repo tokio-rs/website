@@ -1,9 +1,10 @@
-+++
-title = "Essential combinators"
-description = "Common APIs for futures and stream programming"
-menu = "going_deeper"
-weight = 210
-+++
+---
+title: "Essential combinators"
+menu:
+  docs:
+    parent: going_deeper
+    weight: 2020
+---
 
 We saw a few of the most important combinators in the
 [futures](../../getting-started/futures) and
@@ -12,7 +13,7 @@ look at a few more. It's also worth spending some time with the trait
 documentation to familiarize yourself with the full range of combinators
 available ([cheatsheet](/img/diagrams/cheatsheet-for-futures.html)).
 
-### [Some concrete futures and streams](#concrete) {#concrete}
+# Some concrete futures and streams
 
 Any value can be turned into an immediately complete future. There are a few
 functions in the `future` module for creating such a future:
@@ -41,7 +42,7 @@ later, on demand.
 
 [`lazy`]: https://docs.rs/futures/0.1/futures/future/fn.lazy.html
 
-### [IntoFuture](#intofuture) {#intofuture}
+# IntoFuture
 
 A crucial API to know about is the [`IntoFuture`] trait, which is a trait for
 values that can be converted into futures. Most APIs that you think of as taking
@@ -51,7 +52,7 @@ that futures are expected.
 
 [`IntoFuture`]: https://docs.rs/futures/0.1/futures/future/trait.IntoFuture.html
 
-### [Adapters](#adapters) {#adapters}
+# Adapters
 
 Like [`Iterator`], the `Future`, `Stream` and `Sink` traits all come equipped
 with a broad range of "adapter" methods. These methods all consume the receiving
@@ -112,7 +113,7 @@ All adapters are zero-cost, meaning that no memory is allocated internally and
 the implementation will optimize to what you would have otherwise written by
 hand.
 
-### [Error handling](#error-handling) {#error-handling}
+# Error handling
 
 Futures, streams and sinks all treat error handling as a core concern: they are
 all equipped with an associated error type, and the various adapter methods

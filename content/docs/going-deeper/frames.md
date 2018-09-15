@@ -1,9 +1,10 @@
-+++
-title = "Working with framed streams"
-description = "Understanding tokio helpers for framed streams"
-menu = "going_deeper"
-weight = 230
-+++
+---
+title: "Working with framed streams"
+menu:
+  docs:
+    parent: going_deeper
+    weight: 2040
+---
 
 Tokio has helpers to transform a stream of bytes into a stream of frames. Examples
 of byte streams include TCP connections, pipes, file objects and the standard
@@ -14,7 +15,7 @@ One of the simplest forms of framed message is the line delimited message.
 Each message ends with a `\n` character. Let's look at how one would implement
 a stream of line delimited messages with tokio.
 
-## Writing a codec
+# Writing a codec
 
 The codec implements the `tokio_codec::Decoder` and
 `tokio_codec::Encoder` traits. Its job is to convert a frame to and from
@@ -141,7 +142,7 @@ fn encode(&mut self, line: String, buf: &mut BytesMut) -> Result<(), io::Error> 
 It's often simpler to encode information. Here we simply reserve the space
 needed and write the data to the buffer.
 
-## Using a codec
+# Using a codec
 The simplest way of using a codec is with the `Framed` struct. It's a wrapper
 around a codec that implements automatic buffering. The `Framed` struct is both
 a `Stream` and a `Sink`. Thus, you can receive frames from it and send frames

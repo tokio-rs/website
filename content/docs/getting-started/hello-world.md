@@ -1,9 +1,10 @@
-+++
-title = "Hello World!"
-description = ""
-menu = "getting_started"
-weight = 110
-+++
+---
+title: "Hello World!"
+menu:
+  docs:
+    parent: getting_started
+    weight : 1010
+---
 
 To kick off our tour of Tokio, we will start with the obligatory "hello world"
 example. This server will listen for incoming connections. Once a connection is
@@ -13,7 +14,7 @@ Let's get started.
 
 First, generate a new crate.
 
-```shell
+```bash
 $ cargo new --bin hello-world
 $ cd hello-world
 ```
@@ -37,7 +38,7 @@ use tokio::prelude::*;
 # fn main() {}
 ```
 
-## [Writing the server](#writing) {#writing}
+# Writing the server
 
 The first step is to bind a `TcpListener` to a local port. We use the
 `TcpListener` implementation provided by Tokio.
@@ -102,7 +103,7 @@ the work that was previously defined starts getting run.
 
 We will be digging into futures and streams later on.
 
-## [Spawning the task](#spawning) {#spawning}
+# Spawning the task
 
 Executors are responsible for scheduling asynchronous tasks, driving them to
 completion. There are a number of executor implementations to choose from, each have
@@ -139,7 +140,7 @@ is the only one blocking `run` from returning.
 
 Next, we will process the inbound sockets.
 
-## [Writing Data](#writing-data) {#writing-data}
+# Writing Data
 
 Our goal is to write `"hello world\n"` on each accepted socket. We will do this
 by defining a new asynchronous task to do the write and spawning that task on
@@ -195,7 +196,7 @@ nothing more to do, so we just drop the socket, which closes it.
 
 You can find the full example [here][full-code]
 
-## [Next steps](#next-steps) {#next-steps}
+# Next steps
 
 We've only dipped our toes in Tokio and its asynchronous model. The next page in
 the guide, will start digging deeper into the Tokio runtime model.

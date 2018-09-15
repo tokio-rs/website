@@ -1,9 +1,10 @@
-+++
-title = "Timers"
-description = "How to work with time and cancel futures that take too long."
-menu = "going_deeper"
-weight = 205
-+++
+---
+title: "Timers"
+menu:
+  docs:
+    parent: going_deeper
+    weight: 2010
+---
 
 When writing a network based application, it is common to need to perform
 actions based on time.
@@ -15,7 +16,7 @@ actions based on time.
 These use cases are handled by using the various timer APIs that are provided in
 the [timer] module.
 
-## [Running code after a period of time](#delay) {#delay}
+# Running code after a period of time
 
 In this case, we want to perform a task after a set period of time. To do this,
 we use the [`Delay`][delay] API. All we will do is write `"Hello world!"` to the
@@ -56,7 +57,7 @@ does nothing. The instance must be used on a task that is spawned onto the Tokio
 drive the `Delay` instance to completion. In the example above, this is done by
 passing the task to `tokio::run`. Using `tokio::spawn` would also work.
 
-## [Timing out a long running operation](#timeout) {#timeout}
+# Timing out a long running operation
 
 When writing robust networking applications, it's critical to ensure that
 operations complete within reasonable amounts of time. This is especially true
@@ -103,7 +104,7 @@ automatically canceled. This happens when the future returned by
 `io::read_exact` is dropped. Because of the lazy runtime model, dropping a
 future results in the operation being canceled.
 
-## [Running code on an interval](#interval) {#interval}
+# Running code on an interval
 
 Repeatedly running code on an interval is useful for cases like sending a PING
 message on a socket, or checking a configuration file every so often. This can
@@ -144,7 +145,7 @@ number of times `Interval` yields, here limiting to a sequence of 10 events.
 So, the example will run for 0.9 seconds since the first of 10 values is yielded
 immediately.
 
-## [Notes on the timer](#timer) {#timer}
+# Notes on the timer
 
 The Tokio timer has a granularity of one millisecond. Any smaller interval is
 rounded up to the nearest millisecond. The timer is implemented in user land
