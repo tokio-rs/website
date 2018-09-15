@@ -1,9 +1,9 @@
 ---
 title: "Working with framed streams"
+weight: 2040
 menu:
   docs:
     parent: going_deeper
-    weight: 2040
 ---
 
 Tokio has helpers to transform a stream of bytes into a stream of frames. Examples

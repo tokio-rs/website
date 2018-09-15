@@ -56,7 +56,8 @@
       </div>
       <h1 class="tk-title">{{ .Title }}</h1>
       {{ .Content }}
-      {{ with .Next }}
+      <!-- Yes prev... because hugo bugs -->
+      {{ with .PrevInSection }}
         <div class="tk-next">
           <b>Next up</b>: <a href ="{{ .URL }}">{{ .Title }}</a>
         </div>

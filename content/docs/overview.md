@@ -1,6 +1,7 @@
 ---
 title: "Overview"
 weight: 1
+menu: "docs"
 ---
 
 Tokio is an event-driven, non-blocking I/O platform for writing

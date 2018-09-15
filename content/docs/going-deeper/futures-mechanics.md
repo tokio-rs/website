@@ -1,9 +1,9 @@
 ---
 title: "Essential combinators"
+weight: 2020
 menu:
   docs:
     parent: going_deeper
-    weight: 2020
 ---
 
 We saw a few of the most important combinators in the
