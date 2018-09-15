@@ -1,9 +1,9 @@
 ---
 title: "Example: A Chat Server"
+weight : 1060
 menu:
   docs:
     parent: getting_started
-    weight : 1060
 ---
 
 We're going to use what has been covered so far to build a chat server. This is
