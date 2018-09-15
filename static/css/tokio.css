@@ -47,8 +47,6 @@ img {
 
 .tk-navbar {
   background-color: #09569e;
-  /* background-color: #011426; */
-  /* background-color: #774466; */
   box-shadow: 0 .5rem 1rem rgba(0,0,0,.05),inset 0 -1px 0 rgba(0,0,0,.1);
   position: -webkit-sticky;
   position: sticky;
@@ -76,18 +74,19 @@ img {
 
 .tk-sidebar {
   order: 0;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 4rem;
-  z-index: 1000;
-  height: calc(100vh - 4rem);
   border-right: 1px solid rgba(0,0,0,.1);
 }
 
-.tk-sidebar {
-  -webkit-box-flex: 0;
-  -ms-flex: 0 1 320px;
-  flex: 0 1 320px;
+@media (min-width: 768px) {
+  .tk-sidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 4rem;
+    z-index: 1000;
+    height: calc(100vh - 4rem);
+    /* TODO: Remove with doc bar */
+    padding-top:2rem;
+  }
 }
 
 .tk-sidebar .nav > li > a {
@@ -104,8 +103,10 @@ img {
   color: #438686;
 }
 
-.tk-links {
-  display: block !important;
+@media (min-width: 768px) {
+  .tk-links {
+    display: block !important;
+  }
 }
 
 .tk-links {
@@ -125,6 +126,23 @@ img {
 
 .tk-sidenav {
   display: none;
+}
+
+.tk-docs-toggle {
+  padding-top: 1rem!important;
+  padding-bottom: 1rem!important;
+  margin-left: 0!important;
+}
+.tk-docs-toggle h1 {
+  margin-right: auto;
+  font-size: 2rem!important;
+  margin-top: 0!important;
+  margin-bottom: 0!important;
+}
+.tk-docs-toggle btn {
+  line-height: 1;
+  display: block;
+  width: 100px;
 }
 
 /*
@@ -151,13 +169,23 @@ img {
   color: #333;
 }
 
-.tk-docs h1.tk-title {
+.tk-docs h1.tk-title,
+.tk-blog h1.tk-title
+{
   font-size: 2.5rem;
   font-weight: 400;
   margin-top: 1rem;
   margin-bottom: 2.25rem;
   /* border-bottom: 1px solid rgba(0,0,0,.1); */
   max-width: 80%;
+}
+
+@media (max-width: 767.98px) {
+  .tk-docs .tk-title,
+  .tk-blog h1.tk-title
+  {
+    display: none;
+  }
 }
 
 .tk-lead h1.tk-title {
@@ -368,6 +396,13 @@ img {
   font-weight: normal;
   line-height: 1;
   text-decoration: inherit;
+}
+
+/* Hide on small devices */
+@media (max-width: 767.98px) {
+  .github-edit {
+    display: none;
+  }
 }
 
 /*
