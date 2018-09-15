@@ -169,7 +169,9 @@ img {
   color: #333;
 }
 
-.tk-docs h1.tk-title {
+.tk-docs h1.tk-title,
+.tk-blog h1.tk-title
+{
   font-size: 2.5rem;
   font-weight: 400;
   margin-top: 1rem;
@@ -179,7 +181,9 @@ img {
 }
 
 @media (max-width: 767.98px) {
-  .tk-docs .tk-title {
+  .tk-docs .tk-title,
+  .tk-blog h1.tk-title
+  {
     display: none;
   }
 }
