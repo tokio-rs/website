@@ -68,6 +68,35 @@ img {
   font-weight: 500;
 }
 
+.navbar-nav .language-selector {
+  position: relative;
+}
+.navbar-nav .language-selector .fa-language {
+  padding-top: 0.9rem;
+}
+ .navbar-nav .language-selector ul.subitem {
+  display: none;
+  list-style: none;
+  position: absolute;
+  right: 0;
+}
+ .navbar-nav .language-selector:hover .subitem {
+  margin: 0;
+  padding: 0;
+  display: block;
+  background-color: #dcfaf7;
+}
+ .navbar-nav .language-selector ul li {
+  padding: 0;
+  margin: 0;
+  height: auto;
+  line-height: 0.5;
+}
+ .navbar-nav .language-selector ul li a {
+  display: block;
+  padding: 1em;
+}
+
 /*
  *
  * ===== Sidebar =====
@@ -618,3 +647,4 @@ h5:hover a {
   }
 }
 */
+ 
