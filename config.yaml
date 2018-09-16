@@ -7,10 +7,6 @@ googleAnalytics: "UA-90234741-1"
 
 menu:
   docs:
-    - identifier: "overview"
-      name: "Overview"
-      weight: 1
-      url: "/docs/overview"
     - identifier: "getting_started"
       name: "Getting started"
       weight: 1000

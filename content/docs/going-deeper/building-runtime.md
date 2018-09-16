@@ -1,9 +1,9 @@
 ---
 title: "Building a runtime"
+weight: 2050
 menu:
   docs:
     parent: going_deeper
-    weight: 2050
 ---
 
 The runtime ‒ all the pieces needed to run an event driven application ‒ is
