@@ -29,7 +29,12 @@ may be `None`:
 [`Evented`]: https://docs.rs/mio/0.6/mio/event/trait.Evented.html
 
 ```rust
+# extern crate tokio;
+# use tokio::net::TcpListener;
+# use std::net::SocketAddr;
+# fn dox(addr: SocketAddr) {
 let listener = TcpListener::bind(&addr).unwrap();
+# }
 ```
 
 In this case, the reference to the driver is not yet set. However, if a
@@ -37,7 +42,13 @@ constructor that takes a [`Handle`] reference is used, then the driver reference
 will be set to driver represented by the given handle:
 
 ```rust
+# extern crate tokio;
+# use tokio::net::TcpListener;
+# use tokio::reactor::Handle;
+# use std::net::TcpListener as StdListener;
+# fn dox(std_listener: StdListener, my_reactor_handle: &Handle) {
 let listener = TcpListener::from_std(std_listener, &my_reactor_handle);
+# }
 ```
 
 Once a driver is associated with a resource, it is set for the lifetime of the
@@ -56,7 +67,7 @@ with the task system and should be used from tasks and are used as part of
 Here is a task that uses [`poll_accept`] to accept inbound sockets from a
 listener and handle them by spawning a new task:
 
-```rust
+```rust,ignore
 struct Acceptor {
     listener: TcpListener,
 }
@@ -84,18 +95,29 @@ with a peer (or failed attemepting to do so).
 
 Using combinators to connect a [`TcpStream`]:
 
-```rust
+```rust,no_run
+# extern crate tokio;
+# use tokio::prelude::*;
+# use tokio::net::TcpStream;
+# use std::io;
+# fn process<T>(t: T) -> impl Future<Item = (), Error = io::Error> {
+#   Ok(()).into_future()
+# }
+# fn dox() {
+# let addr = "127.0.0.1:0".parse().unwrap();
 tokio::spawn({
     let connect_future = TcpStream::connect(&addr);
 
     connect_future
         .and_then(|socket| process(socket))
+        .map_err(|_| panic!())
 });
+# }
 ```
 
 Futures may also be used directly from other future implementations:
 
-```rust
+```rust,ignore
 struct ConnectAndProcess {
     connect: ConnectFuture,
 }
@@ -152,16 +174,26 @@ described in the previous section.
 
 For example:
 
-```rust
+```rust,no_run
+# extern crate tokio;
+# use tokio::prelude::*;
+# use tokio::net::TcpListener;
+# use tokio::reactor::Handle;
+# use std::net::SocketAddr;
+# fn process<T>(t: T) -> impl Future<Item = (), Error = ()> {
+#   Ok(()).into_future()
+# }
 fn main() {
-    let std_listener = ::std::net::TcpListener::bind(&addr);
-    let listener = TcpListener::from_std(std_listener, &Handle::default());
+    let addr: SocketAddr = "127.0.0.1:0".parse().unwrap();
+    let std_listener = ::std::net::TcpListener::bind(&addr).unwrap();
+    let listener = TcpListener::from_std(std_listener, &Handle::default()).unwrap();
 
     tokio::run({
         listener.incoming().for_each(|socket| {
             tokio::spawn(process(socket));
             Ok(())
         })
+        .map_err(|_| panic!("error"))
     });
 }
 ```
@@ -176,6 +208,13 @@ However, if `tokio-threadpool` is used directly, then tasks spawned onto the
 threadpool executor will not have access to a reactor:
 
 ```rust
+# extern crate tokio;
+# extern crate tokio_threadpool;
+# use tokio_threadpool::*;
+# use tokio::prelude::*;
+# use tokio::net::TcpListener;
+# fn dox() {
+# let addr = "127.0.0.1:0".parse().unwrap();
 let pool = ThreadPool::new();
 let listener = TcpListener::bind(&addr).unwrap();
 
@@ -184,8 +223,11 @@ pool.spawn({
         // This will never get called due to the listener not being able to
         // function.
         unreachable!();
+# Ok(())
     })
+    .map_err(|_| panic!("error"))
 });
+# }
 ```
 
 In order to make the above example work, a reactor must be set for the
@@ -194,14 +236,25 @@ details. Alternatively, a `Handle` obtained with `[Handle::current]` could be
 used:
 
 ```rust
+# extern crate futures;
+# extern crate tokio;
+# extern crate tokio_threadpool;
+# use tokio::prelude::*;
+# use tokio::net::TcpListener;
+# use tokio_threadpool::*;
+# use tokio::reactor::Handle;
+# use futures::future;
+# use std::net::SocketAddr;
+# fn dox() {
+# let addr: SocketAddr = "127.0.0.1:0".parse().unwrap();
 let pool = ThreadPool::new();
 
 // This does not run on the pool.
-tokio::run(lazy(|| {
+tokio::run(future::lazy(move || {
     // Get the handle
     let handle = Handle::current();
 
-    let std_listener = std::net::TcpListener::bind(&addr);
+    let std_listener = std::net::TcpListener::bind(&addr).unwrap();
 
     // This eagerly links the listener with the handle for the current reactor.
     let listener = TcpListener::from_std(std_listener, &handle).unwrap();
@@ -211,10 +264,12 @@ tokio::run(lazy(|| {
             // Do something with the socket
             Ok(())
         })
+        .map_err(|_| panic!())
     });
 
     Ok(())
 }));
+# }
 ```
 
 [`TcpStream`]: https://docs.rs/tokio/0.1/tokio/net/struct.TcpStream.html
@@ -241,7 +296,7 @@ The driver must track each resource that is registered with it. While the actual
 implementation is more complex, it can be thought as a shared reference to a
 cell sharing state, similar to:
 
-```rust
+```rust,ignore
 struct Registration {
     // The registration needs to know its ID. This allows it to remove state
     // from the reactor when it is dropped.
@@ -277,7 +332,7 @@ implementation can be found [here][real-impl]
 
 When the resource is first used, it is registered with the driver:
 
-```rust
+```rust,ignore
 impl TcpListener {
     fn poll_accept(&mut self) -> Poll<TcpStream, io::Error> {
         // If the registration is not set, this will associate the `TcpListener`
@@ -333,7 +388,7 @@ part of the `register` function used above. Again, this guide uses a
 **simplified** implementation which does not match the actual one in
 `tokio-reactor` but is sufficient for understanding how `tokio-reactor` behaves.
 
-```rust
+```rust,ignore
 impl Reactor {
     fn register<T: mio::Evented>(&mut self, evented: &T) -> Arc<Mutex<Registration>> {
         // Generate a unique identifier for this registration. This identifier
@@ -380,16 +435,20 @@ us. This is typically done in a background thread or embedded in the executor as
 a [`Park`] implementation. See the [runtime guide] for more details.
 
 ```rust
+# extern crate tokio_reactor;
+# fn dox() {
+# let mut reactor = tokio_reactor::Reactor::new().unwrap();
 loop {
     // `None` means never timeout, blocking until we receive an operating system
     // event.
     reactor.turn(None);
 }
+# }
 ```
 
 The implementation of `turn` does the following:
 
-```rust
+```rust,ignore
 fn turn(&mut self) {
     // Create storage for operating system events. This shouldn't be created
     // each time `turn` is called, but doing so does not impact behavior.
