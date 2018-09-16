@@ -1,9 +1,9 @@
 ---
 title: "Non-blocking I/O"
+weight: 8020
 menu:
   docs:
     parent: "internals"
-    weight: 8020
 ---
 
 This section describes the network resources and drivers provided by Tokio. This
@@ -25,8 +25,8 @@ composed of the network handle and a reference to the [driver] that is powering
 the resource. Initially, when the resource is first created, the driver pointer
 may be `None`:
 
-[driver]: #
-[`Evented`]: #
+[driver]: #the-network-driver
+[`Evented`]: https://docs.rs/mio/0.6/mio/event/trait.Evented.html
 
 ```rust
 let listener = TcpListener::bind(&addr).unwrap();
@@ -414,7 +414,7 @@ the task runs again, it will call the `poll_accept` function again. This time,
 the `task` slot will be `None`. This means the syscall should be attempted, and
 this time `poll_accept` will return an accepted socket (probably, spurious events are permitted).
 
-[`Runtime`]: #
-[`Park`]: #
+[`Runtime`]: https://docs.rs/tokio/0.1/tokio/runtime/struct.Runtime.html
+[`Park`]: https://docs.rs/tokio-executor/0.1/tokio_executor/park/trait.Park.html
 [real-impl]: https://github.com/tokio-rs/tokio/blob/master/tokio-reactor/src/lib.rs
-[runtime guide]: #
+[runtime guide]: {{< relref "/docs/going-deeper/building-runtime.md" >}}

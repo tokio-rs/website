@@ -1,9 +1,9 @@
 ---
 title: "Runtime model"
+weight: 8010
 menu:
   docs:
     parent: "internals"
-    weight: 8010
 ---
 
 Applications written using Tokio are organized across a large number of small,
@@ -87,8 +87,8 @@ automatically. However, if a task must run a longer computation, it should defer
 work to a [blocking pool] or break up the computation into smaller chunks and
 [yield] back to the executor after each chunk.
 
-[blocking pool]: #
-[yield]: #
+[blocking pool]: https://docs.rs/tokio-threadpool/0.1/tokio_threadpool/fn.blocking.html
+[yield]: #yielding
 
 # Task system
 
@@ -297,8 +297,8 @@ spawn one or more threads and dedicate these threads to draining the `scheduled`
 linked list. Another is to provide a `MyExecutor::run` function that blocks the
 current thread and drains the `scheduled` linked list.
 
-[`current_thread`]: #
-[`thread_pool`]: #
+[`current_thread`]: http://docs.rs/tokio-current-thread
+[`thread_pool`]: https://docs.rs/tokio-threadpool
 [Spawn]: https://docs.rs/futures/0.1/futures/executor/struct.Spawn.html
 [poll_future_notify]: https://docs.rs/futures/0.1/futures/executor/struct.Spawn.html#method.poll_future_notify
 [current]: https://docs.rs/futures/0.1/futures/task/fn.current.html
