@@ -84,8 +84,9 @@ img {
     top: 4rem;
     z-index: 1000;
     height: calc(100vh - 4rem);
-    /* TODO: Remove with doc bar */
-    padding-top:2rem;
+  }
+  .tk-blog .tk-sidebar {
+    padding-top:0.5rem;
   }
 }
 
@@ -119,9 +120,6 @@ img {
   padding-bottom: 1rem;
   margin-right: -15px;
   margin-left: -15px;
-}
-.tk-blog .tk-links {
-  padding-top: 2rem;
 }
 
 .tk-sidenav {
@@ -169,20 +167,20 @@ img {
   color: #333;
 }
 
-.tk-docs h1.tk-title,
 .tk-blog h1.tk-title
 {
+  /*
   font-size: 2.5rem;
   font-weight: 400;
-  margin-top: 1rem;
-  margin-bottom: 2.25rem;
+  */
+  /* margin-top: 1rem; */
+  /* margin-bottom: 2.25rem; */
   /* border-bottom: 1px solid rgba(0,0,0,.1); */
   max-width: 80%;
 }
 
 @media (max-width: 767.98px) {
-  .tk-docs .tk-title,
-  .tk-blog h1.tk-title
+  .tk-blog .tk-content h1.tk-title
   {
     display: none;
   }
@@ -379,8 +377,9 @@ img {
 
 .github-edit {
   float: right;
-  margin-top: 2rem;
+  margin-top: -3rem;
   line-height: 2rem;
+  font-size: .875rem;
 }
 .github-edit a {
   color: #99979c;
@@ -561,95 +560,145 @@ h5:hover a {
   }
 }
 
-
- /*
+/*
  *
- * ===== Media queries =====
+ * ===== Docsearch =====
  *
  */
 
+.algolia-autocomplete {
+  display: block !important;
+  flex: 1;
+}
 
+.algolia-autocomplete .ds-dropdown-menu {
+  width: 100%;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding: .75rem 0 !important;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, .1);
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .175);
+}
+
+@media (min-width: 768px) {
+  .algolia-autocomplete .ds-dropdown-menu {
+    width: 175%;
+  }
+}
+
+.algolia-autocomplete .ds-dropdown-menu::before {
+  display: none !important;
+}
+
+.algolia-autocomplete .ds-dropdown-menu[class^="ds-dataset-"] {
+  padding: 0 !important;
+  overflow: visible !important;
+  background-color: transparent !important;
+  border: 0 !important;
+}
+
+.algolia-autocomplete .ds-dropdown-menu .ds-suggestions {
+    margin-top: 0 !important;
+}
+
+.algolia-autocomplete .algolia-docsearch-suggestion {
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+.algolia-autocomplete .algolia-docsearch-suggestion--category-header {
+  padding: .125rem 1rem !important;
+  margin-top: 0 !important;
+  font-size: .875rem !important;
+  font-weight: 500 !important;
+  /* color: $bd-purple-bright !important; */
+  border-bottom: 0 !important;
+}
+
+.algolia-autocomplete .algolia-docsearch-suggestion--wrapper {
+  float: none !important;
+  padding-top: 0 !important;
+}
+
+.algolia-autocomplete .algolia-docsearch-suggestion--subcategory-column {
+  float: none !important;
+  width: auto !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.algolia-autocomplete .algolia-docsearch-suggestion--content {
+  float: none !important;
+  width: auto !important;
+  padding: 0 !important;
+}
+
+.algolia-autocomplete .algolia-docsearch-suggestion--content::before {
+  display: none !important;
+}
+
+.algolia-autocomplete .ds-suggestion:not(:first-child) .algolia-docsearch-suggestion--category-header {
+  padding-top: .75rem !important;
+  margin-top: .75rem !important;
+  border-top: 1px solid rgba(0, 0, 0, .1);
+}
+
+.algolia-autocomplete .ds-suggestion .algolia-docsearch-suggestion--subcategory-column {
+  display: none !important;
+}
+
+.algolia-autocomplete .algolia-docsearch-suggestion--title {
+  display: block;
+  padding: .25rem 1rem !important;
+  margin-bottom: 0 !important;
+  font-size: .875rem !important;
+  font-weight: 400 !important;
+}
+
+.algolia-autocomplete .algolia-docsearch-suggestion--text {
+  padding: 0 1rem .5rem !important;
+  margin-top: -.25rem;
+  font-size: .875rem !important;
+  font-weight: 400;
+  line-height: 1.25 !important;
+}
+
+.algolia-autocomplete .algolia-docsearch-footer {
+  float: none !important;
+  width: auto !important;
+  height: auto !important;
+  padding: .75rem 1rem 0;
+  font-size: .75rem !important;
+  line-height: 1 !important;
+  color: #767676 !important;
+  border-top: 1px solid rgba(0, 0, 0, .1);
+}
+
+.algolia-autocomplete .algolia-docsearch-footer--logo {
+  display: inline !important;
+  overflow: visible !important;
+  color: inherit !important;
+  text-indent: 0 !important;
+  background: none !important;
+}
+
+.algolia-autocomplete .algolia-docsearch-suggestion--highlight {
   /*
- @media (min-width: 768px) {
-   .bootstrap-vertical-nav .navbar .navbar-collapse {
-      padding: 0;
-      max-height: none;
-   }
-   .bootstrap-vertical-nav .navbar ul {
-      float: none;
-   }
-   .bootstrap-vertical-nav .navbar ul:not {
-      display: block;
-   }
-   .bootstrap-vertical-nav .navbar li {
-      float: none;
-      display: block;
-   }
-
-   .bootstrap-vertical-nav .navbar-nav .nav-item+.nav-item {
-      margin-left: 0;
-   }
+  color: #5f2dab;
+  background-color: rgba(154, 132, 187, .12);
+  */
 }
 
- @media screen and (min-width: 480px) {
-  .hidden-lg-up {
-    display: none !important;
-  }
-  .navbar-collapse {
-    display: flex !important;
-  }
+.algolia-autocomplete .algolia-docsearch-suggestion--text .algolia-docsearch-suggestion--highlight {
+  /*
+  box-shadow: inset 0 -2px 0 0 rgba(95, 45, 171, .5) !important;
+  */
 }
 
- @media screen and (max-width: 479px) {
-  .hd-lg-down {
-    display: none !important;
-  }
-  .navbar-toggleable-md > .container {
-      padding-right: 0;
-      padding-left: 0;
-  }
-
-  .navbar-brand {
-    margin-top: 0 !important;
-    margin-right: 1rem !important;
-  }
-
-  .navbar-nav {
-    display: flex;
-    flex-direction: column;
-    padding-left: 0;
-    margin-bottom: 0 !important;
-    margin-top: 0 !important;
-    list-style: none;
-  }
-
-  .navbar-nav .nav-link {
-    padding: 0;
-  }
-
-  .navbar-nav .nav-item + .nav-item {
-    margin-left: 0;
-  }
-
-  .tk-footer-gray {
-    text-align: center;
-    flex-direction: column;
-  }
-
-  .tk-footer-social a .fa-github {
-    margin-right: 1rem;
-  }
+.algolia-autocomplete .ds-suggestion.ds-cursor .algolia-docsearch-suggestion--content {
+  /*
+  background-color: rgba(208, 189, 236, .15) !important;
+  */
 }
-
-@media (min-width: 1200px) {
-  .tk-footer-gray {
-    width: 1140px;
-  }
-}
-
-@media (min-width: 992px) {
-  .tk-footer-gray {
-    width: 960px;
-  }
-}
-*/

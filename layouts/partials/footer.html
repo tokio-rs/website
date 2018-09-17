@@ -22,6 +22,15 @@
         });
       });
     </script>
+    <!-- at the end of the BODY -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script type="text/javascript"> docsearch({
+    apiKey: 'd7b5b785798fe748621bcaa8301a2201',
+    indexName: 'tokio',
+    inputSelector: '#search-input',
+    debug: false // Set debug to true if you want to inspect the dropdown
+    });
+    </script>
     {{ template "_internal/google_analytics.html" . }}
   </body>
 </html>
