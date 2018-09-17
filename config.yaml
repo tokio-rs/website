@@ -13,6 +13,9 @@ menu:
     - identifier: "going_deeper"
       name: "Going deeper"
       weight: 2000
+    - identifier: "internals"
+      name: "Tokio internals"
+      weight: 8000
     - identifier: "reference"
       name: "API documentation"
       url: "https://docs.rs/tokio"
