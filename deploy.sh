@@ -3,6 +3,9 @@ set -e -x
 # Sync the website
 aws s3 sync $TRAVIS_BUILD_DIR/public s3://tokio.rs --acl public-read --delete
 
+# Create the redirect
+aws s3api put-object --bucket tokio.rs --key docs/index.html --website-redirect-location /docs/getting-started/hello-world --acl public-read
+
 # Create a cloudfront invalidation
 echo -n '{"Paths": {"Items": ["/*"], "Quantity": 1}, "CallerReference":"' >> payload.json &&
 echo -n "travis-$(date)" >> payload.json &&
