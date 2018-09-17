@@ -17,8 +17,9 @@
               Blog Posts
             </p>
             <ul class="nav tk-sidenav">
+              {{ $currentPage := . }}
               {{ range .Site.Menus.blog }}
-                  <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+                  <li><a href="{{ .URL }}" class="{{ if $currentPage.IsMenuCurrent "blog" . }}active{{ end }}">{{ .Name }}</a></li>
               {{ end }}
             </ul>
           </div>

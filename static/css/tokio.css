@@ -291,6 +291,11 @@ img {
     display: block;
 }
 
+.active .active {
+  font-weight: 500;
+  color: rgba(0,0,0,.85)!important;
+}
+
 .tk-toc-link {
   display: block;
   padding: .25rem 1.5rem;
