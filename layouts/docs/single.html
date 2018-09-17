@@ -28,7 +28,7 @@
                 </a>
                 <ul class="nav tk-sidenav">
                 {{ range .Children }}
-                  <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+                  <li><a href="{{ .URL }}" class="{{ if $currentPage.IsMenuCurrent "docs" . }}active{{ end }}">{{ .Name }}</a></li>
                 {{ end }}
                 </ul>
               </div>
