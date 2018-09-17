@@ -22,9 +22,16 @@ they return a value indicating that the operation is in progress.
 A Tokio task is implemented using the [`Future`][Future] trait:
 
 ```rust
+# extern crate futures;
+# use futures::*;
+# type MyResource = future::FutureResult<(), ()>;
 struct MyTask {
     my_resource: MyResource,
 }
+# impl MyTask {
+#     fn process(&self, _: ()) {}
+#     fn process_err(&self, _: ()) {}
+# }
 
 impl Future for MyTask {
     type Item = ();
@@ -148,7 +155,21 @@ received `NotReady` from a resource. For example, the following task
 implementation results in the task never completing.
 
 ```rust
+# #![deny(deprecated)]
+# #[macro_use]
+# extern crate futures;
+use futures::{Future, Poll, Async};
 
+# type Resource1 = futures::future::FutureResult<(), ()>;
+# struct Resource2;
+# impl Resource2 {
+#     fn new(_: ()) -> Self { Resource2 }
+# }
+# impl Future for Resource2 {
+#    type Item = ();
+#    type Error = ();
+#    fn poll(&mut self) -> Poll<(), ()> { unimplemented!(); }
+# }
 enum BadTask {
     First(Resource1),
     Second(Resource2),
@@ -159,21 +180,22 @@ impl Future for BadTask {
     type Error = ();
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        use self::BadTask::*;
-
-        match *self {
+        use BadTask::*;
+        let value = match *self {
             First(ref mut resource) => {
-                let value = try_ready!(resource.poll());
-                *self = Second(Resource2::new(value));
-                Ok(Async::NotReady)
+                try_ready!(resource.poll())
             }
             Second(ref mut resource) => {
                 try_ready!(resource.poll());
-                Ok(Async::Ready(()))
+                return Ok(Async::Ready(()));
             }
-        }
+        };
+
+        *self = Second(Resource2::new(value));
+        Ok(Async::NotReady)
     }
 }
+# fn main() {}
 ```
 
 The problem with the above implementation is that `Ok(Async::NotReady)` is
@@ -185,22 +207,46 @@ notified in the future.
 This situation is generally resolved by adding a loop:
 
 ```rust
-fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-    use self::BadTask::*;
+# #![deny(deprecated)]
+# #[macro_use]
+# extern crate futures;
+use futures::{Future, Poll, Async};
 
+# type Resource1 = futures::future::FutureResult<(), ()>;
+# struct Resource2;
+# impl Resource2 {
+#     fn new(_: ()) -> Self { Resource2 }
+# }
+# impl Future for Resource2 {
+#    type Item = ();
+#    type Error = ();
+#    fn poll(&mut self) -> Poll<(), ()> { unimplemented!(); }
+# }
+# enum BadTask {
+#     First(Resource1),
+#     Second(Resource2),
+# }
+# impl Future for BadTask {
+# type Item = ();
+# type Error = ();
+fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
+    use BadTask::*;
     loop {
-        match *self {
+        let value = match *self {
             First(ref mut resource) => {
-                let value = try_ready!(resource.poll());
-                *self = Second(Resource2::new(value));
+                try_ready!(resource.poll())
             }
             Second(ref mut resource) => {
                 try_ready!(resource.poll());
                 return Ok(Async::Ready(()));
             }
-        }
+        };
+
+        *self = Second(Resource2::new(value));
     }
 }
+# }
+# fn main() {}
 ```
 
 One way to think about it is that a task's `poll` function **must not**
@@ -220,13 +266,23 @@ return control to the executor to allow it to execute other futures.
 Yielding is done by notifying the current task and returning `NotReady`:
 
 ```rust
+# extern crate futures;
+use futures::task;
+use futures::Async;
+
+# fn poll_dox() -> Result<Async<()>, ()> {
+// Yield the current task. The executor will poll this task next
+// iteration through its run list.
 task::current().notify();
 return Ok(Async::NotReady);
+# }
 ```
 
 Yield can be used to break up a CPU expensive computation:
 
 ```rust
+# extern crate futures;
+# use futures::*;
 struct Count {
     remaining: usize,
 }

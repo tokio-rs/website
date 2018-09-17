@@ -275,6 +275,7 @@ tokio::run(future::lazy(move || {
 [`TcpStream`]: https://docs.rs/tokio/0.1/tokio/net/struct.TcpStream.html
 [`TcpListener`]: https://docs.rs/tokio/0.1/tokio/net/struct.TcpListener.html
 [`Handle`]: https://docs.rs/tokio-reactor/0.1/tokio_reactor/struct.Handle.html
+[`Handle::current`]: https://docs.rs/tokio/0.1/tokio/reactor/struct.Handle.html#method.current
 [poll_accept]: http://docs.rs/tokio/0.1.8/tokio/net/struct.TcpListener.html#method.poll_accept
 [`with_default`]: https://docs.rs/tokio-reactor/0.1.5/tokio_reactor/fn.with_default.html
 [`Handle::default`]: https://docs.rs/tokio-reactor/0.1.5/tokio_reactor/struct.Handle.html#method.default
