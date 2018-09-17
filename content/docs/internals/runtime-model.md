@@ -140,7 +140,7 @@ If multiple tasks have expressed interest in a resource, only the *last* task to
 have done so will be notified. Resources are intended to be used from a single
 task only.
 
-## `Async::Ready`
+## `Async::NotReady`
 
 Any function that returns `Async` must adhere to the [contract][contract]. When
 `NotReady` is returned, the current task **must** have been registered for
