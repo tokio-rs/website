@@ -183,8 +183,10 @@ The last section handwaved a bit and said that once a Future transitioned to the
 ready state, the executor is notifed. This enables the executor to be efficient
 in scheduling tasks.
 
-It is critical that the executor is notified when the state transitions to "ready".
-Otherwise, the task will hang infinitely, never getting run again.
+When a function returns Async::NotReady, it signals that it is currently not in
+a ready state and is unable to complete the operation. It is critical that the
+executor is notified when the state transitions to "ready". Otherwise, the task
+will hang infinitely, never getting run again.
 
 For most future implementations, this is done transitively. When a future
 implementation is a combination of sub futures, the outer future only returns
