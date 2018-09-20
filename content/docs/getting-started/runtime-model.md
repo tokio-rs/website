@@ -93,6 +93,7 @@ To define a task, we implement the [`Future`] trait.
 pub struct MyTask;
 
 impl Future for MyTask {
+    // The value this future will have when ready
     type Item = ();
     type Error = ();
 
@@ -103,7 +104,7 @@ impl Future for MyTask {
                 Ok(Async::Ready(()))
             }
             Async::NotReady => {
-                return Ok(Async::NotReady);
+                Ok(Async::NotReady)
             }
         }
     }
@@ -148,6 +149,8 @@ At the very simplest, an executor could look something like this:
 # use std::collections::VecDeque;
 #
 pub struct SpinExecutor {
+    // the tasks an executor is responsbile for in
+    // a double ended queue
     tasks: VecDeque<Box<Future<Item = (), Error = ()>>>,
 }
 

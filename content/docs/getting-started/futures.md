@@ -108,10 +108,6 @@ trait Future {
 }
 ```
 
-You may notice that this is the exact same trait that was used to implement an
-asynchronous task. This is because asynchronous tasks are "just" futures that
-complete with a value of `()` once the computation has completed.
-
 Usually, when you implement a `Future`, you will be defining a computation that
 is a composition of sub (or inner) futures. In this case, the future implementation tries
 to call the inner future(s) and returns `NotReady` if the inner futures are not
@@ -183,13 +179,14 @@ fn poll(&mut self) -> Result<Async<usize>, T::Error> {
 
 # Returning `NotReady`
 
-The last section handwaved a bit and said that when a task returns `NotReady`,
-once it transitioned to the ready state, the executor is notifed. This enables
-the executor to be efficient in scheduling tasks.
+The last section handwaved a bit and said that once a Future transitioned to the
+ready state, the executor is notifed. This enables the executor to be efficient
+in scheduling tasks.
 
-When a function returns `Async::NotReady`, it is critical that the executor is
-notified when the state transitions to "ready". Otherwise, the task will hang
-infinitely, never getting run again.
+When a function returns Async::NotReady, it signals that it is currently not in
+a ready state and is unable to complete the operation. It is critical that the
+executor is notified when the state transitions to "ready". Otherwise, the task
+will hang infinitely, never getting run again.
 
 For most future implementations, this is done transitively. When a future
 implementation is a combination of sub futures, the outer future only returns
@@ -202,18 +199,13 @@ Innermost futures, sometimes called "resources", are the ones responsible for
 notifying the executor. This is done by calling [`notify`] on the task returned
 by [`task::current()`].
 
-Before an executor calls `poll` on a task, it sets the task context to a
-thread-local variable. The inner most future then accesses the context from the
-thread-local so that it is able to notify the task once its readiness state
-changes.
-
 We will be exploring implementing resources and the task system in more depth in
 a later section. The key take away here is **do not return `NotReady` unless you
 got `NotReady` from an inner future**.
 
 # A More Complicated Future
 
-Lets look at a slightly more complicated future implementation. In this case, we
+Let's look at a slightly more complicated future implementation. In this case, we
 will implement a future that takes a host name, does DNS resolution, then
 establishes a connection to the remote host. We assume a `resolve` function
 exists that looks like this:
@@ -307,6 +299,8 @@ impl Future for ResolveAndConnect {
                 }
             };
 
+            // If we reach here, the state was `Resolving`
+            // and the call to the inner Future returned `Ready`
             let connecting = TcpStream::connect(&addr);
             self.state = Connecting(connecting);
         }
@@ -324,8 +318,8 @@ can be in either of two states:
 Each time `poll` is called, we try to advance the state machine to the next
 state.
 
-Now, the future we just implemented is basically [`AndThen`], so we would
-probably just use that combinator instead of re-implementing it.
+Now, the future is basically a re-implementation of the combinator [`AndThen`], so we would
+probably just use that combinator.
 
 ```rust
 # #![deny(deprecated)]
@@ -353,7 +347,7 @@ resolve(my_host)
 # pub fn main() {}
 ```
 
-which is much shorter.
+This is much shorter and does the same thing.
 
 [`futures`]: {{< api-url "futures" >}}
 [`notify`]: {{< api-url "futures" >}}/executor/trait.Notify.html#tymethod.notify

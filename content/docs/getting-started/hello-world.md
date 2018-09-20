@@ -88,9 +88,10 @@ let server = listener.incoming().for_each(|socket| {
 # }
 ```
 
-Combinator functions are used to define asynchronous tasks. The call to
-`listener.incoming()` returns a [`Stream`] of accepted connections. A [`Stream`]
-is kind of like an asynchronous iterator.
+The call to `listener.incoming()` returns a [`Stream`] of accepted connections.
+A [`Stream`] is kind of like an asynchronous iterator. The `for_each` method
+yields new sockets each time a socket is accepted. `for_each` is an example of
+a combinator function that defines how asynchronous work will be processed.
 
 Each combinator function takes ownership of necessary state as well as the
 callback to perform and returns a new `Future` or `Stream` that has the
@@ -98,12 +99,15 @@ additional "step" sequenced.
 
 Returned futures and streams are lazy, i.e., no work is performed when calling
 the combinator. Instead, once all the asynchronous steps are sequenced, the
-final `Future` (representing the task) is spawned on an executor. This is when
+final `Future` (representing the task) is "spawned". This is when
 the work that was previously defined starts getting run.
 
 We will be digging into futures and streams later on.
 
-# Spawning the task
+# Running the server
+
+So far we have a future representing the work to be done by our server, but we
+need a way to spawn (i.e., run) that work. We need an executor.
 
 Executors are responsible for scheduling asynchronous tasks, driving them to
 completion. There are a number of executor implementations to choose from, each have
@@ -132,8 +136,7 @@ tokio::run(server);
 
 `tokio::run` starts the runtime, blocking the current thread until
 all spawned tasks have completed and all resources (like TCP sockets) have been
-dropped. Spawning a task using [`tokio::spawn`] **must** happen from within the
-context of a [runtime][rt].
+dropped.
 
 So far, we only have a single task running on the executor, so the `server` task
 is the only one blocking `run` from returning.
@@ -144,7 +147,7 @@ Next, we will process the inbound sockets.
 
 Our goal is to write `"hello world\n"` on each accepted socket. We will do this
 by defining a new asynchronous task to do the write and spawning that task on
-the same `current_thread` executor.
+the same executor.
 
 Going back to the `incoming().for_each` block.
 
