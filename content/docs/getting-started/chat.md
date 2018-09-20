@@ -699,12 +699,12 @@ to use `Peer`.
 # extern crate futures;
 # use tokio::io;
 # use tokio::prelude::*;
-# use futures::future::{self, Either};
+# use futures::future::{self, Either, empty};
 # type Lines = Box<Stream<Item = (), Error = io::Error>>;
 # struct Peer;
 # impl Peer {
-#     fn new(_: (), state: (), lines: Lines) -> Box<Future<Item = (), Error = io::Error>> {
-#         unimplemented!();
+#     fn new(_: (), state: (), lines: Lines) -> impl Future<Item = (), Error = io::Error> {
+#         empty()
 #     }
 # }
 # fn dox(lines: Lines) {

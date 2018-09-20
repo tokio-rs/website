@@ -41,14 +41,14 @@ unbounded execution time.
 # #![deny(deprecated)]
 # extern crate futures;
 # use futures::prelude::*;
-# use futures::future::{self, Either};
+# use futures::future::{self, Either, empty};
 # use std::time::Duration;
 # fn docx() {
 #
 # pub struct Timeout;
 # impl Timeout {
-#     pub fn new<T>(_: T, _: Duration) -> Box<Future<Item = (), Error = ()>> {
-#         unimplemented!();
+#     pub fn new<T>(_: T, _: Duration) -> impl Future<Item = (), Error = ()> {
+#         empty()
 #     }
 # }
 # pub struct MyExecutor;
@@ -59,35 +59,35 @@ unbounded execution time.
 # }
 # pub struct Error;
 
-// The functions here all return `Box<Future<...>>`. This is one
+// The functions here all return `impl Future<...>`. This is one
 // of a number of ways to return futures. For more details on
 // returning futures, see the "Returning futures" section in
 // "Going deeper: Futures".
 
 /// Get a URI from some remote cache.
 fn cache_get(uri: &str)
-    -> Box<Future<Item = Option<String>, Error = Error>>
-# { unimplemented!() } /*
+    -> impl Future<Item = Option<String>, Error = Error>
+# { empty() } /*
 { ... }
 # */
 
 fn cache_put(uri: &str, val: String)
-    -> Box<Future<Item = (), Error = Error>>
-# { unimplemented!() } /*
+    -> impl Future<Item = (), Error = Error>
+# { empty() } /*
 { ... }
 # */
 
 /// Do a full HTTP get to a remote URL
 fn http_get(uri: &str)
-    -> Box<Future<Item = String, Error = Error>>
-# { unimplemented!() } /*
+    -> impl Future<Item = String, Error = Error>
+# { empty() } /*
 { ... }
 # */
 #
 # let my_executor = MyExecutor;
 
 fn fetch_and_cache(url: &str)
-    -> Box<Future<Item = String, Error = Error>>
+    -> impl Future<Item = String, Error = Error>
 {
     // The URL has to be converted to a string so that it can be
     // moved into the closure. Given futures are asynchronous,
@@ -140,14 +140,14 @@ multiple tasks as the steps are no longer directly related.
 # #![deny(deprecated)]
 # extern crate futures;
 # use futures::prelude::*;
-# use futures::future::{self, Either};
+# use futures::future::{self, Either, empty};
 # use std::time::Duration;
 # fn docx() {
 #
 # pub struct Timeout;
 # impl Timeout {
-#     pub fn new<T>(_: T, _: Duration) -> Box<Future<Item = (), Error = ()>> {
-#         unimplemented!();
+#     pub fn new<T>(_: T, _: Duration) -> impl Future<Item = (), Error = ()> {
+#         empty()
 #     }
 # }
 # pub struct Interval;
@@ -165,17 +165,17 @@ multiple tasks as the steps are no longer directly related.
 # pub struct Error;
 #
 # fn cache_get(uri: &str)
-#     -> Box<Future<Item = Option<String>, Error = Error>>
-# { unimplemented!() }
+#     -> impl Future<Item = Option<String>, Error = Error>
+# { empty() }
 # fn cache_put(uri: &str, val: String)
-#     -> Box<Future<Item = (), Error = Error>>
-# { unimplemented!() }
+#     -> impl Future<Item = (), Error = Error>
+# { empty() }
 # fn http_get(uri: &str)
-#     -> Box<Future<Item = String, Error = Error>>
-# { unimplemented!() }
+#     -> impl Future<Item = String, Error = Error>
+# { empty() }
 # fn fetch_and_cache(url: &str)
-#     -> Box<Future<Item = String, Error = Error>>
-# { unimplemented!() }
+#     -> impl Future<Item = String, Error = Error>
+# { empty() }
 # let my_executor = MyExecutor;
 
 let url = "https://example.com";
@@ -227,15 +227,15 @@ initial value.
 # #![deny(deprecated)]
 # extern crate futures;
 # use futures::prelude::*;
-# use futures::future::{self, Either};
+# use futures::future::{self, Either, empty};
 # use futures::sync::oneshot;
 # use std::time::Duration;
 # fn docx() {
 #
 # pub struct Timeout;
 # impl Timeout {
-#     pub fn new<T>(_: T, _: Duration) -> Box<Future<Item = (), Error = ()>> {
-#         unimplemented!();
+#     pub fn new<T>(_: T, _: Duration) -> impl Future<Item = (), Error = ()> {
+#         empty()
 #     }
 # }
 # pub struct Interval;
@@ -253,17 +253,17 @@ initial value.
 # pub struct Error;
 #
 # fn cache_get(uri: &str)
-#     -> Box<Future<Item = Option<String>, Error = Error>>
-# { unimplemented!() }
+#     -> impl Future<Item = Option<String>, Error = Error>
+# { empty() }
 # fn cache_put(uri: &str, val: String)
-#     -> Box<Future<Item = (), Error = Error>>
-# { unimplemented!() }
+#     -> impl Future<Item = (), Error = Error>
+# { empty() }
 # fn http_get(uri: &str)
-#     -> Box<Future<Item = String, Error = Error>>
-# { unimplemented!() }
+#     -> impl Future<Item = String, Error = Error>
+# { empty() }
 # fn fetch_and_cache(url: &str)
-#     -> Box<Future<Item = String, Error = Error>>
-# { unimplemented!() }
+#     -> impl Future<Item = String, Error = Error>
+# { empty() }
 # let my_executor = MyExecutor;
 
 let url = "https://example.com";
@@ -303,14 +303,16 @@ tasks. Here is the basic structure of a server:
 
 ```rust
 # #![deny(deprecated)]
+# extern crate futures;
 # extern crate tokio;
 #
 # use tokio::io;
 # use tokio::net::{TcpListener, TcpStream};
 # use tokio::prelude::*;
+# use futures::future::empty;
 #
-# pub fn process(socket: TcpStream) -> Box<Future<Item = (), Error = ()> + Send> {
-# unimplemented!();
+# pub fn process(socket: TcpStream) -> impl Future<Item = (), Error = ()> + Send {
+#   empty()
 # }
 #
 # fn docx() {
@@ -340,12 +342,14 @@ connections on the same socket:
 # use futures::prelude::*;
 # use tokio::net::*;
 # use std::io;
+# use futures::future::empty;
+
 pub struct Server {
     listener: TcpListener,
     connections: Vec<Box<Future<Item = (), Error = io::Error> + Send>>,
 }
-# pub fn process(socket: TcpStream) -> Box<Future<Item = (), Error = io::Error> + Send> {
-# unimplemented!();
+# pub fn process(socket: TcpStream) -> impl Future<Item = (), Error = io::Error> + Send {
+#   empty()
 # }
 
 impl Future for Server {
@@ -358,7 +362,7 @@ impl Future for Server {
             match self.listener.poll_accept()? {
                 Async::Ready((socket, _)) => {
                     let connection = process(socket);
-                    self.connections.push(connection);
+                    self.connections.push(Box::new(connection));
                 }
                 Async::NotReady => break,
             }
