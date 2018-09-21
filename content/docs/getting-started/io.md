@@ -41,7 +41,7 @@ mandated properties:
   thread.
 * If a call would otherwise block then the function returns a value indicating so.
   If this happens then the current future's task is scheduled to receive a
-  notification (known as an 'unpark') when the I/O is ready again.
+  notification when the I/O is ready again.
 
 Note that users of [`AsyncRead`] and [`AsyncWrite`] types should use
 [`poll_read`] and [`poll_write`] instead of directly calling [`read`] and [`write`].
