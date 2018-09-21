@@ -387,7 +387,7 @@ fn main() {}
 The caller queues up all lines by calling `buffer`. This appends the line to the
 internal `wr` buffer. Then, once all data is queued up, the caller calls
 `poll_flush`, which does the actual writing to the socket. `poll_flush` only
-returns `Ready` once all the queued data has been succesfully written to the
+returns `Ready` once all the queued data has been successfully written to the
 socket.
 
 Similar to the read half, `NotReady` is only returned when the function

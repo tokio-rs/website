@@ -100,7 +100,7 @@ trait Future {
     /// The type of the value returned when the future completes.
     type Item;
 
-    /// The type representing errors that occured while processing the
+    /// The type representing errors that occurred while processing the
     /// computation.
     type Error;
 
@@ -151,7 +151,7 @@ future is ready, then the `Doubler` future doubles the return value and returns
 
 Because the matching pattern above is common, the [`futures`] crate provides a
 macro: `try_ready!`. It is similar to `try!` or `?`, but it also returns on
-`NotReady`. The above `poll` function can be rewriten using `try_ready!` as
+`NotReady`. The above `poll` function can be rewritten using `try_ready!` as
 follows:
 
 ```rust
@@ -180,7 +180,7 @@ fn poll(&mut self) -> Result<Async<usize>, T::Error> {
 # Returning `NotReady`
 
 The last section handwaved a bit and said that once a Future transitioned to the
-ready state, the executor is notifed. This enables the executor to be efficient
+ready state, the executor is notified. This enables the executor to be efficient
 in scheduling tasks.
 
 When a function returns Async::NotReady, it signals that it is currently not in
