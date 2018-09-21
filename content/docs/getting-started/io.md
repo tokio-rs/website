@@ -39,9 +39,9 @@ mandated properties:
 
 * Calls to `read` or `write` are **nonblocking**, they never block the calling
   thread.
-* If a call would otherwise block then an error is returned with the kind of
-  `WouldBlock`. If this happens then the current future's task is scheduled to
-  receive a notification (an unpark) when the I/O is ready again.
+* If a call would otherwise block then the function returns a value indicating so.
+  If this happens then the current future's task is scheduled to receive a
+  notification (known as an 'unpark') when the I/O is ready again.
 
 Note that users of [`AsyncRead`] and [`AsyncWrite`] types should use
 [`poll_read`] and [`poll_write`] instead of directly calling [`read`] and [`write`].

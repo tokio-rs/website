@@ -49,10 +49,10 @@ not block the thread! When the socket has no pending data in its receive buffer,
 the `read` function returns immediately, indicating that the socket was "not
 ready" to perform the read operation.
 
-When using a Tokio [`TcpStream`], a call to `read` will return an error of kind
-[`ErrorKind::WouldBlock`] if there is no pending data to read. At this point,
-the caller is responsible for calling `read` again at a later time. The trick is
-to know when that "later time" is.
+When using a Tokio [`TcpStream`], a call to `read` will always immediately return
+a value ([`ErrorKind::WouldBlock`]) even if there is no pending data to read.
+If there is no pending data, the caller is responsible for calling `read` again
+at a later time.  The trick is to know when that "later time" is.
 
 Another way to think about a non-blocking read is as "polling" the socket for
 data to read.
