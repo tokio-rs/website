@@ -149,7 +149,7 @@ At the very simplest, an executor could look something like this:
 # use std::collections::VecDeque;
 #
 pub struct SpinExecutor {
-    // the tasks an executor is responsbile for in
+    // the tasks an executor is responsible for in
     // a double ended queue
     tasks: VecDeque<Box<Future<Item = (), Error = ()>>>,
 }
