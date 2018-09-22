@@ -111,7 +111,7 @@ dropped. At this point, the computation will no longer be polled and thus
 perform no more work.
 
 Thanks to Rust's ownership model, the computation is able to implement `drop`
-handles to detect the future being droped. This allows it to perform any
+handles to detect the future being dropped. This allows it to perform any
 necessary cleanup work.
 
 # Lightweight
