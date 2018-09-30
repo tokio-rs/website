@@ -169,4 +169,4 @@ And with that, have a great week!
 
 [`tokio-async-await`]: https://crates.io/crates/tokio-async-await
 [examples]: https://github.com/tokio-rs/tokio/blob/master/tokio-async-await/examples
-[hyper]: https://github.com/tokio-rs/tokio/blob/master/tokio-async-await/examples/hyper.rs
+[hyper]: https://github.com/tokio-rs/tokio/blob/master/tokio-async-await/examples/src/hyper.rs
