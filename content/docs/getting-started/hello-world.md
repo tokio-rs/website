@@ -10,6 +10,10 @@ To kick off our tour of Tokio, we will start with the obligatory "hello world"
 example. This server will listen for incoming connections. Once a connection is
 received, it will write "hello world" to the client and close the connection.
 
+Before we begin you should have a basic understanding of how TCP sockets work. Having
+an understanding of Rust's [standard library implementation][TcpListener] is also
+helpful.
+
 Let's get started.
 
 First, generate a new crate.
@@ -89,29 +93,32 @@ let server = listener.incoming().for_each(|socket| {
 ```
 
 The call to `listener.incoming()` returns a [`Stream`] of accepted connections.
-A [`Stream`] is kind of like an asynchronous iterator. The `for_each` method
-yields new sockets each time a socket is accepted. `for_each` is an example of
-a combinator function that defines how asynchronous work will be processed.
+We'll learn more about [`Streams`] later in the guide, but for now you can think of
+a [`Stream`] as an asynchronous iterator. The `for_each` method yields new sockets
+each time a socket is accepted. `for_each` is an example of a combinator function that
+defines how asynchronous work will be processed.
 
 Each combinator function takes ownership of necessary state as well as the
-callback to perform and returns a new `Future` or `Stream` that has the
-additional "step" sequenced.
+callback to perform and returns a new `Stream` or a `Future` that has the
+additional "step" sequenced. A `Future` is a value representing some computation
+that will complete at some point in the future
 
 Returned futures and streams are lazy, i.e., no work is performed when calling
 the combinator. Instead, once all the asynchronous steps are sequenced, the
-final `Future` (representing the task) is "spawned". This is when
+final `Future` (representing the entire task) is "spawned" (i.e., run). This is when
 the work that was previously defined starts getting run.
 
 We will be digging into futures and streams later on.
 
 # Running the server
 
-So far we have a future representing the work to be done by our server, but we
-need a way to spawn (i.e., run) that work. We need an executor.
+So far we have a `Future` representing the work to be done by our server, but we
+need a way to spawn that work. We need an executor.
 
 Executors are responsible for scheduling asynchronous tasks, driving them to
 completion. There are a number of executor implementations to choose from, each have
-different pros and cons. In this example, we will use the [Tokio runtime][rt].
+different pros and cons. In this example, we will use the [Tokio runtime][rt]
+which comes with a set executor implementation.
 
 The Tokio runtime is a pre-configured runtime for asynchronous applications. It
 includes a thread pool as the default executor. This thread pool is tuned for
@@ -149,7 +156,7 @@ Our goal is to write `"hello world\n"` on each accepted socket. We will do this
 by defining a new asynchronous task to do the write and spawning that task on
 the same executor.
 
-Going back to the `incoming().for_each` block.
+Going back to the `incoming().for_each` block:
 
 ```rust
 # #![deny(deprecated)]
@@ -197,13 +204,14 @@ Note that `res` is a `Result` that contains the original socket. This allows us
 to sequence additional reads or writes on the same socket. However, we have
 nothing more to do, so we just drop the socket, which closes it.
 
-You can find the full example [here][full-code]
+You can find the full example [here][full-code].
 
 # Next steps
 
-We've only dipped our toes in Tokio and its asynchronous model. The next page in
+We've only dipped our toes into Tokio and its asynchronous model. The next page in
 the guide, will start digging deeper into the Tokio runtime model.
 
+[TcpListener]:https://doc.rust-lang.org/std/net/struct.TcpListener.html
 [`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
 [`Stream`]: {{< api-url "futures" >}}/stream/trait.Stream.html
 [rt]: {{< api-url "tokio" >}}/runtime/index.html
