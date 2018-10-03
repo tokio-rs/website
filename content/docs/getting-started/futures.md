@@ -229,7 +229,7 @@ these steps.
 
 ```rust
 # extern crate tokio;
-# use tokio::net::ConnectFuture;
+# use tokio::net::tcp::ConnectFuture;
 # pub struct ResolveFuture;
 enum State {
     // Currently resolving the host name
@@ -257,7 +257,7 @@ Now, the implementation:
 # #[macro_use]
 # extern crate futures;
 # extern crate tokio;
-# use tokio::net::{ConnectFuture, TcpStream};
+# use tokio::net::tcp::{ConnectFuture, TcpStream};
 # use futures::prelude::*;
 # use std::io;
 # pub struct ResolveFuture;
@@ -326,7 +326,7 @@ probably just use that combinator.
 # #[macro_use]
 # extern crate futures;
 # extern crate tokio;
-# use tokio::net::{ConnectFuture, TcpStream};
+# use tokio::net::tcp::{ConnectFuture, TcpStream};
 # use futures::prelude::*;
 # use std::io;
 # pub struct ResolveFuture;
