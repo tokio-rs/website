@@ -14,7 +14,7 @@ And because Tokio is open source, it is on us (the community) to make this
 happen! 👏
 
 But don't worry, this isn't an aimless request to contribute documentation. It
-does, however, require you to participate. There are ways to get involved at any
+does, however, require participation. There are ways to get involved at any
 level of prior Tokio experience.
 
 ## The Tokio documentation blitz
