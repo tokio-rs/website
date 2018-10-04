@@ -1,6 +1,6 @@
 +++
 date = "2018-10-04"
-title = "Announcing the Tokio Doc Blitz effort (we need you!)"
+title = "Announcing the Tokio Doc Push (we need you!)"
 description = "October 04, 2018"
 menu = "blog"
 weight = 990
@@ -17,17 +17,17 @@ But don't worry, this isn't an aimless request to contribute documentation. It
 does, however, require participation. There are ways to get involved at any
 level of prior Tokio experience.
 
-## The Tokio documentation blitz
+## The Tokio documentation push
 
 Here is the plan. A temporary repository
-[`doc-blitz`](http://github.com/tokio-rs/doc-blitz) has been setup, and that is
+[`doc-push`](http://github.com/tokio-rs/doc-push) has been setup, and that is
 where the documentation effort will be coordinated. The README has steps on how
 to get started. Roughly, the process will be:
 
 1) Read the existing documentation, tracking parts that are confusing or leave
 questions unanswered.
 
-2) Open an issue on the doc-blitz repository to report the confusion.
+2) Open an issue on the doc-push repository to report the confusion.
 
 3) Fix the issue.
 
@@ -37,27 +37,27 @@ Where "fix the issue" is fix an existing guide or write a new guide.
 
 ## Writing new guides
 
-To get the effort of writing new guides bootstrapped, the doc-blitz repository
+To get the effort of writing new guides bootstrapped, the doc-push repository
 has been seeded with an [outline] representing my best guess of how the guides
 should be structured.
 
 Anyone can volunteer to write a page from this outline. Just submit a PR adding
 your Github handle next to the page. For example, if you wanted to volunteer to
 write a guide on timeouts, you would submit a PR updating the
-[section](https://github.com/tokio-rs/doc-blitz/blob/master/outline/tracking-time.md#timeouts),
+[section](https://github.com/tokio-rs/doc-push/blob/master/outline/tracking-time.md#timeouts),
 changing **Status: Unassigned** to **Status: Assigned (@myname)**.
 
 Also, feedback and suggestions on the outline structure is greatly appreciated.
 Please open issues and PRs agains the outline.
 
-There is also a new [Gitter] channel dedicated to the doc blitz effort. If you
-want to get involved, but need some guidance. Join the channel and ping us.
-Perhaps you want to try to write a guide, but don't quite feel up to the task
-yet. Ping us, and we will help you through it.
+There is also a new [Gitter] channel dedicated to the doc push. If you want to
+get involved, but need some guidance. Join the channel and ping us.  Perhaps you
+want to try to write a guide, but don't quite feel up to the task yet. Ping us,
+and we will help you through it.
 
 ## An experiment
 
-The doc blitz effort is an experiment. I don't know how it will go, but I am
+The doc push is an experiment. I don't know how it will go, but I am
 hopeful that it will be successful.
 
 It is also an iterative effort. Once a pass at improving the guides happens, we
@@ -94,7 +94,7 @@ you learn what you need to. In exchange, you will contribute a guide 😊.
 ## tl;dr
 
 This is your opportunity to help make Tokio easier to learn. It won't happen
-without volunteering for the doc blitz. In short:
+without volunteering for the doc push. In short:
 
 1) Join the [Gitter].
 
@@ -104,10 +104,10 @@ without volunteering for the doc blitz. In short:
 
 <div style="text-align:right">&mdash; <a href="https://github.com/carllerche">@carllerche</a></div>
 
-[issues]: https://github.com/tokio-rs/doc-blitz/issues/new
-[cookbook]: https://github.com/tokio-rs/doc-blitz/issues/23
-[gotcha]: https://github.com/tokio-rs/doc-blitz/issues/14
+[issues]: https://github.com/tokio-rs/doc-push/issues/new
+[cookbook]: https://github.com/tokio-rs/doc-push/issues/23
+[gotcha]: https://github.com/tokio-rs/doc-push/issues/14
 [prs]: https://github.com/tokio-rs/website/pulls
-[outline]: https://github.com/tokio-rs/doc-blitz/blob/master/outline/README.md
+[outline]: https://github.com/tokio-rs/doc-push/blob/master/outline/README.md
 [Gitter]: https://gitter.im/tokio-rs/doc-blitz
-[repo]: https://github.com/tokio-rs/doc-blitz
+[repo]: https://github.com/tokio-rs/doc-push
