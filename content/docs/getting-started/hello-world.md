@@ -69,7 +69,7 @@ connections on the bound listener and process each accepted connection.
 # use tokio::net::TcpListener;
 # use tokio::prelude::*;
 # fn main() {
-#     let addr = "127.0.0.1:6142".parse().unwrap();
+#     let addr = "127.0.0.1:0".parse().unwrap();
 #     let listener = TcpListener::bind(&addr).unwrap();
 let server = listener.incoming().for_each(|socket| {
     println!("accepted socket; addr={:?}", socket.peer_addr().unwrap());
@@ -159,7 +159,7 @@ Going back to the `incoming().for_each` block.
 # use tokio::net::TcpListener;
 # use tokio::prelude::*;
 # fn main() {
-#     let addr = "127.0.0.1:6142".parse().unwrap();
+#     let addr = "127.0.0.1:0".parse().unwrap();
 #     let listener = TcpListener::bind(&addr).unwrap();
 let server = listener.incoming().for_each(|socket| {
     println!("accepted socket; addr={:?}", socket.peer_addr().unwrap());
