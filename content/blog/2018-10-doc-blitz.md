@@ -10,7 +10,7 @@ In the past, there has been reoccurring feedback that Tokio is hard to
 understand. I believe a lack of good documentation plays a significant part.
 It's time to fix this problem.
 
-And because Tokio is open source, it is on you (the community) to make this
+And because Tokio is open source, it is on us (the community) to make this
 happen! 👏
 
 But don't worry, this isn't an aimless request to contribute documentation. It
