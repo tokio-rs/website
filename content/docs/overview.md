@@ -82,19 +82,7 @@ such as accessing uninitialized memory and use after free. It does this without
 adding any run-time overhead.
 
 Further, APIs are able to leverage the type system to provide hard to misuse
-APIs. For example, `Mutex` does not require the user to explicitly unlock:
-
-```
-use std::sync::Mutex;
-
-# let foo = "".to_string();
-let data = Mutex::new(foo);
-
-let locked = data.lock().unwrap();
-println!("locked data: {}", &locked[..]);
-
-// The lock is automatically released here when `locked` goes out of scope.
-```
+APIs. For example, `Mutex` does not require the user to explicitly unlock.
 
 ## Backpressure
 
