@@ -126,6 +126,7 @@ Going back to the `File::create().and_then` block:
 # extern crate tokio;
 #
 # use tokio::io;
+# use tokio::prelude::*;
 # use tokio::fs::File;
 # fn main() {
 let hello_world = File::create("hello.txt").and_then(|file| {
@@ -134,7 +135,7 @@ let hello_world = File::create("hello.txt").and_then(|file| {
     io::write_all(file, "hello world\n").then(|result| {
       println!("wrote to file; success={:?}", result.is_ok());
       Ok(())
-    });
+    })
 })
 # ;
 # }
