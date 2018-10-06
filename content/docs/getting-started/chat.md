@@ -1,6 +1,6 @@
 ---
 title: "Example: A Chat Server"
-weight : 1060
+weight : 1030
 menu:
   docs:
     parent: getting_started

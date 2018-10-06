@@ -217,7 +217,7 @@ If everything goes well, you should see `hello world` printed from Netcat.
 # Next steps
 
 We've only dipped our toes into Tokio and its asynchronous model. The next page in
-the guide, will start digging deeper into the Tokio runtime model.
+the guide, will start digging a bit deeper into Futures and the Tokio runtime model.
 
 [`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
 [rt]: {{< api-url "tokio" >}}/runtime/index.html
