@@ -118,7 +118,7 @@ fn main() {
 # Chat State
 
 A chat server requires that messages received from one client are broadcasted to
-all other connected clients. This will be done using [message passing] over
+all other connected clients. This will be done using message passing over
 [mpsc] channels.
 
 Each client socket will be managed by a task. Each task will have an associated
@@ -771,7 +771,6 @@ The full code can be found [here][full-code].
 
 [full-code]: https://github.com/tokio-rs/tokio/blob/master/examples/chat.rs
 [Hello World!]: {{< ref "/docs/getting-started/hello-world.md" >}}
-[message passing]: {{< ref "/docs/getting-started/tasks.md#message-passing" >}}
 [mpsc]: {{< api-url "futures" >}}/sync/mpsc/index.html
 [`BytesMut`]: {{< api-url "bytes" >}}/struct.BytesMut.html
 [`Future`]: {{< api-url "futures" >}}/future/trait.Future.html

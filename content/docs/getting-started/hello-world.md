@@ -50,8 +50,8 @@ with a small difference; all actions are performed asynchronously.
 
 # Creating the stream
 
-The first step is to create the `TcpStream`. We use the `TcpStream` implementation provided
-by Tokio.
+The first step is to create the `TcpStream`. We use the `TcpStream` implementation
+provided by Tokio.
 
 ```rust
 # #![deny(deprecated)]
@@ -67,8 +67,8 @@ fn main() {
 }
 ```
 
-Next, we define the `client` task. This asynchronous task will create the stream
-and then yield the stream once it's been created for additional processing.
+Next, we'll add some to the `client` `TcpStream`. This asynchronous task now creates
+the stream and then yields it once it's been created for additional processing.
 
 ```rust
 # #![deny(deprecated)]

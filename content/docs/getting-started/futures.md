@@ -105,8 +105,8 @@ let response_future = client.get("https://www.example.com");
 Now, the `response_future` isn't the actual response. It is a future that will
 complete once the response is received. However, since the caller has a concrete
 **thing** (the future), they can start to use it. For example, they may chain
-computations to perform once the response is received or they might pass the
-future to a function.
+computations using combinators to perform once the response is received or they
+might pass the future to a function.
 
 ```rust,ignore
 let response_is_ok = response_future
@@ -122,7 +122,12 @@ They cannot because they don't have the actual HTTP response. Instead, they
 define the work to be done when the response future completes.
 
 Both the [`futures`] crate and Tokio come with a collection of combinator
-functions that can be used to work with futures.
+functions that can be used to work with futures. So far we've seen `and_then` which
+chains two [`futures`] together, `then` which allows to chain a future to a previous
+one even if it errored, and `map` which simply maps a future's value from one type
+to another.
+
+We'll be exploring more combinators later in this guide.
 
 # Poll based Futures
 
@@ -152,6 +157,8 @@ trait Future {
     /// computation.
     type Error;
 
+    /// The function that will be repeatedly called to see if the future is
+    /// has completed or not
     fn poll(&mut self) -> Result<Async<Self::Item>, Self::Error>;
 }
 ```
@@ -167,13 +174,13 @@ about `poll` in this section since you don't need to know about `poll` to use Fu
 with combinators. The only thing to be aware for now is that `poll` is
 what the runtime will call in order to see if the `Future` is complete yet or not.
 
-The specific part of the runtime in charge of polling futures is known as the executor.
-Which will constantly poll futures and make sure they eventually return a value.
+The specific part of the runtime in charge of polling futures is known as the executor,
+which will constantly poll futures and make sure they eventually return a value.
 
 # Executors
 
-In order for a `Future` to make progress, something has to call `poll`.
-This is the job of an executor.
+In order for a `Future` to make progress, something has to call `poll`.  This is the
+job of an executor.
 
 Executors are responsible for repeatedly calling `poll` on a `Future` until its value
 is returned. There are many different ways to do this. For example, the
@@ -181,20 +188,18 @@ is returned. There are many different ways to do this. For example, the
 spawned tasks, calling poll on them. [`ThreadPool`] schedules tasks across a thread
 pool. This is also the default executor used by the [runtime][rt].
 
-All tasks **must** be spawned on an executor or no work will be performed.
+It's important to remember that all futures **must** be spawned on an executor or no
+work will be performed.
 
 And now we have a very high level understanding of Tokio and futures. Futures are
 values that represent some value that will be available to us "at some point in the
 future". We can combine futures together using combinators to produce another future
-in order to sequence work that should be done once the value is available. However,
-our future needs something to call `poll` on it in order to drive it to completion.
-This something is known as an executor. If we don't give our future to an executor,
-nothing will happen.
+with the combined work of the futures sequenced together. However, our future needs
+something to call `poll` on it in order to drive it to completion.  This something is
+known as an executor. If we don't give our future to an executor, nothing will happen.
 
-In the next section, we'll take a look at more involved example than our hello-world
+In the next section, we'll take a look at a more involved example than our hello-world
 example.
 
 [`futures`]: {{< api-url "futures" >}}
-[`notify`]: {{< api-url "futures" >}}/executor/trait.Notify.html#tymethod.notify
-[`task::current()`]: {{< api-url "futures" >}}/task/fn.current.html
-[`AndThen`]: {{< api-url "futures" >}}/future/struct.AndThen.html
+[rt]: {{< api-url "tokio" >}}/runtime/index.html
