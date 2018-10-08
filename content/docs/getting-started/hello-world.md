@@ -105,7 +105,7 @@ example of a combinator function that defines how asynchronous work will be proc
 Each combinator function takes ownership of necessary state as well as the
 callback to perform and returns a new `Future` that has the additional "step"
 sequenced. A `Future` is a value representing some computation that will complete at
-some point in the future
+some point in the future.
 
 It's worth reiterating that returned futures are lazy, i.e., no work is performed when
 calling the combinator. Instead, once all the asynchronous steps are sequenced, the
