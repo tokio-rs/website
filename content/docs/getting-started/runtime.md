@@ -54,21 +54,35 @@ trait directly.
 We can spawn tasks using `tokio::spawn`. For example:
 
 ```rust
-# use std::io::prelude::*;
-# let my_future = future::ok(1);
+# extern crate tokio;
+# extern crate futures;
+#
+# use tokio::prelude::*;
+# use futures::stream;
 # fn main() {
+# let my_outer_stream = stream::once(Ok(1));
 // Create some kind of future that we want our runtime to execute
-let task = my_future.and_then(|my_value| {
-  println!("Got a value: {:?}", my_value);
+let program = my_outer_stream.for_each(|my_outer_value| {
+  println!("Got value {:?} from the stream", my_outer_value);
+  # let my_inner_future = future::ok(1);
+
+  let task = my_inner_future.and_then(|my_inner_value| {
+    println!("Got a value {:?} from second future", my_inner_value);
+    Ok(())
+  });
+
+  tokio::spawn(task);
   Ok(())
 });
 
-tokio::spawn(task);
+tokio::run(program);
 # }
 ```
 
 Again spawning tasks can happen within other futures or streams allowing multiple
-things to happen concurrently.
+things to happen concurrently. In the above example we're spawning the inner future
+from within the outer stream. Each time we get a value from the stream we'll simply
+run inner future.
 
 In the next section, we'll take a look at a more involved example than our hello-world
 example that takes everything we've learned so far into account.
