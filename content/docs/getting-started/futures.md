@@ -6,13 +6,18 @@ menu:
     parent: getting_started
 ---
 
-Now we will go over the Tokio runtime model and futures. Tokio is built on top of
-the [`futures`] crate and uses its runtime model. This allows it to interop
-with other libraries also using the [`futures`] crate.
+Let's take a closer look at futures. Tokio is built on top of the [`futures`] crate
+and uses its runtime model. This allows it to interop with other libraries also using
+the [`futures`] crate.
 
 **Note**: This runtime model is very different than async libraries found in
 other languages. While, at a high level, APIs can look similar, the way code
 gets executed differs.
+
+We'll be taking a closer look at the runtime in the next section, but a basic
+understanding of the runtime is necessary to understand futures. To gain this
+understanding, we'll firs tlook at the synchronous model that Rust uses by default
+and see how this differs from Tokio's asynchronous model.
 
 # Synchronous Model
 
@@ -124,8 +129,8 @@ define the work to be done when the response future completes.
 Both the [`futures`] crate and Tokio come with a collection of combinator
 functions that can be used to work with futures. So far we've seen `and_then` which
 chains two [`futures`] together, `then` which allows to chain a future to a previous
-one even if it errored, and `map` which simply maps a future's value from one type
-to another.
+one even if the previous one errored, and `map` which simply maps a future's value
+from one type to another.
 
 We'll be exploring more combinators later in this guide.
 
@@ -133,10 +138,11 @@ We'll be exploring more combinators later in this guide.
 
 As discussed in the previous section, Rust futures are poll based. This means that
 instead of a `Future` being responsible for pushing the data somewhere once it is
-complete, it relies on being asked whether it is complete or not. This is a unique
-aspect of the Rust future library.  Most future libraries for other programming
-languages use a push based model where callbacks are supplied to the future and
-the computation invokes the callback immediately with the computation result.
+complete, it relies on being asked whether it is complete or not.
+
+This is a unique aspect of the Rust future library. Most future libraries for other
+programming languages use a push based model where callbacks are supplied to the
+future and the computation invokes the callback immediately with the computation result.
 
 Using a poll based model offers [many advantages], including being a zero cost
 abstraction, i.e., using Rust futures has no added overhead compared to writing
@@ -146,6 +152,8 @@ We'll take a closer look at this poll based model in the next section.
 
 [many advantages]: https://aturon.github.io/blog/2016/09/07/futures-design/
 
+## The Future trait
+
 The `Future` trait is as follows:
 
 ```rust,ignore
@@ -153,8 +161,7 @@ trait Future {
     /// The type of the value returned when the future completes.
     type Item;
 
-    /// The type representing errors that occurred while processing the
-    /// computation.
+    /// The type representing errors that occurred while processing the computation.
     type Error;
 
     /// The function that will be repeatedly called to see if the future is
@@ -163,43 +170,62 @@ trait Future {
 }
 ```
 
-In a future section, we'll be implementing a `Future` from scratch. For now it's just
-important to know that Futures have two associated types: `Item` and `Error`. `Item` is
-the type of the value that the `Future` will yield when it completes. `Error` is the
-type of Error that the `Future` may yield if there's an error before that causes the
-`Future` from being able to complete.
+For now it's just important to know that futures have two associated types: `Item`
+and `Error`. `Item` is the type of the value that the `Future` will yield when it
+completes. `Error` is the type of Error that the `Future` may yield if there's an
+error before that causes the `Future` from being able to complete.
 
 Finally, `Future`s have one method named `poll`. We won't go into too much detail
-about `poll` in this section since you don't need to know about `poll` to use Futures
+about `poll` in this section since you don't need to know about `poll` to use futures
 with combinators. The only thing to be aware for now is that `poll` is
-what the runtime will call in order to see if the `Future` is complete yet or not.
+what the runtime will call in order to see if the `Future` is complete yet or not. If
+you're curious: `Async` is an enum with values `Ready(Item)` or `NotReady` which
+informs the runtime of if the future is complete or not.
 
-The specific part of the runtime in charge of polling futures is known as the executor,
-which will constantly poll futures and make sure they eventually return a value.
+In a future section, we'll be implementing a `Future` from scratch including writing
+a poll function that properly informs the runtime when the future is complete.
 
-# Executors
+## Streams
 
-In order for a `Future` to make progress, something has to call `poll`.  This is the
-job of an executor.
+Streams are the iterator equivalent of futures. Instead of yielding a value at some
+point in the future, streams yield a collection of values each at some point in the
+future. Just like futures, you can use streams to represent a wide range of things
+as long as those things produce discrete values at different points sometime in the
+future. For instance:
+* **UI Events** caused by the user interacting with a GUI in different ways. When an
+  event happens the stream yields a different message to your app over time.
+* **Push Notifications from a server**. Sometimes a request/response model is not
+  what you need. A client can establish a notification stream with a server to be
+  able to receive messages from the server without specifically being requested.
+* **Incoming socket connections**. As different clients connect to a server, the
+  connections stream will yield socket connections.
 
-Executors are responsible for repeatedly calling `poll` on a `Future` until its value
-is returned. There are many different ways to do this. For example, the
-[`CurrentThread`] executor will block the current thread and loop through all
-spawned tasks, calling poll on them. [`ThreadPool`] schedules tasks across a thread
-pool. This is also the default executor used by the [runtime][rt].
+Unlike futures, streams never yield values when they're complete, but rather
+keep yielding values as they become available.
 
-It's important to remember that all futures **must** be spawned on an executor or no
-work will be performed.
+Streams are very similar to futures in their implementation:
 
-And now we have a very high level understanding of Tokio and futures. Futures are
-values that represent some value that will be available to us "at some point in the
-future". We can combine futures together using combinators to produce another future
-with the combined work of the futures sequenced together. However, our future needs
-something to call `poll` on it in order to drive it to completion.  This something is
-known as an executor. If we don't give our future to an executor, nothing will happen.
+```rust,ignore
+trait Stream {
+    /// The type of the value yielded by the stream.
+    type Item;
 
-In the next section, we'll take a look at a more involved example than our hello-world
-example.
+    /// The type representing errors that occurred while processing the computation.
+    type Error;
+
+    /// The function that will be repeatedly called to see if the stream has
+    /// another value it can yield
+    fn poll(&mut self) -> Poll<Option<Self::Item>, Self::Error>;
+}
+```
+
+Just like with futures, we'll be implementing our own `Stream` later in the guide.
+
+In the next section we'll take a look at the specific part of the runtime in charge
+of polling futures and streams known as the executor.
 
 [`futures`]: {{< api-url "futures" >}}
-[rt]: {{< api-url "tokio" >}}/runtime/index.html
+[standard library]: https://doc.rust-lang.org/std/
+[c10k]: https://en.wikipedia.org/wiki/C10k_problem
+[`TcpStream`]: {{< api-url "tokio" >}}/net/struct.TcpStream.html
+[`ErrorKind::WouldBlock`]: https://doc.rust-lang.org/std/io/enum.ErrorKind.html#variant.WouldBlock
