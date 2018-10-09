@@ -1,6 +1,6 @@
 ---
 title: "Timers"
-weight: 2010
+weight: 7010
 menu:
   docs:
     parent: going_deeper

@@ -10,9 +10,15 @@ menu:
     - identifier: "getting_started"
       name: "Getting started"
       weight: 1000
+    - identifier: "io"
+      name: "I/O with Tokio"
+      weight: 2000
+    - identifier: "futures_streams_sinks"
+      name: "Futures, Streams, and Sinks"
+      weight: 3000
     - identifier: "going_deeper"
       name: "Going deeper"
-      weight: 2000
+      weight: 7000
     - identifier: "internals"
       name: "Tokio internals"
       weight: 8000

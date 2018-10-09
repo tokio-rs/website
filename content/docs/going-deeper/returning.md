@@ -1,6 +1,6 @@
 ---
 title: "Returning futures"
-weight: 2030
+weight: 7030
 menu:
   docs:
     parent: going_deeper
@@ -88,7 +88,7 @@ extension to change return types from `Box` to [`impl Trait`].
 # Named types
 [return-named-types]: #named-types
 
-If you wouldn't like to return a `Box` and want to stick with older versions of 
+If you wouldn't like to return a `Box` and want to stick with older versions of
 Rust, another option is to write the return type directly:
 
 ```rust
