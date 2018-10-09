@@ -43,6 +43,9 @@ Note that providing zero-cost abstractions does not mean that Tokio itself has
 no cost. It means that using Tokio results in an end product with equivalent
 overhead to not using Tokio.
 
+[poll]: {{< ref "/docs/getting-started/runtime-model.md" >}}#polling-model
+[futures]: {{< ref "/docs/getting-started/futures.md" >}}
+
 ## Concurrency
 
 Out of the box, Tokio provides a multi-threaded, [work-stealing], scheduler. So,
@@ -57,7 +60,7 @@ utilize many cores is critical for writing fast applications.
 ## Non-blocking I/O
 
 When hitting the network, Tokio will used the most efficient system available to
-the operating system. On Linux this means [epoll], *bsd platforms provide [kqueue],
+the operating system. On Linux this means [epoll], bsd platforms provide [kqueue],
 and Windows has [I/O completion ports][iocp].
 
 This allows multiplexing many sockets on a single thread and receiving
@@ -133,8 +136,16 @@ While Tokio provides a lot out of the box, it is all organized very modularly.
 Each component lives in a separate library. If needed, applications may opt to
 pick and choose the needed components and avoid pulling in the rest.
 
-[poll]: {{< ref "/docs/getting-started/runtime-model.md" >}}#polling-model
-[futures]: {{< ref "/docs/getting-started/futures.md" >}}
+Tokio leverages [`mio`] for the system event queue and [`futures`] for defining
+tasks.  Tokio implements [async] syntax to improve readability of futures.
+[Many] libraries implement Tokio, including [`hyper`] and [`actix`].
+
+[`mio`]: https://carllerche.github.io/mio/mio/index.html
+[`futures`]: https://docs.rs/futures/*/futures/
+[async]: https://tokio.rs/blog/2018-08-async-await/
+[Many]: https://crates.io/crates/tokio/reverse_dependencies
+[`hyper`]: https://hyper.rs/guides/
+[`actix`]: https://actix.rs/book/actix/
 
 # Example
 
@@ -183,4 +194,4 @@ fn main() {
 }
 ```
 
-More examples can be found [here](examples).
+More examples can be found [here](https://github.com/tokio-rs/tokio/tree/master/examples).
