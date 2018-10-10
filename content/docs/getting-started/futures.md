@@ -7,8 +7,8 @@ menu:
 ---
 
 Let's take a closer look at futures. Tokio is built on top of the [`futures`] crate
-and uses its runtime model. This allows it to interop with other libraries also using
-the [`futures`] crate.
+and uses its runtime model. This allows it to interop with other libraries also
+using the [`futures`] crate.
 
 **Note**: This runtime model is very different than async libraries found in
 other languages. While, at a high level, APIs can look similar, the way code
@@ -16,13 +16,13 @@ gets executed differs.
 
 We'll be taking a closer look at the runtime in the next section, but a basic
 understanding of the runtime is necessary to understand futures. To gain this
-understanding, we'll firs tlook at the synchronous model that Rust uses by default
+understanding, we'll first look at the synchronous model that Rust uses by default
 and see how this differs from Tokio's asynchronous model.
 
 # Synchronous Model
 
-First, let's talk briefly about the synchronous (or blocking) model. This is the
-model that the Rust [standard library] uses.
+First, let's talk briefly about the synchronous (or blocking) model that the
+Rust [standard library] uses.
 
 ```rust
 # use std::io::prelude::*;
@@ -37,10 +37,10 @@ let n = socket.read(&mut buf).unwrap();
 ```
 
 When `socket.read` is called, either the socket has pending data in its receive
-buffer or it does not. If there is pending data, then the call to `read` will
-return immediately and `buf` will be filled with that data. However, if there is
-no pending data, then the `read` function will block the current thread until
-data is received. At which time, `buf` will be filled with this newly received
+buffer or it does not. If there is pending data, the call to `read` will return
+immediately and `buf` will be filled with that data. However, if there is no
+pending data, the `read` function will block the current thread until data is
+received. Once the data is received, `buf` will be filled with this newly received
 data and the `read` function will return.
 
 In order to perform reads on many different sockets concurrently, a thread per
@@ -50,8 +50,9 @@ large numbers of sockets. This is known as the [c10k] problem.
 # Non-blocking sockets
 
 The way to avoid blocking a thread when performing an operation like read is to
-not block the thread! When the socket has no pending data in its receive buffer,
-the `read` function returns immediately, indicating that the socket was "not
+not block the thread! Non-blocking sockets allow performing operations, like read,
+without blocking the thread. When the socket has no pending data in its receive
+buffer, the `read` function returns immediately, indicating that the socket was "not
 ready" to perform the read operation.
 
 When using a Tokio [`TcpStream`], a call to `read` will always immediately return
@@ -109,7 +110,7 @@ let response_future = client.get("https://www.example.com");
 
 Now, the `response_future` isn't the actual response. It is a future that will
 complete once the response is received. However, since the caller has a concrete
-**thing** (the future), they can start to use it. For example, they may chain
+**value** (the future), they can start to use it. For example, they may chain
 computations using combinators to perform once the response is received or they
 might pass the future to a function.
 
@@ -136,13 +137,14 @@ We'll be exploring more combinators later in this guide.
 
 # Poll based Futures
 
-As discussed in the previous section, Rust futures are poll based. This means that
-instead of a `Future` being responsible for pushing the data somewhere once it is
-complete, it relies on being asked whether it is complete or not.
+As hinted at earlier, Rust futures are poll based. This means that instead of a
+`Future` being responsible for pushing the data somewhere once it is complete, it
+relies on being asked whether it is complete or not.
 
 This is a unique aspect of the Rust future library. Most future libraries for other
 programming languages use a push based model where callbacks are supplied to the
-future and the computation invokes the callback immediately with the computation result.
+future and the computation invokes the callback immediately with the computation
+result.
 
 Using a poll based model offers [many advantages], including being a zero cost
 abstraction, i.e., using Rust futures has no added overhead compared to writing
@@ -176,10 +178,10 @@ completes. `Error` is the type of Error that the `Future` may yield if there's a
 error before that causes the `Future` from being able to complete.
 
 Finally, `Future`s have one method named `poll`. We won't go into too much detail
-about `poll` in this section since you don't need to know about `poll` to use futures
-with combinators. The only thing to be aware for now is that `poll` is
-what the runtime will call in order to see if the `Future` is complete yet or not. If
-you're curious: `Async` is an enum with values `Ready(Item)` or `NotReady` which
+about `poll` in this section since you don't need to know about `poll` to use
+futures with combinators. The only thing to be aware for now is that `poll` is
+what the runtime will call in order to see if the `Future` is complete yet or not.
+If you're curious: `Async` is an enum with values `Ready(Item)` or `NotReady` which
 informs the runtime of if the future is complete or not.
 
 In a future section, we'll be implementing a `Future` from scratch including writing
@@ -189,9 +191,12 @@ a poll function that properly informs the runtime when the future is complete.
 
 Streams are the iterator equivalent of futures. Instead of yielding a value at some
 point in the future, streams yield a collection of values each at some point in the
-future. Just like futures, you can use streams to represent a wide range of things
-as long as those things produce discrete values at different points sometime in the
-future. For instance:
+future. In other words, streams don't yield just one value at one point in the
+future like futures do. They rather keep yielding values over time.
+
+Just like futures, you can use streams to represent a wide range of things as long
+as those things produce discrete values at different points sometime in the future.
+For instance:
 * **UI Events** caused by the user interacting with a GUI in different ways. When an
   event happens the stream yields a different message to your app over time.
 * **Push Notifications from a server**. Sometimes a request/response model is not
@@ -199,9 +204,6 @@ future. For instance:
   able to receive messages from the server without specifically being requested.
 * **Incoming socket connections**. As different clients connect to a server, the
   connections stream will yield socket connections.
-
-Unlike futures, streams never yield values when they're complete, but rather
-keep yielding values as they become available.
 
 Streams are very similar to futures in their implementation:
 
@@ -221,8 +223,8 @@ trait Stream {
 
 Just like with futures, we'll be implementing our own `Stream` later in the guide.
 
-In the next section we'll take a look at the specific part of the runtime in charge
-of polling futures and streams known as the executor.
+In the next section we'll take a look at the Tokio runtime which is in charge
+of polling futures and streams to completion.
 
 [`futures`]: {{< api-url "futures" >}}
 [standard library]: https://doc.rust-lang.org/std/
