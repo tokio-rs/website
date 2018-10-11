@@ -35,6 +35,7 @@ params:
   tokioReactorDocsURL: "https://tokio-rs.github.io/tokio/tokio_reactor/"
   tokioTimerDocsURL: "https://docs.rs/tokio-timer/0.2"
   futuresDocsURL: "https://docs.rs/futures/0.1/futures"
+  mioDocsURL: "https://docs.rs/mio/*/mio"
   coreDocsURL: "https://docs.rs/tokio-core/0.1/tokio_core"
   protoDocsURL: "https://tokio-rs.github.io/tokio-proto/tokio_proto"
   serviceDocsURL: "https://tokio-rs.github.io/tokio-service/tokio_service"

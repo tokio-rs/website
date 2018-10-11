@@ -53,13 +53,29 @@ the buffer, and reevaluating `.incoming()`.
 allow an event loop to respond to I/O rather than wait for it.  That event loop
 is [`Tokio::reactor`] which receives events from [`mio`].
 
+[`mio::net`] implements networking primitives that allow polling events.
+[`mio::unix`] implement UNIX inter-process communication channels with polling.
+
+## Included with Tokio
+
+Tokio provides the high level interfaces to asynchronous IO for
+
+  * [`TCP sockets`]
+  * [`UDP sockets`]
+  * [`Unix sockets`]
+
 
 [`AsyncRead`]: {{< api-url "tokio" >}}/io/trait.AsyncRead.html
 [`AsyncWrite`]: {{< api-url "tokio" >}}/io/trait.AsyncWrite.html
 [`futures::Async`]: {{< api-url "futures" >}}/enum.Async.html
-[`mio`]: https://docs.rs/mio/*/mio/
+[`mio`]: {{< api-url "mio" >}}
+[`mio::net`]: {{< api-url "mio" >}}/net/index.html
+[`mio::unix`]: {{< api-url "mio" >}}/unix/index.html
 [`std::fs`]: https://doc.rust-lang.org/std/fs/struct.File.html#implementations
 [`std::io`]: https://doc.rust-lang.org/std/io/#read-and-write
 [`std::net` examples]: https://doc.rust-lang.org/std/net/struct.TcpListener.html#examples
+[`TCP sockets`]: {{< api-url "tokio" >}}/net/tcp/index.html
 [`tokio`]: {{< api-url "tokio" >}}
 [`Tokio::reactor`]: {{< api-url "tokio-reactor" >}}
+[`UDP sockets`]: {{< api-url "tokio" >}}/net/udp/index.html
+[`Unix sockets`]: {{< api-url "tokio" >}}/net/unix/index.html
