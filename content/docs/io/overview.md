@@ -47,12 +47,19 @@ fn main() -> io::Result<()> {
 This single-threaded process will evaluate through calling `.incoming()` on
 the `TcpListener` and will continue to run until receiving a KILL signal from
 the operating system or until enough data is received on the TCP port to flush
-the buffer.
+the buffer, and reevaluating `.incoming()`.
+
+`Tokio` I/O, rather than pausing execution, uses a `Futures` based syntax to
+allow an event loop to respond to I/O rather than wait for it.  That event loop
+is [`Tokio::reactor`] which receives events from [`mio`].
+
 
 [`AsyncRead`]: {{< api-url "tokio" >}}/io/trait.AsyncRead.html
 [`AsyncWrite`]: {{< api-url "tokio" >}}/io/trait.AsyncWrite.html
-[`futures::Async`]: https://docs.rs/futures/0.1.18/futures/enum.Async.html
-[`std::io`]: https://doc.rust-lang.org/std/io/#read-and-write
+[`futures::Async`]: {{< api-url "futures" >}}/enum.Async.html
+[`mio`]: https://docs.rs/mio/*/mio/
 [`std::fs`]: https://doc.rust-lang.org/std/fs/struct.File.html#implementations
+[`std::io`]: https://doc.rust-lang.org/std/io/#read-and-write
 [`std::net` examples]: https://doc.rust-lang.org/std/net/struct.TcpListener.html#examples
 [`tokio`]: {{< api-url "tokio" >}}
+[`Tokio::reactor`]: {{< api-url "tokio-reactor" >}}
