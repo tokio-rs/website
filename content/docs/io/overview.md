@@ -50,15 +50,42 @@ the operating system or until enough data is received on the TCP port to flush
 the buffer, and reevaluating `.incoming()`.
 
 `Tokio` I/O, rather than pausing execution, uses a `Futures` based syntax to
-allow an event loop to respond to I/O rather than wait for it.  That event loop
-is [`Tokio::reactor`] which receives events from [`mio`].
+allow an event loop to respond to I/O rather than wait for it.  For network I/O
+the driver is [`Tokio::reactor`] which receives events from [`mio`].
+
+### Mio
+
+Mio is a [cross platform] implementation of low-level I/O.  Mio's goal is to
+create a unified syntax to operate on a wide range of platforms.  This makes
+Tokio applications portable by default.
+
+#### Evented
+
+Mio includes a trait [`Evented`] which designates a source of `Event`.  The
+implementation of the trait [`register`]s with [`Poll`].  To receive an `Event`,
+the executor will `poll` the registered `Evented` value and forward it to the
+pending future task.
+
+#### Polling
+
+Mio's [`Poll::poll`] call is a synchronous call that blocks execution of the
+thread for a given `Duration`.  This call may generate multiple [`Events`]
+which are processed followed by another call to `Poll::poll`.
+
+#### Primitives
 
 [`mio::net`] implements networking primitives that allow polling events.
 [`mio::unix`] implement UNIX inter-process communication channels with polling.
 
+### Tokio Runtime
+
+`mio` does not provide scheduling.  Tokio shines by using configuration to
+implement a `Runtime Model` that matches the properties of a specific resource.
+
+
 ## Included with Tokio
 
-Tokio provides the high level interfaces to asynchronous IO for
+Tokio provides the high level interfaces to asynchronous I/O for
 
   * [`TCP sockets`]
   * [`UDP sockets`]
@@ -67,10 +94,15 @@ Tokio provides the high level interfaces to asynchronous IO for
 
 [`AsyncRead`]: {{< api-url "tokio" >}}/io/trait.AsyncRead.html
 [`AsyncWrite`]: {{< api-url "tokio" >}}/io/trait.AsyncWrite.html
+[`Evented`]: {{< api-url "mio" >}}/event/trait.Evented.html
+[`Events`]: {{< api-url "mio" >}}/struct.Events.html
 [`futures::Async`]: {{< api-url "futures" >}}/enum.Async.html
 [`mio`]: {{< api-url "mio" >}}
 [`mio::net`]: {{< api-url "mio" >}}/net/index.html
 [`mio::unix`]: {{< api-url "mio" >}}/unix/index.html
+[`Poll`]: {{< api-url "mio" >}}/struct.Poll.html
+[`Poll::poll`]: {{< api-url "mio" >}}/struct.Poll.html#method.poll
+[`register`]: {{< api-url "mio" >}}/struct.Poll.html#method.register
 [`std::fs`]: https://doc.rust-lang.org/std/fs/struct.File.html#implementations
 [`std::io`]: https://doc.rust-lang.org/std/io/#read-and-write
 [`std::net` examples]: https://doc.rust-lang.org/std/net/struct.TcpListener.html#examples
@@ -79,3 +111,4 @@ Tokio provides the high level interfaces to asynchronous IO for
 [`Tokio::reactor`]: {{< api-url "tokio-reactor" >}}
 [`UDP sockets`]: {{< api-url "tokio" >}}/net/udp/index.html
 [`Unix sockets`]: {{< api-url "tokio" >}}/net/unix/index.html
+[cross platform]: {{< api-url "mio" >}}/#platforms
