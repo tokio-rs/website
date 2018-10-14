@@ -44,6 +44,10 @@ use tokio::prelude::*;
 # fn main() {}
 ```
 
+Here we use Tokio's own [`io`] and [`net`] modules. These modules provide the same
+abstractions over networking and I/O-operations as the corresponding modules in `std`
+with a small difference; all actions are performed asynchronously.
+
 # Creating the stream
 
 The first step is to create the `TcpStream`. We use the `TcpStream` implementation provided
@@ -200,5 +204,7 @@ the guide, will start digging deeper into the Tokio runtime model.
 
 [`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
 [rt]: {{< api-url "tokio" >}}/runtime/index.html
+[`io`]: {{< api-url "tokio" >}}/io/index.html
+[`net`]: {{< api-url "tokio" >}}/net/index.html
 [`io::write_all`]: {{< api-url "tokio-io" >}}/io/fn.write_all.html
 [full-code]:https://github.com/tokio-rs/tokio/blob/master/examples/hello_world.rs
