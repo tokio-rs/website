@@ -25,7 +25,7 @@ $ cargo new --bin hello-world
 $ cd hello-world
 ```
 
-Next, add the necessary dependencies:
+Next, add the necessary dependencies in `Cargo.toml`:
 
 ```toml
 [dependencies]
