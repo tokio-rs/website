@@ -197,6 +197,23 @@ that our Future has been run to completion.
 
 You can find the full example [here][full-code].
 
+# Running the code
+
+[Netcat] is a tool for quickly creating TCP sockets from the command line. The following
+command starts a listening TCP socket on the previously specified port.
+
+```bash
+$ nc -l -p 6142
+```
+
+In a different terminal we'll run our project.
+
+```bash
+$ cargo run
+```
+
+If everything goes well, you should see `hello world` printed from Netcat.
+
 # Next steps
 
 We've only dipped our toes into Tokio and its asynchronous model. The next page in
@@ -207,4 +224,5 @@ the guide, will start digging deeper into the Tokio runtime model.
 [`io`]: {{< api-url "tokio" >}}/io/index.html
 [`net`]: {{< api-url "tokio" >}}/net/index.html
 [`io::write_all`]: {{< api-url "tokio-io" >}}/io/fn.write_all.html
-[full-code]:https://github.com/tokio-rs/tokio/blob/master/examples/hello_world.rs
+[full-code]: https://github.com/tokio-rs/tokio/blob/master/examples/hello_world.rs
+[Netcat]: http://netcat.sourceforge.net/
