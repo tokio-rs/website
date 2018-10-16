@@ -6,23 +6,15 @@ menu:
     parent: getting_started
 ---
 
-The [`tokio`] crate comes with TCP and UDP networking types. Unlike the types in
-`std`, Tokio's networking types are based on the poll model and will notify the
-task executors when their readiness states change (data is received and write
-buffers are flushed). In the [`tokio::net`] module you'll find types like
-[`TcpListener`], [`TcpStream`], and [`UdpSocket`].
+The [`tokio`] crate comes with TCP and UDP networking types. Unlike the types in `std`, Tokio's networking types are based on the poll model and will notify the task executors when their readiness states change (data is received and write buffers are flushed). In the [`tokio::net`] module you'll find types like [`TcpListener`], [`TcpStream`], and [`UdpSocket`].
 
-All of these types provide both a future API as well as a poll
-API.
+All of these types provide both a future API as well as a poll API.
 
-The Tokio net types are powered by a [Mio] based reactor that, by default, is
-started up lazily on a background thread. See [reactor] documentation for more
-details.
+The Tokio net types are powered by a [Mio] based reactor that, by default, is started up lazily on a background thread. See [reactor] documentation for more details.
 
 # Using the Future API
 
-We've already seen some of this earlier in the guide with the [`incoming`]
-function as well as the helpers found in [`tokio_io::io`].
+We've already seen some of this earlier in the guide with the [`incoming`] function as well as the helpers found in [`tokio_io::io`].
 
 These helpers include:
 
@@ -32,22 +24,14 @@ These helpers include:
 * [`write_all`]: Write the entire contents of a buffer.
 * [`copy`]: Copy bytes from one I/O handle to another.
 
-A lot of these functions / helpers are generic over the [`AsyncRead`] and
-[`AsyncWrite`] traits. These traits are similar to [`Read`] and [`Write`] from
-`std`, but are only for types that are "future aware", i.e. follow the
-mandated properties:
+A lot of these functions / helpers are generic over the [`AsyncRead`] and [`AsyncWrite`] traits. These traits are similar to [`Read`] and [`Write`] from `std`, but are only for types that are "future aware", i.e. follow the mandated properties:
 
-* Calls to `read` or `write` are **nonblocking**, they never block the calling
-  thread.
-* If a call would otherwise block then the function returns a value indicating so.
-  If this happens then the current future's task is scheduled to receive a
-  notification when the I/O is ready again.
+* Calls to `read` or `write` are **nonblocking**, they never block the calling thread.
+* If a call would otherwise block then the function returns a value indicating so. If this happens then the current future's task is scheduled to receive a notification when the I/O is ready again.
 
-Note that users of [`AsyncRead`] and [`AsyncWrite`] types should use
-[`poll_read`] and [`poll_write`] instead of directly calling [`read`] and [`write`].
+Note that users of [`AsyncRead`] and [`AsyncWrite`] types should use [`poll_read`] and [`poll_write`] instead of directly calling [`read`] and [`write`].
 
-For example, here is how to accept connections, read 5 bytes from them, then
-write the 5 bytes back to the socket:
+For example, here is how to accept connections, read 5 bytes from them, then write the 5 bytes back to the socket:
 
 ```rust
 # #![deny(deprecated)]
@@ -81,12 +65,9 @@ let server = listener.incoming().for_each(|socket| {
 
 # Using the Poll API
 
-The Poll based API is to be used when implementing `Future` by hand and you need
-to return `Async`. This is useful when you need to implement your own
-combinators that handle custom logic.
+The Poll based API is to be used when implementing `Future` by hand and you need to return `Async`. This is useful when you need to implement your own combinators that handle custom logic.
 
-For example, this is how the `read_exact` future could be implemented for a
-`TcpStream`.
+For example, this is how the `read_exact` future could be implemented for a `TcpStream`.
 
 ```rust
 # #![deny(deprecated)]
@@ -152,14 +133,10 @@ impl Future for ReadExact {
 
 # Datagrams
 
-Note that most of this discussion has been around I/O or byte *streams*, which
-UDP importantly is not! To accommodate this, however, the [`UdpSocket`] type
-also provides a number of methods for working with it conveniently:
+Note that most of this discussion has been around I/O or byte *streams*, which UDP importantly is not! To accommodate this, however, the [`UdpSocket`] type also provides a number of methods for working with it conveniently:
 
-* [`send_dgram`] allows you to express sending a datagram as a future, returning
-  an error if the entire datagram couldn't be sent at once.
-* [`recv_dgram`] expresses reading a datagram into a buffer, yielding both the
-  buffer and the address it came from.
+* [`send_dgram`] allows you to express sending a datagram as a future, returning an error if the entire datagram couldn't be sent at once.
+* [`recv_dgram`] expresses reading a datagram into a buffer, yielding both the buffer and the address it came from.
 
 [`tokio`]: {{< api-url "tokio" >}}
 [`tokio::net`]: {{< api-url "tokio" >}}/net/index.html

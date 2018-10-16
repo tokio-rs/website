@@ -6,72 +6,47 @@ menu = "blog"
 weight = 992
 +++
 
-It took a bit longer than I had initially hoped (as it always does), but a new
-Tokio version has been released. This release includes, among other features, a
-new [set of APIs][fs] that allow performing filesystem operations from an
-asynchronous context, concurrency improvements, timer improvements, and more
-(including bug fixes, so be sure to update!).
+It took a bit longer than I had initially hoped (as it always does), but a new Tokio version has been released. This release includes, among other features, a new [set of APIs][fs] that allow performing filesystem operations from an asynchronous context, concurrency improvements, timer improvements, and more (including bug fixes, so be sure to update!).
 
-It has been a little bit since the last post. There haven't been any big
-feature releases, but that doesn't mean that we have been idle. New crates have
-been released with many incremental improvements over the past few months. Many
-of these improvements have been contributed by the community, so I thought a
-little highlight was in order.
+It has been a little bit since the last post. There haven't been any big feature releases, but that doesn't mean that we have been idle. New crates have been released with many incremental improvements over the past few months. Many of these improvements have been contributed by the community, so I thought a little highlight was in order.
 
 ## Filesystem APIs
 
-The initial release of `tokio-fs` was more of a stub than a full implementation.
-It only included basic file system operations.
+The initial release of `tokio-fs` was more of a stub than a full implementation. It only included basic file system operations.
 
-The latest release includes [non-blocking versions][fs] for most file system
-APIs. This amazing work was contributed mostly by [@griff] in an [epic PR][pr]
-and [@lnicola] in a series of smaller PRs, but many others participated to help
-review and improve the crate.
+The latest release includes [non-blocking versions][fs] for most file system APIs. This amazing work was contributed mostly by [@griff] in an [epic PR][pr] and [@lnicola] in a series of smaller PRs, but many others participated to help review and improve the crate.
 
-Thanks goes to: [@dekellum], [@matsadler], [@debris], [@mati865], [@lovebug356],
-[@bryanburgers], [@shepmaster].
+Thanks goes to: [@dekellum], [@matsadler], [@debris], [@mati865], [@lovebug356], [@bryanburgers], [@shepmaster].
 
 [fs]: https://docs.rs/tokio/0.1.8/tokio/fs/index.html
 [pr]: https://github.com/tokio-rs/tokio/pull/494
 
 ## Concurrency improvements
 
-Over the past couple months, [@stjepang] has been chugging along improving the
-concurrency related bits of Tokio. Some highlights:
+Over the past couple months, [@stjepang] has been chugging along improving the concurrency related bits of Tokio. Some highlights:
 
 * [#459] - Fix a race in thread wakeup
 * [#470] - Improve worker spinning
 * [#517] - Improve scalability of a RW Lock used in the reactor.
 * [#534] - Improve the stealing part of the work-stealing runtime.
 
-We also had a good chat while he was in town for Rustconf, and I'm excited for
-his work that is yet to come.
+We also had a good chat while he was in town for Rustconf, and I'm excited for his work that is yet to come.
 
 And of course, thanks for all the [crossbeam] work. Tokio heavily depends on it.
 
 ## `current_thread::Runtime`
 
-The `current_thread::Runtime` has also received a number of incremental
-improvements since it was initially introduced by [@vorner] and [@kpp].
+The `current_thread::Runtime` has also received a number of incremental improvements since it was initially introduced by [@vorner] and [@kpp].
 
-[@sdroege] added a `Handle` that allows spawning tasks onto the runtime from
-other threads ([#340]). This is implemented using a channel to send the task to the
-runtime thread (a similar strategy that `tokio-core` used).
+[@sdroege] added a `Handle` that allows spawning tasks onto the runtime from other threads ([#340]). This is implemented using a channel to send the task to the runtime thread (a similar strategy that `tokio-core` used).
 
-And [@jonhoo] implemented a `block_on_all` function ([#477]) and fixed a bug
-with tracking the number of active futures and coordinating shutdown ([#478])
+And [@jonhoo] implemented a `block_on_all` function ([#477]) and fixed a bug with tracking the number of active futures and coordinating shutdown ([#478])
 
 ## Timer improvements
 
-`tokio::timer` does get a new feature: [`DelayQueue`]. This type allows the user
-to store values that get returned back after some period of time. This is useful
-for supporting more complex time related cases.
+`tokio::timer` does get a new feature: [`DelayQueue`]. This type allows the user to store values that get returned back after some period of time. This is useful for supporting more complex time related cases.
 
-Lets' take a cache as an example. The goal of a cache is to hold values
-associated with a key for a certain amount of time. After the time elapses, the
-value is dropped. It has always been possible to implement this with
-[`tokio::timer::Delay`][Delay], but is a bit challenging. When the cache has many
-entries, all of them must be scanned to check if they need to be dropped.
+Lets' take a cache as an example. The goal of a cache is to hold values associated with a key for a certain amount of time. After the time elapses, the value is dropped. It has always been possible to implement this with [`tokio::timer::Delay`][Delay], but is a bit challenging. When the cache has many entries, all of them must be scanned to check if they need to be dropped.
 
 With [`DelayQueue`], the implementation becomes more efficient:
 
@@ -128,10 +103,7 @@ impl Cache {
 
 ## Many other small improvements
 
-Besides what has been listed above, Tokio has received many small improvements
-and bug fixes across most of the crates. These have been provided by our amazing
-community.  I'm hoping that over time, more and more people will join the effort
-of building Tokio and help it continue to evolve.
+Besides what has been listed above, Tokio has received many small improvements and bug fixes across most of the crates. These have been provided by our amazing community.  I'm hoping that over time, more and more people will join the effort of building Tokio and help it continue to evolve.
 
 So, a big thanks to [all of you have have contributed][contrib] to Tokio to date.
 

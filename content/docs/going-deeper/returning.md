@@ -9,9 +9,7 @@ menu:
 [`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
 [`Iterator`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html
 
-When working with futures, one of the first things you're likely to need to do
-is to return a [`Future`]. As with [`Iterator`]s, however, doing so can be a little tricky.
-There are several options, listed from most to least ergonomic:
+When working with futures, one of the first things you're likely to need to do is to return a [`Future`]. As with [`Iterator`]s, however, doing so can be a little tricky. There are several options, listed from most to least ergonomic:
 
 * [Trait objects][return-trait-objects]
 * [`impl Trait`][return-impl-trait]
@@ -34,30 +32,20 @@ fn foo() -> Box<Future<Item = u32, Error = io::Error>> {
 }
 ```
 
-The upside of this strategy is that it's easy to write down (just a [`Box`]) and
-easy to create. This is also maximally flexible in terms of future changes to
-the method as *any* type of future can be returned as an opaque, boxed `Future`.
+The upside of this strategy is that it's easy to write down (just a [`Box`]) and easy to create. This is also maximally flexible in terms of future changes to the method as *any* type of future can be returned as an opaque, boxed `Future`.
 
 [`Box`]: https://doc.rust-lang.org/std/boxed/struct.Box.html
 
-The downside of this approach is that it requires a runtime allocation when the
-future is constructed, and dynamic dispatch when using that future. The `Box`
-needs to be allocated on the heap and the future itself is then placed
-inside. Note, though that this is the *only* allocation here, otherwise while
-the future is being executed no allocations will be made.
+The downside of this approach is that it requires a runtime allocation when the future is constructed, and dynamic dispatch when using that future. The `Box` needs to be allocated on the heap and the future itself is then placed inside. Note, though that this is the *only* allocation here, otherwise while the future is being executed no allocations will be made.
 
-It's often possible to mitigate that cost by boxing only at the end of a long
-chain of futures you want to return, which entails only a single allocation and
-dynamic dispatch for the entire chain.
+It's often possible to mitigate that cost by boxing only at the end of a long chain of futures you want to return, which entails only a single allocation and dynamic dispatch for the entire chain.
 
 [trait object]: https://doc.rust-lang.org/book/trait-objects.html
 
 # `impl Trait`
 [return-impl-trait]: #impl-trait
 
-If you are using a version of Rust greater than 1.26, then you can use the
-language feature [`impl Trait`]. This language feature will allow, for
-example:
+If you are using a version of Rust greater than 1.26, then you can use the language feature [`impl Trait`]. This language feature will allow, for example:
 
 [`impl Trait`]: https://github.com/rust-lang/rfcs/blob/master/text/1522-conservative-impl-trait.md
 
@@ -69,27 +57,16 @@ fn add_10<F>(f: F) -> impl Future<Item = i32, Error = F::Error>
 }
 ```
 
-Here we're indicating that the return type is "something that implements
-`Future`" with the given associated types. Other than that we just use the
-future combinators as we normally would.
+Here we're indicating that the return type is "something that implements `Future`" with the given associated types. Other than that we just use the future combinators as we normally would.
 
-The upsides to this approach are that it is zero overhead with no `Box`
-necessary, it's maximally flexible to future implementations as the actual
-return type is hidden, and it's ergonomic to write as it's similar to the nice
-`Box` example above.
+The upsides to this approach are that it is zero overhead with no `Box` necessary, it's maximally flexible to future implementations as the actual return type is hidden, and it's ergonomic to write as it's similar to the nice `Box` example above.
 
-The downside to this approach is only that using a `Box` is still more
-flexible -- if you might return two different types of `Future`, then you
-must still return `Box<Future<Item = F::Item, Error = F::Error>` instead of
-`impl Future<Item = F::Item, Error = F::Error>`. The good news however is
-that this case is rare; in general, it should be a backwards-compatible
-extension to change return types from `Box` to [`impl Trait`].
+The downside to this approach is only that using a `Box` is still more flexible -- if you might return two different types of `Future`, then you must still return `Box<Future<Item = F::Item, Error = F::Error>` instead of `impl Future<Item = F::Item, Error = F::Error>`. The good news however is that this case is rare; in general, it should be a backwards-compatible extension to change return types from `Box` to [`impl Trait`].
 
 # Named types
 [return-named-types]: #named-types
 
-If you wouldn't like to return a `Box` and want to stick with older versions of
-Rust, another option is to write the return type directly:
+If you wouldn't like to return a `Box` and want to stick with older versions of Rust, another option is to write the return type directly:
 
 ```rust
 # extern crate futures;
@@ -104,26 +81,18 @@ fn add_10<F>(f: F) -> Map<F, fn(i32) -> i32>
 }
 ```
 
-Here we name the return type exactly as the compiler sees it. The `map`
-function returns the [`Map`] struct which internally contains the future and the
-function to perform the map.
+Here we name the return type exactly as the compiler sees it. The `map` function returns the [`Map`] struct which internally contains the future and the function to perform the map.
 
-The upside to this approach is that it doesn't have the runtime overhead of
-`Box` from before, and works on Rust versions pre-1.26.
+The upside to this approach is that it doesn't have the runtime overhead of `Box` from before, and works on Rust versions pre-1.26.
 
-The downside, however, is that it's often quite difficult to name the type.
-Sometimes the types can get quite large or be unnameable altogether. Here we're
-using a function pointer (`fn(i32) -> i32`), but we would ideally use a closure.
-Unfortunately, the return type cannot name the closure, for now. It also leads to
-very verbose signatures, and leaks implementation details to clients.
+The downside, however, is that it's often quite difficult to name the type. Sometimes the types can get quite large or be unnameable altogether. Here we're using a function pointer (`fn(i32) -> i32`), but we would ideally use a closure. Unfortunately, the return type cannot name the closure, for now. It also leads to very verbose signatures, and leaks implementation details to clients.
 
 [`Map`]: https://docs.rs/futures/0.1/futures/future/struct.Map.html
 
 # Custom types
 [return-custom-types]: #custom-types
 
-Finally, you can wrap the concrete return type in a new type, and implement
-future for it. For example:
+Finally, you can wrap the concrete return type in a new type, and implement future for it. For example:
 
 ```rust,ignore
 struct MyFuture {
@@ -141,14 +110,8 @@ impl Future for MyFuture {
 }
 ```
 
-In this example we're returning a custom type, `MyFuture`, and we implement the
-`Future` trait directly for it. This implementation leverages an underlying
-`Oneshot<i32>`, but any other kind of protocol can also be implemented here as
-well.
+In this example we're returning a custom type, `MyFuture`, and we implement the `Future` trait directly for it. This implementation leverages an underlying `Oneshot<i32>`, but any other kind of protocol can also be implemented here as well.
 
-The upside to this approach is that it won't require a `Box` allocation and it's
-still maximally flexible. The implementation details of `MyFuture` are hidden to
-the outside world so it can change without breaking others.
+The upside to this approach is that it won't require a `Box` allocation and it's still maximally flexible. The implementation details of `MyFuture` are hidden to the outside world so it can change without breaking others.
 
-The downside to this approach, however, is that this is the least ergonomic way
-to return futures.
+The downside to this approach, however, is that this is the least ergonomic way to return futures.

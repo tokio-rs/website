@@ -3,33 +3,25 @@ title = "Third-party crates"
 description = ""
 +++
 
-Currently the [`futures`], [`tokio-core`], [`tokio-service`], and [`tokio-proto`] crates provide
-the foundation for the Tokio ecosystem. There's a growing set of crates outside
-of Tokio itself, however, filling in more functionality!
+Currently the [`futures`], [`tokio-core`], [`tokio-service`], and [`tokio-proto`] crates provide the foundation for the Tokio ecosystem. There's a growing set of crates outside of Tokio itself, however, filling in more functionality!
 
 * [`tokio-curl`] is an HTTP client library backed by the libcurl C library.
-* [`tokio-timer`] is a timer library providing finer-grained control over timers
-  and helpful timeout facilities over the types in [`tokio-core`].
+* [`tokio-timer`] is a timer library providing finer-grained control over timers and helpful timeout facilities over the types in [`tokio-core`].
 * [`tokio-tls`] is a library for TLS streams backed by [`native-tls`].
 * [`tokio-openssl`] is similar to [`tokio-tls`] but hardwired to OpenSSL.
-* [`tokio-uds`] is a Unix library for supporting Unix Domain Sockets in the same
-  way that `tokio_core::net` works with TCP sockets
+* [`tokio-uds`] is a Unix library for supporting Unix Domain Sockets in the same way that `tokio_core::net` works with TCP sockets
 * [`tokio-inotify`] maps inotify file descriptors to a `Stream`.
 * [`tokio-signal`] maps Unix signals to a `Stream`.
 * [`tokio-serial`] is a (Unix-only) serial port I/O library.
-* [`tokio-process`] enables asynchronous process managment, both for child
-  processes exiting as well as I/O pipes to children.
-* [`trust-dns`] is an asynchronous DNS client and server, supporting features
-  like DNSSec as well
-* [`capnproto-rust`] is an implementation of Cap'n Proto for Rust which has the
-  ability to work with futures as well
+* [`tokio-process`] enables asynchronous process managment, both for child processes exiting as well as I/O pipes to children.
+* [`trust-dns`] is an asynchronous DNS client and server, supporting features like DNSSec as well
+* [`capnproto-rust`] is an implementation of Cap'n Proto for Rust which has the ability to work with futures as well
 * [`tk-sendfile`] allows using the `sendfile` syscall with Tokio
 * [`tokio-postgres`] is an asynchronous PostgreSQL driver
 * [`tokio-retry`] provides extensible asynchronous retry behaviours
 * [`couchbase`] is an asynchronous driver for Couchbase, exposing Futures and Streams as first class response types.
 
-If you've got your own crate or know of others that should be present on this
-list, please feel free to send a PR!
+If you've got your own crate or know of others that should be present on this list, please feel free to send a PR!
 
 [`futures`]: https://github.com/alexcrichton/futures-rs
 [`tokio-core`]: https://github.com/tokio-rs/tokio-core
@@ -53,4 +45,3 @@ list, please feel free to send a PR!
 [`thrussh`]: https://crates.io/crates/thrussh
 [`tokio-retry`]: https://github.com/srijs/rust-tokio-retry
 [`couchbase`]: https://crates.io/crates/couchbase
-

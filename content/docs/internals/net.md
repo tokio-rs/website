@@ -6,24 +6,15 @@ menu:
     parent: "internals"
 ---
 
-This section describes the network resources and drivers provided by Tokio. This
-component provides one of Tokio's primary functions: non-blocking, event-driven,
-networking provided by the appropriate operating system primitives (epoll,
-kqueue, IOCP, ...). It is modeled after the resource and driver pattern
-described in the previous section.
+This section describes the network resources and drivers provided by Tokio. This component provides one of Tokio's primary functions: non-blocking, event-driven, networking provided by the appropriate operating system primitives (epoll, kqueue, IOCP, ...). It is modeled after the resource and driver pattern described in the previous section.
 
-The network driver is built using [mio] and network resources are backed by
-types that implement [`Evented`].
+The network driver is built using [mio] and network resources are backed by types that implement [`Evented`].
 
-This guide will be focused on TCP types. The other network resources (UDP, unix
-sockets, pipes, etc) follow the same pattern.
+This guide will be focused on TCP types. The other network resources (UDP, unix sockets, pipes, etc) follow the same pattern.
 
 # The network resource.
 
-Network resources are types, such as [`TcpListener`] and [`TcpStream`], that are
-composed of the network handle and a reference to the [driver] that is powering
-the resource. Initially, when the resource is first created, the driver pointer
-may be `None`:
+Network resources are types, such as [`TcpListener`] and [`TcpStream`], that are composed of the network handle and a reference to the [driver] that is powering the resource. Initially, when the resource is first created, the driver pointer may be `None`:
 
 [driver]: #the-network-driver
 [`Evented`]: https://docs.rs/mio/0.6/mio/event/trait.Evented.html
@@ -37,9 +28,7 @@ let listener = TcpListener::bind(&addr).unwrap();
 # }
 ```
 
-In this case, the reference to the driver is not yet set. However, if a
-constructor that takes a [`Handle`] reference is used, then the driver reference
-will be set to driver represented by the given handle:
+In this case, the reference to the driver is not yet set. However, if a constructor that takes a [`Handle`] reference is used, then the driver reference will be set to driver represented by the given handle:
 
 ```rust
 # extern crate tokio;
@@ -51,21 +40,13 @@ let listener = TcpListener::from_std(std_listener, &my_reactor_handle);
 # }
 ```
 
-Once a driver is associated with a resource, it is set for the lifetime of the
-resource and cannot be changed. The associated driver is responsible for
-receiving operating system events for the network resource and notifying the
-tasks that have expressed interest in the resource.
+Once a driver is associated with a resource, it is set for the lifetime of the resource and cannot be changed. The associated driver is responsible for receiving operating system events for the network resource and notifying the tasks that have expressed interest in the resource.
 
 ## Using the resource
 
-Resource types include non-blocking functions that are prefixed with `poll_` and
-that include `Async` in the return type. These are the functions that are linked
-with the task system and should be used from tasks and are used as part of
-[`Future`] implementations. For example, [`TcpStream`] provides [`poll_read`] and
-[`poll_write`]. [`TcpListener`] provides [`poll_accept`].
+Resource types include non-blocking functions that are prefixed with `poll_` and that include `Async` in the return type. These are the functions that are linked with the task system and should be used from tasks and are used as part of [`Future`] implementations. For example, [`TcpStream`] provides [`poll_read`] and [`poll_write`]. [`TcpListener`] provides [`poll_accept`].
 
-Here is a task that uses [`poll_accept`] to accept inbound sockets from a
-listener and handle them by spawning a new task:
+Here is a task that uses [`poll_accept`] to accept inbound sockets from a listener and handle them by spawning a new task:
 
 ```rust,ignore
 struct Acceptor {
@@ -87,11 +68,7 @@ impl Future for Acceptor {
 }
 ```
 
-Resource types may also include functions that return futures. These are
-helpers that use the `poll_` functions to provide additional functionality. For
-example, [`TcpStream`] provides a [`connect`] function that returns a future.
-This future will complete once the [`TcpStream`] has established a connection
-with a peer (or failed attemepting to do so).
+Resource types may also include functions that return futures. These are helpers that use the `poll_` functions to provide additional functionality. For example, [`TcpStream`] provides a [`connect`] function that returns a future. This future will complete once the [`TcpStream`] has established a connection with a peer (or failed attemepting to do so).
 
 Using combinators to connect a [`TcpStream`]:
 
@@ -136,41 +113,19 @@ impl Future for ConnectAndProcess {
 
 # Registering the resource with the driver
 
-When using [`TcpListener::poll_accept`][poll_accept] (or any `poll_*` function),
-if the resource is ready to return immediately then it will do so. In the case
-of [`poll_accept`][poll_accept], being ready means that there is a socket
-waiting to be accepted in the queue. If the resource is **not** ready, i.e.
-there is no pending socket to accept, then the resource asks the driver to
-notify the current task once it becomes ready.
+When using [`TcpListener::poll_accept`][poll_accept] (or any `poll_*` function), if the resource is ready to return immediately then it will do so. In the case of [`poll_accept`][poll_accept], being ready means that there is a socket waiting to be accepted in the queue. If the resource is **not** ready, i.e. there is no pending socket to accept, then the resource asks the driver to notify the current task once it becomes ready.
 
-The first time `NotReady` is returned by a resource, if the resource was not
-explicity assigned a driver using a [`Handle`] argument, the resource will register
-itself with a driver instance. This is done by looking at the network driver
-associated with the current execution context.
+The first time `NotReady` is returned by a resource, if the resource was not explicity assigned a driver using a [`Handle`] argument, the resource will register itself with a driver instance. This is done by looking at the network driver associated with the current execution context.
 
-The default driver for the execution context is stored using a thread-local, set
-using [`with_default`], and accessed using [`Handle::current`]. It is the
-runtime's responsibility to ensure that the task is polled from within the
-closure passed to [`with_default`]. A call to [`Handle::current`] accesses the
-thread-local set by [`with_default`] in order to return the handle to the
-driver for the current execution context.
+The default driver for the execution context is stored using a thread-local, set using [`with_default`], and accessed using [`Handle::current`]. It is the runtime's responsibility to ensure that the task is polled from within the closure passed to [`with_default`]. A call to [`Handle::current`] accesses the thread-local set by [`with_default`] in order to return the handle to the driver for the current execution context.
 
 ## `Handle::current` vs `Handle::default`
 
-Both `Handle::current` and `Handle::default` return a `Handle` instance.
-They are, however, subtly different. Most often, `Handle::default` is the
-desired behavior.
+Both `Handle::current` and `Handle::default` return a `Handle` instance. They are, however, subtly different. Most often, `Handle::default` is the desired behavior.
 
-`Handle::current` **immediately** reads the thread-local variable storing the
-driver for the current driver. This means that `Handle::current` must be called
-from an execution context that set the default driver. `Handle::current` should
-be used when the handle is going to be sent to a different execution contexts
-and the user wishes that a specific reactor is used (see below for an example).
+`Handle::current` **immediately** reads the thread-local variable storing the driver for the current driver. This means that `Handle::current` must be called from an execution context that set the default driver. `Handle::current` should be used when the handle is going to be sent to a different execution contexts and the user wishes that a specific reactor is used (see below for an example).
 
-On the other hand, [`Handle::default`] lazily reads the thread-local variable.
-This allows getting a `Handle` instance from *outside* of an execution context.
-When the resource is used, the handle will access the thread-local variable as
-described in the previous section.
+On the other hand, [`Handle::default`] lazily reads the thread-local variable. This allows getting a `Handle` instance from *outside* of an execution context. When the resource is used, the handle will access the thread-local variable as described in the previous section.
 
 For example:
 
@@ -198,14 +153,9 @@ fn main() {
 }
 ```
 
-In this example, `incoming()` returns a future that is implemented by calling
-`poll_accept`. The future is spawned onto a runtime, which has a network driver
-configured as part of the execution context. When `poll_accept` is called from
-within the execution context, that is when the thread-local is read and the
-driver is associated with the `TcpListener` instance.
+In this example, `incoming()` returns a future that is implemented by calling `poll_accept`. The future is spawned onto a runtime, which has a network driver configured as part of the execution context. When `poll_accept` is called from within the execution context, that is when the thread-local is read and the driver is associated with the `TcpListener` instance.
 
-However, if `tokio-threadpool` is used directly, then tasks spawned onto the
-threadpool executor will not have access to a reactor:
+However, if `tokio-threadpool` is used directly, then tasks spawned onto the threadpool executor will not have access to a reactor:
 
 ```rust
 # extern crate tokio;
@@ -230,10 +180,7 @@ pool.spawn({
 # }
 ```
 
-In order to make the above example work, a reactor must be set for the
-threadpool's execution context. See [building a runtime][building] for more
-details. Alternatively, a `Handle` obtained with `[Handle::current]` could be
-used:
+In order to make the above example work, a reactor must be set for the threadpool's execution context. See [building a runtime][building] for more details. Alternatively, a `Handle` obtained with `[Handle::current]` could be used:
 
 ```rust
 # extern crate futures;
@@ -283,19 +230,11 @@ tokio::run(future::lazy(move || {
 
 # The network driver
 
-The driver that powers all of Tokio's network types is the [`Reactor`] type in
-the [`tokio-reactor`] crate. It is implemented using [mio]. Calls to
-[`Reactor::turn`] uses [`mio::Poll::poll`] to get operating system events for
-registered network resources. It then notifies the registered tasks for each
-network resource using the [task system]. The tasks then get scheduled to run on
-their associated executors and the task then sees the network resource as ready
-and calls to `poll_*` functions return `Async::Ready`.
+The driver that powers all of Tokio's network types is the [`Reactor`] type in the [`tokio-reactor`] crate. It is implemented using [mio]. Calls to [`Reactor::turn`] uses [`mio::Poll::poll`] to get operating system events for registered network resources. It then notifies the registered tasks for each network resource using the [task system]. The tasks then get scheduled to run on their associated executors and the task then sees the network resource as ready and calls to `poll_*` functions return `Async::Ready`.
 
 ## Linking the driver with resources
 
-The driver must track each resource that is registered with it. While the actual
-implementation is more complex, it can be thought as a shared reference to a
-cell sharing state, similar to:
+The driver must track each resource that is registered with it. While the actual implementation is more complex, it can be thought as a shared reference to a cell sharing state, similar to:
 
 ```rust,ignore
 struct Registration {
@@ -326,10 +265,7 @@ struct Reactor {
 }
 ```
 
-**This is not the real implementation**, but a simplified version to demonstrate
-the behavior. In practice, there is no `Mutex`, cells are not allocated per
-resource instance, and the reactor does not use a `HashMap`. The real
-implementation can be found [here][real-impl]
+**This is not the real implementation**, but a simplified version to demonstrate the behavior. In practice, there is no `Mutex`, cells are not allocated per resource instance, and the reactor does not use a `HashMap`. The real implementation can be found [here][real-impl]
 
 When the resource is first used, it is registered with the driver:
 
@@ -373,21 +309,9 @@ impl TcpListener {
 }
 ```
 
-Note that there is only a single `task` field per resource. The implications are
-that a resource can only be used from a single task at a time. If
-`TcpListener::poll_accept` returns `NotReady`, registering the current task and
-the listener is then sent to a different task which calls `poll_accept` and sees
-`NotReady`, then the second task is the only one that will receive a
-notification once a socket is ready to be accepted. Resources may support
-tracking different tasks for different operations. For example, `TcpStream`
-internally has two task fields: one for notifying on read ready and one for
-notifying on write ready. This allows `TcpStream::poll_read` and
-`TcpStream::poll_write` to be called from different tasks.
+Note that there is only a single `task` field per resource. The implications are that a resource can only be used from a single task at a time. If `TcpListener::poll_accept` returns `NotReady`, registering the current task and the listener is then sent to a different task which calls `poll_accept` and sees `NotReady`, then the second task is the only one that will receive a notification once a socket is ready to be accepted. Resources may support tracking different tasks for different operations. For example, `TcpStream` internally has two task fields: one for notifying on read ready and one for notifying on write ready. This allows `TcpStream::poll_read` and `TcpStream::poll_write` to be called from different tasks.
 
-The evented types are registered with the driver's [`mio::Poll`] instance as
-part of the `register` function used above. Again, this guide uses a
-**simplified** implementation which does not match the actual one in
-`tokio-reactor` but is sufficient for understanding how `tokio-reactor` behaves.
+The evented types are registered with the driver's [`mio::Poll`] instance as part of the `register` function used above. Again, this guide uses a **simplified** implementation which does not match the actual one in `tokio-reactor` but is sufficient for understanding how `tokio-reactor` behaves.
 
 ```rust,ignore
 impl Reactor {
@@ -416,14 +340,9 @@ impl Reactor {
 
 ## Running the driver
 
-The driver needs to run in order for its associated resources to function. If
-the driver does not run, the resources will never become ready. Running the
-driver is handled automatically when using a [`Runtime`], but it is useful to
-understand how it works. If you are interested in the real implementation, the
-[`tokio-reactor`][real-impl] source is the best reference.
+The driver needs to run in order for its associated resources to function. If the driver does not run, the resources will never become ready. Running the driver is handled automatically when using a [`Runtime`], but it is useful to understand how it works. If you are interested in the real implementation, the [`tokio-reactor`][real-impl] source is the best reference.
 
-When resources are registered with the driver, they are also registered with
-Mio. Running the driver performs the following steps in a loop:
+When resources are registered with the driver, they are also registered with Mio. Running the driver performs the following steps in a loop:
 
 1) Call [`Poll::poll`] to get operating system events.
 2) Dispatch all events to the appropriate resources via the registration.
@@ -431,9 +350,7 @@ Mio. Running the driver performs the following steps in a loop:
 [`mio::Poll`]: https://docs.rs/mio/0.6/mio/struct.Poll.html
 [`Poll::poll`]: https://docs.rs/mio/0.6/mio/struct.Poll.html#method.poll
 
-The steps above are done by calling `Reactor::turn`. The looping part is up to
-us. This is typically done in a background thread or embedded in the executor as
-a [`Park`] implementation. See the [runtime guide] for more details.
+The steps above are done by calling `Reactor::turn`. The looping part is up to us. This is typically done in a background thread or embedded in the executor as a [`Park`] implementation. See the [runtime guide] for more details.
 
 ```rust
 # extern crate tokio_reactor;
@@ -469,10 +386,7 @@ fn turn(&mut self) {
 }
 ```
 
-Notifying the task results in the task getting scheduled on its executor. When
-the task runs again, it will call the `poll_accept` function again. This time,
-the `task` slot will be `None`. This means the syscall should be attempted, and
-this time `poll_accept` will return an accepted socket (probably, spurious events are permitted).
+Notifying the task results in the task getting scheduled on its executor. When the task runs again, it will call the `poll_accept` function again. This time, the `task` slot will be `None`. This means the syscall should be attempted, and this time `poll_accept` will return an accepted socket (probably, spurious events are permitted).
 
 [`Runtime`]: https://docs.rs/tokio/0.1/tokio/runtime/struct.Runtime.html
 [`Park`]: https://docs.rs/tokio-executor/0.1/tokio_executor/park/trait.Park.html
