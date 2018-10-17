@@ -6,21 +6,13 @@ menu:
     parent: getting_started
 ---
 
-We're going to use what has been covered so far to build a chat server. This is
-a non-trivial Tokio server application.
+We're going to use what has been covered so far to build a chat server. This is a non-trivial Tokio server application.
 
-The server is going to use a line-based protocol. Lines are terminated by
-`\r\n`. This is compatible with telnet, so we will just use telnet for the
-client. When a client connects, it must identify itself by sending a line
-containing its "nick" (i.e., some name used to identify the client amongst its
-peers).
+The server is going to use a line-based protocol. Lines are terminated by `\r\n`. This is compatible with telnet, so we will just use telnet for the client. When a client connects, it must identify itself by sending a line containing its "nick" (i.e., some name used to identify the client amongst its peers).
 
-Once a client is identified, all sent lines are prefixed with `[nick]: ` and
-broadcasted to all other connected clients.
+Once a client is identified, all sent lines are prefixed with `[nick]: ` and broadcasted to all other connected clients.
 
-The full code can be found [here][full-code]. Note that Tokio provides some additional
-abstractions that have not yet been covered that would enable the chat server to
-be written with less code.
+The full code can be found [here][full-code]. Note that Tokio provides some additional abstractions that have not yet been covered that would enable the chat server to be written with less code.
 
 # Setup
 
@@ -69,16 +61,14 @@ type Rx = mpsc::UnboundedReceiver<Bytes>;
 # fn main() {}
 ```
 
-Now, we setup the necessary structure for a server. These are the same steps
-that were used as part of the [Hello World!] example:
+Now, we setup the necessary structure for a server. These are the same steps that were used as part of the [Hello World!] example:
 
 * Bind a `TcpListener` to a local port.
 * Define a task that accepts inbound connections and processes them.
 * Start the Tokio runtime
 * Spawn the server task.
 
-Again, no work actually happens until the server task is spawned on the
-executor.
+Again, no work actually happens until the server task is spawned on the executor.
 
 ```rust
 # #![deny(deprecated)]
@@ -117,19 +107,11 @@ fn main() {
 
 # Chat State
 
-A chat server requires that messages received from one client are broadcasted to
-all other connected clients. This will be done using [message passing] over
-[mpsc] channels.
+A chat server requires that messages received from one client are broadcasted to all other connected clients. This will be done using [message passing] over [mpsc] channels.
 
-Each client socket will be managed by a task. Each task will have an associated
-[mpsc] channel that is used to receive messages from other clients. The send
-half of all these channels is stored in an `Rc` cell in order to make them
-accessible.
+Each client socket will be managed by a task. Each task will have an associated [mpsc] channel that is used to receive messages from other clients. The send half of all these channels is stored in an `Rc` cell in order to make them accessible.
 
-In this example, we are going to be using **unbounded** channels. Ideally,
-channels should never be unbounded, but handling backpressure in this kind of
-situation is a bit tricky. We will leave bounding the channels to a later
-section dedicated to handling backpressure.
+In this example, we are going to be using **unbounded** channels. Ideally, channels should never be unbounded, but handling backpressure in this kind of situation is a bit tricky. We will leave bounding the channels to a later section dedicated to handling backpressure.
 
 Here is how the shared state is defined (the `Tx` type alias was done above):
 
@@ -143,9 +125,7 @@ struct Shared {
 }
 ```
 
-Then, at the very top of the `main` function, the state instance is created.
-This state instance will be moved into the task that accepts incoming
-connections.
+Then, at the very top of the `main` function, the state instance is created. This state instance will be moved into the task that accepts incoming connections.
 
 ```rust
 # #![deny(deprecated)]
@@ -154,8 +134,7 @@ connections.
 let state = Arc::new(Mutex::new(Shared::new()));
 ```
 
-Now we can handle processing incoming connections. The server task is updated to
-this:
+Now we can handle processing incoming connections. The server task is updated to this:
 
 ```rust
 # #![deny(deprecated)]
@@ -177,9 +156,7 @@ listener.incoming().for_each(move |socket| {
 # fn main() {}
 ```
 
-The server task passes all sockets along with a clone of the server state to a
-`process` function. Let's define that function. It will have a structure like
-this:
+The server task passes all sockets along with a clone of the server state to a `process` function. Let's define that function. It will have a structure like this:
 
 ```rust
 # #![deny(deprecated)]
@@ -201,25 +178,15 @@ fn process(socket: TcpStream, state: Arc<Mutex<Shared>>) {
 # fn main() {}
 ```
 
-The call to `tokio::spawn` will spawn a new task onto the current Tokio runtime.
-All the worker threads keep a reference to the current runtime stored in a
-thread-local variable. Note, attempting to call `tokio::spawn` from outside of
-the Tokio runtime will result in a panic.
+The call to `tokio::spawn` will spawn a new task onto the current Tokio runtime. All the worker threads keep a reference to the current runtime stored in a thread-local variable. Note, attempting to call `tokio::spawn` from outside of the Tokio runtime will result in a panic.
 
-All the connection processing logic has to be able to do is understand the
-protocol. The protocol is line-based, terminated by `\r\n`.  Instead of working
-at the byte stream level, it is much easier to work at the frame level, i.e.
-working with values that represent atomic messages.
+All the connection processing logic has to be able to do is understand the protocol. The protocol is line-based, terminated by `\r\n`.  Instead of working at the byte stream level, it is much easier to work at the frame level, i.e. working with values that represent atomic messages.
 
-We implement a codec that holds the socket and exposes an API that takes and
-consumes lines.
+We implement a codec that holds the socket and exposes an API that takes and consumes lines.
 
 # Line Codec
 
-A codec is a loose term for a type that takes a byte stream type (`AsyncRead +
-AsyncWrite`) and exposes a read and write API at the frame level. The
-[`tokio-io`] crate provides additional helpers for writing codecs, in this
-example, we are going to do it by hand.
+A codec is a loose term for a type that takes a byte stream type (`AsyncRead + AsyncWrite`) and exposes a read and write API at the frame level. The [`tokio-io`] crate provides additional helpers for writing codecs, in this example, we are going to do it by hand.
 
 The `Lines` codec is defined as such:
 
@@ -248,9 +215,7 @@ impl Lines {
 # fn main() {}
 ```
 
-Data read from the socket is buffered into `rd`. When a full line is read, it is
-returned to the caller. Lines submitted by the caller to write to the socket are
-buffered into `wr`, then flushed.
+Data read from the socket is buffered into `rd`. When a full line is read, it is returned to the caller. Lines submitted by the caller to write to the socket are buffered into `wr`, then flushed.
 
 This is how the read half is implemented:
 
@@ -328,16 +293,9 @@ impl Lines {
 # fn main() {}
 ```
 
-The example uses [`BytesMut`] from the [`bytes`] crate. This provides some nice
-utilities for working with byte sequences in a networking context. The
-[`Stream`] implementation yields `BytesMut` values which contain exactly one
-line.
+The example uses [`BytesMut`] from the [`bytes`] crate. This provides some nice utilities for working with byte sequences in a networking context. The [`Stream`] implementation yields `BytesMut` values which contain exactly one line.
 
-As always, the key to implementing a function that returns `Async` is to never
-return `Async::NotReady` unless the function implementation received an
-`Async::NotReady` itself. In this example, `NotReady` is only returned if
-`fill_read_buf` returns `NotReady` and `fill_read_buf` only returns `NotReady`
-if `TcpStream::read_buf` returns `NotReady`.
+As always, the key to implementing a function that returns `Async` is to never return `Async::NotReady` unless the function implementation received an `Async::NotReady` itself. In this example, `NotReady` is only returned if `fill_read_buf` returns `NotReady` and `fill_read_buf` only returns `NotReady` if `TcpStream::read_buf` returns `NotReady`.
 
 Now, for the write half.
 
@@ -384,14 +342,9 @@ impl Lines {
 fn main() {}
 ```
 
-The caller queues up all lines by calling `buffer`. This appends the line to the
-internal `wr` buffer. Then, once all data is queued up, the caller calls
-`poll_flush`, which does the actual writing to the socket. `poll_flush` only
-returns `Ready` once all the queued data has been successfully written to the
-socket.
+The caller queues up all lines by calling `buffer`. This appends the line to the internal `wr` buffer. Then, once all data is queued up, the caller calls `poll_flush`, which does the actual writing to the socket. `poll_flush` only returns `Ready` once all the queued data has been successfully written to the socket.
 
-Similar to the read half, `NotReady` is only returned when the function
-implementation received `NotReady` itself.
+Similar to the read half, `NotReady` is only returned when the function implementation received `NotReady` itself.
 
 And the `Lines` codec is used in the `process` function as such:
 
@@ -450,22 +403,16 @@ fn process(socket: TcpStream, state: Arc<Mutex<Shared>>) {
 
 # Broadcasting Messages
 
-The next step is to implement the connection processing logic that handles the
-actual chat functionality, i.e. broadcasting messages from one client to all the
-others.
+The next step is to implement the connection processing logic that handles the actual chat functionality, i.e. broadcasting messages from one client to all the others.
 
-To implement this, we will explicitly implement a [`Future`] that takes the
-`Lines` codec instance and handles the broadcasting logic. This logic handles:
+To implement this, we will explicitly implement a [`Future`] that takes the `Lines` codec instance and handles the broadcasting logic. This logic handles:
 
 1. Receive messages on its message channel and write them to the socket.
 2. Receive messages from the socket and broadcast them to all peers.
 
-Implementing this logic entirely with combinators is also possible, but requires
-using [`split`], which hasn't been covered yet. Also, this provides an
-opportunity to see how to implement a non-trivial [`Future`] by hand.
+Implementing this logic entirely with combinators is also possible, but requires using [`split`], which hasn't been covered yet. Also, this provides an opportunity to see how to implement a non-trivial [`Future`] by hand.
 
-Here is the definition of the future that processes the broadcast logic for a
-connection:
+Here is the definition of the future that processes the broadcast logic for a connection:
 
 ```rust
 # use std::net::SocketAddr;
@@ -555,10 +502,7 @@ impl Peer {
 # fn main() {}
 ```
 
-A [mpsc] channel is created for other peers to send their messages to this
-newly created peer. After creating the channel, the transmit half is inserted
-into the peers map. This entry is removed in the drop implementation for
-`Peer`.
+A [mpsc] channel is created for other peers to send their messages to this newly created peer. After creating the channel, the transmit half is inserted into the peers map. This entry is removed in the drop implementation for `Peer`.
 
 ```rust
 # use std::net::SocketAddr;
@@ -690,9 +634,7 @@ impl Future for Peer {
 
 # Final Touches
 
-All that remains is wiring up the `Peer` future that was just implemented. To do
-this, the client connection task (defined in the `process` function) is extended
-to use `Peer`.
+All that remains is wiring up the `Peer` future that was just implemented. To do this, the client connection task (defined in the `process` function) is extended to use `Peer`.
 
 ```rust
 # extern crate tokio;
@@ -759,13 +701,9 @@ let connection = lines.into_future()
 # fn main() {}
 ```
 
-Besides just adding `Peer`, `name == None` is also handled. In this case, the
-remote client terminated before identifying itself.
+Besides just adding `Peer`, `name == None` is also handled. In this case, the remote client terminated before identifying itself.
 
-Returning multiple futures (the `name == None` handler and `Peer`) is handled by
-wrapping the returned futures in [`Either`]. [`Either`] is an enum that accepts
-a different future type for each variant. This allows returning multiple future
-types without reaching for trait objects.
+Returning multiple futures (the `name == None` handler and `Peer`) is handled by wrapping the returned futures in [`Either`]. [`Either`] is an enum that accepts a different future type for each variant. This allows returning multiple future types without reaching for trait objects.
 
 The full code can be found [here][full-code].
 
