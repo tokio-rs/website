@@ -61,7 +61,7 @@ by Tokio.
 fn main() {
     // Parse the address of whatever server we're talking to
     let addr = "127.0.0.1:6142".parse().unwrap();
-    let stream = TcpStream::connect(&addr);
+    let client = TcpStream::connect(&addr);
 
     // Following snippets come here...
 }
@@ -78,7 +78,7 @@ and then yield the stream once it's been created for additional processing.
 # use tokio::prelude::*;
 # fn main() {
 # let addr = "127.0.0.1:6142".parse().unwrap();
-let hello_world = TcpStream::connect(&addr).and_then(|stream| {
+let client = TcpStream::connect(&addr).and_then(|stream| {
     println!("created stream");
 
     // Process stream here.
