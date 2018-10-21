@@ -59,7 +59,7 @@ utilize many cores is critical for writing fast applications.
 
 ## Non-blocking I/O
 
-When hitting the network, Tokio will used the most efficient system available to
+When hitting the network, Tokio will use the most efficient system available to
 the operating system. On Linux this means [epoll], bsd platforms provide [kqueue],
 and Windows has [I/O completion ports][iocp].
 
