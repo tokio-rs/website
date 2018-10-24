@@ -1,5 +1,5 @@
 ---
-title: "Futures"
+title: "Futures: In Depth"
 weight : 7010
 menu:
   docs:

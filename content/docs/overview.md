@@ -43,7 +43,7 @@ Note that providing zero-cost abstractions does not mean that Tokio itself has
 no cost. It means that using Tokio results in an end product with equivalent
 overhead to not using Tokio.
 
-[poll]: {{< ref "/docs/getting-started/runtime-model.md" >}}#polling-model
+[poll]: {{< ref "/docs/getting-started/futures.md" >}}#poll-based-futures
 [futures]: {{< ref "/docs/getting-started/futures.md" >}}
 
 ## Concurrency
