@@ -20,8 +20,8 @@ computation. Usually, the future _completes_ due to an event that happens
 elsewhere in the system. While we’ve been looking at things from the perspective
 of basic I/O, you can use a future to represent a wide range of events, e.g.:
 
-* **A database query** that’s executing in a thread pool. When the query
-  finishes, the future is completed, and its value is the result of the query.
+* **A database query**, when the query finishes, the future is completed, and
+  its value is the result of the query.
 
 * **An RPC invocation** to a server. When the server replies, the future is
   completed, and its value is the server’s response.
@@ -69,16 +69,17 @@ let response_is_ok = response_future
 track_response_success(response_is_ok);
 ```
 
-All of those actions taken with the future don't immediately perform any work.
+None of those actions taken with the future perform any immediate work.
 They cannot because they don't have the actual HTTP response. Instead, they
-define the work to be done when the response future completes.
+define the work to be done when the response future completes and the actual
+response is available.
 
 Both the [`futures`] crate and Tokio come with a collection of combinator
 functions that can be used to work with futures.
 
 # Implementing `Future`
 
-Implementing the `Future` is pretty common when using Tokio, so it is important
+Implementing the `Future` trait is pretty common when using Tokio, so it is important
 to be comfortable with it.
 
 As discussed in the previous section, Rust futures are poll based. This is a
@@ -150,9 +151,10 @@ future is ready, then the `Doubler` future doubles the return value and returns
 `Ready`.
 
 Because the matching pattern above is common, the [`futures`] crate provides a
-macro: `try_ready!`. It is similar to `try!` or `?`, but it also returns on
-`NotReady`. The above `poll` function can be rewritten using `try_ready!` as
-follows:
+macro: `try_ready!`. It is similar to `try!` or `?`, but as well as returning on
+an error, it also returns on `Ok(NotReady)`.
+
+The above `poll` function can be rewritten using `try_ready!` as follows:
 
 ```rust
 # #![deny(deprecated)]
@@ -169,10 +171,10 @@ follows:
 #     type Item = usize;
 #     type Error = T::Error;
 #
-fn poll(&mut self) -> Result<Async<usize>, T::Error> {
-    let v = try_ready!(self.inner.poll());
-    Ok(Async::Ready(v * 2))
-}
+    fn poll(&mut self) -> Result<Async<usize>, T::Error> {
+        let v = try_ready!(self.inner.poll());
+        Ok(Async::Ready(v * 2))
+    }
 # }
 # pub fn main() {}
 ```

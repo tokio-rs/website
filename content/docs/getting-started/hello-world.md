@@ -21,7 +21,7 @@ Let's get started.
 First, generate a new crate.
 
 ```bash
-$ cargo new --bin hello-world
+$ cargo new hello-world
 $ cd hello-world
 ```
 
@@ -46,7 +46,7 @@ use tokio::prelude::*;
 
 Here we use Tokio's own [`io`] and [`net`] modules. These modules provide the same
 abstractions over networking and I/O-operations as the corresponding modules in `std`
-with a small difference; all actions are performed asynchronously.
+with a small difference: all actions are performed asynchronously.
 
 # Creating the stream
 
@@ -68,7 +68,7 @@ fn main() {
 ```
 
 Next, we define the `client` task. This asynchronous task will create the stream
-and then yield the stream once it's been created for additional processing.
+and then process the stream.
 
 ```rust
 # #![deny(deprecated)]
@@ -78,20 +78,19 @@ and then yield the stream once it's been created for additional processing.
 # use tokio::prelude::*;
 # fn main() {
 # let addr = "127.0.0.1:6142".parse().unwrap();
-let client = TcpStream::connect(&addr).and_then(|stream| {
-    println!("created stream");
+    let client = TcpStream::connect(&addr).and_then(|stream| {
+        println!("created stream");
 
-    // Process stream here.
-
-    Ok(())
-})
-.map_err(|err| {
-    // All tasks must have an `Error` type of `()`. This forces error
-    // handling and helps avoid silencing failures.
-    //
-    // In our example, we are only going to log the error to STDOUT.
-    println!("connection error = {:?}", err);
-});
+        // Process stream here.
+        Ok(())
+    })
+    .map_err(|err| {
+        // All tasks must have an `Error` type of `()`. This forces error
+        // handling and helps avoid silencing failures.
+        //
+        // In our example, we are only going to log the error to STDOUT.
+        println!("connection error = {:?}", err);
+    });
 # }
 ```
 
@@ -103,18 +102,17 @@ not wait for the stream to be created before it returns. Rather it returns immed
 with a value representing the work of creating a TCP stream. We'll see down below when this work
 _actually_ gets executed.
 
-The `and_then` method yields the stream once it has been created. `and_then` is an
+The `and_then` method receives the stream once it has been created. `and_then` is an
 example of a combinator function that defines how asynchronous work will be processed.
 
 Each combinator function takes ownership of necessary state as well as the
-callback to perform and returns a new `Future` that has the additional "step"
-sequenced. A `Future` is a value representing some computation that will complete at
-some point in the future.
+callback to perform previous steps, and returns a new `Future` that has the additional "step"
+sequenced.
 
 It's worth reiterating that returned futures are lazy, i.e., no work is performed when
 calling the combinator. Instead, once all the asynchronous steps are sequenced, the
-final `Future` (representing the entire task) is "spawned" (i.e., run). This is when
-the work that was previously defined starts getting run. In other words, the code
+final `Future` (representing the entire task) is 'spawned' (i.e., run). This is when
+the previously defined work starts getting run. In other words, the code
 we've written so far does not actually create a TCP stream.
 
 We will be digging more into futures (and the related concepts of streams and sinks)
@@ -140,16 +138,17 @@ Going back to the `TcpStream::connect(addr).and_then` block:
 # use tokio::prelude::*;
 # use tokio::net::TcpStream;
 # fn main() {
-# let addr = "127.0.0.1:6142".parse().unwrap();
-let client = TcpStream::connect(&addr).and_then(|stream| {
-    println!("created stream");
+#   let addr = "127.0.0.1:6142".parse().unwrap();
+    let client = TcpStream::connect(&addr).and_then(|stream| {
+        println!("created stream");
 
-    io::write_all(stream, "hello world\n").then(|result| {
-      println!("wrote to stream; success={:?}", result.is_ok());
-      Ok(())
+        io::write_all(stream, "hello world\n").then(|result| {
+            println!("wrote to stream; success={:?}", result.is_ok());
+            Ok(())
+        })
     })
-})
-# ;
+    // ...
+#   ;
 # }
 ```
 
@@ -159,14 +158,15 @@ stream. `then` is used to sequence a step that gets run once the write has
 completed. In our example, we just write a message to `STDOUT` indicating that
 the write has completed.
 
-Note that `result` is a `Result` that contains the original stream. This allows us
+Note that `result` is a `Result` that contains the original stream (compare to
+`and_then`, which passes the stream without the `Result` wrapper). This allows us
 to sequence additional reads or writes to the same stream. However, we have
 nothing more to do, so we just drop the stream, which automatically closes it.
 
 # Running the client task
 
 So far we have a `Future` representing the work to be done by our program, but we
-have not actually run it. We need a way to "spawn" that work. We need an executor.
+have not actually run it. We need a way to 'spawn' that work. We need an executor.
 
 Executors are responsible for scheduling asynchronous tasks, driving them to
 completion. There are a number of executor implementations to choose from, each have
@@ -181,10 +181,10 @@ different pros and cons. In this example, we will use the default executor of th
 # use tokio::prelude::*;
 # use futures::future;
 # fn main() {
-# let client = future::ok(());
-println!("About to create the stream and write to it...");
-tokio::run(client);
-println!("Stream has been created and written to.");
+#   let client = future::ok(());
+    println!("About to create the stream and write to it...");
+    tokio::run(client);
+    println!("Stream has been created and written to.");
 # }
 ```
 
@@ -203,7 +203,7 @@ You can find the full example [here][full-code].
 command starts a listening TCP socket on the previously specified port.
 
 ```bash
-$ nc -l -p 6142
+$ nc -l 6142
 ```
 
 In a different terminal we'll run our project.
@@ -217,7 +217,7 @@ If everything goes well, you should see `hello world` printed from Netcat.
 # Next steps
 
 We've only dipped our toes into Tokio and its asynchronous model. The next page in
-the guide, will start digging deeper into the Tokio runtime model.
+the guide will start digging deeper into the Tokio runtime model.
 
 [`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
 [rt]: {{< api-url "tokio" >}}/runtime/index.html

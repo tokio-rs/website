@@ -5,8 +5,8 @@ menu: "docs"
 ---
 
 Tokio allows developers to write asynchronous programs in the Rust programming
-language. Instead of synchronously waiting for long-running operations like reading
-a file or waiting for a timer to complete before moving on to the next thing,
+language. Instead of synchronously waiting for long-running operations (like reading
+a file or waiting for a timer to complete) before moving on to the next thing,
 Tokio allows developers to write programs where execution continues while the
 long-running operations are in progress.
 
@@ -138,7 +138,7 @@ pick and choose the needed components and avoid pulling in the rest.
 
 Tokio leverages [`mio`] for the system event queue and [`futures`] for defining
 tasks.  Tokio implements [async] syntax to improve readability of futures.
-[Many] libraries implement Tokio, including [`hyper`] and [`actix`].
+[Many] libraries are implemented using Tokio, including [`hyper`] and [`actix`].
 
 [`mio`]: https://carllerche.github.io/mio/mio/index.html
 [`futures`]: https://docs.rs/futures/*/futures/

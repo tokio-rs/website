@@ -7,7 +7,7 @@ menu:
 ---
 
 Now we will go over the Tokio / futures runtime model. Tokio is built on top of
-the [`futures`] crate and uses its runtime model. This allows it to interop
+the [`futures`] crate and uses its runtime model. This allows Tokio to interop
 with other libraries also using the [`futures`] crate.
 
 **Note**: This runtime model is very different than async libraries found in
@@ -23,11 +23,11 @@ model that the Rust [standard library] uses.
 # use std::io::prelude::*;
 # use std::net::TcpStream;
 # fn dox(mut socket: TcpStream) {
-// let socket = ...;
-let mut buf = [0; 1024];
-let n = socket.read(&mut buf).unwrap();
+    // let socket = ...;
+    let mut buf = [0; 1024];
+    let n = socket.read(&mut buf).unwrap();
 
-// Do something with &buf[..n];
+    // Do something with &buf[..n];
 # }
 ```
 
@@ -54,13 +54,13 @@ a value ([`ErrorKind::WouldBlock`]) even if there is no pending data to read.
 If there is no pending data, the caller is responsible for calling `read` again
 at a later time.  The trick is to know when that "later time" is.
 
-Another way to think about a non-blocking read is as "polling" the socket for
+Another way to think about a non-blocking read is as 'polling' the socket for
 data to read.
 
 # Polling Model
 
 The strategy of polling a socket for data can be generalized to any operation.
-For example, a function to get a "widget" in the polling model would look
+For example, a function to get a `Widget` in the polling model would look
 something like this:
 
 ```rust,ignore
