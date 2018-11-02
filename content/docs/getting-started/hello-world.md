@@ -50,8 +50,8 @@ with a small difference; all actions are performed asynchronously.
 
 # Creating the stream
 
-The first step is to create the `TcpStream`. We use the `TcpStream` implementation provided
-by Tokio.
+The first step is to create the `TcpStream`. We use the `TcpStream` implementation
+provided by Tokio.
 
 ```rust
 # #![deny(deprecated)]
@@ -67,8 +67,8 @@ fn main() {
 }
 ```
 
-Next, we define the `client` task. This asynchronous task will create the stream
-and then yield the stream once it's been created for additional processing.
+Next, we'll add some to the `client` `TcpStream`. This asynchronous task now creates
+the stream and then yields it once it's been created for additional processing.
 
 ```rust
 # #![deny(deprecated)]
@@ -217,7 +217,7 @@ If everything goes well, you should see `hello world` printed from Netcat.
 # Next steps
 
 We've only dipped our toes into Tokio and its asynchronous model. The next page in
-the guide, will start digging deeper into the Tokio runtime model.
+the guide, will start digging a bit deeper into Futures and the Tokio runtime model.
 
 [`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
 [rt]: {{< api-url "tokio" >}}/runtime/index.html

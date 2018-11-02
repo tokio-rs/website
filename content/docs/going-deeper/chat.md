@@ -1,9 +1,9 @@
 ---
 title: "Example: A Chat Server"
-weight : 1060
+weight : 7050
 menu:
   docs:
-    parent: getting_started
+    parent: going_deeper
 ---
 
 We're going to use what has been covered so far to build a chat server. This is
@@ -771,7 +771,7 @@ The full code can be found [here][full-code].
 
 [full-code]: https://github.com/tokio-rs/tokio/blob/master/examples/chat.rs
 [Hello World!]: {{< ref "/docs/getting-started/hello-world.md" >}}
-[message passing]: {{< ref "/docs/getting-started/tasks.md#message-passing" >}}
+[message passing]: {{< ref "/docs/going-deeper/tasks.md#message-passing" >}}
 [mpsc]: {{< api-url "futures" >}}/sync/mpsc/index.html
 [`BytesMut`]: {{< api-url "bytes" >}}/struct.BytesMut.html
 [`Future`]: {{< api-url "futures" >}}/future/trait.Future.html

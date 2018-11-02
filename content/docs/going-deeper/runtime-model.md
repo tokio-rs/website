@@ -1,9 +1,9 @@
 ---
 title: "Runtime Model"
-weight : 1020
+weight : 7030
 menu:
   docs:
-    parent: getting_started
+    parent: going_deeper
 ---
 
 Now we will go over the Tokio / futures runtime model. Tokio is built on top of
@@ -222,7 +222,7 @@ Then, the executor would look something like this:
 ```
 
 Being able to get notified when a task goes from "not ready" to "ready" is the
-core of the [`futures`] task model. We will be digging more into that shortly.
+core of the [`futures`] task model.
 
 [`futures`]: {{< api-url "futures" >}}
 [standard library]: https://doc.rust-lang.org/std/
