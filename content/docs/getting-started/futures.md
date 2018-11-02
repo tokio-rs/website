@@ -14,10 +14,10 @@ using the [`futures`] crate.
 other languages. While, at a high level, APIs can look similar, the way code
 gets executed differs.
 
-We'll be taking a closer look at the runtime in the next section, but a basic
-understanding of the runtime is necessary to understand futures. To gain this
-understanding, we'll first look at the synchronous model that Rust uses by default
-and see how this differs from Tokio's asynchronous model.
+We'll be taking a closer look at the runtime in the upcoming sections, but a
+basic understanding of the runtime is necessary to understand futures. To gain
+this understanding, we'll first look at the synchronous model that Rust uses by
+default and see how this differs from Tokio's asynchronous model.
 
 # Synchronous Model
 
