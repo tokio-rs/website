@@ -1,5 +1,5 @@
 ---
-title: "Future combinators"
+title: "Combinators"
 weight : 2040
 menu:
   docs:
@@ -8,12 +8,15 @@ menu:
 
 Often times, Future implementations follow similar patterns. To help reduce
 boilerplate, the `futures` crate provides a number of utilities, called
-"combinators", that abstract these patterns.
+"combinators", that abstract these patterns. Many of these combinators exist as
+functions on the [`Future`] trait.
+
+# Building blocks
 
 Let's revisit the future implementations from the previous pages and see how
 they can be simplified by using combinators.
 
-# `map`
+## `map`
 
 The [`map`] combinator takes a future and returns a new future that applies a
 function to the value yielded by the first future.
@@ -105,10 +108,16 @@ Comparing `Map` with our `Display` implementation, it is clear how they both are
 very similar. Where `Display` calls `println!`, `Map` passes the value to the
 function.
 
-# `and_then`
+## `and_then`
 
 Now, let's use combinators to rewrite the future that established a TCP stream
-and wrote "hello world" to the peer.
+and wrote "hello world" to the peer using the `and_then` combinator.
+
+The `and_then` combinator allows sequencing two asynchronous operations. Once
+the first operation completes, the value is passed to a function. The function
+uses that value to produce a new future and that future is then executed. The
+difference between `and_then` and `map` is that `and_then`'s function returns a
+future where as `map's function returns a value.
 
 The original implementation is found [here][connect-and-write]. Once updated to
 use combinators, it becomes:
@@ -121,7 +130,6 @@ extern crate futures;
 
 use tokio::io;
 use tokio::net::TcpStream;
-use bytes::Bytes;
 use futures::Future;
 
 fn main() {
@@ -129,14 +137,56 @@ fn main() {
 
     let future = TcpStream::connect(&addr)
         .and_then(|socket| {
-            let data = Bytes::from_static(b"hello world");
-            io::write_all(socket, data)
+            io::write_all(socket, b"hello world")
+        })
+        .map(|_| println!("write complete"))
+        .map_err(|_| println!("failed"));
+
+// # let future = futures::future::ok::<(), ()>(());
+    tokio::run(future);
+}
+```
+
+Further computations may be sequenced by chaining calls to `and_then`. For
+example:
+
+```rust
+# #![deny(deprecated)]
+# extern crate tokio;
+# extern crate bytes;
+# extern crate futures;
+#
+# use tokio::io;
+# use tokio::net::TcpStream;
+# use futures::Future;
+
+fn main() {
+    let addr = "127.0.0.1:1234".parse().unwrap();
+
+    let future = TcpStream::connect(&addr)
+        .and_then(|socket| {
+            io::write_all(socket, b"hello world")
+        })
+        .and_then(|(socket, _)| {
+            // read exactly 11 bytes
+            io::read_exact(socket, vec![0; 11])
+        })
+        .and_then(|(socket, buf)| {
+            println!("got {:?}", buf);
+            Ok(())
         });
 
 # let future = futures::future::ok::<(), ()>(());
     tokio::run(future);
 }
 ```
+
+The future returned by `and_then` executes identically to the future we
+implemented by hand on the previous page.
+
+# Essential combinators
+
+TODO
 
 # When to use combinators
 
@@ -149,3 +199,4 @@ TODO:
 [`map`]: #
 [display-fut]: #
 [connect-and-write]: #
+[`Future`]: #
