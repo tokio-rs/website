@@ -150,24 +150,25 @@ The state is then transitioned to `Connected`.
 
 From the `Connected` state, the future writes data to the socket. This is done
 with the [`write_buf`] function. I/O functions are covered in more detail in the
-[next section][io_section]. Briefly, `write_buf` is a non-blocking function to
+[next section][io_section]. Briefly, [`write_buf`] is a non-blocking function to
 write data to the socket. If the socket is not ready to accept the write,
 `NotReady` is returned. If some data (but not necessarily all) was written,
 `Ready(n)` is returned, where `n` is the number of written bytes. The cursor is
 also advanced.
 
 Once in the `Connected` state, the future must loops as long as there is data
-left to write. Because `write_buf` is wrapped with `try_ready!()`, when
-`write_buf` returns `NotReady`, our `poll` function returns with `NotReady`.
+left to write. Because [`write_buf`] is wrapped with `try_ready!()`, when
+[`write_buf`] returns `NotReady`, our `poll` function returns with `NotReady`.
 
 At some point in the future, our `poll` function is called again. Because it is
 in the `Connected` state, it jumps directly to writing data.
 
 **Note** the loops, they are important. Many future implementations contain
 loops. These loops are necessary because `poll` cannot return until either all
-the data is written to the socket, or an inner future (`ConnectFuture` or
-`write_buf`) returns `NotReady`.
+the data is written to the socket, or an inner future ([`ConnectFuture`] or
+[`write_buf`]) returns `NotReady`.
 
 [`ConnectFuture`]: https://docs.rs/tokio/0.1/tokio/net/tcp/struct.ConnectFuture.html
+[`write_buf`]: https://docs.rs/tokio/0.1/tokio/io/trait.AsyncWrite.html#method.write_buf
 [`TcpStream::connect`]: https://docs.rs/tokio/0.1.12/tokio/net/struct.TcpStream.html#method.connect
 [io_section]: {{< ref "/docs/io/overview.md" >}}
