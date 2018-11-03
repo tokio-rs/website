@@ -84,7 +84,7 @@ returned from `my_resource.poll()` and the task is able to complete.
 
 Cooperative scheduling is used to schedule tasks on executors. A single executor
 is expected to manage many tasks across a small set of threads. There will be
-a far greater number of tasks then threads. There also is no pre-emption. This
+a far greater number of tasks than threads. There also is no pre-emption. This
 means that when a task is scheduled to execute, it blocks the current thread
 until the `poll` function returns.
 
