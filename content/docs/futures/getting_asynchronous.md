@@ -168,6 +168,6 @@ loops. These loops are necessary because `poll` cannot return until either all
 the data is written to the socket, or an inner future (`ConnectFuture` or
 `write_buf`) returns `NotReady`.
 
-[`ConnectFuture`]: #
-[`TcpStream::connect`]: #.
-[io_section]: #
+[`ConnectFuture`]: https://docs.rs/tokio/0.1/tokio/net/tcp/struct.ConnectFuture.html
+[`TcpStream::connect`]: https://docs.rs/tokio/0.1.12/tokio/net/struct.TcpStream.html#method.connect
+[io_section]: {{< ref "/docs/io/overview.md" >}}
