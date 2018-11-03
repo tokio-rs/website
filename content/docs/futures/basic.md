@@ -34,7 +34,7 @@ Let's implement it for our "hello world" future:
 extern crate futures;
 
 // `Poll` is a type alias for `Result<Async<T>, E>`
-use futures::{Futures, Async, Poll};
+use futures::{Future, Async, Poll};
 
 struct HelloWorld;
 
@@ -75,6 +75,11 @@ In our case, let's print the future to STDOUT. We will do that by implementing a
 `Display` future.
 
 ```rust
+extern crate futures;
+
+use futures::{Future, Async, Poll};
+use std::fmt;
+
 struct Display<T>(T);
 
 impl<T> Future for Display<T>
@@ -114,6 +119,18 @@ When `HelloWorld` is combined with `Display`, both the `Item` and `Error` types
 are `()` and the future can be executed by Tokio:
 
 ```rust
+extern crate tokio;
+# extern crate futures;
+# struct HelloWorld;
+# struct Display<T>(T);
+# impl<T> futures::Future for Display<T> {
+#     type Item = ();
+#     type Error = ();
+#     fn poll(&mut self) -> futures::Poll<(), ()> {
+#         Ok(().into())
+#     }
+# }
+
 let future = Display(HelloWorld);
 tokio::run(future);
 ```
@@ -127,6 +144,12 @@ helper macro: `try_ready!`. The poll function can be rewritten using the macro
 as such:
 
 ```rust
+#[macro_use]
+extern crate futures;
+
+use futures::{Future, Async, Poll};
+use std::fmt;
+
 struct Display<T>(T);
 
 impl<T> Future for Display<T>
@@ -143,4 +166,6 @@ where
         Ok(Async::Ready(()))
     }
 }
+
+# fn main() {}
 ```
