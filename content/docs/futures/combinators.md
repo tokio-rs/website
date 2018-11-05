@@ -190,6 +190,92 @@ TODO
 
 # When to use combinators
 
+Using combinators can reduce a lot of boilerplate, but they are not always a
+good fit. Due to limitations, implementing `Future` manually is going to be common.
+
+## Functional style
+
+Closures passed to combinators must be `'static`. This means it is not possible
+to pass references into the closure. Ownership of all state must be moved into
+the closure. The reason for this is that lifetimes are based on the stack. With
+asynchronous code, the ability to rely on the stack is lost.
+
+Because of this, code written using combinators end up being very functional in
+style. Let's compare Future combinators with synchronous `Result` combinators.
+
+```rust
+use std::io;
+
+# struct Data;
+
+fn get_data() -> Result<Data, io::Error> {
+#     unimplemented!();
+    // ...
+}
+
+fn get_ok_data() -> Result<Vec<Data>, io::Error> {
+    let mut dst = vec![];
+
+    for _ in 0..10 {
+        get_data().and_then(|data| {
+            dst.push(data);
+            Ok(())
+        });
+    }
+
+    Ok(dst)
+}
+```
+
+This works because the closure passed to `and_then` is able to obtain a mutable
+borrow to `dst`. The Rust compiler is able to guarantee that `dst` will outlive
+the closure.
+
+However, when using futures, it is no longer possible to borrow `dst`. Instead,
+`dst` must be passed around. Something like:
+
+```rust
+extern crate futures;
+
+use futures::{stream, Future, Stream};
+use std::io;
+
+# struct Data;
+
+fn get_data() -> impl Future<Item = Data, Error = io::Error> {
+# futures::future::ok(Data)
+    // ...
+}
+
+fn get_ok_data() -> impl Future<Item = Vec<Data>, Error = io::Error> {
+    let mut dst = vec![];
+
+    // Start with an unbounded stream that uses unit values.
+    stream::repeat(())
+        // Only take 10. This is how the for loop is simulated using a functional
+        // style.
+        .take(10)
+        // The `fold` combinator is used here because, in order to be
+        // functional, the state must be moved into the combinator. In this
+        // case, the state is the `dst` vector.
+        .fold(dst, move |mut dst, _| {
+            // Once again, the `dst` vector must be moved into the nested
+            // closure.
+            get_data().and_then(move |item| {
+                dst.push(item);
+
+                // The state must be included as part of the return value, so
+                // `dst` is returned.
+                Ok(dst)
+            })
+        })
+}
+# fn main() {}
+```
+
+## Returning combinator futures
+
+
 TODO:
 
 * Cannot be named (in some cases).
