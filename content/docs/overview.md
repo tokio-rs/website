@@ -180,7 +180,7 @@ fn main() {
 
             // ... after which we'll print what happened.
             let handle_conn = bytes_copied.map(|amt| {
-                println!("wrote {:?} bytes", amt)
+                println!("wrote {:} bytes", amt.0)
             }).map_err(|err| {
                 eprintln!("IO error {:?}", err)
             });
