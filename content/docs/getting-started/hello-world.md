@@ -203,7 +203,7 @@ You can find the full example [here][full-code].
 command starts a listening TCP socket on the previously specified port.
 
 ```bash
-$ nc -l -p 6142
+$ nc -l 6142
 ```
 
 In a different terminal we'll run our project.
