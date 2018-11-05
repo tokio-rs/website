@@ -197,6 +197,7 @@ future like futures do. They rather keep yielding values over time.
 Just like futures, you can use streams to represent a wide range of things as long
 as those things produce discrete values at different points sometime in the future.
 For instance:
+
 * **UI Events** caused by the user interacting with a GUI in different ways. When an
   event happens the stream yields a different message to your app over time.
 * **Push Notifications from a server**. Sometimes a request/response model is not
