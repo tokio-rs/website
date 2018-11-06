@@ -61,6 +61,8 @@ transient and the caller may try calling `poll` again in the future and values
 may be produced again. If the error is fatal, then the next call to `poll`
 should return `Ok(Async::Ready(None))`.
 
+# Fibonacci
+
 The following example shows how to implement the fibonacci sequence as a stream.
 
 ```rust
@@ -171,6 +173,8 @@ let display = Display10::new(fib);
 tokio::run(display);
 ```
 
+## Getting asynchronous
+
 So far, the fibonacci stream is synchronous. Lets make it asynchronous by
 waiting a second between values. To do this,
 [`tokio::timer::Interval`][interval] is used. `Interval` is, itself, a stream
@@ -256,4 +260,57 @@ let display = Display10::new(fib);
 tokio::run(display);
 ```
 
+# Combinators
+
+Just like futures, streams come with a number of combinators for reducing
+boilerplate. Many of these combinators exist as functions on the
+[`Stream`][trait-dox] trait.
+
+Updating fibonacci stream can be rewritten using the [`unfold`] function:
+
+```rust
+extern crate futures;
+
+use futures::{stream, Stream};
+
+fn fibonacci() -> impl Stream<Item = u64, Error = ()> {
+    stream::unfold((1, 1), |(curr, next)| {
+        let new_next = curr + next;
+
+        Some(Ok((curr, (next, new_next))))
+    })
+}
+```
+
+Just like with futures, using stream combinators requires a functional style of
+programming. Also, `impl Stream` is used to return the stream from the function.
+The [returning futures] strategies apply equality to returning streams.
+
+`Display10` is reimplemented using [`take`] and [`for_each`]:
+
+```rust
+extern crate tokio;
+extern crate futures;
+
+use futures::Stream;
+# use futures::stream;
+# fn fibonacci() -> impl Stream<Item = u64, Error = ()> {
+# stream::once(Ok(1))
+# }
+
+tokio::run(
+    fibonacci().take(10)
+        .for_each(|num| {
+            println!("{}", num);
+            Ok(())
+        })
+);
+```
+
 [interval]: https://docs.rs/tokio/0.1/tokio/timer/struct.Interval.html
+[trait-dox]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html
+[mod-dox]: https://docs.rs/futures/0.1/futures/stream/index.html
+[`unfold`]: https://docs.rs/futures/0.1/futures/stream/fn.unfold.html
+[`take`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.take
+[`for_each`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.for_each
+[returning futures]: {{< ref "/docs/futures/combinators.md#returning-futures" >}}#
