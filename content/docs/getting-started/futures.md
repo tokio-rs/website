@@ -221,13 +221,12 @@ trait Stream {
 }
 ```
 
-Just like with futures, we'll be implementing our own `Stream` later in the guide.
-
-In the next section we'll take a look at the Tokio runtime which is in charge
-of polling futures and streams to completion.
+Streams come with their own set of combinators and will be covered in more depth
+in the [working with futures][working-with-streams] section.
 
 [`futures`]: {{< api-url "futures" >}}
 [standard library]: https://doc.rust-lang.org/std/
 [c10k]: https://en.wikipedia.org/wiki/C10k_problem
 [`TcpStream`]: {{< api-url "tokio" >}}/net/struct.TcpStream.html
 [`ErrorKind::WouldBlock`]: https://doc.rust-lang.org/std/io/enum.ErrorKind.html#variant.WouldBlock
+[working-with-streams]: {{< ref "/docs/futures/streams.md" >}}
