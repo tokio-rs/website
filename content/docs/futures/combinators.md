@@ -445,6 +445,8 @@ if some_condition {
 }
 ```
 
+#### Returning from multiple branches
+
 This results in `rustc` outputting a compilation error of `error[E0308]: if and
 else have incompatible types`. Functions returning `impl Future` must still have
 a single return type. The `impl Future` syntax just means that the return type
@@ -504,6 +506,37 @@ In order to return early when an error has been encountered, an `Either` variant
 must be used to contain the error future.
 
 [`Either`]: https://docs.rs/futures/0.1.25/futures/future/enum.Either.html
+
+#### Associated types
+
+Traits with functions that return futures must include an associated type for
+that future. For example, consider a simplified version of the Tower [`Service`]
+trait:
+
+```rust,ignore
+pub trait Service {
+    /// Requests handled by the service.
+    type Request;
+
+    /// Responses given by the service.
+    type Response;
+
+    /// Errors produced by the service.
+    type Error;
+
+    /// The future response value.
+    type Future: Future<Item = Self::Response, Error = Self::Error>;
+
+    fn call(&mut self, req: Self::Request) -> Self::Future;
+}
+```
+
+In order to implement this trait, the future returned by `call` must be
+nameable and set to the `Future` associated type. In this case, `impl Future`
+does not work and the future must either be boxed as a [trait
+object](#trait-objects) or a custom future must be defined.
+
+[`Service`]: https://docs.rs/tower-service/0.1/tower_service/trait.Service.html
 
 ### Trait objects
 
@@ -568,20 +601,31 @@ implementing `Future` by hand. Doing so provides full control, but comes at a
 cost of additional boilerplate given that no combinator functions can be used
 with this approach.
 
-## When to avoid combinators
+## When to use combinators
 
-TODO: What is a good rule of thumb.
+Combinators are powerful ways to reduce boilerplate in your Tokio based
+application, but as discussed in this section, they are not a silver bullet. It
+is common to implement custom futures as well as custom combinators. This raises
+the question of when combinators should be used versus implementing `Future` by
+hand.
 
-* State is not complex
-* No concurrent operations on shared state.
+As per the discussion above, if the future type must be nameable and a `Box` is
+not acceptable overhead, then combinators may not be used. Besides this, it
+depends on the complexity of the state that must be passed around between
+combinators.
 
-# Conclusion
+Scenarios when the state must be accessed concurrently from multiple combinators
+may be a good case for implementing a `Future` by hand.
 
-Combinators are a powerful way to reduce boilerplate in your Tokio based
-application, but they are not a silver bullet. It will be common to implement
-your own futures as well as your own custom combinators.
 
-[`map`]: #
-[display-fut]: #
-[connect-and-write]: #
-[`Future`]: #
+TODO: This section needs to be expanded with examples. If you have ideas to
+improve this section, visit the [doc-push] repo and open an issue with your
+thoughts.
+
+This page has not been worked on yet. If you'd like to contribute visit the [doc-push]
+repo.
+
+[doc-push]: https://github.com/tokio-rs/doc-push
+[`map`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.map
+[display-fut]: {{< ref "/docs/futures/basic.md" >}}#cleaning-things-up
+[connect-and-write]: {{< ref "/docs/futures/getting_asynchronous.md" >}}#chaining-computations
