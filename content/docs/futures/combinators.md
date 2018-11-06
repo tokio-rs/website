@@ -9,7 +9,7 @@ menu:
 Often times, Future implementations follow similar patterns. To help reduce
 boilerplate, the `futures` crate provides a number of utilities, called
 "combinators", that abstract these patterns. Many of these combinators exist as
-functions on the [`Future`] trait.
+functions on the [`Future`][trait-dox] trait.
 
 # Building blocks
 
