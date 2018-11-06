@@ -273,6 +273,43 @@ fn get_ok_data() -> impl Future<Item = Vec<Data>, Error = io::Error> {
 # fn main() {}
 ```
 
+Another strategy, which tends to work best with immutable data, is to store the
+data in an `Arc` and clone handles into the closures. One case in which this
+works well is sharing configuration values in multiple closures. For example:
+
+```rust
+extern crate futures;
+
+use futures::{future, Future};
+use std::io;
+use std::sync::Arc;
+
+fn get_motd() -> impl Future<Item = String, Error = io::Error> {
+    // ....
+# futures::future::ok("".to_string())
+}
+
+fn print_multi() -> impl Future<Item = (), Error = io::Error> {
+    let name = Arc::new("carl".to_string());
+
+    let futures: Vec<_> = (0..1).map(|_| {
+        // Clone the `name` handle, this allows multiple concurrent futures
+        // to access the name to print.
+        let name = name.clone();
+
+        get_motd()
+            .and_then(move |motd| {
+                println!("Hello {}, {}", name, motd);
+                Ok(())
+            })
+    })
+    .collect();
+
+    future::join_all(futures)
+        .map(|_| ())
+}
+```
+
 ## Returning combinator futures
 
 
