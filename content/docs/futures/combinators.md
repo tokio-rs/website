@@ -186,7 +186,72 @@ implemented by hand on the previous page.
 
 # Essential combinators
 
-TODO
+It is worth spending some time with the [`Future` trait][trait-dox] and
+[module][mod-dox] documentation to gain familiarity with the full set of
+available combinators. This guide will provide a very quick overview.
+
+[trait-dox]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
+[mod-dox]: https://docs.rs/futures/0.1/futures/future/index.html
+
+## Concrete futures
+
+Any value can be turned into an immediately complete future. There are a few
+functions in the `future` module for creating such a future:
+
+- [`ok`], which is analogous to `Result::Ok`: it treats the value you give it as
+  an immediately successful future.
+- [`err`], which is analogous to `Result::Err`: it treats the value you give it
+  as an immediately failed future.
+- [`result`], which lifts a result to an immediately-complete future.
+
+[`ok`]: https://docs.rs/futures/0.1/futures/future/fn.ok.html
+[`err`]: https://docs.rs/futures/0.1/futures/future/fn.err.html
+[`result`]: https://docs.rs/futures/0.1/futures/future/fn.result.html
+
+In addition, there is also a function, [`lazy`], which allows constructing a
+future given a *closure*. The closure is not immediately invoked, instead it is
+invoked the first time the future is polled.
+
+[`lazy`]: https://docs.rs/futures/0.1/futures/future/fn.lazy.html
+
+## IntoFuture
+
+A crucial API to know about is the [`IntoFuture`] trait, which is a trait for
+values that can be converted into futures. Most APIs that you think of as taking
+futures actually work with this trait instead. The key reason: the trait is
+implemented for `Result`, allowing you to return `Result` values in many places
+that futures are expected.
+
+Most combinator closures that return a future actually return an instance of
+[`IntoFuture`].
+
+[`IntoFuture`]: https://docs.rs/futures/0.1/futures/future/trait.IntoFuture.html
+
+## Adapters
+
+Like [`Iterator`], the `Future` trait comes equipped with a broad range of
+"adapter" methods. These methods all consume the future and return a new,
+wrapped, future. Using these adapter combinators, it is possible to:
+
+* Change the type of a future ([`map`], [`map_err`])
+* Run another future after one has completed ([`then`], [`and_then`],
+  [`or_else`])
+* Figure out which of two futures resolves first ([`select`])
+* Wait for two futures to both complete ([`join`])
+* Convert to a trait object ([`Box::new`])
+* Convert unwinding into errors ([`catch_unwind`])
+
+[`Iterator`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html
+[`Box`]: https://doc.rust-lang.org/std/boxed/struct.Box.html
+[`Box::new`]: https://doc.rust-lang.org/std/boxed/struct.Box.html#method.new
+[`map`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.map
+[`map_err`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.map_err
+[`then`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.then
+[`and_then`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.and_then
+[`or_else`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.or_else
+[`select`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.select
+[`join`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.join
+[`catch_unwind`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.catch_unwind
 
 # When to use combinators
 
@@ -310,14 +375,211 @@ fn print_multi() -> impl Future<Item = (), Error = io::Error> {
 }
 ```
 
-## Returning combinator futures
+## Returning futures
 
+Because combinators often use closures as part of their type signature, it is
+not possible to name the future type. This, in turn, means that the future type
+cannot be used as part of a function's signature. When passing a future as a
+function argument, generics can be used in almost all cases. For example:
 
-TODO:
+```rust
+extern crate futures;
 
-* Cannot be named (in some cases).
-* Cannot borrow.
-* Full functional.
+use futures::Future;
+
+fn get_motd() -> impl Future<Item = String> {
+    // ...
+# futures::future::ok::<_, ()>("".to_string())
+}
+
+fn with_future<T: Future<Item = String>>(f: T) {
+    // ...
+# drop(f);
+}
+
+let my_future = get_motd().map(|motd| {
+    format!("MOTD = {}", motd)
+});
+
+with_future(my_future);
+```
+
+However, for returning futures, it isn't as simple. There are a few options with
+pros and cons:
+
+* [Use `impl Future`](#use-impl-future)
+* [Trait objects](#trait-objects)
+* [Implement `Future` by hand](#implement-future-by-hand)
+
+### Use `impl Future`
+
+As of Rust version **1.26**, the language feature [`impl Trait`] can be used for
+returning combinator futures. This allows writing the following:
+
+[`impl Trait`]: https://github.com/rust-lang/rfcs/blob/master/text/1522-conservative-impl-trait.md
+
+```rust
+# extern crate futures;
+# use futures::Future;
+fn add_10<F>(f: F) -> impl Future<Item = i32, Error = F::Error>
+    where F: Future<Item = i32>,
+{
+    f.map(|i| i + 10)
+}
+```
+
+The `add_10` function has a return type that is "something that implements
+`Future`" with the specified associated types. This allows returning a future
+without explicitly naming the future type.
+
+The pros to this approach are that it is zero overhead and covers a wide variety
+of cases. However, there is a problem when returning futures from different
+code branches. For example:
+
+```rust,ignore
+if some_condition {
+    return get_motd()
+        .map(|motd| format!("MOTD = {}", motd));
+} else {
+    return futures::ok("My MOTD".to_string());
+}
+```
+
+This results in `rustc` outputting a compilation error of `error[E0308]: if and
+else have incompatible types`. Functions returning `impl Future` must still have
+a single return type. The `impl Future` syntax just means that the return type
+does not have to be named. However, each combinator type has a **different**
+type, so the types being returned in each conditional branch are different.
+
+Given the above scenario, there are two options. The first is to change the
+function to return a [trait object](#trait-objects). The second is to use the
+[`Either`] type:
+
+```rust
+# extern crate futures;
+# use futures::Future;
+# use futures::future::{self, Either};
+# fn get_motd() -> impl Future<Item = String> {
+# future::ok::<_, ()>("".to_string())
+# }
+# fn my_op() -> impl Future<Item = String> {
+# let some_condition = true;
+if some_condition {
+    return Either::A(get_motd()
+        .map(|motd| format!("MOTD = {}", motd)));
+} else {
+    return Either::B(
+        future::ok("My MOTD".to_string()));
+}
+# }
+# fn main() {}
+```
+
+This ensures that the function has a single return type: `Either`.
+
+In situations where there are more than two branches, `Either` enums must be
+nested (`Either<Either<A, B>, C>`) or a custom, multi variant, enum is defined.
+
+This scenario comes up often when trying to conditional return errors.
+Consider:
+
+```rust
+# extern crate futures;
+# use futures::{future::{self, Either}, Future};
+# fn is_valid(_: &str) -> bool { true }
+# fn get_motd() -> impl Future<Item = String, Error = &'static str> { future::ok("".to_string()) }
+fn my_operation(arg: String) -> impl Future<Item = String> {
+    if is_valid(&arg) {
+        return Either::A(get_motd().map(|motd| {
+            format!("MOTD = {}", motd)
+        }));
+    }
+
+    Either::B(future::err("something went wrong"))
+}
+# fn main() {}
+```
+
+In order to return early when an error has been encountered, an `Either` variant
+must be used to contain the error future.
+
+[`Either`]: https://docs.rs/futures/0.1.25/futures/future/enum.Either.html
+
+### Trait objects
+
+Another strategy is to return a boxed future as a [trait object]:
+
+```rust
+# extern crate futures;
+# use std::io;
+# use futures::Future;
+# fn main() {}
+fn foo() -> Box<Future<Item = u32, Error = io::Error>> {
+    // ...
+# loop {}
+}
+```
+
+The pro of this strategy is that it is easy to write `Box`. It also is able to
+handle the "branching" described above with arbitrary number of branches:
+
+```rust
+# extern crate futures;
+# use futures::{future::{self, Either}, Future};
+# fn is_valid(_: &str) -> bool { true }
+# fn get_motd() -> impl Future<Item = String, Error = &'static str> { future::ok("".to_string()) }
+fn my_operation(arg: String) -> Box<Future<Item = String, Error = &'static str>> {
+    if is_valid(&arg) {
+        if arg == "foo" {
+            return Box::new(get_motd().map(|motd| {
+                format!("FOO = {}", motd)
+            }));
+        } else {
+            return Box::new(get_motd().map(|motd| {
+                format!("MOTD = {}", motd)
+            }));
+        }
+    }
+
+    Box::new(future::err("something went wrong"))
+}
+# fn main() {}
+```
+
+The cons are that the boxing approach requires more overhead given that an
+allocation is required to store the future value. Another con is, by default,
+`Box<Future<...>>` is **not** `Send` and cannot be sent across threads **even if
+the future contained in the box is `Send`**.
+
+To make a boxed future `Send`, it must be annotated as such:
+
+```rust,ignore
+fn my_operation() -> Box<Future<Item = String, Error = &'static str> + Send> {
+    // ...
+}
+```
+
+[trait object]: https://doc.rust-lang.org/book/trait-objects.html
+
+### Implement `Future` by hand
+
+Finally, when the above strategies fail, it is always possible to fall back on
+implementing `Future` by hand. Doing so provides full control, but comes at a
+cost of additional boilerplate given that no combinator functions can be used
+with this approach.
+
+## When to avoid combinators
+
+TODO: What is a good rule of thumb.
+
+* State is not complex
+* No concurrent operations on shared state.
+
+# Conclusion
+
+Combinators are a powerful way to reduce boilerplate in your Tokio based
+application, but they are not a silver bullet. It will be common to implement
+your own futures as well as your own custom combinators.
 
 [`map`]: #
 [display-fut]: #
