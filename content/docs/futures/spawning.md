@@ -43,6 +43,11 @@ The `tokio::run` function will block until the the future passed to `run`
 teriminates as well as **all other spawned tasks**. In this case, `tokio::run`
 blocks until all four tasks output to STDOUT and terminate.
 
+The [`lazy`] function runs the closure the first time the future is polled. It
+is used here to ensure that `tokio::spawn` is called from a task. Without
+[`lazy`], `tokio::spawn` would be called from outside the context of a task,
+which results in an error.
+
 # Communicating with tasks
 
 Just as with Go and Erlang, tasks can communicate using message passing. In
@@ -112,16 +117,50 @@ tokio::run(lazy(|| {
 These two message passing primitives will also be used in the examples below to
 coordinate and communicate between tasks.
 
-# When to use tasks
+# Multi threaded
 
-TODO: Intro:
+While it is possible to introduce concurrency with futures without spawning
+tasks, this concurrency will be limited to running on a single thread. Spawning
+tasks allows the Tokio runtime to schedule these tasks on multiple threads.
+
+The [multi-threaded Tokio runtime][rt] manages multiple OS threads internally.
+It multiplexes many tasks across a few physical threads. When a Tokio
+application spawns its tasks, these tasks are submitted to the runtime and the
+runtime handles scheduling.
+
+[rt]: https://docs.rs/tokio/0.1/tokio/runtime/index.html
+
+# When to spawn tasks
+
+As all things software related, the answer is that it depends. Generally, the
+answer is spawn a new task whenever you can. The more available tasks, the
+greater the ability to run the tasks in parallel. However, keep in mind that if
+multiple tasks do require communication, this will involve channel overhead.
+
+The following examples will help illustrate cases for spawning new tasks.
 
 ## Processing inbound sockets
 
+Spawn a task per socket.
+
 ## Background processing
+
+Example: send messages to a background task to do metrics rollups and publish on an
+interval.
 
 ## Coordinating access to a resource
 
+Example: Read / write from a socket. Send pings, return pong RTT.
+
+# When not to spawn tasks
+
+If the amount of coordination via message passing and synchronization primitives
+outweighs the parallism benefits from spawning tasks, then maintaining a single
+task is preferred.
+
+For example, it is generally better to maintain reading from and writing to a
+single TCP socket on a single task instead of splitting up reading and writing
+between two tasks.
 
 [Go's goroutine]: https://www.golang-book.com/books/intro/10
 [Erlang's process]: http://erlang.org/doc/reference_manual/processes.html
@@ -129,4 +168,4 @@ TODO: Intro:
 [`sync`]: {{< api-url "futures" >}}/sync/index.html
 [`oneshot`]: {{< api-url "futures" >}}/sync/oneshot/index.html
 [`mpsc`]: {{< api-url "futures" >}}/sync/mpsc/index.html
-
+[`lazy`]: https://docs.rs/futures/0.1/futures/future/fn.lazy.html
