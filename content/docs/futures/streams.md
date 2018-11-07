@@ -307,6 +307,59 @@ tokio::run(
 );
 ```
 
+The [`take`] combinator limits the fibonacci stream to 10 values. The [`for_each`]
+combinator asynchronously iterates the stream values. [`for_each`] consumes the
+stream and returns a future that completes once the closure was called once for
+each stream value. It is the asynchronous equivalent to a rust `for` loop.
+
+# Essential combinators
+
+It is worth spending some time with the [`Stream` trait][trait-dox] and
+[module][mod-dox] documentation to gain some familiarity with the full set of
+available combinators. This guide will provide a very quick overview.
+
+## Concrete streams
+
+The [`stream` module][mod-dox] contains functions for converting values and
+iterators into streams.
+
+- [`once`] converts the provided value into an immediately ready stream that
+  yields a single item: the provided value.
+- [`iter_ok`] and [`iter_result`] both take [`IntoIterator`] values and converts
+  them to an immediately ready stream that yields the iterator values.
+- [`empty`] returns a stream that immediately yields `None`.
+
+For example:
+
+```rust
+extern crate tokio;
+extern crate futures;
+
+use futures::{stream, Stream};
+
+let values = vec!["one", "two", "three"];
+
+tokio::run(
+    stream::iter_ok(values).for_each(|value| {
+        println!("{}", value);
+        Ok(())
+    })
+)
+```
+
+## Adapters
+
+Like [`Iterator`], the `Stream` trait includes a broad range of "adapter"
+methods. These methods all consume the stream, returning a new stream providing
+the requested behavior. Using these adapter combinators, it is possible to:
+
+* Change the type of a stream ([`map`], [`map_err`], [`and_then`]).
+* Handle stream errors ([`or_else`]).
+* Filter stream values ([`take`], [`take_while`], [`skip`], [`skip_while`],
+  [`filter`], [`filter_map`]).
+* Asynchronously iterate the values ([`for_each`], [`fold`]).
+* Combine multiple streams together ([`zip`], [`chain`], [`select`]).
+
 [interval]: https://docs.rs/tokio/0.1/tokio/timer/struct.Interval.html
 [trait-dox]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html
 [mod-dox]: https://docs.rs/futures/0.1/futures/stream/index.html
@@ -314,3 +367,24 @@ tokio::run(
 [`take`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.take
 [`for_each`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.for_each
 [returning futures]: {{< ref "/docs/futures/combinators.md#returning-futures" >}}#
+[`once`]: https://docs.rs/futures/0.1/futures/stream/fn.once.html
+[`iter_ok`]: https://docs.rs/futures/0.1/futures/stream/fn.iter_ok.html
+[`iter_result`]: https://docs.rs/futures/0.1/futures/stream/fn.iter_result.html
+[`empty`]: https://docs.rs/futures/0.1/futures/stream/fn.empty.html
+[`IntoIterator`]: https://doc.rust-lang.org/std/iter/trait.IntoIterator.html
+[`Iterator`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html
+[`map`]: #
+[`map_err`]: #
+[`and_then`]: #
+[`or_else`]: #
+[`filter`]: #
+[`filter_map`]: #
+[`for_each`]: #
+[`fold`]: #
+[`take`]: #
+[`take_while`]: #
+[`skip`]: #
+[`skip_while`]: #
+[`zip`]: #
+[`chain`]: #
+[`select`]: #

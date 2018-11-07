@@ -198,11 +198,12 @@ available combinators. This guide will provide a very quick overview.
 Any value can be turned into an immediately complete future. There are a few
 functions in the `future` module for creating such a future:
 
-- [`ok`], which is analogous to `Result::Ok`: it treats the value you give it as
-  an immediately successful future.
-- [`err`], which is analogous to `Result::Err`: it treats the value you give it
-  as an immediately failed future.
-- [`result`], which lifts a result to an immediately-complete future.
+- [`ok`], analogous to `Result::Ok`, converts the provided value into a
+  immediately ready future that yields back the value.
+- [`err`], analogous to `Result::Err`, converts the provided error into an
+  immediately ready future that fails with the error.  as an immediately failed
+  future.
+- [`result`] lifts a result to an immediately complete future.
 
 [`ok`]: https://docs.rs/futures/0.1/futures/future/fn.ok.html
 [`err`]: https://docs.rs/futures/0.1/futures/future/fn.err.html
@@ -229,9 +230,9 @@ Most combinator closures that return a future actually return an instance of
 
 ## Adapters
 
-Like [`Iterator`], the `Future` trait comes equipped with a broad range of
-"adapter" methods. These methods all consume the future and return a new,
-wrapped, future. Using these adapter combinators, it is possible to:
+Like [`Iterator`], the `Future` trait includes a broad range of "adapter"
+methods. These methods all consume the future, returning a new future providing
+the requested behavior. Using these adapter combinators, it is possible to:
 
 * Change the type of a future ([`map`], [`map_err`])
 * Run another future after one has completed ([`then`], [`and_then`],
