@@ -213,6 +213,11 @@ use futures::future::lazy;
 use futures::sync::mpsc;
 use std::time::Duration;
 
+// Defines the background task. The `rx` argument is the channel receive
+// handle. The task will pull `usize` values (which represent number of
+// bytes read by a socket) off the channel and sum it internally. Every
+// 30 seconds, the current sum is written to STDOUT and the sum is reset
+// to zero.
 fn bg_task(rx: mpsc::Receiver<usize>)
 -> impl Future<Item = (), Error = ()>
 {
@@ -226,6 +231,7 @@ fn bg_task(rx: mpsc::Receiver<usize>)
         Done,
     }
 
+    // Interval at which the current sum is written to STDOUT.
     let tick_dur = Duration::from_secs(30);
 
     let interval = Interval::new_interval(tick_dur)
