@@ -314,7 +314,108 @@ tokio::run(lazy(|| {
 
 ## Coordinating access to a resource
 
-Example: Read / write from a socket. Send pings, return pong RTT.
+When working with futures, the preferred strategy for coordinating
+access to a shared resource (socket, data, etc...) is by using message
+passing. To do this, a dedicated task is spawned to manage the resource
+and other tasks interact with the resource by sending messages.
+
+This pattern is very similar to to the previous example, but this time
+the tasks want to receive a message back once the operation is complete.
+To implement this, both `mpsc` and `oneshot` channels are used.
+
+The example coordinates access to a [transport] over a ping / pong
+protocol. Pings are sent into the transport and pongs are received.
+Primary tasks send a message to the coordinator task to initiate a ping,
+the coordinator task will respond to the ping request with the [round
+trip time][rtt]. The message sent to the coordinator task over the
+`mpsc` contains a `oneshot::Sender` allowing the coordinator task to
+respond.
+
+```rust
+extern crate tokio;
+extern crate futures;
+
+use tokio::io;
+use futures::{future, Future, Stream, Sink};
+use futures::future::lazy;
+use futures::sync::{mpsc, oneshot};
+use std::time::{Duration, Instant};
+
+type Message = oneshot::Sender<Duration>;
+
+struct Transport;
+
+impl Transport {
+    fn send_ping(&self) {
+        // ...
+    }
+
+    fn recv_pong(&self) -> impl Future<Item = (), Error = io::Error> {
+#         future::ok(())
+        // ...
+    }
+}
+
+fn coordinator_task(rx: mpsc::Receiver<Message>)
+-> impl Future<Item = (), Error = ()>
+{
+    let transport = Transport;
+
+    rx.for_each(move |pong_tx| {
+        let start = Instant::now();
+
+        transport.send_ping();
+
+        transport.recv_pong()
+            .map_err(|_| ())
+            .and_then(move |_| {
+                let rtt = start.elapsed();
+                pong_tx.send(rtt).unwrap();
+                Ok(())
+            })
+    })
+}
+
+/// Request an rtt.
+fn rtt(tx: mpsc::Sender<Message>)
+-> impl Future<Item = (Duration, mpsc::Sender<Message>), Error = ()>
+{
+    let (resp_tx, resp_rx) = oneshot::channel();
+
+    tx.send(resp_tx)
+        .map_err(|_| ())
+        .and_then(|tx| {
+            resp_rx.map(|dur| (dur, tx))
+                .map_err(|_| ())
+        })
+}
+
+# if false {
+// Start the application
+tokio::run(lazy(|| {
+    // Create the channel that is used to communicate with the
+    // background task.
+    let (tx, rx) = mpsc::channel(1_024);
+
+    // Spawn the background task:
+    tokio::spawn(coordinator_task(rx));
+
+    // Spawn a few tasks that use the coordinator to requst RTTs.
+    for _ in 0..4 {
+        let tx = tx.clone();
+
+        tokio::spawn(lazy(|| {
+            rtt(tx).and_then(|(dur, _)| {
+                println!("duration = {:?}", dur);
+                Ok(())
+            })
+        }));
+    }
+
+    Ok(())
+}));
+# }
+```
 
 # When not to spawn tasks
 
@@ -333,3 +434,5 @@ between two tasks.
 [`oneshot`]: {{< api-url "futures" >}}/sync/oneshot/index.html
 [`mpsc`]: {{< api-url "futures" >}}/sync/mpsc/index.html
 [`lazy`]: https://docs.rs/futures/0.1/futures/future/fn.lazy.html
+[transport]: {{< ref "docs/going-deeper/frames.md" >}}
+[rtt]: https://en.wikipedia.org/wiki/Round-trip_delay_time
