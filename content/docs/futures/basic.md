@@ -60,6 +60,13 @@ complete, it returns `Async::Ready(value)`. If the future is unable to complete
 due to being blocked on an internal resource (such as a TCP socket), it returns
 `Async::NotReady`.
 
+When a future's `poll` function is called, the implementation will
+**synchronously** do as much work as possible until it is logically
+blocked on some asynchronous event that has not occured yet. The future
+implementation then saves its state internally so that the next time
+`poll` is called (after an external event is receied), it resumes
+processing from the point it left off. Work is not repeated.
+
 The hello world future requires no asynchronous processing and is immediately
 ready, so it returns `Ok(Async::Ready(value))`.
 

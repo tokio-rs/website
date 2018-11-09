@@ -139,6 +139,10 @@ fn main() {
 }
 ```
 
+It is very common to implement futures as an `enum` of the possible
+states. This allows the future implementation to track its state
+internally by transitioning between the enum's variants.
+
 This future is represented as an enumeration of states:
 
 1. Connecting
