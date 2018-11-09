@@ -319,9 +319,9 @@ access to a shared resource (socket, data, etc...) is by using message
 passing. To do this, a dedicated task is spawned to manage the resource
 and other tasks interact with the resource by sending messages.
 
-This pattern is very similar to to the previous example, but this time
-the tasks want to receive a message back once the operation is complete.
-To implement this, both `mpsc` and `oneshot` channels are used.
+This pattern is very similar to the previous example, but this time the
+tasks want to receive a message back once the operation is complete. To
+implement this, both `mpsc` and `oneshot` channels are used.
 
 The example coordinates access to a [transport] over a ping / pong
 protocol. Pings are sent into the transport and pongs are received.
