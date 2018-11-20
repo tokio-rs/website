@@ -548,7 +548,7 @@ Another strategy is to return a boxed future as a [trait object]:
 # use std::io;
 # use futures::Future;
 # fn main() {}
-fn foo() -> Box<Future<Item = u32, Error = io::Error>> {
+fn foo() -> Box<Future<Item = u32, Error = io::Error> + Send> {
     // ...
 # loop {}
 }
@@ -562,7 +562,7 @@ handle the "branching" described above with arbitrary number of branches:
 # use futures::{future::{self, Either}, Future};
 # fn is_valid(_: &str) -> bool { true }
 # fn get_motd() -> impl Future<Item = String, Error = &'static str> { future::ok("".to_string()) }
-fn my_operation(arg: String) -> Box<Future<Item = String, Error = &'static str>> {
+fn my_operation(arg: String) -> Box<Future<Item = String, Error = &'static str> + Send> {
     if is_valid(&arg) {
         if arg == "foo" {
             return Box::new(get_motd().map(|motd| {
@@ -580,10 +580,16 @@ fn my_operation(arg: String) -> Box<Future<Item = String, Error = &'static str>>
 # fn main() {}
 ```
 
-The cons are that the boxing approach requires more overhead given that an
-allocation is required to store the future value. Another con is, by default,
-`Box<Future<...>>` is **not** `Send` and cannot be sent across threads **even if
-the future contained in the box is `Send`**.
+The downside is that the boxing approach requires more overhead. An allocation
+is required to store the returned future value. In addition, whenever the future
+is used Rust needs to dynamically unbox it via a runtime lookup (vtable).
+This can make boxed futures slightly slower in practice, though the difference
+is often not noticeable.
+
+There is one caveat that can trip up authors trying to use a `Box<Future<...>>`,
+particularly with `tokio::run`. By default, `Box<Future<...>>` is **not** `Send`
+and cannot be sent across threads, **even if the future contained in the box is
+`Send`**.
 
 To make a boxed future `Send`, it must be annotated as such:
 

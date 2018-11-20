@@ -77,7 +77,7 @@ use tokio::prelude::*;
 use std::time::{Duration, Instant};
 
 fn read_four_bytes(socket: TcpStream)
-    -> Box<Future<Item = (TcpStream, Vec<u8>), Error = ()>>
+    -> Box<Future<Item = (TcpStream, Vec<u8>), Error = ()> + Send>
 {
     let buf = vec![0; 4];
     let fut = io::read_exact(socket, buf)
