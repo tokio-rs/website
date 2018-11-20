@@ -10,12 +10,12 @@ Tokio based applications are organized in terms of Tasks. A task is a small unit
 of logic that executes independently from other tasks. It is similar to [Go's
 goroutine] and [Erlang's process], but asynchronous. In other words, tasks are
 asynchronous green threads. Tasks are spawned for similar reasons that threads
-are spawned in syhnchronous code, but spawning a task with Tokio is extremely
+are spawned in synchronous code, but spawning a task with Tokio is extremely
 lightweight.
 
 Previous examples defined a future and passed that future to `tokio::run`. This
 resulted in a task being spawned onto Tokio's runtime to execute the provided
-future. Additional tasks may be spanwed by calling `tokio::spawn`, but only from
+future. Additional tasks may be spawned by calling `tokio::spawn`, but only from
 code that is already running on a Tokio task. One way to think about it is the
 future passed to `tokio::run` is the "main function".
 
