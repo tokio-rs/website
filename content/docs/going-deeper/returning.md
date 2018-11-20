@@ -28,7 +28,7 @@ First, you always have the option of returning a boxed [trait object]:
 # use std::io;
 # use futures::Future;
 # fn main() {}
-fn foo() -> Box<Future<Item = u32, Error = io::Error>> {
+fn foo() -> Box<Future<Item = u32, Error = io::Error> + Send> {
     // ...
 # loop {}
 }
@@ -49,6 +49,11 @@ the future is being executed no allocations will be made.
 It's often possible to mitigate that cost by boxing only at the end of a long
 chain of futures you want to return, which entails only a single allocation and
 dynamic dispatch for the entire chain.
+
+Astute readers may notice the explicit `Send` trait notation within the `Box`
+definition. The notation is added because `Future` is not explicitly `Send` by
+default; this causes problems later when trying to pass this future or one of its
+derivatives into `tokio::run`.
 
 [trait object]: https://doc.rust-lang.org/book/trait-objects.html
 
@@ -76,14 +81,18 @@ future combinators as we normally would.
 The upsides to this approach are that it is zero overhead with no `Box`
 necessary, it's maximally flexible to future implementations as the actual
 return type is hidden, and it's ergonomic to write as it's similar to the nice
-`Box` example above.
+`Box` example above. (You can even remove `Send`, because the compiler has
+enough information to determine at compile time that `Future` is `Send`!)
 
 The downside to this approach is only that using a `Box` is still more
-flexible -- if you might return two different types of `Future`, then you
-must still return `Box<Future<Item = F::Item, Error = F::Error>` instead of
-`impl Future<Item = F::Item, Error = F::Error>`. The good news however is
-that this case is rare; in general, it should be a backwards-compatible
-extension to change return types from `Box` to [`impl Trait`].
+flexible. If you might return two different types of `Future`, then you
+must still return `Box<Future<Item = F::Item, Error = F::Error> + Send>` instead
+of `impl Future<Item = F::Item, Error = F::Error>`. For the same reason, you
+cannot use `impl Trait` when defining or implementing your own traits -- the
+compiler will not let you specify `impl Trait` as a return type in a trait
+implementation because it can't determine which explicit type the trait should return.
+The good news however is that these cases are rare; in general, it should be a
+backwards-compatible extension to change return types from `Box` to [`impl Trait`].
 
 # Named types
 [return-named-types]: #named-types

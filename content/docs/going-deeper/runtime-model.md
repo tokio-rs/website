@@ -151,12 +151,12 @@ At the very simplest, an executor could look something like this:
 pub struct SpinExecutor {
     // the tasks an executor is responsible for in
     // a double ended queue
-    tasks: VecDeque<Box<Future<Item = (), Error = ()>>>,
+    tasks: VecDeque<Box<Future<Item = (), Error = ()> + Send>>,
 }
 
 impl SpinExecutor {
     pub fn spawn<T>(&mut self, task: T)
-    where T: Future<Item = (), Error = ()> + 'static
+    where T: Future<Item = (), Error = ()> + 'static + Send
     {
         self.tasks.push_back(Box::new(task));
     }
