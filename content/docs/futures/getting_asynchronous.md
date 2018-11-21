@@ -66,7 +66,7 @@ the previous page. The primary difference is, in this case,
 before returning the connected socket. When this happens, our future returns
 `NotReady`.
 
-`GetPeerAddr` constains [`ConnectFuture`], a future that completes once a TCP
+`GetPeerAddr` contains [`ConnectFuture`], a future that completes once a TCP
 stream has been established. This future is returned by [`TcpStream::connect`].
 
 When `GetPeerAddr` is passed to `tokio::run`, Tokio will repeatedly call `poll`
