@@ -21,8 +21,6 @@ extern crate futures;
 
 use tokio::net::{TcpStream, tcp::ConnectFuture};
 use futures::{Future, Async, Poll};
-use std::io;
-use std::net::SocketAddr;
 
 struct GetPeerAddr {
     connect: ConnectFuture,
@@ -40,7 +38,7 @@ impl Future for GetPeerAddr {
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
             Err(e) => {
-                println!("failed to connect");
+                println!("failed to connect: {}", e);
                 Ok(Async::Ready(()))
             }
         }
