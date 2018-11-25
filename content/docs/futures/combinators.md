@@ -117,7 +117,7 @@ The `and_then` combinator allows sequencing two asynchronous operations. Once
 the first operation completes, the value is passed to a function. The function
 uses that value to produce a new future and that future is then executed. The
 difference between `and_then` and `map` is that `and_then`'s function returns a
-future where as `map's function returns a value.
+future where as `map`'s function returns a value.
 
 The original implementation is found [here][connect-and-write]. Once updated to
 use combinators, it becomes:
