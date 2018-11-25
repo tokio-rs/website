@@ -175,7 +175,7 @@ The call to [`tokio::spawn`] is the key here. We crucially want all clients to m
 progress concurrently, rather than blocking one on completion of another. To achieve
 this we use the `tokio::spawn` function to execute the work in the background.
 
-If we did not do this than each invocation of the block in `for_each` would be
+If we did not do this then each invocation of the block in `for_each` would be
 resolved at a time meaning we could never have two client connections processed
 concurrently!
 
