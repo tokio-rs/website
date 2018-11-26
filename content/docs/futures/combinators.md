@@ -142,7 +142,8 @@ fn main() {
         .map(|_| println!("write complete"))
         .map_err(|_| println!("failed"));
 
-// # let future = futures::future::ok::<(), ()>(());
+#    let future = futures::future::ok::<(), ()>(());
+
     tokio::run(future);
 }
 ```
