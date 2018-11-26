@@ -80,10 +80,10 @@ fn main() {
     });
 
     println!("server running on localhost:6142");
-    # // `select` completes when the first of the two futures completes. Since
-    # // future::ok() completes immediately, the server won't hang waiting for
-    # // more connections. This is just so the doc test doesn't hang.
-    # let server = server.select(futures::future::ok(())).then(|_| Ok(()));
+#    // `select` completes when the first of the two futures completes. Since
+#    // future::ok() completes immediately, the server won't hang waiting for
+#    // more connections. This is just so the doc test doesn't hang.
+#    let server = server.select(futures::future::ok(())).then(|_| Ok(()));
 
     // Start the server
     //
