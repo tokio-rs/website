@@ -16,8 +16,8 @@ computation. Usually, the future _completes_ due to an event that happens
 elsewhere in the system. While we’ve been looking at things from the perspective
 of basic I/O, you can use a future to represent a wide range of events, e.g.:
 
-* **A database query** that’s executing in a thread pool. When the query
-  finishes, the future is completed, and its value is the result of the query.
+* **A database query**, when the query finishes, the future is completed, and
+  its value is the result of the query.
 
 * **An RPC invocation** to a server. When the server replies, the future is
   completed, and its value is the server’s response.
