@@ -97,7 +97,7 @@ buffer has been written out and flushed.
 writes all the bytes read out from the `AsyncRead` into the `AsyncWrite`
 until `poll_read` indicates that the input has been closed and all the
 bytes have been written out and flushed to the output. This is the
-combinator we used in our echo server in the previous section!
+combinator we used in our [echo server] in the previous section!
 
 Finally, [`lines`] takes an `AsyncRead`, and returns a `Stream` that
 yields each line from the input until there are no more lines to read.
@@ -107,16 +107,53 @@ want to take a look at before you decide to write your own!
 
 # Split I/O resources
 
-<!-- TODO
-    split()
-        Why is split needed? When should split be used?
-        io::copy
-        Spawn read / write on other tasks
--->
+The [echo server] contained this mysterious-looking snippet:
+
+```rust,ignore
+let (reader, writer) = socket.split();
+let bytes_copied = tokio::io::copy(reader, writer);
+```
+
+As the comment above it explains, we split the `TcpStream` (`socket`)
+into a read "half" and a write "half", and use the [`copy`] combinator
+we discussed above to produce a `Future` that asynchronously copies  all
+the data from the read half to the write half. But why is this "split"
+required in the first place? After all, `AsyncRead::poll_ready` and
+`AsyncWrite::poll_write` just take `&mut self`.
+
+To answer that, we need to think back to Rust's ownership system a
+little. Recall that Rust only allows you to have a _single_ mutable
+reference to a given variable at a time. But we have to pass _two_
+arguments to [`copy`], one for where to read from, and one for where to
+write to. However, once we pass a mutable reference to the `TcpStream`
+as one of the arguments, we cannot also construct a second mutable
+reference to it to pass as the second argument! *We* know that [`copy`]
+won't read and write _at the same time_ to those, but that's not
+expressed in `copy`'s types.
+
+Enter [`split`], a provided method on the `AsyncRead` trait when the
+type *also* implements `AsyncWrite`. If we look at the signature, we see
+
+```rust,ignore
+fn split(self) -> (ReadHalf<Self>, WriteHalf<Self>)
+  where Self: AsyncWrite { ... }
+```
+
+The returned `ReadHalf` implements `AsyncRead`, and the `WriteHalf`
+implements `AsyncWrite`. And crucially, we now have two *separate*
+pointers into our type, which we can pass around separately. This comes
+in handy for [`copy`], but it also means that we can pass each half to
+a different future, and handle the reads and writes completely
+independently! Behind the scenes, [`split`] uses a [`BiLock`] to ensure
+that if we both try to read and write at the same time, only one of them
+happen at a time.
 
 [the overview]: {{< ref "/docs/io/overview.md" >}}
+[echo server]: {{< ref "/docs/io/overview.md" >}}#an-example-server
 [`AsyncRead`]: {{< api-url "tokio-io" >}}/trait.AsyncRead.html
+[`split`]: {{< api-url "tokio-io" >}}/trait.AsyncRead.html##method.split
 [`AsyncWrite`]: {{< api-url "tokio-io" >}}/trait.AsyncWrite.html
+[`BiLock`]: {{< api-url "futures" >}}/sync/struct.BiLock.html
 [`tokio::io`]: {{< api-url "tokio" >}}/io/index.html
 [`read_exact`]: {{< api-url "tokio" >}}/io/fn.read_exact.html
 [`write_all`]: {{< api-url "tokio" >}}/io/fn.write_all.html

@@ -39,6 +39,8 @@ the status of the various I/O resources that different futures are
 waiting for, and is notified by the operating system whenever the status
 of any of them change.
 
+## An example server
+
 To get a sense of how this fits together, consider this [echo
 server](https://tools.ietf.org/html/rfc862) implementation:
 
