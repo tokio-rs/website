@@ -64,7 +64,7 @@ We can spawn tasks using `tokio::spawn`. For example:
 // Create some kind of future that we want our runtime to execute
 let program = my_outer_stream.for_each(|my_outer_value| {
   println!("Got value {:?} from the stream", my_outer_value);
-  
+
   let my_inner_future = future::ok(1);
 
   let task = my_inner_future.and_then(|my_inner_value| {
@@ -91,5 +91,5 @@ world example that takes everything we've learned so far into account.
 [`CurrentThread`]: {{< api-url "tokio" >}}/executor/current_thread/index.html
 [`ThreadPool`]: http://docs.rs/tokio-threadpool
 [rt]: {{< api-url "tokio" >}}/runtime/index.html
-[Go's goroutine]: https://www.golang-book.com/books/intro/10
-[Erlang's process]: http://erlang.org/doc/reference_manual/processes.html
+[Go’s goroutine]: https://www.golang-book.com/books/intro/10
+[Erlang’s process]: http://erlang.org/doc/reference_manual/processes.html
