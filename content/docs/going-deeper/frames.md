@@ -1,6 +1,6 @@
 ---
 title: "Working with framed streams"
-weight: 7040
+weight: 7090
 menu:
   docs:
     parent: going_deeper

@@ -1,6 +1,6 @@
 ---
 title: "Essential combinators"
-weight: 7020
+weight: 7070
 menu:
   docs:
     parent: going_deeper

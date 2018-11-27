@@ -1,9 +1,9 @@
 ---
 title: "Runtime Model"
-weight : 1020
+weight : 7030
 menu:
   docs:
-    parent: getting_started
+    parent: going_deeper
 ---
 
 Now we will go over the Tokio / futures runtime model. Tokio is built on top of
@@ -151,12 +151,12 @@ At the very simplest, an executor could look something like this:
 pub struct SpinExecutor {
     // the tasks an executor is responsible for in
     // a double ended queue
-    tasks: VecDeque<Box<Future<Item = (), Error = ()>>>,
+    tasks: VecDeque<Box<Future<Item = (), Error = ()> + Send>>,
 }
 
 impl SpinExecutor {
     pub fn spawn<T>(&mut self, task: T)
-    where T: Future<Item = (), Error = ()> + 'static
+    where T: Future<Item = (), Error = ()> + 'static + Send
     {
         self.tasks.push_back(Box::new(task));
     }
@@ -222,7 +222,7 @@ Then, the executor would look something like this:
 ```
 
 Being able to get notified when a task goes from "not ready" to "ready" is the
-core of the [`futures`] task model. We will be digging more into that shortly.
+core of the [`futures`] task model.
 
 [`futures`]: {{< api-url "futures" >}}
 [standard library]: https://doc.rust-lang.org/std/

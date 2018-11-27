@@ -1,9 +1,9 @@
 ---
-title: "Putting It Together"
-weight : 3050
+title: "Leaf futures"
+weight : 2070
 menu:
   docs:
-    parent: futures_streams_sinks
+    parent: futures
 ---
 
 This page has not been worked on yet. If you'd like to contribute visit the [doc-push]

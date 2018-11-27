@@ -18,6 +18,8 @@ types that implement [`Evented`].
 This guide will be focused on TCP types. The other network resources (UDP, unix
 sockets, pipes, etc) follow the same pattern.
 
+[mio]: https://docs.rs/mio/
+
 # The network resource.
 
 Network resources are types, such as [`TcpListener`] and [`TcpStream`], that are
