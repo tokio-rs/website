@@ -94,6 +94,8 @@ use bytes::{Bytes, Buf};
 use futures::{Future, Async, Poll};
 use std::io::{self, Cursor};
 
+// HelloWorld has two states, namely waiting to connect to the socket
+// and already connected to the socket
 enum HelloWorld {
     Connecting(ConnectFuture),
     Connected(TcpStream, Cursor<Bytes>),
@@ -112,6 +114,8 @@ impl Future for HelloWorld {
                     try_ready!(f.poll())
                 }
                 Connected(ref mut socket, ref mut data) => {
+                    // Keep trying to write the buffer to the socket as long as the
+                    // buffer has more bytes it available for consumption
                     while data.has_remaining() {
                         try_ready!(socket.write_buf(data));
                     }

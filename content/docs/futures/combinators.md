@@ -351,7 +351,7 @@ use futures::{future, Future};
 use std::io;
 use std::sync::Arc;
 
-fn get_motd() -> impl Future<Item = String, Error = io::Error> {
+fn get_message() -> impl Future<Item = String, Error = io::Error> {
     // ....
 # futures::future::ok("".to_string())
 }
@@ -364,9 +364,9 @@ fn print_multi() -> impl Future<Item = (), Error = io::Error> {
         // to access the name to print.
         let name = name.clone();
 
-        get_motd()
-            .and_then(move |motd| {
-                println!("Hello {}, {}", name, motd);
+        get_message()
+            .and_then(move |message| {
+                println!("Hello {}, {}", name, message);
                 Ok(())
             })
     })
@@ -389,7 +389,7 @@ extern crate futures;
 
 use futures::Future;
 
-fn get_motd() -> impl Future<Item = String> {
+fn get_message() -> impl Future<Item = String> {
     // ...
 # futures::future::ok::<_, ()>("".to_string())
 }
@@ -399,8 +399,8 @@ fn with_future<T: Future<Item = String>>(f: T) {
 # drop(f);
 }
 
-let my_future = get_motd().map(|motd| {
-    format!("MOTD = {}", motd)
+let my_future = get_message().map(|message| {
+    format!("MESSAGE = {}", message)
 });
 
 with_future(my_future);
@@ -440,10 +440,10 @@ code branches. For example:
 
 ```rust,ignore
 if some_condition {
-    return get_motd()
-        .map(|motd| format!("MOTD = {}", motd));
+    return get_message()
+        .map(|message| format!("MESSAGE = {}", message));
 } else {
-    return futures::ok("My MOTD".to_string());
+    return futures::ok("My MESSAGE".to_string());
 }
 ```
 
@@ -463,17 +463,17 @@ function to return a [trait object](#trait-objects). The second is to use the
 # extern crate futures;
 # use futures::Future;
 # use futures::future::{self, Either};
-# fn get_motd() -> impl Future<Item = String> {
+# fn get_message() -> impl Future<Item = String> {
 # future::ok::<_, ()>("".to_string())
 # }
 # fn my_op() -> impl Future<Item = String> {
 # let some_condition = true;
 if some_condition {
-    return Either::A(get_motd()
-        .map(|motd| format!("MOTD = {}", motd)));
+    return Either::A(get_message()
+        .map(|message| format!("MESSAGE = {}", message)));
 } else {
     return Either::B(
-        future::ok("My MOTD".to_string()));
+        future::ok("My MESSAGE".to_string()));
 }
 # }
 # fn main() {}
@@ -491,11 +491,11 @@ Consider:
 # extern crate futures;
 # use futures::{future::{self, Either}, Future};
 # fn is_valid(_: &str) -> bool { true }
-# fn get_motd() -> impl Future<Item = String, Error = &'static str> { future::ok("".to_string()) }
+# fn get_message() -> impl Future<Item = String, Error = &'static str> { future::ok("".to_string()) }
 fn my_operation(arg: String) -> impl Future<Item = String> {
     if is_valid(&arg) {
-        return Either::A(get_motd().map(|motd| {
-            format!("MOTD = {}", motd)
+        return Either::A(get_message().map(|message| {
+            format!("MESSAGE = {}", message)
         }));
     }
 
@@ -562,16 +562,16 @@ handle the "branching" described above with arbitrary number of branches:
 # extern crate futures;
 # use futures::{future::{self, Either}, Future};
 # fn is_valid(_: &str) -> bool { true }
-# fn get_motd() -> impl Future<Item = String, Error = &'static str> { future::ok("".to_string()) }
+# fn get_message() -> impl Future<Item = String, Error = &'static str> { future::ok("".to_string()) }
 fn my_operation(arg: String) -> Box<Future<Item = String, Error = &'static str> + Send> {
     if is_valid(&arg) {
         if arg == "foo" {
-            return Box::new(get_motd().map(|motd| {
-                format!("FOO = {}", motd)
+            return Box::new(get_message().map(|message| {
+                format!("FOO = {}", message)
             }));
         } else {
-            return Box::new(get_motd().map(|motd| {
-                format!("MOTD = {}", motd)
+            return Box::new(get_message().map(|message| {
+                format!("MESSAGE = {}", message)
             }));
         }
     }
@@ -625,13 +625,9 @@ combinators.
 Scenarios when the state must be accessed concurrently from multiple combinators
 may be a good case for implementing a `Future` by hand.
 
-
 TODO: This section needs to be expanded with examples. If you have ideas to
 improve this section, visit the [doc-push] repo and open an issue with your
 thoughts.
-
-This page has not been worked on yet. If you'd like to contribute visit the [doc-push]
-repo.
 
 [doc-push]: https://github.com/tokio-rs/doc-push
 [`map`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.map
