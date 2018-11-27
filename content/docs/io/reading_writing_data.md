@@ -19,7 +19,7 @@ I/O story, and are important to understand when working with I/O code.
 > `AsyncWrite` is pretty much exactly the same, just for writing data to
 > an I/O resource (like a TCP socket) instead of reading from it.
 
-So, let's take a look at [`AsyncRead`] and see what all the fuzz is
+So, let's take a look at [`AsyncRead`] and see what all the fuss is
 about:
 
 ```rust,no_run
@@ -32,8 +32,8 @@ pub trait AsyncRead: Read {
 ```
 
 Huh. What's going on here? Well, `AsyncRead` is really just `Read` from
-`std::io`, along with a _contract_. The documentation for `AsyncRead`
-reads:
+`std::io`, along with an additional _contract_. The documentation for
+`AsyncRead` reads:
 
 > This trait inherits from `std::io::Read` and indicates that an I/O
 > object is non-blocking. **All non-blocking I/O objects must return an
@@ -144,16 +144,14 @@ implements `AsyncWrite`. And crucially, we now have two *separate*
 pointers into our type, which we can pass around separately. This comes
 in handy for [`copy`], but it also means that we can pass each half to
 a different future, and handle the reads and writes completely
-independently! Behind the scenes, [`split`] uses a [`BiLock`] to ensure
-that if we both try to read and write at the same time, only one of them
-happen at a time.
+independently! Behind the scenes, [`split`] ensures that if we both try
+to read and write at the same time, only one of them happen at a time.
 
 [the overview]: {{< ref "/docs/io/overview.md" >}}
 [echo server]: {{< ref "/docs/io/overview.md" >}}#an-example-server
 [`AsyncRead`]: {{< api-url "tokio-io" >}}/trait.AsyncRead.html
 [`split`]: {{< api-url "tokio-io" >}}/trait.AsyncRead.html##method.split
 [`AsyncWrite`]: {{< api-url "tokio-io" >}}/trait.AsyncWrite.html
-[`BiLock`]: {{< api-url "futures" >}}/sync/struct.BiLock.html
 [`tokio::io`]: {{< api-url "tokio" >}}/io/index.html
 [`read_exact`]: {{< api-url "tokio" >}}/io/fn.read_exact.html
 [`write_all`]: {{< api-url "tokio" >}}/io/fn.write_all.html

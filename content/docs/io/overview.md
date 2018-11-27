@@ -10,10 +10,11 @@ The Rust standard library provides support for networking and I/O, such
 as TCP connections, UDP sockets, reading from and writing to files, etc.
 However, those operations are all synchronous, or _blocking_, meaning
 that when you call them, the current thread may stop executing and go to
-sleep until it is unblocked. For example, `read` will block until there
-is data to read. In the world of futures, that behavior is unfortunate,
-since we would like to continue executing other futures we may have
-while waiting for the I/O to complete.
+sleep until it is unblocked. For example, the `read` method in
+[`std::io::Read`] will block until there is data to read. In the world
+of futures, that behavior is unfortunate, since we would like to
+continue executing other futures we may have while waiting for the I/O
+to complete.
 
 To enable this, Tokio provides _non-blocking_ versions of many standard
 library I/O resources, such as [file operations] and [TCP], [UDP], and
@@ -24,9 +25,9 @@ accepting a new TCP connection), and implement non-blocking variants of
 
 Non-blocking reads and writes do not block if, for example, there is no
 more data available. Instead, they return immediately with a
-`WouldBlock` error, along with a promise (like `Future::poll`) that they
-have arranged for the current task to be woken up when they can later
-make progress, such as when a network packet arrives. 
+`WouldBlock` error, along with a guarantee (like `Future::poll`) that
+they have arranged for the current task to be woken up when they can
+later make progress, such as when a network packet arrives.
 
 By using the non-blocking Tokio I/O types, a future that performs I/O
 no longer blocks execution of other futures if the I/O they wish to
@@ -114,6 +115,7 @@ tokio::run(server);
 
 More examples can be found [here](examples).
 
+[`std::io::Read`]: https://doc.rust-lang.org/std/io/trait.Read.html
 [`mio`]: {{< api-url "mio" >}}
 [`tokio`]: {{< api-url "tokio" >}}
 [`tokio-fs`]: {{< api-url "tokio" >}}/fs/index.html
