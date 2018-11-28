@@ -4,6 +4,8 @@
 {{- .Site.Params.tokioExecutorDocsURL -}}
 {{- else if eq (.Get 0) "tokio-io" -}}
 {{- .Site.Params.tokioIoDocsURL -}}
+{{- else if eq (.Get 0) "tokio-codec" -}}
+{{- .Site.Params.tokioCodecDocsURL -}}
 {{- else if eq (.Get 0) "tokio-reactor" -}}
 {{- .Site.Params.tokioReactorDocsURL -}}
 {{- else if eq (.Get 0) "tokio-timer" -}}
