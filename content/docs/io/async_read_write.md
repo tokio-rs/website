@@ -41,23 +41,22 @@ With that all said, let's look at how we might implement the
 #[macro_use]
 extern crate futures;
 # fn main() {}
-use std::{io, mem};
+use std::io;
 use tokio::prelude::*;
 
 // This is going to be our Future.
-// In the common case, this is set to Reading,
-// but we'll set it to Empty when we return Async::Ready
+// In the common case, this is set to Some(Reading),
+// but we'll set it to None when we return Async::Ready
 // so that we can return the reader and the buffer.
-enum ReadExact<R, T> {
-    Reading {
-        // This is the stream we're reading from.
-        reader: R,
-        // This is the buffer we're reading into.
-        buffer: T,
-        // And this is how far into the buffer we've written.
-        pos: usize,
-    },
-    Empty,
+struct ReadExact<R, T>(Option<Reading<R, T>>);
+
+struct Reading<R, T> {
+    // This is the stream we're reading from.
+    reader: R,
+    // This is the buffer we're reading into.
+    buffer: T,
+    // And this is how far into the buffer we've written.
+    pos: usize,
 }
 
 // We want to be able to construct a ReadExact over anything
@@ -68,12 +67,12 @@ where
     R: AsyncRead,
     T: AsMut<[u8]>,
 {
-    ReadExact::Reading {
+    ReadExact(Some(Reading {
         reader,
         buffer,
         // Initially, we've read no bytes into buffer.
         pos: 0,
-    }
+    }))
 }
 
 impl<R, T> Future for ReadExact<R, T>
@@ -87,12 +86,12 @@ where
     type Error = io::Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        match *self {
-            ReadExact::Reading {
+        match self.0 {
+            Some(Reading {
                 ref mut reader,
                 ref mut buffer,
                 ref mut pos,
-            } => {
+            }) => {
                 let buffer = buffer.as_mut();
                 // Check that we haven't finished
                 while *pos < buffer.len() {
@@ -119,18 +118,17 @@ where
                     }
                 }
             }
-            ReadExact::Empty => panic!("poll a ReadExact after it's done"),
+            None => panic!("poll a ReadExact after it's done"),
         }
 
         // We need to return the reader and the buffer, which we can only
-        // do by moving them out of self. We do this by swapping our state
-        // with an "empty" one. This _should_ be fine, because poll() requires
-        // callers to not call poll() again after Ready has been returned,
-        // so we should only ever see ReadExact::Reading when poll() is called.
-        match mem::replace(self, ReadExact::Empty) {
-            ReadExact::Reading { reader, buffer, .. } => Ok(Async::Ready((reader, buffer))),
-            ReadExact::Empty => panic!(),
-        }
+        // do by moving them out of self. We do this by taking our state
+        // and leaving `None`. This _should_ be fine, because poll()
+        // requires callers to not call poll() again after Ready has been
+        // returned, so we should only ever see Some(Reading) when poll()
+        // is called.
+        let reading = self.0.take().expect("must have seen Some above");
+        Ok(Async::Ready((reading.reader, reading.buffer)))
     }
 }
 ```
@@ -210,24 +208,23 @@ Without further ado, let's take a look at how we might implement
 #[macro_use]
 extern crate futures;
 # fn main() {}
-use std::{io, mem};
+use std::io;
 use tokio::prelude::*;
 
 // This is going to be our Future.
 // It'll seem awfully familiar to ReadExact above!
-// In the common case, this is set to Writing,
-// but we'll set it to Empty when we return Async::Ready
+// In the common case, this is set to Some(Writing),
+// but we'll set it to None when we return Async::Ready
 // so that we can return the writer and the buffer.
-enum WriteAll<W, T> {
-    Writing {
-        // This is the stream we're writing into.
-        writer: W,
-        // This is the buffer we're writing from.
-        buffer: T,
-        // And this is much of the buffer we've written.
-        pos: usize,
-    },
-    Empty,
+struct WriteAll<W, T>(Option<Writing<W, T>>);
+
+struct Writing<W, T> {
+    // This is the stream we're writing into.
+    writer: W,
+    // This is the buffer we're writing from.
+    buffer: T,
+    // And this is much of the buffer we've written.
+    pos: usize,
 }
 
 // We want to be able to construct a WriteAll over anything
@@ -238,12 +235,12 @@ where
     W: AsyncWrite,
     T: AsRef<[u8]>,
 {
-    WriteAll::Writing {
+    WriteAll(Some(Writing {
         writer,
         buffer,
         // Initially, we've written none of the bytes from buffer.
         pos: 0,
-    }
+    }))
 }
 
 impl<W, T> Future for WriteAll<W, T>
@@ -257,12 +254,12 @@ where
     type Error = io::Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        match *self {
-            WriteAll::Writing {
+        match self.0 {
+            Some(Writing {
                 ref mut writer,
                 ref buffer,
                 ref mut pos,
-            } => {
+            }) => {
                 let buffer = buffer.as_ref();
                 // Check that we haven't finished
                 while *pos < buffer.len() {
@@ -292,15 +289,13 @@ where
                     }
                 }
             }
-            WriteAll::Empty => panic!("poll a WriteAll after it's done"),
+            None => panic!("poll a WriteAll after it's done"),
         }
 
         // We use the same trick as in ReadExact to ensure that we can return
         // the buffer and the writer once the entire buffer has been written out.
-        match mem::replace(self, WriteAll::Empty) {
-            WriteAll::Writing { writer, buffer, .. } => Ok((writer, buffer).into()),
-            WriteAll::Empty => panic!(),
-        }
+        let writing = self.0.take().expect("must have seen Some above");
+        Ok(Async::Ready((writing.writer, writing.buffer)))
     }
 }
 ```
