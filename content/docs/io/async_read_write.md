@@ -186,9 +186,11 @@ have done synchronously in the implementation of `Drop`; it's just that
 in the asynchronous world, you can't easily do something in `Drop`
 because you need to have an executor that keeps polling your writer!
 
-<!--
-Socket is safely dropped after shutdown returns Ok(Ready).
-Sometimes it isn't possible:
+<!-- // this is a comment
+Somewhere down the line, per outline, we may want to add a paragraph on:
+
+  Socket is safely dropped after shutdown returns Ok(Ready).
+  Sometimes it isn't possible:
     Alternative: spawn task w/ socket to do cleanup work.
 -->
 
