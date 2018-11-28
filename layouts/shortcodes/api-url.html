@@ -4,6 +4,10 @@
 {{- .Site.Params.tokioExecutorDocsURL -}}
 {{- else if eq (.Get 0) "tokio-io" -}}
 {{- .Site.Params.tokioIoDocsURL -}}
+{{- else if eq (.Get 0) "tokio-codec" -}}
+{{- .Site.Params.tokioCodecDocsURL -}}
+{{- else if eq (.Get 0) "tokio-reactor" -}}
+{{- .Site.Params.tokioReactorDocsURL -}}
 {{- else if eq (.Get 0) "tokio-timer" -}}
 {{- .Site.Params.tokioTimerDocsURL -}}
 {{- else if eq (.Get 0) "bytes" -}}
@@ -12,6 +16,8 @@
 {{- .Site.Params.coreDocsURL -}}
 {{- else if eq (.Get 0) "futures" -}}
 {{- .Site.Params.futuresDocsURL -}}
+{{- else if eq (.Get 0) "mio" -}}
+{{- .Site.Params.mioDocsURL -}}
 {{- else if eq (.Get 0) "proto" -}}
 {{- .Site.Params.protoDocsURL -}}
 {{- else if eq (.Get 0) "service" -}}
