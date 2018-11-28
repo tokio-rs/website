@@ -8,6 +8,7 @@ menu:
 
 From doc-push plan:
 
+```text
 Using the poll_ based APIs for reading and writing data. This page talks
 about the lower level API and explains how the combinators described on
 the previous page work. There should be plenty of examples.
@@ -30,3 +31,4 @@ Contents
             Socket is safely dropped after shutdown returns Ok(Ready).
             Sometimes it isn't possible:
                 Alternative: spawn task w/ socket to do cleanup work.
+```
