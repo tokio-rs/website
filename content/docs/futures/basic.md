@@ -152,8 +152,9 @@ Running this results in "hello world" being outputted to standard out.
 # Cleaning things up
 
 The pattern of waiting on an inner future is common enough that there is a
-helper macro: `try_ready!`. The poll function can be rewritten using the macro
-as such:
+helper macro: `try_ready!`.
+
+The poll function can be rewritten using the macro as such:
 
 ```rust
 # #![deny(deprecated)]

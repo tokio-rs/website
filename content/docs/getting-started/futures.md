@@ -7,7 +7,7 @@ menu:
 ---
 
 Let's take a closer look at futures. Tokio is built on top of the [`futures`] crate
-and uses its runtime model. This allows it to interop with other libraries also
+and uses its runtime model. This allows Tokio to interop with other libraries also
 using the [`futures`] crate.
 
 **Note**: This runtime model is very different than async libraries found in
@@ -60,7 +60,7 @@ a value ([`ErrorKind::WouldBlock`]) even if there is no pending data to read.
 If there is no pending data, the caller is responsible for calling `read` again
 at a later time.  The trick is to know when that "later time" is.
 
-Another way to think about a non-blocking read is as "polling" the socket for
+Another way to think about a non-blocking read is as 'polling' the socket for
 data to read.
 
 Futures are an abstraction around this polling model. A `Future` represents a value
@@ -74,8 +74,8 @@ computation. Usually, the future _completes_ due to an event that happens
 elsewhere in the system. While we’ve been looking at things from the perspective
 of basic I/O, you can use a future to represent a wide range of events, e.g.:
 
-* **A database query** that’s executing in a thread pool. When the query
-  finishes, the future is completed, and its value is the result of the query.
+* **A database query**, when the query finishes, the future is completed, and
+  its value is the result of the query.
 
 * **An RPC invocation** to a server. When the server replies, the future is
   completed, and its value is the server’s response.
@@ -123,9 +123,10 @@ let response_is_ok = response_future
 track_response_success(response_is_ok);
 ```
 
-All of those actions taken with the future don't immediately perform any work.
+None of those actions taken with the future perform any immediate work.
 They cannot because they don't have the actual HTTP response. Instead, they
-define the work to be done when the response future completes.
+define the work to be done when the response future completes and the actual
+response is available.
 
 Both the [`futures`] crate and Tokio come with a collection of combinator
 functions that can be used to work with futures. So far we've seen `and_then` which

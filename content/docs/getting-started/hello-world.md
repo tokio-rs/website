@@ -21,7 +21,7 @@ Let's get started.
 First, generate a new crate.
 
 ```bash
-$ cargo new --bin hello-world
+$ cargo new hello-world
 $ cd hello-world
 ```
 
@@ -46,7 +46,7 @@ use tokio::prelude::*;
 
 Here we use Tokio's own [`io`] and [`net`] modules. These modules provide the same
 abstractions over networking and I/O-operations as the corresponding modules in `std`
-with a small difference; all actions are performed asynchronously.
+with a small difference: all actions are performed asynchronously.
 
 # Creating the stream
 
@@ -113,9 +113,9 @@ some point in the future.
 
 It's worth reiterating that returned futures are lazy, i.e., no work is performed when
 calling the combinator. Instead, once all the asynchronous steps are sequenced, the
-final `Future` (representing the entire task) is "spawned" (i.e., run). This is when
-the work that was previously defined starts getting run. In other words, the code
-we've written so far does not actually create a TCP stream.
+final `Future` (representing the entire task) is 'spawned' (i.e., run). This is when
+the previously defined work starts getting run. In other words, the code we've written
+so far does not actually create a TCP stream.
 
 We will be digging more into futures (and the related concepts of streams and sinks)
 later on.
@@ -159,14 +159,15 @@ stream. `then` is used to sequence a step that gets run once the write has
 completed. In our example, we just write a message to `STDOUT` indicating that
 the write has completed.
 
-Note that `result` is a `Result` that contains the original stream. This allows us
+Note that `result` is a `Result` that contains the original stream (compare to
+`and_then`, which passes the stream without the `Result` wrapper). This allows us
 to sequence additional reads or writes to the same stream. However, we have
 nothing more to do, so we just drop the stream, which automatically closes it.
 
 # Running the client task
 
 So far we have a `Future` representing the work to be done by our program, but we
-have not actually run it. We need a way to "spawn" that work. We need an executor.
+have not actually run it. We need a way to 'spawn' that work. We need an executor.
 
 Executors are responsible for scheduling asynchronous tasks, driving them to
 completion. There are a number of executor implementations to choose from, each have
@@ -217,7 +218,7 @@ If everything goes well, you should see `hello world` printed from Netcat.
 # Next steps
 
 We've only dipped our toes into Tokio and its asynchronous model. The next page in
-the guide, will start digging a bit deeper into Futures and the Tokio runtime model.
+the guide will start digging a bit deeper into Futures and the Tokio runtime model.
 
 [`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
 [rt]: {{< api-url "tokio" >}}/runtime/index.html
