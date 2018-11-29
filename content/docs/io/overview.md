@@ -113,7 +113,7 @@ tokio::run(server);
 # }
 ```
 
-More examples can be found [here](examples).
+More examples can be found [here][examples].
 
 [`std::io::Read`]: https://doc.rust-lang.org/std/io/trait.Read.html
 [`mio`]: {{< api-url "mio" >}}
@@ -124,3 +124,4 @@ More examples can be found [here](examples).
 [TCP]: {{< api-url "tokio" >}}/net/tcp/index.html
 [UDP]: {{< api-url "tokio" >}}/net/udp/index.html
 [Unix]: {{< api-url "tokio" >}}/net/unix/index.html
+[examples]: https://github.com/tokio-rs/tokio/tree/master/examples
