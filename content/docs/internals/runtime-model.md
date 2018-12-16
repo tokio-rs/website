@@ -180,7 +180,7 @@ impl Future for BadTask {
     type Error = ();
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        use BadTask::*;
+        use self::BadTask::*;
         let value = match *self {
             First(ref mut resource) => {
                 try_ready!(resource.poll())
@@ -230,7 +230,7 @@ use futures::{Future, Poll, Async};
 # type Item = ();
 # type Error = ();
 fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-    use BadTask::*;
+    use self::BadTask::*;
     loop {
         let value = match *self {
             First(ref mut resource) => {
