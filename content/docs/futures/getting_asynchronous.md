@@ -134,10 +134,10 @@ fn main() {
     let addr = "127.0.0.1:1234".parse().unwrap();
     let connect_future = TcpStream::connect(&addr);
     let hello_world = HelloWorld::Connecting(connect_future);
-# let hello_world = futures::future::ok::<(), ()>(());
+# let hello_world = futures::future::ok::<(), io::Error>(());
 
-    // Run it
-    tokio::run(hello_world)
+    // Run it, here we map the error since tokio::run expects a Future<Item=(), Error=()>
+    tokio::run(hello_world.map_err(|e| println!("{0}", e)))
 }
 ```
 
