@@ -28,7 +28,7 @@ an asynchronous application.
 
 # Fast
 
-Tokio is built on the Rust programming language, which is in of itself very
+Tokio is built on the Rust programming language, which is itself very
 fast. Applications built with Tokio will get those same benefits. Tokio's design
 is also geared towards enabling applications to be as fast as possible.
 
