@@ -253,6 +253,11 @@ img {
   border-bottom: 1px solid rgba(0,0,0,.05);
 }
 
+.tk-date {
+  color: #6c757d !important;
+  padding-bottom: 25px;
+}
+
 .tk-content {
   order: 1;
 }
