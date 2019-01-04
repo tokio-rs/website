@@ -23,9 +23,9 @@ trait Future {
     type Error;
 
     /// The function that will be repeatedly called to see if the future is
-    /// has completed or not. The `Async` enum can either by `Ready` or
-    /// or `NotReady` and indicates whether the future is ready
-    // to produce a value or not.
+    /// has completed or not. The `Async` enum can either be `Ready` or
+    /// `NotReady` and indicates whether the future is ready to produce
+    /// a value or not.
     fn poll(&mut self) -> Result<Async<Self::Item>, Self::Error>;
 }
 ```
