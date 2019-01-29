@@ -109,9 +109,11 @@ impl Future for HelloWorld {
         use self::HelloWorld::*;
 
         loop {
-            let socket = match *self {
+            match self {
                 Connecting(ref mut f) => {
-                    try_ready!(f.poll())
+                    let socket = try_ready!(f.poll());
+                    let data = Cursor::new(Bytes::from_static(b"hello world"));
+                    *self = Connected(socket, data);
                 }
                 Connected(ref mut socket, ref mut data) => {
                     // Keep trying to write the buffer to the socket as long as the
@@ -119,13 +121,9 @@ impl Future for HelloWorld {
                     while data.has_remaining() {
                         try_ready!(socket.write_buf(data));
                     }
-
                     return Ok(Async::Ready(()));
                 }
-            };
-
-            let data = Cursor::new(Bytes::from_static(b"hello world"));
-            *self = Connected(socket, data);
+            }
         }
     }
 }
