@@ -359,7 +359,7 @@ fn get_message() -> impl Future<Item = String, Error = io::Error> {
 fn print_multi() -> impl Future<Item = (), Error = io::Error> {
     let name = Arc::new("carl".to_string());
 
-    let futures: Vec<_> = (0..1).map(|_| {
+    let futures: Vec<_> = (0..10).map(|_| {
         // Clone the `name` handle, this allows multiple concurrent futures
         // to access the name to print.
         let name = name.clone();
