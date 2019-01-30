@@ -284,7 +284,7 @@ fn fibonacci() -> impl Stream<Item = u64, Error = ()> {
 
 Just like with futures, using stream combinators requires a functional style of
 programming. Also, `impl Stream` is used to return the stream from the function.
-The [returning futures] strategies apply equality to returning streams.
+The [returning futures] strategies apply equally to returning streams.
 
 `Display10` is reimplemented using [`take`] and [`for_each`]:
 
