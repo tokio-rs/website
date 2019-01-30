@@ -221,6 +221,7 @@ We've only dipped our toes into Tokio and its asynchronous model. The next page 
 the guide will start digging a bit deeper into Futures and the Tokio runtime model.
 
 [`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
+[`Futures`]: /docs/getting-started/futures/
 [rt]: {{< api-url "tokio" >}}/runtime/index.html
 [`io`]: {{< api-url "tokio" >}}/io/index.html
 [`net`]: {{< api-url "tokio" >}}/net/index.html
