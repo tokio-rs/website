@@ -117,7 +117,7 @@ impl Future for HelloWorld {
                 }
                 Connected(ref mut socket, ref mut data) => {
                     // Keep trying to write the buffer to the socket as long as the
-                    // buffer has more bytes it available for consumption
+                    // buffer has more bytes available for consumption
                     while data.has_remaining() {
                         try_ready!(socket.write_buf(data));
                     }
