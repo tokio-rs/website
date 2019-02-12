@@ -231,7 +231,7 @@ core of the [`futures`] task model.
 [`TcpStream`]: {{< api-url "tokio" >}}/net/struct.TcpStream.html
 [`Async`]: {{< api-url "futures" >}}/enum.Async.html
 [`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
-[`CurrentThread`]: {{< api-url "tokio" >}}/executor/current_thread/index.html
+[`CurrentThread`]: https://docs.rs/tokio-current-thread
 [`ThreadPool`]: http://docs.rs/tokio-threadpool
 [rt]: {{< api-url "tokio" >}}/runtime/index.html
 [next section]: {{< ref "/docs/getting-started/futures.md#returning-not-ready" >}}

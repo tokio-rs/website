@@ -187,5 +187,5 @@ also `executor.run` which can be executed afterwards.
 [`Park`]: {{< api-url "tokio-executor" >}}/park/trait.Park.html
 [`Reactor`]: {{< api-url "tokio" >}}/reactor/struct.Reactor.html
 [mio]: https://crates.io/crates/mio
-[`CurrentThread`]: {{< api-url "tokio" >}}/executor/current_thread/struct.CurrentThread.html
-[`Timer`]: {{< api-url "tokio-timer" >}}/timer/struct.Timer.html
+[`CurrentThread`]: https://docs.rs/tokio-current-thread/0.1.4/tokio_current_thread/struct.CurrentThread.html
+[`Timer`]: {{< api-url "tokio-timer" >}}/tokio_timer/timer/struct.Timer.html
