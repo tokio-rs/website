@@ -89,6 +89,10 @@ img {
 }
 
 @media (max-width: 767.98px) {
+  .navbar-brand {
+    margin-right: 0px;
+  }
+
   .tk-navbar {
     padding-right: .5rem;
     padding-left: .5rem;
