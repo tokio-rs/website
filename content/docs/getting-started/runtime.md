@@ -88,7 +88,7 @@ run inner future.
 In the next section, we'll take a look at a more involved example than our hello-
 world example that takes everything we've learned so far into account.
 
-[`CurrentThread`]: {{< api-url "tokio" >}}/executor/current_thread/index.html
+[`CurrentThread`]: https://docs.rs/tokio-current-thread
 [`ThreadPool`]: http://docs.rs/tokio-threadpool
 [rt]: {{< api-url "tokio" >}}/runtime/index.html
 [Go’s goroutine]: https://www.golang-book.com/books/intro/10

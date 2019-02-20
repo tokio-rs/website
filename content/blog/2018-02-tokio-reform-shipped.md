@@ -105,7 +105,7 @@ of the [Conduit] project.
 
 [reform RFC]: https://github.com/tokio-rs/tokio-rfcs/blob/master/text/0001-tokio-reform.md
 [crates.io]: https://crates.io/crates/tokio
-[`current_thread`]: {{< api-url "tokio" >}}/executor/current_thread/index.html
+[`current_thread`]: https://docs.rs/tokio-current-thread
 [`tokio-io`]: https://github.com/tokio-rs/tokio-io
 [`futures`]: https://github.com/rust-lang-nursery/futures-rs
 [`mio`]: https://github.com/carllerche/mio
