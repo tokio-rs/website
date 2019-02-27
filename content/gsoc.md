@@ -7,12 +7,12 @@ This is the list of ideas for students wishing to apply to Google Summer of
 Code. For more information on what the program is and how to apply, see the
 [student guide](https://google.github.io/gsocguides/student/). If you're
 interested in applying we would love to get to know you more on
-[Gitter](https://gitter.im/tokio-rs/tokio).
+[Gitter](https://gitter.im/tokio-rs/gsoc).
 
 The most successful projects are often those proposed by the students
 themselves. The following list represents some of our ideas and wishes for the
 project. However, suggesting your own idea is always encouraged. Jump over to
-[Gitter](https://gitter.im/tokio-rs/tokio) and chat with us!
+[Gitter](https://gitter.im/tokio-rs/gsoc) and chat with us!
 
 ---
 
