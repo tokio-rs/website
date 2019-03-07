@@ -111,7 +111,7 @@ message on a socket, or checking a configuration file every so often. This can
 be implemented by repeatedly creating [`Delay`][delay] values. However, because
 this is a common pattern, [`Interval`][interval] is provided.
 
-The [`Interval`] type implements `Stream`, yielding at the specified rate.
+The [`Interval`][interval] type implements `Stream`, yielding at the specified rate.
 
 ```rust
 # #![deny(deprecated)]
