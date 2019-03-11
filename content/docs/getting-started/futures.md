@@ -167,7 +167,7 @@ trait Future {
     /// The type representing errors that occurred while processing the computation.
     type Error;
 
-    /// The function that will be repeatedly called to see if the future is
+    /// The function that will be repeatedly called to see if the future
     /// has completed or not
     fn poll(&mut self) -> Result<Async<Self::Item>, Self::Error>;
 }
