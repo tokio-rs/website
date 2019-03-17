@@ -66,7 +66,7 @@ When a future's `poll` function is called, the implementation will
 **synchronously** do as much work as possible until it is logically
 blocked on some asynchronous event that has not occured yet. The future
 implementation then saves its state internally so that the next time
-`poll` is called (after an external event is receied), it resumes
+`poll` is called (after an external event is received), it resumes
 processing from the point it left off. Work is not repeated.
 
 The hello world future requires no asynchronous processing and is immediately
