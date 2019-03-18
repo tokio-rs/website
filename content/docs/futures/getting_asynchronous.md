@@ -14,11 +14,6 @@ Let's start by implementing a future that establishes a TCP socket with a remote
 peer and extracts the peer socket address, writing it to STDOUT.
 
 ```rust
-# #![deny(deprecated)]
-extern crate tokio;
-#[macro_use]
-extern crate futures;
-
 use tokio::net::{TcpStream, tcp::ConnectFuture};
 use futures::{Future, Async, Poll};
 
@@ -82,16 +77,10 @@ Now, let's take the connect future and update it to write "hello world" once the
 TCP socket has been established.
 
 ```rust
-# #![deny(deprecated)]
-extern crate tokio;
-extern crate bytes;
-#[macro_use]
-extern crate futures;
-
 use tokio::io::AsyncWrite;
 use tokio::net::{TcpStream, tcp::ConnectFuture};
 use bytes::{Bytes, Buf};
-use futures::{Future, Async, Poll};
+use futures::{try_ready, Future, Async, Poll};
 use std::io::{self, Cursor};
 
 // HelloWorld has two states, namely waiting to connect to the socket

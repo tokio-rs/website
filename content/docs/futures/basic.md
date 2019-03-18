@@ -33,9 +33,6 @@ trait Future {
 Let's implement it for our "hello world" future:
 
 ```rust
-# #![deny(deprecated)]
-extern crate futures;
-
 // `Poll` is a type alias for `Result<Async<T>, E>`
 use futures::{Future, Async, Poll};
 
@@ -85,9 +82,6 @@ In our case, let's print the future to STDOUT. We will do that by implementing a
 `Display` future.
 
 ```rust
-# #![deny(deprecated)]
-extern crate futures;
-
 use futures::{Future, Async, Poll};
 use std::fmt;
 
@@ -131,8 +125,6 @@ are `()` and the future can be executed by Tokio:
 
 ```rust
 # #![deny(deprecated)]
-extern crate tokio;
-# extern crate futures;
 # struct HelloWorld;
 # struct Display<T>(T);
 # impl<T> futures::Future for Display<T> {
@@ -157,11 +149,7 @@ helper macro: `try_ready!`.
 The poll function can be rewritten using the macro as such:
 
 ```rust
-# #![deny(deprecated)]
-#[macro_use]
-extern crate futures;
-
-use futures::{Future, Async, Poll};
+use futures::{try_ready, Future, Async, Poll};
 use std::fmt;
 
 struct Display<T>(T);
