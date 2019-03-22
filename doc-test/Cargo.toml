@@ -1,0 +1,18 @@
+[package]
+name = "doc-test"
+version = "0.1.0"
+authors = ["Bhargav Voleti <bhargav.voleti93@gmail.com>"]
+edition = "2018"
+build = "build.rs"
+
+[dependencies]
+futures = "0.1.18"
+tokio = "0.1.5"
+bytes = "0.4"
+
+
+[build-dependencies]
+skeptic = "0.13"
+
+[dev-dependencies]
+skeptic = "0.13"
