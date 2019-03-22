@@ -100,6 +100,8 @@ impl Stream for Fibonacci {
         Ok(Async::Ready(Some(curr)))
     }
 }
+
+# fn main() {}
 ```
 
 To use the stream, a future must be built that consumes it. The following future
@@ -160,17 +162,19 @@ extern crate tokio;
 # extern crate futures;
 # struct Fibonacci;
 # impl Fibonacci { fn new() { } }
-# struct Display10<T> { v: T };
+# struct Display10<T> { v: T }
 # impl<T> Display10<T> {
 # fn new(_: T) -> futures::future::FutureResult<(), ()> {
 # futures::future::ok(())
 # }
 # }
 
+# fn main() {
 let fib = Fibonacci::new();
 let display = Display10::new(fib);
 
 tokio::run(display);
+# }
 ```
 
 ## Getting asynchronous
@@ -245,7 +249,7 @@ extern crate tokio;
 # extern crate futures;
 # struct Fibonacci;
 # impl Fibonacci { fn new(dur: Duration) { } }
-# struct Display10<T> { v: T };
+# struct Display10<T> { v: T }
 # impl<T> Display10<T> {
 # fn new(_: T) -> futures::future::FutureResult<(), ()> {
 # futures::future::ok(())
@@ -254,10 +258,12 @@ extern crate tokio;
 
 use std::time::Duration;
 
+# fn main() {
 let fib = Fibonacci::new(Duration::from_secs(1));
 let display = Display10::new(fib);
 
 tokio::run(display);
+# }
 ```
 
 # Combinators
@@ -280,6 +286,7 @@ fn fibonacci() -> impl Stream<Item = u64, Error = ()> {
         Some(Ok((curr, (next, new_next))))
     })
 }
+# fn main() {}
 ```
 
 Just like with futures, using stream combinators requires a functional style of
@@ -298,6 +305,7 @@ use futures::Stream;
 # stream::once(Ok(1))
 # }
 
+# fn main() {
 tokio::run(
     fibonacci().take(10)
         .for_each(|num| {
@@ -305,6 +313,7 @@ tokio::run(
             Ok(())
         })
 );
+# }
 ```
 
 The [`take`] combinator limits the fibonacci stream to 10 values. The [`for_each`]
@@ -337,6 +346,7 @@ extern crate futures;
 
 use futures::{stream, Stream};
 
+# fn main() {
 let values = vec!["one", "two", "three"];
 
 tokio::run(
@@ -345,6 +355,7 @@ tokio::run(
         Ok(())
     })
 )
+# }
 ```
 
 ## Adapters

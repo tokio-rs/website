@@ -128,7 +128,7 @@ copying operation is complete, resolving to the amount of data that was copied.
 
 Let's take a look at the closure we passed to `for_each` again.
 
-```rust
+```rust, no_run
 # #![deny(deprecated)]
 # extern crate tokio;
 # extern crate futures;

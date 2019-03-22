@@ -37,6 +37,7 @@ may be `None`:
 # fn dox(addr: SocketAddr) {
 let listener = TcpListener::bind(&addr).unwrap();
 # }
+# fn main() {}
 ```
 
 In this case, the reference to the driver is not yet set. However, if a
@@ -51,6 +52,7 @@ will be set to driver represented by the given handle:
 # fn dox(std_listener: StdListener, my_reactor_handle: &Handle) {
 let listener = TcpListener::from_std(std_listener, &my_reactor_handle);
 # }
+# fn main() {}
 ```
 
 Once a driver is associated with a resource, it is set for the lifetime of the
@@ -115,6 +117,7 @@ tokio::spawn({
         .map_err(|_| panic!())
 });
 # }
+# fn main() {}
 ```
 
 Futures may also be used directly from other future implementations:
@@ -230,6 +233,7 @@ pool.spawn({
     .map_err(|_| panic!("error"))
 });
 # }
+# fn main() {}
 ```
 
 In order to make the above example work, a reactor must be set for the
@@ -272,6 +276,7 @@ tokio::run(future::lazy(move || {
     Ok(())
 }));
 # }
+# fn main() {}
 ```
 
 [`TcpStream`]: https://docs.rs/tokio/0.1/tokio/net/struct.TcpStream.html
@@ -447,6 +452,7 @@ loop {
     reactor.turn(None);
 }
 # }
+# fn main() {}
 ```
 
 The implementation of `turn` does the following:

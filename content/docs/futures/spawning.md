@@ -27,6 +27,7 @@ extern crate futures;
 
 use futures::future::lazy;
 
+# fn main() {
 tokio::run(lazy(|| {
     for i in 0..4 {
         tokio::spawn(lazy(move || {
@@ -37,6 +38,7 @@ tokio::run(lazy(|| {
 
     Ok(())
 }));
+# }
 ```
 
 The `tokio::run` function will block until the the future passed to `run`
@@ -70,6 +72,7 @@ use futures::Future;
 use futures::future::lazy;
 use futures::sync::oneshot;
 
+# fn main() {
 tokio::run(lazy(|| {
     let (tx, rx) = oneshot::channel();
 
@@ -84,6 +87,7 @@ tokio::run(lazy(|| {
     })
     .map_err(|e| println!("error = {:?}", e))
 }));
+# }
 ```
 
 And `mpsc` is good for sending a stream of values to another task:
@@ -96,6 +100,7 @@ use futures::{stream, Future, Stream, Sink};
 use futures::future::lazy;
 use futures::sync::mpsc;
 
+# fn main() {
 tokio::run(lazy(|| {
     let (tx, rx) = mpsc::channel(1_024);
 
@@ -112,6 +117,7 @@ tokio::run(lazy(|| {
         Ok(())
     })
 }));
+# }
 ```
 
 These two message passing primitives will also be used in the examples below to
@@ -154,6 +160,7 @@ use tokio::io;
 use tokio::net::TcpListener;
 use futures::{Future, Stream};
 
+# fn main() {
 let addr = "127.0.0.1:0".parse().unwrap();
 let listener = TcpListener::bind(&addr).unwrap();
 
@@ -178,6 +185,7 @@ tokio::run({
     })
     .map_err(|e| println!("listener error = {:?}", e))
 });
+# }
 # }
 ```
 
@@ -270,6 +278,7 @@ fn bg_task(rx: mpsc::Receiver<usize>)
     .map(|_| ())
 }
 
+# fn main() {
 # if false {
 // Start the application
 tokio::run(lazy(|| {
@@ -309,6 +318,7 @@ tokio::run(lazy(|| {
     })
     .map_err(|e| println!("listener error = {:?}", e))
 }));
+# }
 # }
 ```
 
@@ -390,6 +400,7 @@ fn rtt(tx: mpsc::Sender<Message>)
         })
 }
 
+# fn main() {
 # if false {
 // Start the application
 tokio::run(lazy(|| {
@@ -414,6 +425,7 @@ tokio::run(lazy(|| {
 
     Ok(())
 }));
+# }
 # }
 ```
 

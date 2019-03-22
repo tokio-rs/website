@@ -51,6 +51,7 @@ impl Future for MyTask {
         }
     }
 }
+# fn main() {}
 ```
 
 Tasks are submitted to an executor using `tokio::spawn` or by calling a `spawn`
@@ -276,6 +277,7 @@ use futures::Async;
 task::current().notify();
 return Ok(Async::NotReady);
 # }
+# fn main() {}
 ```
 
 Yield can be used to break up a CPU expensive computation:
@@ -305,6 +307,7 @@ impl Future for Count {
         Ok(Async::Ready(()))
     }
 }
+# fn main() {}
 ```
 
 [contract]: https://docs.rs/futures/0.1.23/futures/future/trait.Future.html#tymethod.poll

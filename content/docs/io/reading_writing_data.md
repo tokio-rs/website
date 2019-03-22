@@ -29,6 +29,7 @@ pub trait AsyncRead: Read {
     // various provided methods
     // ...
 }
+# fn main() {}
 ```
 
 Huh. What's going on here? Well, `AsyncRead` is really just [`Read`]
@@ -386,6 +387,7 @@ impl Decoder for LinesCodec {
         })
     }
 }
+# fn main() {}
 ```
 
 [the overview]: {{< ref "/docs/io/overview.md" >}}
