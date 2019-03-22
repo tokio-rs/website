@@ -1,3 +1,4 @@
 target/
 tags
 libtest.rmeta
+Cargo.lock
