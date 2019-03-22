@@ -292,6 +292,8 @@ fn get_ok_data() -> Result<Vec<Data>, io::Error> {
 
     Ok(dst)
 }
+
+# fn main() {}
 ```
 
 This works because the closure passed to `and_then` is able to obtain a mutable
@@ -375,6 +377,8 @@ fn print_multi() -> impl Future<Item = (), Error = io::Error> {
     future::join_all(futures)
         .map(|_| ())
 }
+
+# fn main() {}
 ```
 
 ## Returning futures
@@ -399,11 +403,13 @@ fn with_future<T: Future<Item = String>>(f: T) {
 # drop(f);
 }
 
+# fn main() {
 let my_future = get_message().map(|message| {
     format!("MESSAGE = {}", message)
 });
 
 with_future(my_future);
+# }
 ```
 
 However, for returning futures, it isn't as simple. There are a few options with
@@ -428,6 +434,8 @@ fn add_10<F>(f: F) -> impl Future<Item = i32, Error = F::Error>
 {
     f.map(|i| i + 10)
 }
+
+# fn main() {}
 ```
 
 The `add_10` function has a return type that is "something that implements

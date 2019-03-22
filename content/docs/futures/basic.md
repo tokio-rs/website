@@ -49,6 +49,8 @@ impl Future for HelloWorld {
         Ok(Async::Ready("hello world".to_string()))
     }
 }
+
+# fn main() {}
 ```
 
 The `Item` and `Error` associated types define the types returned by the future
@@ -112,6 +114,8 @@ where
         Ok(Async::Ready(()))
     }
 }
+
+# fn main() {}
 ```
 
 The `Display` takes a future that yields items that can be displayed. When it is
@@ -143,8 +147,10 @@ extern crate tokio;
 #     }
 # }
 
+# fn main() {
 let future = Display(HelloWorld);
 tokio::run(future);
+# }
 ```
 
 Running this results in "hello world" being outputted to standard out.

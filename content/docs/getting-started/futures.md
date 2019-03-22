@@ -34,6 +34,7 @@ let n = socket.read(&mut buf).unwrap();
 
 // Do something with &buf[..n];
 # }
+# fn main() {}
 ```
 
 When `socket.read` is called, either the socket has pending data in its receive

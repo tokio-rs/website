@@ -248,6 +248,8 @@ And the `ResolveAndConnect` future is defined as:
 pub struct ResolveAndConnect {
     state: State,
 }
+
+# fn main() {}
 ```
 
 Now, the implementation:
