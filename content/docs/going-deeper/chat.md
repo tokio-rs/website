@@ -141,6 +141,7 @@ Here is how the shared state is defined (the `Tx` type alias was done above):
 struct Shared {
     peers: HashMap<SocketAddr, Tx>,
 }
+# fn main() {}
 ```
 
 Then, at the very top of the `main` function, the state instance is created.
@@ -151,7 +152,9 @@ connections.
 # #![deny(deprecated)]
 # use std::sync::{Arc, Mutex};
 # type Shared = String;
+# fn main() {
 let state = Arc::new(Mutex::new(Shared::new()));
+# }
 ```
 
 Now we can handle processing incoming connections. The server task is updated to

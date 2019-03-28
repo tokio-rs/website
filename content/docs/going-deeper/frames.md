@@ -35,6 +35,8 @@ pub struct LinesCodec {
     // only look at `de\n` before returning.
     next_index: usize,
 }
+
+# fn main() {}
 ```
 
 The comments here explain how, since the bytes are buffered until a line is
@@ -58,7 +60,7 @@ Let's look at how `Decoder::decode` is implemented for `LinesCodec`.
 # use std::str;
 # use bytes::BytesMut;
 # use tokio_io::codec::*;
-# struct LinesCodec { next_index: usize };
+# struct LinesCodec { next_index: usize }
 # impl Decoder for LinesCodec {
 #    type Item = String;
 #    type Error = io::Error;
@@ -100,6 +102,7 @@ fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<String>, io::Error> {
     }
 }
 # }
+# fn main() {}
 ```
 
 The `Encoder::encode` method is called when a frame must be written to the
@@ -116,7 +119,7 @@ Let's now look at how `Encoder::encode` is implemented for `LinesCodec`.
 # use std::str;
 # use bytes::*;
 # use tokio_io::codec::*;
-# struct LinesCodec { next_index: usize };
+# struct LinesCodec { next_index: usize }
 # impl Encoder for LinesCodec {
 #    type Item = String;
 #    type Error = io::Error;
@@ -137,6 +140,7 @@ fn encode(&mut self, line: String, buf: &mut BytesMut) -> Result<(), io::Error> 
     Ok(())
 }
 # }
+# fn main() {}
 ```
 
 It's often simpler to encode information. Here we simply reserve the space
@@ -158,6 +162,7 @@ and `AsyncWrite` traits using the `AsyncRead::framed` method.
 # use futures::prelude::*;
 # use tokio::net::TcpStream;
 # use tokio_codec::{Framed, LinesCodec};
+# fn main() {
 # let addr = "127.0.0.1:5000".parse().expect("invalid socket address");
 TcpStream::connect(&addr).and_then(|sock| {
     let framed_sock = Framed::new(sock, LinesCodec::new());
@@ -166,4 +171,5 @@ TcpStream::connect(&addr).and_then(|sock| {
         Ok(())
     })
 });
+# }
 ```
