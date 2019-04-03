@@ -194,4 +194,4 @@ fn main() {
 }
 ```
 
-More examples can be found [here](https://github.com/tokio-rs/tokio/tree/master/examples).
+More examples can be found [here](https://github.com/tokio-rs/tokio/tree/master/tokio/examples).
