@@ -772,7 +772,7 @@ types without reaching for trait objects.
 
 The full code can be found [here][full-code].
 
-[full-code]: https://github.com/tokio-rs/tokio/blob/master/examples/chat.rs
+[full-code]: https://github.com/tokio-rs/tokio/blob/master/tokio/examples/chat.rs
 [Hello World!]: {{< ref "/docs/getting-started/hello-world.md" >}}
 [message passing]: {{< ref "/docs/going-deeper/tasks.md#message-passing" >}}
 [mpsc]: {{< api-url "futures" >}}/sync/mpsc/index.html
