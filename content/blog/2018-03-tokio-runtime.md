@@ -42,7 +42,7 @@ reading all data from the socket and writing it back to the same socket.
 The [guides] and [examples] have been updated to use the runtime.
 
 [guides]: https://tokio.rs/docs/getting-started/hello-world/
-[examples]: https://github.com/tokio-rs/tokio/tree/master/examples
+[examples]: https://github.com/tokio-rs/tokio/tree/master/tokio/examples
 
 ## What is the Tokio Runtime?
 
