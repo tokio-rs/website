@@ -22,8 +22,8 @@ of basic I/O, you can use a future to represent a wide range of events, e.g.:
 * **An RPC invocation** to a server. When the server replies, the future is
   completed, and its value is the server’s response.
 
-* **A timeout**. When time is up, the future is completed, and its value is
-  `()`.
+* **A timeout**. When time is up, the future is completed, the value is an empty tuple
+  `()` (also referred to as "unit" or "the unit type").
 
 * **A long-running CPU-intensive task**, running on a thread pool. When the task
   finishes, the future is completed, and its value is the return value of the
