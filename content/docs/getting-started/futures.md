@@ -177,7 +177,7 @@ trait Future {
 For now it's just important to know that futures have two associated types: `Item`
 and `Error`. `Item` is the type of the value that the `Future` will yield when it
 completes. `Error` is the type of Error that the `Future` may yield if there's an
-error before that causes the `Future` from being able to complete.
+error before that prevents the `Future` from completing successfully.
 
 Finally, `Future`s have one method named `poll`. We won't go into too much detail
 about `poll` in this section since you don't need to know about `poll` to use

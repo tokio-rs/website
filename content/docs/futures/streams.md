@@ -321,6 +321,41 @@ combinator asynchronously iterates the stream values. [`for_each`] consumes the
 stream and returns a future that completes once the closure was called once for
 each stream value. It is the asynchronous equivalent to a rust `for` loop.
 
+It is possible to implement fibonacci with 1 second wait between values using [Interval] stream and combinators:
+
+```rust
+extern crate futures;
+extern crate tokio;
+
+use futures::Stream;
+use std::time::Duration;
+use tokio::timer::Interval;
+
+struct Fibonacci {
+    curr: u64,
+    next: u64,
+}
+
+# fn main() {
+let mut fib = Fibonacci { curr: 1, next: 1 };
+
+let future = Interval::new_interval(Duration::from_secs(1)).map(move |_| {
+    let curr = fib.curr;
+    let next = curr + fib.next;
+
+    fib.curr = fib.next;
+    fib.next = next;
+
+    curr
+});
+
+tokio::run(future.take(10).map_err(|_| ()).for_each(|num| {
+    println!("{}", num);
+    Ok(())
+}));
+# }
+```
+
 # Essential combinators
 
 It is worth spending some time with the [`Stream` trait][trait-dox] and
