@@ -140,7 +140,7 @@ Tokio leverages [`mio`] for the system event queue and [`futures`] for defining
 tasks.  Tokio implements [async] syntax to improve readability of futures.
 [Many] libraries are implemented using Tokio, including [`hyper`] and [`actix`].
 
-[`mio`]: https://carllerche.github.io/mio/mio/index.html
+[`mio`]: https://github.com/tokio-rs/mio
 [`futures`]: https://docs.rs/futures/*/futures/
 [async]: https://tokio.rs/blog/2018-08-async-await/
 [Many]: https://crates.io/crates/tokio/reverse_dependencies
