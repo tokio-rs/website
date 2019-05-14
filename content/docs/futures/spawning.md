@@ -300,14 +300,12 @@ tokio::run(lazy(|| {
             // Each spawned task will have a clone of the sender handle.
             let tx = tx.clone();
 
-            // In this example, "hello world" will be written to the
-            // socket followed by the socket being closed.
             io::read_to_end(socket, vec![])
-                // Drop the socket
                 .and_then(move |(_, buf)| {
                     tx.send(buf.len())
                         .map_err(|_| io::ErrorKind::Other.into())
                 })
+                // Drop the socket
                 .map(|_| ())
                 // Write any error to STDOUT
                 .map_err(|e| println!("socket error = {:?}", e))
