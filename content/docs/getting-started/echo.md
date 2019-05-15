@@ -30,6 +30,7 @@ Next, add the necessary dependencies:
 ```toml
 [dependencies]
 tokio = "0.1"
+# futures = "0.1"
 ```
 
 and the crates and types into scope in `main.rs`:
@@ -37,7 +38,7 @@ and the crates and types into scope in `main.rs`:
 ```rust
 # #![deny(deprecated)]
 extern crate tokio;
-extern crate futures;
+# extern crate futures;
 
 use tokio::io;
 use tokio::net::TcpListener;
