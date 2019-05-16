@@ -300,6 +300,8 @@ tokio::run(lazy(|| {
             // Each spawned task will have a clone of the sender handle.
             let tx = tx.clone();
 
+            // In this example, all bytes read from the
+            // socket will be placed into a Vec.
             io::read_to_end(socket, vec![])
                 // Drop the socket
                 .and_then(move |(_, buf)| {
