@@ -301,11 +301,11 @@ tokio::run(lazy(|| {
             let tx = tx.clone();
 
             io::read_to_end(socket, vec![])
+                // Drop the socket
                 .and_then(move |(_, buf)| {
                     tx.send(buf.len())
                         .map_err(|_| io::ErrorKind::Other.into())
                 })
-                // Drop the socket
                 .map(|_| ())
                 // Write any error to STDOUT
                 .map_err(|e| println!("socket error = {:?}", e))
