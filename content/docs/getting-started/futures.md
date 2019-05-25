@@ -57,7 +57,7 @@ buffer, the `read` function returns immediately, indicating that the socket was 
 ready" to perform the read operation.
 
 When using a Tokio [`TcpStream`], a call to `read` will always immediately return
-a value ([`ErrorKind::WouldBlock`]) even if there is no pending data to read.
+a value ([`ErrorKind::WouldBlock`]) even if there is pending data to read.
 If there is no pending data, the caller is responsible for calling `read` again
 at a later time.  The trick is to know when that "later time" is.
 
