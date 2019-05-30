@@ -95,7 +95,7 @@ Resource types may also include functions that return futures. These are
 helpers that use the `poll_` functions to provide additional functionality. For
 example, [`TcpStream`] provides a [`connect`] function that returns a future.
 This future will complete once the [`TcpStream`] has established a connection
-with a peer (or failed attemepting to do so).
+with a peer (or failed attempting to do so).
 
 Using combinators to connect a [`TcpStream`]:
 
