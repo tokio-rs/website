@@ -493,7 +493,7 @@ This ensures that the function has a single return type: `Either`.
 In situations where there are more than two branches, `Either` enums must be
 nested (`Either<Either<A, B>, C>`) or a custom, multi variant, enum is defined.
 
-This scenario comes up often when trying to conditional return errors.
+This scenario comes up often when trying to conditionally return errors.
 Consider:
 
 ```rust
