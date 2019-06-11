@@ -391,9 +391,9 @@ Instead of managing all the various Tokio components individually, a runtime is
 created and started in a single call.
 
 Tokio offers a [concurrent runtime][concurrent] and a
-[single-threaded][current_thread] runtimee. The concurrent runtime is backed by
+[single-threaded][current_thread] runtime. The concurrent runtime is backed by
 a multi-threaded, work-stealing executor. The single-threaded runtime executes
-all tasks and drivers on thee current thread. The user may pick the runtime with
+all tasks and drivers on the current thread. The user may pick the runtime with
 characteristics best suited for the application.
 
 [`Reactor`]: https://docs.rs/tokio-reactor/0.1.5/tokio_reactor/
