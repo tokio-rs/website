@@ -42,7 +42,7 @@ tokio::run(lazy(|| {
 ```
 
 The `tokio::run` function will block until the the future passed to `run`
-teriminates as well as **all other spawned tasks**. In this case, `tokio::run`
+terminates as well as **all other spawned tasks**. In this case, `tokio::run`
 blocks until all four tasks output to STDOUT and terminate.
 
 The [`lazy`] function runs the closure the first time the future is polled. It
