@@ -18,7 +18,7 @@ more complex, but there are more moving parts around. Knowing the details here
 can be a stepping stone to reading the code of the default runtime.
 
 A complete, working example of things discussed here can be found in the
-[git repository](https://github.com/tokio-rs/tokio/tree/master/tokio/examples/manual-runtime.rs).
+[git repository](https://github.com/tokio-rs/tokio/tree/v0.1.x/tokio/examples/manual-runtime.rs).
 
 # The `Park` trait
 

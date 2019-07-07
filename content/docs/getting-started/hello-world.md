@@ -229,6 +229,6 @@ the guide will start digging a bit deeper into Futures and the Tokio runtime mod
 [`io`]: {{< api-url "tokio" >}}/io/index.html
 [`net`]: {{< api-url "tokio" >}}/net/index.html
 [`io::write_all`]: {{< api-url "tokio-io" >}}/io/fn.write_all.html
-[full-code]: https://github.com/tokio-rs/tokio/blob/master/tokio/examples/hello_world.rs
+[full-code]: https://github.com/tokio-rs/tokio/tree/v0.1.x/tokio/examples/hello_world.rs
 [Netcat]: http://netcat.sourceforge.net/
 [Nmap.org]: https://nmap.org
