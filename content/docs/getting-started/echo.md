@@ -182,7 +182,7 @@ concurrently!
 
 The full code can be found [here][full-code].
 
-[full-code]: https://github.com/tokio-rs/tokio/blob/master/tokio/examples/echo.rs
+[full-code]: https://github.com/tokio-rs/tokio/tree/v0.1.x/tokio/examples/echo.rs
 [hello world]: {{< ref "/docs/getting-started/hello-world.md" >}}
 [`io::copy`]: {{< api-url "tokio" >}}/io/fn.copy.html
 [`split`]: {{< api-url "tokio" >}}/io/trait.AsyncRead.html#method.split
