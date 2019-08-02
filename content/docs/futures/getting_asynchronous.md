@@ -7,7 +7,7 @@ menu:
 ---
 
 Futures are all about managing asynchronicity. Implementing a future that
-completes asynchonously requires correctly handling receiving `Async::NotReady`
+completes asynchronously requires correctly handling receiving `Async::NotReady`
 from the inner future.
 
 Let's start by implementing a future that establishes a TCP socket with a remote
