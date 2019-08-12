@@ -302,7 +302,7 @@ exists):
 # extern crate tokio;
 extern crate bytes;
 use bytes::{BufMut, BytesMut};
-use tokio::codec::{Decoder, Encoder};
+use tokio::codec::{Decoder, Encoder, Framed};
 use tokio::prelude::*;
 
 // This is where we'd keep track of any extra book-keeping information
@@ -387,16 +387,12 @@ impl Decoder for LinesCodec {
         })
     }
 }
-# fn main() {}
-```
 
-To use our custom `LinesCodec`, we need to frame incoming data using [`Framed::new`]:
-
-````rust
-use tokio::codec::Framed;
 
 # fn main() {
 # let addr = "127.0.0.1:12345".parse().unwrap();
+
+// To use our custom LinesCodec, we need to frame incoming data using Framed::new
 let lines_fut = TcpStream::connect(&addr).and_then(|stream| {
     // Frame the input with our codec...
     let transport = Framed::new(stream, LinesCodec);
@@ -410,6 +406,7 @@ let lines_fut = TcpStream::connect(&addr).and_then(|stream| {
 .map_err(|e| eprintln!("socket error: {}", e));
 
 tokio::run(lines_fut);
+# }
 ```
 
 [the overview]: {{< ref "/docs/io/overview.md" >}}
