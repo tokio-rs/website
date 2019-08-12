@@ -390,6 +390,28 @@ impl Decoder for LinesCodec {
 # fn main() {}
 ```
 
+To use our custom `LinesCodec`, we need to frame incoming data using [`Framed::new`]:
+
+````rust
+use tokio::codec::Framed;
+
+# fn main() {
+# let addr = "127.0.0.1:12345".parse().unwrap();
+let lines_fut = TcpStream::connect(&addr).and_then(|stream| {
+    // Frame the input with our codec...
+    let transport = Framed::new(stream, LinesCodec);
+
+    // ...then print each framed line
+    transport.for_each(|line| {
+        println!("Next line: {}", line);
+        Ok(())
+    })
+})
+.map_err(|e| eprintln!("socket error: {}", e));
+
+tokio::run(lines_fut);
+```
+
 [the overview]: {{< ref "/docs/io/overview.md" >}}
 [the next section]: {{< ref "/docs/io/async_read_write.md" >}}
 [echo server]: {{< ref "/docs/io/overview.md" >}}#an-example-server
