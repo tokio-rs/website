@@ -97,7 +97,7 @@ between those contexts.
 
 To record the flow of execution, `tracing` introduces the concept of _spans_. Unlike a log
 line that represents a moment in time, a span models a period of time with a
-beginning and an end. When a a program begins executing in a context or performing
+beginning and an end. When a program begins executing in a context or performing
 a unit of work, it _enters_ a span, and when it stops executing in that context,
 it _exits_ the span.
 
@@ -247,13 +247,17 @@ Contributions in all these areas will be welcomed eagerly. We're all looking
 forward to seeing what the community will build on top of the platform
 that `tracing` provides!
 
+If you're interested, check out `tracing` [on GitHub][github] or join the
+[Gitter] chat channel!
+
 [linkerd]: https://github.com/linkerd/linkerd2-proxy
 [vector]: https://github.com/timberio/vector
 [OpenTelemetry]: https://opentelemetry.io/
 [Jaeger]: https://www.jaegertracing.io/
-[core-crates]: https://crates.io/crates/tracing-crates
+[core-crates]: https://crates.io/crates/tracing-core
 
 [tracing-crates]: https://crates.io/crates/tracing
 [log-crates]: https://crates.io/crates/log
 [docs]: https://docs.rs/tracing/0.1.5/tracing/
 [github]: https://github.com/tokio-rs/tracing
+[gitter]: https://gitter.im/tracing-rs/tracing
