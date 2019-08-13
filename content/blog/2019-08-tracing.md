@@ -250,6 +250,8 @@ that `tracing` provides!
 If you're interested, check out `tracing` [on GitHub][github] or join the
 [Gitter] chat channel!
 
+<div style="text-align:right">&mdash;Eliza Weisman</div>
+
 [linkerd]: https://github.com/linkerd/linkerd2-proxy
 [vector]: https://github.com/timberio/vector
 [OpenTelemetry]: https://opentelemetry.io/
