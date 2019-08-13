@@ -1,7 +1,7 @@
 +++
-date = "2019-08-12"
+date = "2019-08-13"
 title = "Diagnostics with Tracing"
-description = "August 12, 2019"
+description = "August 13, 2019"
 menu = "blog"
 weight = 988
 +++
