@@ -18,7 +18,7 @@ driven diagnostics.
 ## Why do we need another logging library?
 
 Rust already has a robust logging ecosystem based around the
-[`log`][log-crates] crate's logging facade &mdash; there's `env-logger`, `fern`,
+[`log`][log-crates] crate's logging facade &mdash; there's `env_logger`, `fern`,
 and several other libraries to choose from. So why is `tracing` necessary, and
 what benefit does it provide that these existing libraries don't? To answer
 these questions, we need to consider the challenges introduced by diagnostics in
@@ -108,6 +108,11 @@ is in **both** spans, with the newly-entered span considered the _child_ and the
 outer span the _parent_. We can then construct a tree of nested spans and follow
 them throughout different parts of a program.
 
+`tracing` also supports _events_, which model instantaneous points in time.
+Events are similar to traditional log messages, but exist within the tree of
+spans as well. When we record an event, we can pinpoint the context in which it
+occurred.
+
 ### Structure
 
 By attaching _structured data_ to spans, we can model contexts. Rather than
@@ -142,6 +147,218 @@ requests recieved for different paths or HTTP methods. By looking at the
 structure of the span tree as well as at key-value data, we can even do things
 like recording the entire lifespan of a request only when it ended with an
 error.
+
+## A Worked Example
+
+To demonstrate the value of this kind of diagnostics, let's take a look at an
+example. In this example, we've written a small HTTP service, using [`tower`],
+that implements "character repetition as a service". The service recieves
+requests for paths consisting of a single ASCII character, and responds with
+that character duplicated a number of times equal to the value of the
+`Content-Length` header.
+
+We've instrumented the example service using `tracing`, and used the
+[`tracing-subscriber`] crate to implement an admin endpoint that
+allows us to [change the filter configuration][reload] that determines what
+`tracing` instrumentation is enabled at runtime. A load generator runs in the background
+that constantly sends requests for random alphabetic characters to the demo service.
+
+With a version of the example service instrumented using the [`log`][log-crates] and
+[`env_logger`] crates, we get  output like this:
+
+```log
+...
+[DEBUG load_log] accepted connection from [::1]:55257
+[DEBUG load_log] received request for path "/z"
+[DEBUG load_log] accepted connection from [::1]:55258
+[DEBUG load_log] received request for path "/Z"
+[ERROR load_log] error received from server! status: 500
+[DEBUG load_log] accepted connection from [::1]:55259
+[DEBUG load_log] accepted connection from [::1]:55260
+[DEBUG load_log] received request for path "/H"
+[DEBUG load_log] accepted connection from [::1]:55261
+[DEBUG load_log] received request for path "/S"
+[DEBUG load_log] received request for path "/C"
+[DEBUG load_log] accepted connection from [::1]:55262
+[DEBUG load_log] received request for path "/x"
+[DEBUG load_log] accepted connection from [::1]:55263
+[DEBUG load_log] accepted connection from [::1]:55264
+[WARN  load_log] path "/" not found; returning 404
+[DEBUG load_log] accepted connection from [::1]:55265
+[ERROR load_log] error received from server! status: 404
+[DEBUG load_log] received request for path "/Q"
+[DEBUG load_log] accepted connection from [::1]:55266
+[DEBUG load_log] received request for path "/l"
+...
+```
+
+Because the service is under load, these messages scroll past very fast. I've
+included just a small sample of the output here.
+
+Although the errors do show up in the logs, it's difficult to associate them
+with any context that might help us determine their cause. For the 404 error,
+we're lucky enough that whomever added the warning line logged by the server
+thought to include the path in the human-readable log message, but for the 500
+error, we're flying blind.
+
+Now, let's switch to a version of the demo application that's instrumented with
+`tracing`:
+
+```log
+...
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60891}: load: accepted connection
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60890}: load: accepted connection
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60891}:request{req.method=GET req.path="/I"}: load: received request. req.headers={"content-length": "18", "host": "[::1]:3000"} req.version=HTTP/1.1
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60890}:request{req.method=GET req.path="/T"}: load: received request. req.headers={"content-length": "4", "host": "[::1]:3000"} req.version=HTTP/1.1
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60892}: load: accepted connection
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60892}:request{req.method=GET req.path="/x"}: load: received request. req.headers={"content-length": "6", "host": "[::1]:3000"} req.version=HTTP/1.1
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60893}: load: accepted connection
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60895}:request{req.method=GET req.path="/"}: load: received request. req.headers={"content-length": "13", "host": "[::1]:3000"} req.version=HTTP/1.1
+ WARN server{name=serve local=[::1]:3000}:conn{remote=[::1]:60895}:request{req.method=GET req.path="/"}: load: rsp.status=404
+ERROR gen: error received from server! status=404
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60893}:request{req.method=GET req.path="/a"}: load: received request. req.headers={"content-length": "11", "host": "[::1]:3000"} req.version=HTTP/1.1
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60894}: load: accepted connection
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60894}:request{req.method=GET req.path="/V"}: load: received request. req.headers={"content-length": "12", "host": "[::1]:3000"} req.version=HTTP/1.1
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60896}: load: accepted connection
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60998}: load: accepted connection
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60996}:request{req.method=GET req.path="/z"}: load: received request. req.headers={"content-length": "17", "host": "[::1]:3000"} req.version=HTTP/1.1
+ERROR gen: error received from server! status=500
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60987}: load: accepted connection
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60911}: load: accepted connection
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60911}:request{req.method=GET req.path="/m"}: load: received request. req.headers={"content-length": "7", "host": "[::1]:3000"} req.version=HTTP/1.1
+DEBUG server{name=serve local=[::1]:3000}:conn{remote=[::1]:60912}: load: accepted connection
+...
+```
+
+Notice how in addition to printing individual events, the span contexts in which
+they occurred are also printed. In particular, each connection and request
+creates its own span. However, these events are recorded very frequently, so the
+logs are still scrolling by quite fast.
+
+If we send a request to the demo app's admin endpoint, we can reload the
+filter configuration to look only at the events recorded by the load generators:
+
+```bash
+:; curl -X PUT localhost:3001/filter -d "gen=debug"
+```
+
+These filters are specified using a syntax similar to that of the [`env_logger`]
+crate.
+
+The rate at which the logs scroll by slows down significantly, and we see output
+like this:
+
+```log
+...
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen: error received from server! status=404
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: error received from server! status=500
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: error received from server! status=500
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: error received from server! status=500
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: error received from server! status=500
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen: error received from server! status=404
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: error received from server! status=500
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen: error received from server! status=404
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen: error received from server! status=404
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: error received from server! status=500
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen: error received from server! status=404
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: error received from server! status=500
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen: error received from server! status=404
+...
+```
+
+Looking at the `request` spans outut by the load generator, we start to notice a
+pattern. The value of the `req.path` field is always either `"/"` or `"/z"`.
+
+We can reload the filter configuration again, setting the verbosity to maximum
+only when we're inside a span with the field `req.path` with the value `"/"`:
+
+```bash
+:; curl -X PUT localhost:3001/filter -d "[{req.path=\"/\"}]=trace"
+```
+
+The `[]` indicates that we wish to filter on `tracing` spans rather than on
+static targets, and the `{}` indicate that we want to match span fields.
+
+```log
+...
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen: sending request...
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: tower_buffer::service: sending request to buffer worker
+DEBUG request{req.method=GET req.path="/"}: load: received request. req.headers={"content-length": "21", "host": "[::1]:3000"} req.version=HTTP/1.1
+TRACE request{req.method=GET req.path="/"}: load: handling request...
+TRACE request{req.method=GET req.path="/"}: load: rsp.error=path must be a single ASCII character
+ WARN request{req.method=GET req.path="/"}: load: rsp.status=404
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen: error received from server! status=404
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen: response complete. rsp.body=path must be a single ASCII character
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen: sending request...
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: tower_buffer::service: sending request to buffer worker
+DEBUG request{req.method=GET req.path="/"}: load: received request. req.headers={"content-length": "18", "host": "[::1]:3000"} req.version=HTTP/1.1
+TRACE request{req.method=GET req.path="/"}: load: handling request...
+TRACE request{req.method=GET req.path="/"}: load: rsp.error=path must be a single ASCII character
+ WARN request{req.method=GET req.path="/"}: load: rsp.status=404
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen: error received from server! status=404
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen: response complete. rsp.body=path must be a single ASCII character
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen: sending request...
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: tower_buffer::service: sending request to buffer worker
+DEBUG request{req.method=GET req.path="/"}: load: received request. req.headers={"content-length": "2", "host": "[::1]:3000"} req.version=HTTP/1.1
+...
+```
+
+Now we see what's going on. The service doesn't support requests to `/` and is,
+quite correctly, responding with a 404. But what about those 500 errors? We
+remember that they seemed to only occur when the requested path is "/z"...
+
+```bash
+:; curl -X PUT localhost:3001/filter -d "[{req.path=\"/z\"}]=trace"
+```
+
+```log
+...
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: sending request...
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: tower_buffer::service: sending request to buffer worker
+DEBUG request{req.method=GET req.path="/z"}: load: received request. req.headers={"content-length": "0", "host": "[::1]:3000"} req.version=HTTP/1.1
+TRACE request{req.method=GET req.path="/z"}: load: handling request...
+TRACE request{req.method=GET req.path="/z"}: load: error=i don't like this letter. letter="z"
+TRACE request{req.method=GET req.path="/z"}: load: rsp.error=unknown internal error
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: error received from server! status=500
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: response complete. rsp.body=unknown internal error
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: sending request...
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: tower_buffer::service: sending request to buffer worker
+DEBUG request{req.method=GET req.path="/z"}: load: received request. req.headers={"content-length": "16", "host": "[::1]:3000"} req.version=HTTP/1.1
+TRACE request{req.method=GET req.path="/z"}: load: handling request...
+TRACE request{req.method=GET req.path="/z"}: load: error=i don't like this letter. letter="z"
+TRACE request{req.method=GET req.path="/z"}: load: rsp.error=unknown internal error
+ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: error received from server! status=500
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: response complete. rsp.body=unknown internal error
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: gen: sending request...
+TRACE load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/z"}: tower_buffer::service: sending request to buffer worker
+DEBUG request{req.method=GET req.path="/z"}: load: received request. req.headers={"content-length": "24", "host": "[::1]:3000"} req.version=HTTP/1.1
+TRACE request{req.method=GET req.path="/z"}: load: handling request...
+TRACE request{req.method=GET req.path="/z"}: load: error=i don't like this letter. letter="z"
+TRACE request{req.method=GET req.path="/z"}: load: rsp.error=unknown internal error
+...
+```
+
+We can now trace the entire life-cycle of a request to `/z`, ignoring everything
+else that's happening concurrently. And, looking at the logged events, we see
+that the service records that "I don't like this letter" and returns an internal
+error. We've found the (admittedly, entirely fake) bug!
+
+This kind of dynamic filtering is only possible with context-aware, structured
+diagnostic instrumentation. Because nesting spans and events lets us construct a
+a tree of related contexts, we can interpret the diagnostics in terms of events
+that are _logically_ or _causally_ linked (e.g., they occurred while handling
+the same request) rather than those that are _temporally_ linked (they occurred
+near each other in time).
+
+If you're interested in seeing the code that produced these logs, or
+interactively experimenting with this demo, you can check out the example
+[here][example].
+
+[`tower`]: https://crates.io/crates/tower
+[`env_logger`]: https://crates.io/crates/env_logger
+[reload]: https://docs.rs/tracing-subscriber/latest/tracing_subscriber/reload/index.html
+[example]: https://github.com/tokio-rs/tracing/blob/master/tracing-tower/examples/load.rs
+
 
 ## Getting Started with Tracing
 
@@ -257,9 +474,12 @@ If you're interested, check out `tracing` [on GitHub][github] or join the
 [OpenTelemetry]: https://opentelemetry.io/
 [Jaeger]: https://www.jaegertracing.io/
 [core-crates]: https://crates.io/crates/tracing-core
-
 [tracing-crates]: https://crates.io/crates/tracing
 [log-crates]: https://crates.io/crates/log
+[`tracing-tower`]: https://github.com/tokio-rs/tracing/blob/master/tracing-tower
+[`tracing-subscriber`]: https://crates.io/crates/tracing-subscriber
+[`tracing-log`]: https://crates.io/crates/tracing-log
+[`tracing-fmt`]: https://crates.io/crates/tracing-fmt
 [docs]: https://docs.rs/tracing/0.1.5/tracing/
 [github]: https://github.com/tokio-rs/tracing
 [gitter]: https://gitter.im/tracing-rs/tracing
