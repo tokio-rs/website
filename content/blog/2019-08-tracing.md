@@ -482,4 +482,4 @@ If you're interested, check out `tracing` [on GitHub][github] or join the
 [`tracing-fmt`]: https://crates.io/crates/tracing-fmt
 [docs]: https://docs.rs/tracing/0.1.5/tracing/
 [github]: https://github.com/tokio-rs/tracing
-[gitter]: https://gitter.im/tracing-rs/tracing
+[gitter]: https://gitter.im/tokio-rs/tracing
