@@ -45,7 +45,7 @@ we can determine that any log records occurring after an "accepted
 connection..." message and before a "closing connection" message refer to that
 connection.
 
-In asynchronous systems like Tokio, however, interpreting traditional log
+However, in asynchronous systems like Tokio, interpreting traditional log
 messages can often be quite challenging. A single thread in an asynchronous
 system might be executing any number of tasks, switching between them as IO
 resources become available, and an application might consist of a number of such
