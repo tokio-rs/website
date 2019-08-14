@@ -18,17 +18,17 @@ driven diagnostics.
 ## Why do we need another logging library?
 
 Rust already has a robust logging ecosystem based around the
-[`log`][log-crates] crate's logging facade &mdash; there's `env_logger`, `fern`,
-and several other libraries to choose from. So why is `tracing` necessary, and
-what benefit does it provide that these existing libraries don't? To answer
-these questions, we need to consider the challenges introduced by diagnostics in
-asynchronous systems.
+[log][log-crates] crate's logging facade, with libraries such as
+`env_logger` and `fern` in widespread use. This raises reasonable
+questions&ndash; why is `tracing` necessary, and what benefit does it provide
+that existing libraries don't? To answer these questions, we need to
+consider the challenges introduced by diagnostics in asynchronous
+systems.
 
-In synchronous code, we can simply log individual messages as we flow through
-our program, and expect them to be printed out in order. A programmer can
-interpret the logs fairly easily, since the log records are output
-sequentially. For example, in a synchronous system, if I see a group of log
-messages like this:
+In synchronous code, we can simply log individual messages as the program
+executes, and expect them to be printed in order. A programmer can interpret the
+logs fairly easily, since the log records are output sequentially. For example,
+in a synchronous system, if I see a group of log messages like this:
 
 ```plain
 DEBUG server: accepted connection from 106.42.126.8:56975
