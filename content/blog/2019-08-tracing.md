@@ -122,7 +122,7 @@ simply recording unstructured, human-readable messages, `tracing`
 instrumentation points record typed key-value data called _fields_. For example,
 in an HTTP server, a span representing an accepted connection might record fields
 such as the client's IP address, the requested path, request method, headers,
-and so on. If we revisit the example above, with the edition of spans, we might
+and so on. If we revisit the example above, with the addition of spans, we might
 see something like this:
 
 ```plain
