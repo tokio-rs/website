@@ -13,7 +13,9 @@ using the Tokio runtime &mdash; introduces new challenges.
 
 [`tracing`][tracing-crates] is a collection of libraries that provide a framework
 for instrumenting Rust programs to collect structured, context-aware, event
-driven diagnostics.
+driven diagnostics. Note that `tracing` was originally released under the name
+`tokio-trace`; the name was changed to reflect that, although it is part of the
+Tokio project, the `tokio` runtime is not required to use `tracing`.
 
 ## Why do we need another logging library?
 
