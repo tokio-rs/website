@@ -7,7 +7,7 @@ menu:
 ---
 
 We're going to use what has been covered so far to build an echo server. This is a
-Tokio application that encorporates everything we've learned so far. The server will
+Tokio application that incorporates everything we've learned so far. The server will
 simply receive messages from the connected client and send back the same message it
 received to the client.
 
