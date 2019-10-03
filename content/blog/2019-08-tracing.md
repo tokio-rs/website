@@ -268,7 +268,7 @@ ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen
 ...
 ```
 
-Looking at the `request` spans outut by the load generator, we start to notice a
+Looking at the `request` spans output by the load generator, we start to notice a
 pattern. The value of the `req.path` field is always either `"/"` or `"/z"`.
 
 We can reload the filter configuration again, setting the verbosity to maximum
