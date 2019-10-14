@@ -402,7 +402,7 @@ loop {
         self.buffer[idx].as_mut_ptr().write(task);
 
         // Make the task available
-        self.tail.store(tail + 1, Release);
+        self.tail.store(tail.wrapping_add(1), Release);
 
         return;
     }
