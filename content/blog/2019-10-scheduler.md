@@ -736,7 +736,7 @@ makes some pretty aggressive optimizations and avoids most `std` types in order
 to write more specialized versions. There is quite a bit of `unsafe` code in the
 new scheduler.
 
-There are a few ways to test concurrent code. One, is to let your users do the
+There are a few ways to test concurrent code. One is to let your users do the
 testing and debugging for you (an attractive option, to be sure). Another is to
 write unit tests that run in a loop and hope it catches a bug. Maybe even throw
 in [TSAN]. Of course, if this does catch a bug, there is no way to easily
