@@ -918,3 +918,5 @@ sped up, so this new scheduler work is not the end on the performance front.
 
 I also hope the amount of detail this article provides is useful for others who
 may attempt to write a scheduler.
+
+<div style="text-align:right">&mdash;Carl Lerche</div>
