@@ -808,7 +808,7 @@ and stress testing.
 
 The astute reader might have questioned the claim that loom tests "all possible
 permutations", and would be right to do so. Naive permutation of behavior would
-result in combinatorial explosion at the factorial level. Anything non trivial
+result in combinatorial explosion at the factorial level. Any non trivial
 test would never complete. This problem has been researched for years and a
 number of algorithms exist to manage the combinatorial explosion. Loom's core
 algorithm is based on [dynamic partial order reduction][dpor]. This algorithm is
