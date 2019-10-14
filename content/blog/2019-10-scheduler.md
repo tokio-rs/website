@@ -917,5 +917,4 @@ already. There also are plenty of areas in the Tokio code base that could be
 sped up, so this new scheduler work is not the end on the performance front.
 
 I also hope the amount of detail this article provides is useful for others who
-may attempt to write a scheduler, especially for others writing schedulers to
-power Rust async tasks.
+may attempt to write a scheduler.
