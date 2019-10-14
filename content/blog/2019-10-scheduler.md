@@ -698,7 +698,7 @@ impl Waker {
 
     fn wake_by_ref(&self) {
         let task = self.task.clone();
-        task.scheduler.schedule(self.task);
+        task.scheduler.schedule(task);
     }
 }
 ```
