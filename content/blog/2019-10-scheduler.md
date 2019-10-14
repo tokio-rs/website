@@ -189,7 +189,7 @@ possible because it is slow.
 
 Another way to model a scheduler is to use multiple single-threaded schedulers.
 Each processor gets its own run queue and tasks are pinned to a specific
-processor. This avoids the problem of synchronization entirely. As, Rust's task
+processor. This avoids the problem of synchronization entirely. As Rust's task
 model requires the ability to queue a task from any thread, there still needs to
 be a thread-safe way to inject tasks into the scheduler. Either each processor's
 run queue supports a thread-safe push operation (MPSC) or each processor has
