@@ -593,7 +593,7 @@ immediately transitioned to the searching state. When a processor in the
 searching state finds new tasks, it will first transition out of the searching
 state, then attempt another processor.
 
-This logic has the effect of throttling the rate at which processors work up. If
+This logic has the effect of throttling the rate at which processors wake up. If
 a batch of tasks is scheduled at once (for example, when `epoll` is polled for
 socket readiness), the first one will result in notifying a processor. That
 processor is now in the searching state. The rest of the scheduled tasks in the
