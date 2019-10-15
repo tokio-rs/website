@@ -591,9 +591,9 @@ previous scheduler, however, notification only happens if there are no workers
 in the searching state (see previous section). When a worker is notified, it is
 immediately transitioned to the searching state. When a processor in the
 searching state finds new tasks, it will first transition out of the searching
-state, then attempt another processor.
+state, then notify another processor.
 
-This logic has the effect of throttling the rate at which processors work up. If
+This logic has the effect of throttling the rate at which processors wake up. If
 a batch of tasks is scheduled at once (for example, when `epoll` is polled for
 socket readiness), the first one will result in notifying a processor. That
 processor is now in the searching state. The rest of the scheduled tasks in the
@@ -698,7 +698,7 @@ impl Waker {
 
     fn wake_by_ref(&self) {
         let task = self.task.clone();
-        task.scheduler.schedule(self.task);
+        task.scheduler.schedule(task);
     }
 }
 ```
