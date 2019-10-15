@@ -24,7 +24,7 @@ an asynchronous application.
 
 [net]: https://docs.rs/tokio/0.1/tokio/net/index.html
 [reactor]: https://docs.rs/tokio/0.1/tokio/reactor/index.html
-[scheduler]: https://tokio-rs.github.io/tokio/tokio/runtime/index.html
+[scheduler]: https://tokio-rs.github.io/tokio/doc/tokio/runtime/index.html
 
 # Fast
 
