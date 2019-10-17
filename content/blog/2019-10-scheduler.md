@@ -491,7 +491,7 @@ The `steal` function is similar to the `pop` function but the load from
 operation will attempt to claim half of the queue instead of a single task. This
 has some nice characteristics which we will cover later.
 
-The last missing piece is consuning the global queue. This queue is used to
+The last missing piece is consuming the global queue. This queue is used to
 handle overflow from processor local queues as well as to submit tasks to the
 scheduler from non-processor threads. If a processor is under load, i.e. the
 local run queue has tasks. The processor will attempt to pop from the global
