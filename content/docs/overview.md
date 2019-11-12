@@ -152,45 +152,42 @@ tasks.  Tokio implements [async] syntax to improve readability of futures.
 A basic TCP echo server with Tokio:
 
 ```rust
-extern crate tokio;
-
-use tokio::prelude::*;
-use tokio::io::copy;
 use tokio::net::TcpListener;
+use tokio::prelude::*;
 
-fn main() {
-# }
-# fn hax() {
+#[tokio::main]
+async fn main() {
     // Bind the server's socket.
-    let addr = "127.0.0.1:12345".parse().unwrap();
-    let listener = TcpListener::bind(&addr)
-        .expect("unable to bind TCP listener");
+    let addr = "127.0.0.1:12345";
+    let mut incoming = TcpListener::bind(&addr)
+        .await
+        .expect("unable to bind TCP listener")
+        .incoming();
 
     // Pull out a stream of sockets for incoming connections
-    let server = listener.incoming()
-        .map_err(|e| eprintln!("accept failed = {:?}", e))
-        .for_each(|sock| {
-            // Split up the reading and writing parts of the
-            // socket.
-            let (reader, writer) = sock.split();
+    while let Some(conn) = incoming.next().await {
+        match conn {
+            Err(e) => eprintln!("accept failed = {:?}", e),
+            Ok(mut sock) => {
+                // Spawn the future that echos the data and returns how
+                // many bytes were copied as a concurrent task.
+                tokio::spawn(async move {
+                    // Split up the reading and writing parts of the
+                    // socket.
+                    let (mut reader, mut writer) = sock.split();
 
-            // A future that echos the data and returns how
-            // many bytes were copied...
-            let bytes_copied = copy(reader, writer);
-
-            // ... after which we'll print what happened.
-            let handle_conn = bytes_copied.map(|amt| {
-                println!("wrote {:} bytes", amt.0)
-            }).map_err(|err| {
-                eprintln!("IO error {:?}", err)
-            });
-
-            // Spawn the future as a concurrent task.
-            tokio::spawn(handle_conn)
-        });
-
-    // Start the Tokio runtime
-    tokio::run(server);
+                    match reader.copy(&mut writer).await {
+                        Ok(amt) => {
+                            println!("wrote {:} bytes", amt);
+                        }
+                        Err(err) => {
+                            eprintln!("IO error {:?}", err);
+                        }
+                    }
+                });
+            }
+        }
+    }
 }
 ```
 
