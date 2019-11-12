@@ -29,23 +29,11 @@ Next, add the necessary dependencies in `Cargo.toml`:
 
 ```toml
 [dependencies]
-tokio = "0.1"
+tokio = "0.2.0-alpha"
 ```
 
-and the crates and types into scope in `main.rs`:
-
-```rust
-# #![deny(deprecated)]
-extern crate tokio;
-
-use tokio::io;
-use tokio::net::TcpStream;
-use tokio::prelude::*;
-# fn main() {}
-```
-
-Here we use Tokio's own [`io`] and [`net`] modules. These modules provide the same
-abstractions over networking and I/O-operations as the corresponding modules in `std`
+We are going to use Tokio's own [`net`] module. This module provides the same
+abstractions over networking and I/O-operations as the corresponding module in `std`
 with a small difference: all actions are performed asynchronously.
 
 # Creating the stream
@@ -54,14 +42,11 @@ The first step is to create the `TcpStream`. We use the `TcpStream` implementati
 provided by Tokio.
 
 ```rust
-# #![deny(deprecated)]
-# extern crate tokio;
-#
-# use tokio::net::TcpStream;
+use tokio::net::TcpStream;
+
 fn main() {
-    // Parse the address of whatever server we're talking to
-    let addr = "127.0.0.1:6142".parse().unwrap();
-    let client = TcpStream::connect(&addr);
+    let addr = "127.0.0.1:6142";
+    let client = TcpStream::connect(addr);
 
     // Following snippets come here...
 }
@@ -71,58 +56,41 @@ Next, we'll add some to the `client` `TcpStream`. This asynchronous task now cre
 the stream and then yields it once it's been created for additional processing.
 
 ```rust
-# #![deny(deprecated)]
-# extern crate tokio;
-#
-# use tokio::net::TcpStream;
-# use tokio::prelude::*;
-# fn main() {
-# let addr = "127.0.0.1:6142".parse().unwrap();
-let client = TcpStream::connect(&addr).and_then(|stream| {
-    println!("created stream");
+use tokio::net::TcpStream;
 
-    // Process stream here.
+fn main() {
+    let addr = "127.0.0.1:6142";
+    let client = TcpStream::connect(addr);
 
-    Ok(())
-})
-.map_err(|err| {
-    // All tasks must have an `Error` type of `()`. This forces error
-    // handling and helps avoid silencing failures.
-    //
-    // In our example, we are only going to log the error to STDOUT.
-    println!("connection error = {:?}", err);
-});
-# }
+    let future = async move {
+        match client.await {
+            Ok(_stream) => {
+                println!("created stream");
+
+                // Process stream here.
+            }
+            Err(err) => {
+                // In our example, we are only going to log the error to STDOUT.
+                println!("connection error = {:?}", err);
+            }
+        };
+    };
+}
 ```
 
-The call to `TcpStream::connect` returns a [`Future`] of the created TCP stream.
+Inside the block the call to `TcpStream::connect` returns a [`Future`] of the created TCP stream.
 We'll learn more about [`Futures`] later in the guide, but for now you can think of
 a [`Future`] as a value that represents something that will eventually happen in the
 future (in this case the stream will be created). This means that `TcpStream::connect` does
 not wait for the stream to be created before it returns. Rather it returns immediately
-with a value representing the work of creating a TCP stream. We'll see down below when this work
-_actually_ gets executed.
+with a value representing the work of creating a TCP stream.
 
-The `and_then` method yields the stream once it has been created. `and_then` is an
-example of a combinator function that defines how asynchronous work will be processed.
-
-Each combinator function takes ownership of necessary state as well as the
-callback to perform and returns a new `Future` that has the additional "step"
-sequenced. A `Future` is a value representing some computation that will complete at
-some point in the future.
-
-It's worth reiterating that returned futures are lazy, i.e., no work is performed when
-calling the combinator. Instead, once all the asynchronous steps are sequenced, the
-final `Future` (representing the entire task) is 'spawned' (i.e., run). This is when
-the previously defined work starts getting run. In other words, the code we've written
-so far does not actually create a TCP stream.
+Note the `async`-block that follows. Contents of the async block are not executed immediately but are rather
+stored in an object whose result can be computed later. Inside the `async` block we can `await` on the
+created future so that any code that follows is executed with the result of the `await`-ed [`Future`]'s computation.
 
 We will be digging more into futures (and the related concepts of streams and sinks)
 later on.
-
-It's also important to note that we've called `map_err` to convert whatever error
-we may have gotten to `()` before we can actually run our future. This ensures that
-we acknowledge errors.
 
 Next, we will process the stream.
 
@@ -130,34 +98,32 @@ Next, we will process the stream.
 
 Our goal is to write `"hello world\n"` to the stream.
 
-Going back to the `TcpStream::connect(addr).and_then` block:
+Going back to the `TcpStream::connect(addr)` block:
 
 ```rust
-# #![deny(deprecated)]
-# extern crate tokio;
-#
-# use tokio::io;
-# use tokio::prelude::*;
-# use tokio::net::TcpStream;
-# fn main() {
-# let addr = "127.0.0.1:6142".parse().unwrap();
-let client = TcpStream::connect(&addr).and_then(|stream| {
-    println!("created stream");
+use tokio::io::AsyncWriteExt;
+use tokio::net::TcpStream;
 
-    io::write_all(stream, "hello world\n").then(|result| {
-      println!("wrote to stream; success={:?}", result.is_ok());
-      Ok(())
-    })
-})
-# ;
-# }
+fn main() {
+    let addr = "127.0.0.1:6142";
+    let client = TcpStream::connect(addr);
+
+    let future = async move {
+        if let Ok(mut stream) = client.await {
+            println!("created stream");
+
+            let result = stream.write_all(b"hello world\n").await;
+
+            println!("wrote to stream; success={:?}", result.is_ok());
+        }
+    };
+}
 ```
 
-The [`io::write_all`] function takes ownership of `stream`, returning a
+The [`AsyncWriteExt::write_all`] trait method takes `stream` by mutable reference,
 [`Future`] that completes once the entire message has been written to the
-stream. `then` is used to sequence a step that gets run once the write has
-completed. In our example, we just write a message to `STDOUT` indicating that
-the write has completed.
+stream. In our example, we `await` for the completion of said future and just
+write a message to `STDOUT` indicating that the write has completed.
 
 Note that `result` is a `Result` that contains the original stream (compare to
 `and_then`, which passes the stream without the `Result` wrapper). This allows us
@@ -175,26 +141,60 @@ different pros and cons. In this example, we will use the default executor of th
 [Tokio runtime][rt].
 
 ```rust
-# #![deny(deprecated)]
-# extern crate tokio;
-# extern crate futures;
-#
-# use tokio::prelude::*;
-# use futures::future;
-# fn main() {
-# let client = future::ok(());
-println!("About to create the stream and write to it...");
-tokio::run(client);
-println!("Stream has been created and written to.");
-# }
+use tokio::io::AsyncWriteExt;
+use tokio::net::TcpStream;
+use tokio::runtime::Runtime;
+
+fn main() {
+    let addr = "127.0.0.1:6142";
+    let client = TcpStream::connect(addr);
+
+    let future = async move {
+        if let Ok(mut stream) = client.await {
+            println!("created stream");
+
+            let result = stream.write_all(b"hello world\n").await;
+
+            println!("wrote to stream; success={:?}", result.is_ok());
+        }
+    };
+
+    let rt = Runtime::new().unwrap();
+    println!("About to create the stream and write to it...");
+    rt.block_on(future);
+    println!("Stream has been created and written to.");
+}
 ```
 
-`tokio::run` starts the runtime, blocking the current thread until all spawned tasks
+In this case we create the default runtime, and spawn the task onto it, blocking the current thread until all spawned tasks
 have completed and all resources (like files and sockets) have been dropped.
 
 So far, we only have a single task running on the executor, so the `client` task
 is the only one blocking `run` from returning. Once `run` has returned we can be sure
 that our Future has been run to completion.
+
+This example can also be greatly simplified using the `#[tokio::main]` procedural macro.
+
+```rust
+use tokio::io::AsyncWriteExt;
+use tokio::net::TcpStream;
+
+#[tokio::main]
+async fn main() {
+    let addr = "127.0.0.1:6142";
+    let client = TcpStream::connect(addr);
+
+    if let Ok(mut stream) = client.await {
+        println!("created stream");
+
+        let result = stream.write_all(b"hello world\n").await;
+
+        println!("wrote to stream; success={:?}", result.is_ok());
+    }
+}
+```
+
+Notice how `main()` has become an `async` function. It is equivalent to placing all its code inside an `async` block.
 
 You can find the full example [here][full-code].
 
@@ -226,9 +226,8 @@ the guide will start digging a bit deeper into Futures and the Tokio runtime mod
 [`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
 [`Futures`]: /docs/getting-started/futures/
 [rt]: {{< api-url "tokio" >}}/runtime/index.html
-[`io`]: {{< api-url "tokio" >}}/io/index.html
 [`net`]: {{< api-url "tokio" >}}/net/index.html
-[`io::write_all`]: {{< api-url "tokio-io" >}}/io/fn.write_all.html
+[`io::write_all`]: {{< api-url "tokio" >}}/io/fn.write_all.html
 [full-code]: https://github.com/tokio-rs/tokio/tree/v0.1.x/tokio/examples/hello_world.rs
 [Netcat]: http://netcat.sourceforge.net/
 [Nmap.org]: https://nmap.org
