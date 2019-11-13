@@ -6,9 +6,9 @@ menu:
     parent: getting_started
 ---
 
-Let's take a closer look at futures. Tokio is built on top of the [`futures`] crate
-and uses its runtime model. This allows Tokio to interop with other libraries also
-using the [`futures`] crate.
+Let's take a closer look at futures. Tokio is built on top of `task` and `future` modules
+found in the Rust standard library as well as the `futures` crate.
+This allows Tokio to interop with other libraries also built on the same foundation.
 
 **Note**: This runtime model is very different than async libraries found in
 other languages. While, at a high level, APIs can look similar, the way code
@@ -21,7 +21,7 @@ default and see how this differs from Tokio's asynchronous model.
 
 # Synchronous Model
 
-First, let's talk briefly about the synchronous (or blocking) model that the
+First, let's talk briefly about the synchronous (or blocking) model that most of the
 Rust [standard library] uses.
 
 ```rust
@@ -117,7 +117,7 @@ might pass the future to a function.
 
 ```rust,ignore
 let response_is_ok = response_future
-    .map(|response| {
+    .map_ok(|response| {
         response.status().is_ok()
     });
 
@@ -163,27 +163,22 @@ The `Future` trait is as follows:
 ```rust,ignore
 trait Future {
     /// The type of the value returned when the future completes.
-    type Item;
-
-    /// The type representing errors that occurred while processing the computation.
-    type Error;
+    type Output;
 
     /// The function that will be repeatedly called to see if the future
     /// has completed or not
-    fn poll(&mut self) -> Result<Async<Self::Item>, Self::Error>;
+    fn poll(self: Pin<&mut Self>, cx: &mut Context) -> Poll<Self::Output>;
 }
 ```
 
-For now it's just important to know that futures have two associated types: `Item`
-and `Error`. `Item` is the type of the value that the `Future` will yield when it
-completes. `Error` is the type of Error that the `Future` may yield if there's an
-error before that prevents the `Future` from completing successfully.
+For now it's just important to know that futures have an associated type: `Output`.
+It is the type of the value that the `Future` will yield when it completes.
 
-Finally, `Future`s have one method named `poll`. We won't go into too much detail
+Additionally, `Future`s have one method named `poll`. We won't go into too much detail
 about `poll` in this section since you don't need to know about `poll` to use
 futures with combinators. The only thing to be aware for now is that `poll` is
 what the runtime will call in order to see if the `Future` is complete yet or not.
-If you're curious: `Async` is an enum with values `Ready(Item)` or `NotReady` which
+If you're curious: `Poll` is an enum with values `Ready(Item)` or `Pending` which
 informs the runtime of if the future is complete or not.
 
 In a future section, we'll be implementing a `Future` from scratch including writing
@@ -215,12 +210,9 @@ trait Stream {
     /// The type of the value yielded by the stream.
     type Item;
 
-    /// The type representing errors that occurred while processing the computation.
-    type Error;
-
     /// The function that will be repeatedly called to see if the stream has
     /// another value it can yield
-    fn poll(&mut self) -> Poll<Option<Self::Item>, Self::Error>;
+    fn poll_next(self: Pin<&mut Self>, cx: &mut Context) -> Poll<Option<Self::Item>>
 }
 ```
 
