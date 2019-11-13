@@ -24,7 +24,7 @@ The runtime is responsible for repeatedly calling `poll` on a `Future` until its
 value is returned. There are many different ways to do this and thus many types of
 runtime configurations. For example, the [`CurrentThread`] runtime configuration
 will block the current thread and loop through all spawned Futures, calling poll on
-them. The [`ThreadPool`] configuration schedules Futures across a thread pool. This
+them. The thread pool configuration schedules Futures across a thread pool. This
 is also the default configuration used by the Tokio [runtime][rt].
 
 It's important to remember that all futures **must** be spawned on the runtime or no
@@ -54,29 +54,25 @@ trait directly.
 We can spawn tasks using `tokio::spawn`. For example:
 
 ```rust
-# extern crate tokio;
-# extern crate futures;
-#
 # use tokio::prelude::*;
-# use futures::stream;
+
 # fn main() {
-# let my_outer_stream = stream::once(Ok(1));
+# let mut my_outer_stream = tokio::stream::iter(Some(1));
 // Create some kind of future that we want our runtime to execute
-let program = my_outer_stream.for_each(|my_outer_value| {
-  println!("Got value {:?} from the stream", my_outer_value);
+let program = async move {
+  while let Some(my_outer_value) = my_outer_stream.next().await {
+    println!("Got value {:?} from the stream", my_outer_value);
 
-  let my_inner_future = future::ok(1);
+    let my_inner_future = tokio::future::ready(1);
 
-  let task = my_inner_future.and_then(|my_inner_value| {
-    println!("Got a value {:?} from second future", my_inner_value);
-    Ok(())
-  });
+    tokio::spawn(async move {
+      let my_inner_value = my_inner_future.await;
+      println!("Got a value {:?} from second future", my_inner_value);
+    });
+  }
+};
 
-  tokio::spawn(task);
-  Ok(())
-});
-
-tokio::run(program);
+tokio::runtime::Runtime::new().unwrap().block_on(program);
 # }
 ```
 
@@ -88,8 +84,7 @@ run inner future.
 In the next section, we'll take a look at a more involved example than our hello-
 world example that takes everything we've learned so far into account.
 
-[`CurrentThread`]: https://docs.rs/tokio-current-thread
-[`ThreadPool`]: http://docs.rs/tokio-threadpool
+[`CurrentThread`]: https://docs.rs/tokio/*/tokio/runtime/current_thread
 [rt]: {{< api-url "tokio" >}}/runtime/index.html
 [Go’s goroutine]: https://www.golang-book.com/books/intro/10
 [Erlang’s process]: http://erlang.org/doc/reference_manual/processes.html
