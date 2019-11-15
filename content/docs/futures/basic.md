@@ -135,21 +135,22 @@ are `()` and the future can be executed by Tokio:
 
 ```rust
 # #![deny(deprecated)]
-extern crate tokio;
-# extern crate futures;
+# use core::future::Future;
+# use core::pin::Pin;
+# use core::task::{Context, Poll};
 # struct HelloWorld;
 # struct Display<T>(T);
-# impl<T> futures::Future for Display<T> {
-#     type Item = ();
-#     type Error = ();
-#     fn poll(&mut self) -> futures::Poll<(), ()> {
-#         Ok(().into())
+# impl<T> Future for Display<T> {
+#     type Output = ();
+#     fn poll(self: Pin<&mut Self>, _ctx: &mut Context<'_>) -> Poll<Self::Output> {
+#         Poll::Ready(())
 #     }
 # }
 
-# fn main() {
+# #[tokio::main]
+# async fn main() {
 let future = Display(HelloWorld);
-tokio::run(future);
+future.await;
 # }
 ```
 
