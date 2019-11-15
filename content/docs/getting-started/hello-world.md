@@ -56,41 +56,43 @@ Next, we'll add some to the `client` `TcpStream`. This asynchronous task now cre
 the stream and then yields it once it's been created for additional processing.
 
 ```rust
-use tokio::net::TcpStream;
+# use tokio::net::TcpStream;
 
-fn main() {
-    let addr = "127.0.0.1:6142";
-    let client = TcpStream::connect(addr);
+# fn main() {
+let addr = "127.0.0.1:6142";
+let client = TcpStream::connect(addr);
 
-    let future = async move {
-        match client.await {
-            Ok(_stream) => {
-                println!("created stream");
+let future = async move {
+  // TcpStream::connect future has an Output type of io::Result<TcpStream>
+  match client.await {
+    Ok(_stream) => {
+      println!("created stream");
 
-                // Process stream here.
-            }
-            Err(err) => {
-                // In our example, we are only going to log the error to STDOUT.
-                println!("connection error = {:?}", err);
-            }
-        };
-    };
-}
+      // Process stream here.
+    }
+    Err(err) => {
+      // In our example, we are only going to log the error to STDOUT.
+      println!("connection error = {:?}", err);
+    }
+  };
+};
+# }
 ```
 
-Inside the block the call to `TcpStream::connect` returns a [`Future`] of the created TCP stream.
+The call to `TcpStream::connect` returns a [`Future`] of the created TCP stream.
 We'll learn more about [`Futures`] later in the guide, but for now you can think of
 a [`Future`] as a value that represents something that will eventually happen in the
 future (in this case the stream will be created). This means that `TcpStream::connect` does
-not wait for the stream to be created before it returns. Rather it returns immediately
+not wait for the stream to be created before it returns. Rather, it returns immediately
 with a value representing the work of creating a TCP stream.
 
-Note the `async`-block that follows. Contents of the async block are not executed immediately but are rather
-stored in an object whose result can be computed later. Inside the `async` block we can `await` on the
-created future so that any code that follows is executed with the result of the `await`-ed [`Future`]'s computation.
+Note the `async` block that follows. Like the `TcpStream::connect` future,
+the contents of the `async` block are not executed immediately.
+Instead, they are stored in an object whose result can be computed later.
+Inside the `async` block we can `await` the created future, so that any code that follows
+is executed with the result of the `await`-ed [`Future`]'s computation.
 
-We will be digging more into futures (and the related concepts of streams and sinks)
-later on.
+We will be digging more into futures (and the related concepts of streams and sinks) later on.
 
 Next, we will process the stream.
 
@@ -98,7 +100,7 @@ Next, we will process the stream.
 
 Our goal is to write `"hello world\n"` to the stream.
 
-Going back to the `TcpStream::connect(addr)` block:
+Going back to the `async` block in the previous example:
 
 ```rust
 use tokio::io::AsyncWriteExt;
@@ -143,6 +145,29 @@ different pros and cons. In this example, we will use the default executor of th
 ```rust
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpStream;
+
+#[tokio::main]
+async fn main() {
+    let addr = "127.0.0.1:6142";
+    let client = TcpStream::connect(addr);
+
+    if let Ok(mut stream) = client.await {
+        println!("created stream");
+
+        let result = stream.write_all(b"hello world\n").await;
+
+        println!("wrote to stream; success={:?}", result.is_ok());
+    }
+}
+```
+
+Notice how `main()` has become an `async` function. It is equivalent to placing all its code inside an `async` block.
+
+If we rewrite this example in full, without the procedural macro:
+
+```rust
+use tokio::io::AsyncWriteExt;
+use tokio::net::TcpStream;
 use tokio::runtime::Runtime;
 
 fn main() {
@@ -172,29 +197,6 @@ have completed and all resources (like files and sockets) have been dropped.
 So far, we only have a single task running on the executor, so the `client` task
 is the only one blocking `run` from returning. Once `run` has returned we can be sure
 that our Future has been run to completion.
-
-This example can also be greatly simplified using the `#[tokio::main]` procedural macro.
-
-```rust
-use tokio::io::AsyncWriteExt;
-use tokio::net::TcpStream;
-
-#[tokio::main]
-async fn main() {
-    let addr = "127.0.0.1:6142";
-    let client = TcpStream::connect(addr);
-
-    if let Ok(mut stream) = client.await {
-        println!("created stream");
-
-        let result = stream.write_all(b"hello world\n").await;
-
-        println!("wrote to stream; success={:?}", result.is_ok());
-    }
-}
-```
-
-Notice how `main()` has become an `async` function. It is equivalent to placing all its code inside an `async` block.
 
 You can find the full example [here][full-code].
 

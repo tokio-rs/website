@@ -6,8 +6,8 @@ menu:
     parent: getting_started
 ---
 
-Let's take a closer look at futures. Tokio is built on top of `task` and `future` modules
-found in the Rust standard library as well as the `futures` crate.
+Let's take a closer look at futures. Tokio is built on top of [`task`] and [`future`] modules
+found in the Rust standard library, as well as on the [`futures`] crate.
 This allows Tokio to interop with other libraries also built on the same foundation.
 
 **Note**: This runtime model is very different than async libraries found in
@@ -172,13 +172,13 @@ trait Future {
 ```
 
 For now it's just important to know that futures have an associated type: `Output`.
-It is the type of the value that the `Future` will yield when it completes.
+This is the type of the value that the `Future` will yield when it completes.
 
-Additionally, `Future`s have one method named `poll`. We won't go into too much detail
+Additionally, `Future`s have one method, named `poll`. We won't go into too much detail
 about `poll` in this section since you don't need to know about `poll` to use
-futures with combinators. The only thing to be aware for now is that `poll` is
+futures with async/await. The only thing to be aware for now is that `poll` is
 what the runtime will call in order to see if the `Future` is complete yet or not.
-If you're curious: `Poll` is an enum with values `Ready(Item)` or `Pending` which
+If you're curious: [`Poll`] is an enum with values `Ready(Item)` or `Pending` which
 informs the runtime of if the future is complete or not.
 
 In a future section, we'll be implementing a `Future` from scratch including writing
@@ -219,9 +219,12 @@ trait Stream {
 Streams come with their own set of combinators and will be covered in more depth
 in the [working with futures][working-with-streams] section.
 
+[`task`]: https://doc.rust-lang.org/std/task
+[`future`]: https://doc.rust-lang.org/std/future
 [`futures`]: {{< api-url "futures" >}}
 [standard library]: https://doc.rust-lang.org/std/
 [c10k]: https://en.wikipedia.org/wiki/C10k_problem
+[`Poll`]: https://doc.rust-lang.org/std/task/enum.Poll.html
 [`TcpStream`]: {{< api-url "tokio" >}}/net/struct.TcpStream.html
 [`ErrorKind::WouldBlock`]: https://doc.rust-lang.org/std/io/enum.ErrorKind.html#variant.WouldBlock
 [working-with-streams]: {{< ref "/docs/futures/streams.md" >}}
