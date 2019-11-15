@@ -17,36 +17,28 @@ The `Future` trait is as follows:
 ```rust,ignore
 trait Future {
     /// The type of the value returned when the future completes.
-    type Item;
-
-    /// The type representing errors that occurred while processing the computation.
-    type Error;
+    type Output;
 
     /// The function that will be repeatedly called to see if the future
-    /// has completed or not. The `Async` enum can either be `Ready` or
-    /// `NotReady` and indicates whether the future is ready to produce
+    /// has completed or not. The `Poll` enum can either be `Ready` or
+    /// `Pending` and indicates whether the future is ready to produce
     /// a value or not.
-    fn poll(&mut self) -> Result<Async<Self::Item>, Self::Error>;
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output>;
 }
 ```
 
 Let's implement it for our "hello world" future:
 
 ```rust
-# #![deny(deprecated)]
-extern crate futures;
-
-// `Poll` is a type alias for `Result<Async<T>, E>`
-use futures::{Future, Async, Poll};
+use std::{pin::Pin, future::Future, task::{Context, Poll}};
 
 struct HelloWorld;
 
 impl Future for HelloWorld {
-    type Item = String;
-    type Error = ();
+    type Output = String;
 
-    fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        Ok(Async::Ready("hello world".to_string()))
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        Poll::Ready("hello world".to_string())
     }
 }
 
