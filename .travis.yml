@@ -6,9 +6,12 @@ install:
       tar xzvf -
   - pip install --user awscli
   - ~/.local/bin/aws configure set preview.cloudfront true
+  - wget https://github.com/kpp/mdBook/releases/download/e2018/mdbook -P ~/.cargo/bin/ && chmod +x ~/.cargo/bin/mdbook
+  - git clone https://github.com/tokio-rs/tokio.git --depth=1
+  - cd tokio && cargo build && cd ../
 
 script:
-  - ci/test.sh
+  - cd content/docs && mdbook test -L ../../tokio/target/debug/deps/ && cd ../../
   - ./hugo
 
 env:

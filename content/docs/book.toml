@@ -1,0 +1,7 @@
+[book]
+authors = ["Tokio developers"]
+language = "en"
+multilingual = false
+src = "./"
+title = "Tokio docs"
+edition = "2018"
