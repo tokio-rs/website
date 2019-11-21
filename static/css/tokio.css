@@ -55,6 +55,27 @@ img {
   z-index: 1071;
 }
 
+.alpha .tk-navbar {
+  background-color: #db9900;
+}
+.alpha p {
+  color: #fff;
+  font-size: small;
+  padding: 0px;
+  margin: 0px;
+}
+.alpha  .warn {
+    position: absolute;
+    top: 1px;
+    left: 82px;
+}
+.alpha .version {
+    position: absolute;
+    top: 1px;
+    right: 20px;
+}
+
+
 .tk-navbar .navbar-nav-svg {
   display: inline-block;
   width: 1rem;

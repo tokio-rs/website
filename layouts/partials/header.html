@@ -33,12 +33,16 @@
       {{ end }}
     </title>
   </head>
-  <body>
+  <body class="{{ .Site.Params.Status }}">
     <header class="navbar navbar-expand navbar-dark flex-column flex-md-row tk-navbar">
       <a class="navbar-brand" href="/">
         <img src="/img/Tokio_Mark_White.png" class="align-middle" alt="">
       </a>
       <div class="collapse navbar-collapse">
+        {{ if eq .Site.Params.Status "alpha"}}
+          <p class="warn">Update in-progress, may be incorrect and incomplete</p>
+          <p class="version">{{.Site.Params.Version}}</p>
+        {{ end }}
         <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link {{ if .IsHome }} active {{ end }}" href="/">Home</a>
