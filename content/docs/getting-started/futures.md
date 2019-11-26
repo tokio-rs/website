@@ -133,7 +133,7 @@ pub trait Future {
 
     /// Attempt to resolve the future to a final value, registering
     /// the current task for wakeup if the value is not yet available.
-    fn poll(self: Pin<&mut Self>, cx: &mut Context) -> Poll<Self::Output>;
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output>;
 }
 ```
 
