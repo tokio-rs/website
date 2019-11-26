@@ -91,7 +91,7 @@ Next, we do work with the TCP stream.
 
 Our goal is to write `"hello world\n"` to the stream.
 
-```rust
+```rust,no_run
 # #![deny(deprecated)]
 #
 # use tokio::net::TcpStream;
