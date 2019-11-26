@@ -29,8 +29,8 @@ Next, add the necessary dependencies:
 
 ```toml
 [dependencies]
-tokio = "0.2.0-alpha"
-futures-preview = "0.3.0-alpha"
+tokio = "0.2"
+futures = "0.3"
 ```
 
 and the crates and types into scope in `main.rs`:
@@ -176,7 +176,7 @@ concurrently!
 The full code can be found [here][full-code].
 
 [full-code]: https://github.com/tokio-rs/tokio/blob/master/examples/echo.rs
-[hello world]: ../hello-world
-[`AsyncReadExt::copy`]: https://docs.rs/tokio/*/tokio/io/trait.AsyncReadExt.html#method.copy
-[`split`]: https://docs.rs/tokio/*/tokio/io/trait.AsyncRead.html#method.split
-[`tokio::spawn`]: https://docs.rs/tokio/*/tokio/fn.spawn.html
+[hello world]: {{< ref "/docs/getting-started/hello-world.md" >}}
+[`AsyncReadExt::copy`]: {{< api-url "tokio" >}}/io/trait.AsyncReadExt.html#method.copy
+[`split`]: {{< api-url "tokio" >}}/io/trait.AsyncRead.html#method.split
+[`tokio::spawn`]: {{< api-url "tokio" >}}/fn.spawn.html
