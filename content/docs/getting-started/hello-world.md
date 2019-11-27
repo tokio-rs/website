@@ -42,6 +42,7 @@ Next, add the following to `main.rs`:
 
 ```rust
 # #![deny(deprecated)]
+# #![allow(unused_imports)]
 
 use tokio::io;
 use tokio::net::TcpStream;
@@ -77,6 +78,7 @@ async fn main() {
     let stream = TcpStream::connect("127.0.0.1:6142").await.unwrap();
 
     // Following snippets come here...
+# drop(stream);
 }
 ```
 
