@@ -35,7 +35,8 @@ futures = "0.3"
 
 and the crates and types into scope in `main.rs`:
 
-```rust,ignore
+```rust
+# #![allow(unused_imports)]
 use tokio::io;
 use tokio::net::TcpListener;
 use tokio::prelude::*;
@@ -54,8 +55,10 @@ Again, no work actually happens until the server task is spawned on the
 executor.
 
 ```rust
+# #![deny(deprecated)]
 # use futures::prelude::*;
 # use tokio::net::TcpListener;
+#
 #[tokio::main]
 async fn main() {
     let addr = "127.0.0.1:6142";
@@ -119,9 +122,9 @@ copying operation is complete, resolving to the amount of data that was copied.
 Let's take a look at the connection accept code again.
 
 ```rust
+# #![deny(warnings)]
 # use std::env;
 # use futures::prelude::*;
-# use tokio::prelude::*;
 # use tokio::net::TcpListener;
 # #[tokio::main]
 # async fn main() {

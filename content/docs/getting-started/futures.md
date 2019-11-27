@@ -24,17 +24,17 @@ default and see how this differs from Tokio's asynchronous model.
 First, let's talk briefly about the synchronous (or blocking) model that the
 Rust [standard library] uses.
 
-```rust
+```rust,no_run
 # use std::io::prelude::*;
 # use std::net::TcpStream;
-# fn dox(mut socket: TcpStream) {
-// let socket = ...;
+# fn main() {
+let mut socket = TcpStream::connect("127.0.0.1:8080").unwrap();
 let mut buf = [0; 1024];
 let n = socket.read(&mut buf).unwrap();
 
 // Do something with &buf[..n];
+# drop(n);
 # }
-# fn main() {}
 ```
 
 When `socket.read` is called, either the socket has pending data in its receive
@@ -126,7 +126,10 @@ We'll take a closer look at this poll based model in the next section.
 
 The `Future` trait is as follows:
 
-```rust,ignore
+```rust,no_run
+use std::pin::Pin;
+use std::task::{Context, Poll};
+
 pub trait Future {
     /// The type of value produced on completion.
     type Output;
@@ -135,6 +138,7 @@ pub trait Future {
     /// the current task for wakeup if the value is not yet available.
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output>;
 }
+# fn main() {}
 ```
 
 For now it's just important to know that futures have an associated type,
