@@ -53,14 +53,13 @@ Now, we setup the necessary structure for a server:
 Again, no work actually happens until the server task is spawned on the
 executor.
 
-```rust,ignore
+```rust
 # use futures::prelude::*;
 # use tokio::net::TcpListener;
-# use tokio::prelude::*;
 #[tokio::main]
 async fn main() {
     let addr = "127.0.0.1:6142";
-    let listener = TcpListener::bind(addr).await.unwrap();
+    let mut listener = TcpListener::bind(addr).await.unwrap();
 
     // Here we convert the `TcpListener` to a stream of incoming connections
     // with the `incoming` method. We then define how to process each element in
@@ -94,7 +93,7 @@ async fn main() {
 
 Here we've created a TcpListener that can listen for incoming TCP connections. On the
 listener we call `incoming` which turns the listener into a `Stream` of inbound client
-connections. We then call `for_each` which will yield each inbound client connection.
+connections. We then call `StreamExt::next()` trait method and `await` on it to get new inbound client connection.
 For now we're not doing anything with this inbound connection - that's our next step.
 
 Once we have our server, we `.await` on it. Up until this point our
@@ -106,9 +105,9 @@ completion.
 Now that we have incoming client connections, we should handle them.
 
 We just want to copy all data read from the socket back onto the socket itself
-(e.g. "echo"). We can use the standard [`AsyncReadExt::copy`] trait method to do precisely this.
+(e.g. "echo"). We can use the standard [`io::copy`] function to do precisely this.
 
-The `copy` method is called on the source where to read from and takes one argument, where to write to.
+The `copy` function takes two arguments, where to read from and where to write to.
 We only have one argument, though, with `socket`. Luckily there's a method, [`split`]
 , which will split a readable and writeable stream into its two halves. This
 operation allows us to work with each stream independently, such as pass them as two
@@ -119,18 +118,20 @@ copying operation is complete, resolving to the amount of data that was copied.
 
 Let's take a look at the connection accept code again.
 
-```rust,ignore
+```rust
 # use std::env;
+# use futures::prelude::*;
 # use tokio::prelude::*;
 # use tokio::net::TcpListener;
 # #[tokio::main]
 # async fn main() {
 # let addr = env::args().nth(1).unwrap_or("127.0.0.1:8080".to_string());
 # // Bind the server's socket.
-# let mut incoming = TcpListener::bind(&addr)
+# let mut listener = TcpListener::bind(&addr)
 #     .await
-#     .expect("unable to bind TCP listener")
-#     .incoming();
+#     .expect("unable to bind TCP listener");
+#
+# let mut incoming = listener.incoming();
 let server = {
   async move {
     while let Some(conn) = incoming.next().await {
@@ -144,7 +145,7 @@ let server = {
             // socket.
             let (mut reader, mut writer) = sock.split();
 
-            match reader.copy(&mut writer).await {
+            match tokio::io::copy(&mut reader, &mut writer).await {
               Ok(amt) => {
                 println!("wrote {} bytes", amt);
               }
@@ -158,12 +159,13 @@ let server = {
     }
   }
 };
-# server.await
+# let server = future::select(Box::pin(server), future::ready(Ok::<_, ()>(())));
+# server.await;
 # }
 ```
 
 As you can see we've split the `socket` stream into readable and writable parts. We
-then used `AsyncReadExt::copy` to read from `reader` and write into `writer`. We `await` on the result and inspect it printing some diagnostics.
+then used `io::copy` to read from `reader` and write into `writer`. We `await` on the result and inspect it printing some diagnostics.
 
 The call to [`tokio::spawn`] is the key here. We crucially want all clients to make
 progress concurrently, rather than blocking one on completion of another. To achieve
@@ -177,6 +179,6 @@ The full code can be found [here][full-code].
 
 [full-code]: https://github.com/tokio-rs/tokio/blob/master/examples/echo.rs
 [hello world]: {{< ref "/docs/getting-started/hello-world.md" >}}
-[`AsyncReadExt::copy`]: {{< api-url "tokio" >}}/io/trait.AsyncReadExt.html#method.copy
+[`io::copy`]: {{< api-url "tokio" >}}/io/fn.copy.html
 [`split`]: {{< api-url "tokio" >}}/io/trait.AsyncRead.html#method.split
 [`tokio::spawn`]: {{< api-url "tokio" >}}/fn.spawn.html
