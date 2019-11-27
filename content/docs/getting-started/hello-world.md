@@ -120,11 +120,11 @@ You can find the full example [here][full-code].
 command starts a listening TCP socket on the previously specified port.
 
 ```bash
-$ nc -l -p 6142
+$ nc -l 6142
 ```
 > The command above is used with the GNU version of netcat that comes stock on many
 > unix based operating systems. The following command can be used with the
-> [NMap.org][NMap.org] version: `$ ncat -l -p 6142`
+> [NMap.org][NMap.org] version: `$ ncat -l 6142`
 
 In a different terminal we'll run our project.
 
