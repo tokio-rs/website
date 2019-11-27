@@ -433,6 +433,7 @@ When resources are registered with the driver, they are also registered with
 Mio. Running the driver performs the following steps in a loop:
 
 1) Call [`Poll::poll`] to get operating system events.
+
 2) Dispatch all events to the appropriate resources via the registration.
 
 [`mio::Poll`]: https://docs.rs/mio/0.6/mio/struct.Poll.html
