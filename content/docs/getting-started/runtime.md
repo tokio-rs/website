@@ -16,7 +16,7 @@ the **something** is the Tokio runtime.
 The [`Runtime`] is responsible for repeatedly calling `poll` on a `Future` until
 its value is returned. There are a few different ways this can happen in
 practice. For example, the [`basic_scheduler`] configuration will block the
-current thread and process all spawned tasks in prace. The
+current thread and process all spawned tasks in place. The
 [`threaded_scheduler`] configuration uses a work-stealing thread pool and
 distributes load across multiple threads. The `threaded_scheduler` is the
 default for applications and the `basic_scheduler` is the default for tests.
