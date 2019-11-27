@@ -1,9 +1,6 @@
 ---
 title: "Spawning"
 weight : 2060
-menu:
-  docs:
-    parent: futures
 ---
 
 Tokio based applications are organized in terms of Tasks. A task is a small unit

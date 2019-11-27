@@ -1,9 +1,6 @@
 ---
 title: "Timers"
 weight: 7060
-menu:
-  docs:
-    parent: going_deeper
 ---
 
 When writing a network based application, it is common to need to perform

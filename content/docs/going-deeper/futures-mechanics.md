@@ -1,9 +1,6 @@
 ---
 title: "Essential combinators"
 weight: 7070
-menu:
-  docs:
-    parent: going_deeper
 ---
 
 We saw a few of the most important combinators in the

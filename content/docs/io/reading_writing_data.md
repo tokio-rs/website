@@ -1,9 +1,6 @@
 ---
 title: "Reading and Writing Data"
 weight : 3020
-menu:
-  docs:
-    parent: io
 ---
 
 

@@ -1,10 +1,6 @@
 ---
 title: "Streams"
 weight : 2050
-menu:
-  docs:
-    parent: futures
-    identifier: "futures/runtime-model"
 ---
 
 Streams are similar to futures, but instead of yielding a single value, they

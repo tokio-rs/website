@@ -1,9 +1,6 @@
 ---
 title: "Example: A Chat Server"
 weight : 7050
-menu:
-  docs:
-    parent: going_deeper
 ---
 
 We're going to use what has been covered so far to build a chat server. This is

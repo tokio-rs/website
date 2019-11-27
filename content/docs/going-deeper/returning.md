@@ -1,9 +1,6 @@
 ---
 title: "Returning futures"
 weight: 7080
-menu:
-  docs:
-    parent: going_deeper
 ---
 
 [`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
