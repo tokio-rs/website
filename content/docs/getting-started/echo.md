@@ -124,7 +124,7 @@ Let's take a look at the connection accept code again.
 ```rust
 # #![deny(warnings)]
 # use std::env;
-# use futures::prelude::*;
+use futures::StreamExt;
 # use tokio::net::TcpListener;
 # #[tokio::main]
 # async fn main() {
@@ -134,7 +134,7 @@ Let's take a look at the connection accept code again.
 #     .await
 #     .expect("unable to bind TCP listener");
 #
-# let mut incoming = listener.incoming();
+let mut incoming = listener.incoming();
 let server = {
   async move {
     while let Some(conn) = incoming.next().await {
