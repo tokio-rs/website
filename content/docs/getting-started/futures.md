@@ -76,7 +76,7 @@ similar to writing synchronous code. The compiler will then transform the code
 to generate the state machines needed to use non-blocking sockets.
 
 When calling an `async fn`, such as `TcpStream::connect`, instead of blocking
-the current thread waitin for completion, a value representing the computation
+the current thread waiting for completion, a value representing the computation
 is immediately returned. This value implements the [`Future`] trait. There is no
 guarantee as to when or where the computation will happen. The computation may
 happen immediately or it may be lazy (it usually is lazy). When the caller
