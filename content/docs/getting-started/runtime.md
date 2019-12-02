@@ -28,7 +28,7 @@ runtime or no work will be performed.
 
 One of the unique aspects of Tokio is that futures can be spawned on the runtime
 from within other async tasks. Tasks are the application’s “unit of logic”.
-They are similar to [Go’s goroutine] and [Erlang’s process], but asynchronous.
+They are similar to [Go’s goroutine](https://gobyexample.com/goroutines) and [Erlang’s process](http://erlang.org/doc/reference_manual/processes.html), but asynchronous.
 In other words, tasks are asynchronous green threads.
 
 Tasks are passed to the runtime, which handle scheduling the task. The runtime
