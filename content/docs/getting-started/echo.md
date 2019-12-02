@@ -33,7 +33,7 @@ tokio = "0.2"
 futures = "0.3"
 ```
 
-and the crates and types into scope in `main.rs`:
+And add the crates and types into scope in `main.rs`:
 
 ```rust
 # #![allow(unused_imports)]
