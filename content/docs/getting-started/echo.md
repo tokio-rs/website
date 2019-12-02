@@ -96,11 +96,11 @@ async fn main() {
 
 Here we've created a TcpListener that can listen for incoming TCP connections. On the
 listener we call `incoming` which turns the listener into a `Stream` of inbound client
-connections. We then call `StreamExt::next()` trait method and `await` on it to get new inbound client connection.
+connections. We then call the `StreamExt::next()` trait method and `await` on it to get a new inbound client connection.
 For now we're not doing anything with this inbound connection - that's our next step.
 
 Once we have our server, we `.await` on it. Up until this point our
-server feature has done nothing. It's up to the Tokio runtime to drive our future to
+server feature has done nothing. It's now up to the Tokio runtime to drive our future to
 completion.
 
 ## Handling the connections
