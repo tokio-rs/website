@@ -22,9 +22,9 @@ functions in the `future` module for creating such a future:
 - [`err`], which is analogous to `Result::Err`: it treats the value you give it as an immediately failed future.
 - [`result`], which lifts a result to an immediately-complete future.
 
-[`ok`]: https://docs.rs/futures/0.1/futures/future/fn.ok.html
-[`err`]: https://docs.rs/futures/0.1/futures/future/fn.err.html
-[`result`]: https://docs.rs/futures/0.1/futures/future/fn.result.html
+[`ok`]: {{< api-url "futures01" >}}/future/fn.ok.html
+[`err`]: {{< api-url "futures01" >}}/future/fn.err.html
+[`result`]: {{< api-url "futures01" >}}/future/fn.result.html
 
 For streams, there are a few equivalents of an "immediately ready" stream:
 
@@ -33,14 +33,14 @@ iterator. The iterator produces `Result` values, and the first error terminates
 the stream with that error.
 - [`once`], which creates a single-element stream from a `Result`.
 
-[`iter`]: https://docs.rs/futures/0.1/futures/stream/fn.iter.html
-[`once`]: https://docs.rs/futures/0.1/futures/stream/fn.once.html
+[`iter`]: {{< api-url "futures01" >}}/stream/fn.iter.html
+[`once`]: {{< api-url "futures01" >}}/stream/fn.once.html
 
 In addition to these constructors, there's also a function, [`lazy`], which
 allows you to construct a future given a *closure* that will produce that future
 later, on demand.
 
-[`lazy`]: https://docs.rs/futures/0.1/futures/future/fn.lazy.html
+[`lazy`]: {{< api-url "futures01" >}}/future/fn.lazy.html
 
 # IntoFuture
 
@@ -50,7 +50,7 @@ futures actually work with this trait instead. The key reason: the trait is
 implemented for `Result`, allowing you to return `Result` values in many places
 that futures are expected.
 
-[`IntoFuture`]: https://docs.rs/futures/0.1/futures/future/trait.IntoFuture.html
+[`IntoFuture`]: {{< api-url "futures01" >}}/future/trait.IntoFuture.html
 
 # Adapters
 
@@ -66,17 +66,17 @@ object and return a new, wrapped one. For futures, you can use adapters to:
 * Convert to a trait object ([`Box::new`])
 * Convert unwinding into errors ([`catch_unwind`])
 
-[`Iterator`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html
-[`Box`]: https://doc.rust-lang.org/std/boxed/struct.Box.html
-[`Box::new`]: https://doc.rust-lang.org/std/boxed/struct.Box.html#method.new
-[`map`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.map
-[`map_err`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.map_err
-[`then`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.then
-[`and_then`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.and_then
-[`or_else`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.or_else
-[`select`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.select
-[`join`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.join
-[`catch_unwind`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.catch_unwind
+[`Iterator`]: {{< api-url "std" >}}/iter/trait.Iterator.html
+[`Box`]: {{< api-url "std" >}}/boxed/struct.Box.html
+[`Box::new`]: {{< api-url "std" >}}/boxed/struct.Box.html#method.new
+[`map`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.map
+[`map_err`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.map_err
+[`then`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.then
+[`and_then`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.and_then
+[`or_else`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.or_else
+[`select`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.select
+[`join`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.join
+[`catch_unwind`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.catch_unwind
 
 For streams, there are a large set of adapters, including:
 
@@ -88,18 +88,18 @@ For streams, there are a large set of adapters, including:
   [`and_then`][stream-and_then], [`or_else`][stream-or_else])
 * Additional adapters for combining streams ([`merge`], [`select`][stream-select])
 
-[stream-map]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.map
-[`fold`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.fold
-[`collect`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.collect
-[`filter`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.filter
-[`zip`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.zip
-[`take`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.take
-[`skip`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.skip
-[stream-then]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.then
-[stream-and_then]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.and_then
-[stream-or_else]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.or_else
-[`merge`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.merge
-[stream-select]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.select
+[stream-map]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.map
+[`fold`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.fold
+[`collect`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.collect
+[`filter`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.filter
+[`zip`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.zip
+[`take`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.take
+[`skip`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.skip
+[stream-then]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.then
+[stream-and_then]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.and_then
+[stream-or_else]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.or_else
+[`merge`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.merge
+[stream-select]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.select
 
 The `Sink` trait currently has fewer adapters<!--TODO: fix this link; the most important ones were
 covered in [the introduction](../../getting-started/streams-and-sinks).-->
@@ -107,7 +107,7 @@ covered in [the introduction](../../getting-started/streams-and-sinks).-->
 Finally, an object that is both a stream and a sink can be broken into separate
 stream and sink objects using the [`split`] adapter.
 
-[`split`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.split
+[`split`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.split
 
 All adapters are zero-cost, meaning that no memory is allocated internally and
 the implementation will optimize to what you would have otherwise written by

@@ -775,11 +775,11 @@ The full code can be found [here][full-code].
 [full-code]: https://github.com/tokio-rs/tokio/tree/v0.1.x/tokio/examples/chat.rs
 [Hello World!]: {{< ref "/docs/getting-started/hello-world.md" >}}
 [message passing]: {{< ref "/docs/going-deeper/tasks.md#message-passing" >}}
-[mpsc]: {{< api-url "futures" >}}/sync/mpsc/index.html
+[mpsc]: {{< api-url "futures01" >}}/sync/mpsc/index.html
 [`BytesMut`]: {{< api-url "bytes" >}}/struct.BytesMut.html
-[`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
-[`Stream`]: {{< api-url "futures" >}}/stream/trait.Stream.html
+[`Future`]: {{< api-url "futures01" >}}/future/trait.Future.html
+[`Stream`]: {{< api-url "futures01" >}}/stream/trait.Stream.html
 [`bytes`]: {{< api-url "bytes" >}}
 [`split`]: {{< api-url "tokio-io" >}}/trait.AsyncRead.html#method.split
 [`tokio-io`]: {{< api-url "tokio-io" >}}
-[`Either`]: {{< api-url "futures" >}}/future/enum.Either.html
+[`Either`]: {{< api-url "futures01" >}}/future/enum.Either.html

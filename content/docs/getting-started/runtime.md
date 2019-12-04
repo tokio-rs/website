@@ -63,6 +63,6 @@ stream we'll simply run inner future.
 In the next section, we'll take a look at a more involved example than our hello-
 world example that takes everything we've learned so far into account.
 
-[`Runtime`]: https://docs.rs/tokio/0.2/tokio/runtime/struct.Runtime.html
-[`basic_scheduler`]: https://docs.rs/tokio/0.2/tokio/runtime/struct.Builder.html#method.basic_scheduler
-[`threaded_scheduler`]: https://docs.rs/tokio/0.2/tokio/runtime/struct.Builder.html#method.threaded_scheduler
+[`Runtime`]: {{< api-url "tokio" >}}/runtime/struct.Runtime.html
+[`basic_scheduler`]: {{< api-url "tokio" >}}/runtime/struct.Builder.html#method.basic_scheduler
+[`threaded_scheduler`]: {{< api-url "tokio" >}}/runtime/struct.Builder.html#method.threaded_scheduler

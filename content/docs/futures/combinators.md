@@ -192,8 +192,8 @@ It is worth spending some time with the [`Future` trait][trait-dox] and
 [module][mod-dox] documentation to gain familiarity with the full set of
 available combinators. This guide will provide a very quick overview.
 
-[trait-dox]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
-[mod-dox]: https://docs.rs/futures/0.1/futures/future/index.html
+[trait-dox]: {{< api-url "futures01" >}}/future/trait.Future.html
+[mod-dox]: {{< api-url "futures01" >}}/future/index.html
 
 ## Concrete futures
 
@@ -207,15 +207,15 @@ functions in the `future` module for creating such a future:
   future.
 - [`result`] lifts a result to an immediately complete future.
 
-[`ok`]: https://docs.rs/futures/0.1/futures/future/fn.ok.html
-[`err`]: https://docs.rs/futures/0.1/futures/future/fn.err.html
-[`result`]: https://docs.rs/futures/0.1/futures/future/fn.result.html
+[`ok`]: {{< api-url "futures01" >}}/future/fn.ok.html
+[`err`]: {{< api-url "futures01" >}}/future/fn.err.html
+[`result`]: {{< api-url "futures01" >}}/future/fn.result.html
 
 In addition, there is also a function, [`lazy`], which allows constructing a
 future given a *closure*. The closure is not immediately invoked, instead it is
 invoked the first time the future is polled.
 
-[`lazy`]: https://docs.rs/futures/0.1/futures/future/fn.lazy.html
+[`lazy`]: {{< api-url "futures01" >}}/future/fn.lazy.html
 
 ## IntoFuture
 
@@ -228,7 +228,7 @@ that futures are expected.
 Most combinator closures that return a future actually return an instance of
 [`IntoFuture`].
 
-[`IntoFuture`]: https://docs.rs/futures/0.1/futures/future/trait.IntoFuture.html
+[`IntoFuture`]: {{< api-url "futures01" >}}/future/trait.IntoFuture.html
 
 ## Adapters
 
@@ -244,17 +244,17 @@ the requested behavior. Using these adapter combinators, it is possible to:
 * Convert to a trait object ([`Box::new`])
 * Convert unwinding into errors ([`catch_unwind`])
 
-[`Iterator`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html
-[`Box`]: https://doc.rust-lang.org/std/boxed/struct.Box.html
-[`Box::new`]: https://doc.rust-lang.org/std/boxed/struct.Box.html#method.new
-[`map`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.map
-[`map_err`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.map_err
-[`then`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.then
-[`and_then`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.and_then
-[`or_else`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.or_else
-[`select`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.select
-[`join`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.join
-[`catch_unwind`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.catch_unwind
+[`Iterator`]: {{< api-url "std" >}}/iter/trait.Iterator.html
+[`Box`]: {{< api-url "std" >}}/boxed/struct.Box.html
+[`Box::new`]: {{< api-url "std" >}}/boxed/struct.Box.html#method.new
+[`map`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.map
+[`map_err`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.map_err
+[`then`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.then
+[`and_then`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.and_then
+[`or_else`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.or_else
+[`select`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.select
+[`join`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.join
+[`catch_unwind`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.catch_unwind
 
 # When to use combinators
 
@@ -639,6 +639,6 @@ improve this section, visit the [doc-push] repo and open an issue with your
 thoughts.
 
 [doc-push]: https://github.com/tokio-rs/doc-push
-[`map`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html#method.map
+[`map`]: {{< api-url "futures01" >}}/future/trait.Future.html#method.map
 [display-fut]: {{< ref "/docs/futures/basic.md" >}}#cleaning-things-up
 [connect-and-write]: {{< ref "/docs/futures/getting_asynchronous.md" >}}#chaining-computations

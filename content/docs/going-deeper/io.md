@@ -161,24 +161,24 @@ also provides a number of methods for working with it conveniently:
 * [`recv_dgram`] expresses reading a datagram into a buffer, yielding both the
   buffer and the address it came from.
 
-[`tokio`]: {{< api-url "tokio" >}}
-[`tokio::net`]: {{< api-url "tokio" >}}/net/index.html
-[`TcpListener`]: {{< api-url "tokio" >}}/net/struct.TcpListener.html
-[`TcpStream`]: {{< api-url "tokio" >}}/net/struct.TcpStream.html
-[`UdpSocket`]: {{< api-url "tokio" >}}/net/struct.UdpSocket.html
-[`send_dgram`]: {{< api-url "tokio" >}}/net/struct.UdpSocket.html#method.send_dgram
-[`recv_dgram`]: {{< api-url "tokio" >}}/net/struct.UdpSocket.html#method.recv_dgram
-[`incoming`]: {{< api-url "tokio" >}}/net/struct.TcpListener.html#method.incoming
-[`read_exact`]: {{< api-url "tokio" >}}/io/fn.read_exact.html
-[`read_to_end`]: {{< api-url "tokio" >}}/io/fn.read_to_end.html
-[`write_all`]: {{< api-url "tokio" >}}/io/fn.write_all.html
-[`copy`]: {{< api-url "tokio" >}}/io/fn.copy.html
-[`tokio_io::io`]: {{< api-url "tokio" >}}/io/index.html
+[`tokio`]: {{< api-url "tokio01" >}}
+[`tokio::net`]: {{< api-url "tokio01" >}}/net/index.html
+[`TcpListener`]: {{< api-url "tokio01" >}}/net/struct.TcpListener.html
+[`TcpStream`]: {{< api-url "tokio01" >}}/net/struct.TcpStream.html
+[`UdpSocket`]: {{< api-url "tokio01" >}}/net/struct.UdpSocket.html
+[`send_dgram`]: {{< api-url "tokio01" >}}/net/struct.UdpSocket.html#method.send_dgram
+[`recv_dgram`]: {{< api-url "tokio01" >}}/net/struct.UdpSocket.html#method.recv_dgram
+[`incoming`]: {{< api-url "tokio01" >}}/net/struct.TcpListener.html#method.incoming
+[`read_exact`]: {{< api-url "tokio01" >}}/io/fn.read_exact.html
+[`read_to_end`]: {{< api-url "tokio01" >}}/io/fn.read_to_end.html
+[`write_all`]: {{< api-url "tokio01" >}}/io/fn.write_all.html
+[`copy`]: {{< api-url "tokio01" >}}/io/fn.copy.html
+[`tokio_io::io`]: {{< api-url "tokio01" >}}/io/index.html
 [Mio]: https://docs.rs/mio/
-[reactor]: {{< api-url "tokio" >}}/reactor/index.html
-[`AsyncRead`]: {{< api-url "tokio" >}}/io/trait.AsyncRead.html
-[`AsyncWrite`]: {{< api-url "tokio" >}}/io/trait.AsyncWrite.html
-[`Read`]: https://doc.rust-lang.org/std/io/trait.Read.html
-[`Write`]: https://doc.rust-lang.org/std/io/trait.Write.html
-[`poll_read`]: {{< api-url "tokio" >}}/io/trait.AsyncRead.html#method.poll_read
-[`poll_write`]: {{< api-url "tokio" >}}/io/trait.AsyncWrite.html#method.poll_write
+[reactor]: {{< api-url "tokio01" >}}/reactor/index.html
+[`AsyncRead`]: {{< api-url "tokio01" >}}/io/trait.AsyncRead.html
+[`AsyncWrite`]: {{< api-url "tokio01" >}}/io/trait.AsyncWrite.html
+[`Read`]: {{< api-url "std" >}}/io/trait.Read.html
+[`Write`]: {{< api-url "std" >}}/io/trait.Write.html
+[`poll_read`]: {{< api-url "tokio01" >}}/io/trait.AsyncRead.html#method.poll_read
+[`poll_write`]: {{< api-url "tokio01" >}}/io/trait.AsyncWrite.html#method.poll_write

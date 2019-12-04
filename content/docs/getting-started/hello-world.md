@@ -141,10 +141,10 @@ If everything goes well, you should see `hello world` printed from Netcat.
 We've only dipped our toes into Tokio and its asynchronous model. The next page in
 the guide will start digging a bit deeper into Futures and the Tokio runtime model.
 
-[`io`]: https://docs.rs/tokio/0.2/tokio/io/index.html
-[`net`]: https://docs.rs/tokio/0.2/tokio/net/index.html
-[`write_all`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html#method.write_all
-[`AsyncWriteExt`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html
+[`io`]: {{< api-url "tokio" >}}/io/index.html
+[`net`]: {{< api-url "tokio" >}}/net/index.html
+[`write_all`]: {{< api-url "tokio" >}}/io/trait.AsyncWriteExt.html#method.write_all
+[`AsyncWriteExt`]: {{< api-url "tokio" >}}/io/trait.AsyncWriteExt.html
 [full-code]: https://github.com/tokio-rs/tokio/blob/master/examples/hello_world.rs
 [Netcat]: http://netcat.sourceforge.net/
 [Nmap.org]: https://nmap.org

@@ -6,8 +6,8 @@ menu:
     parent: going_deeper
 ---
 
-[`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
-[`Iterator`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html
+[`Future`]: {{< api-url "futures01" >}}/future/trait.Future.html
+[`Iterator`]: {{< api-url "std" >}}/iter/trait.Iterator.html
 
 When working with futures, one of the first things you're likely to need to do
 is to return a [`Future`]. As with [`Iterator`]s, however, doing so can be a little tricky.
@@ -38,7 +38,7 @@ The upside of this strategy is that it's easy to write down (just a [`Box`]) and
 easy to create. This is also maximally flexible in terms of future changes to
 the method as *any* type of future can be returned as an opaque, boxed `Future`.
 
-[`Box`]: https://doc.rust-lang.org/std/boxed/struct.Box.html
+[`Box`]: {{< api-url "std" >}}/boxed/struct.Box.html
 
 The downside of this approach is that it requires a runtime allocation when the
 future is constructed, and dynamic dispatch when using that future. The `Box`
@@ -126,7 +126,7 @@ using a function pointer (`fn(i32) -> i32`), but we would ideally use a closure.
 Unfortunately, the return type cannot name the closure, for now. It also leads to
 very verbose signatures, and leaks implementation details to clients.
 
-[`Map`]: https://docs.rs/futures/0.1/futures/future/struct.Map.html
+[`Map`]: {{< api-url "futures01" >}}/future/struct.Map.html
 
 # Custom types
 [return-custom-types]: #custom-types

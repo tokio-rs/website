@@ -413,11 +413,11 @@ spawn a new task.
 
 [Go's goroutine]: https://www.golang-book.com/books/intro/10
 [Erlang's process]: http://erlang.org/doc/reference_manual/processes.html
-[`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
+[`Future`]: {{< api-url "futures01" >}}/future/trait.Future.html
 [executors]: #
-[`futures`]: {{< api-url "futures" >}}
-[`tokio`]: {{< api-url "tokio" >}}
-[`sync`]: {{< api-url "futures" >}}/sync/index.html
-[`oneshot`]: {{< api-url "futures" >}}/sync/oneshot/index.html
-[`mpsc`]: {{< api-url "futures" >}}/sync/mpsc/index.html
-[`FuturesUnordered`]: {{< api-url "futures" >}}/stream/futures_unordered/struct.FuturesUnordered.html
+[`futures`]: {{< api-url "futures01" >}}
+[`tokio`]: {{< api-url "tokio01" >}}
+[`sync`]: {{< api-url "futures01" >}}/sync/index.html
+[`oneshot`]: {{< api-url "futures01" >}}/sync/oneshot/index.html
+[`mpsc`]: {{< api-url "futures01" >}}/sync/mpsc/index.html
+[`FuturesUnordered`]: {{< api-url "futures01" >}}/stream/futures_unordered/struct.FuturesUnordered.html

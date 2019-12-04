@@ -225,14 +225,14 @@ Then, the executor would look something like this:
 Being able to get notified when a task goes from "not ready" to "ready" is the
 core of the [`futures`] task model.
 
-[`futures`]: {{< api-url "futures" >}}
-[standard library]: https://doc.rust-lang.org/std/
+[`futures`]: {{< api-url "futures01" >}}
+[standard library]: {{< api-url "std" >}}
 [c10k]: https://en.wikipedia.org/wiki/C10k_problem
-[`ErrorKind::WouldBlock`]: https://doc.rust-lang.org/std/io/enum.ErrorKind.html#variant.WouldBlock
-[`TcpStream`]: {{< api-url "tokio" >}}/net/struct.TcpStream.html
-[`Async`]: {{< api-url "futures" >}}/enum.Async.html
-[`Future`]: {{< api-url "futures" >}}/future/trait.Future.html
+[`ErrorKind::WouldBlock`]: {{< api-url "std" >}}/io/enum.ErrorKind.html#variant.WouldBlock
+[`TcpStream`]: {{< api-url "tokio01" >}}/net/struct.TcpStream.html
+[`Async`]: {{< api-url "futures01" >}}/enum.Async.html
+[`Future`]: {{< api-url "futures01" >}}/future/trait.Future.html
 [`CurrentThread`]: https://docs.rs/tokio-current-thread
 [`ThreadPool`]: http://docs.rs/tokio-threadpool
-[rt]: {{< api-url "tokio" >}}/runtime/index.html
+[rt]: {{< api-url "tokio01" >}}/runtime/index.html
 [next section]: {{< ref "/docs/getting-started/futures.md#returning-not-ready" >}}

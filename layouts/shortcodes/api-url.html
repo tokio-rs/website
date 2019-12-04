@@ -1,5 +1,7 @@
 {{- if eq (.Get 0) "tokio" -}}
 {{- .Site.Params.tokioDocsURL -}}
+{{- else if eq (.Get 0) "tokio01" -}}
+{{- .Site.Params.tokio01DocsURL -}}
 {{- else if eq (.Get 0) "tokio-executor" -}}
 {{- .Site.Params.tokioExecutorDocsURL -}}
 {{- else if eq (.Get 0) "tokio-io" -}}
@@ -16,10 +18,14 @@
 {{- .Site.Params.coreDocsURL -}}
 {{- else if eq (.Get 0) "futures" -}}
 {{- .Site.Params.futuresDocsURL -}}
+{{- else if eq (.Get 0) "futures01" -}}
+{{- .Site.Params.futures01DocsURL -}}
 {{- else if eq (.Get 0) "mio" -}}
 {{- .Site.Params.mioDocsURL -}}
 {{- else if eq (.Get 0) "proto" -}}
 {{- .Site.Params.protoDocsURL -}}
 {{- else if eq (.Get 0) "service" -}}
 {{- .Site.Params.serviceDocsURL -}}
+{{- else if eq (.Get 0) "std" -}}
+{{- .Site.Params.stdDocsURL -}}
 {{- end -}}

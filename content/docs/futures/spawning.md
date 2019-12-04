@@ -441,10 +441,10 @@ between two tasks.
 
 [Go's goroutine]: https://www.golang-book.com/books/intro/10
 [Erlang's process]: http://erlang.org/doc/reference_manual/processes.html
-[`futures`]: {{< api-url "futures" >}}
-[`sync`]: {{< api-url "futures" >}}/sync/index.html
-[`oneshot`]: {{< api-url "futures" >}}/sync/oneshot/index.html
-[`mpsc`]: {{< api-url "futures" >}}/sync/mpsc/index.html
-[`lazy`]: https://docs.rs/futures/0.1/futures/future/fn.lazy.html
+[`futures`]: {{< api-url "futures01" >}}
+[`sync`]: {{< api-url "futures01" >}}/sync/index.html
+[`oneshot`]: {{< api-url "futures01" >}}/sync/oneshot/index.html
+[`mpsc`]: {{< api-url "futures01" >}}/sync/mpsc/index.html
+[`lazy`]: {{< api-url "futures01" >}}/future/fn.lazy.html
 [transport]: {{< ref "docs/going-deeper/frames.md" >}}
 [rtt]: https://en.wikipedia.org/wiki/Round-trip_delay_time

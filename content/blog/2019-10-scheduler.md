@@ -313,9 +313,9 @@ value around, as well as taking less space in structs, allowing for more
 critical data to fit in the cache line. The custom [vtable] design enables
 a number of optimizations which will be discussed later.
 
-[std_task]: https://doc.rust-lang.org/std/task/index.html
+[std_task]: {{< api-url "std" >}}/task/index.html
 [cramertj]: https://github.com/cramertj
-[vtable]: https://doc.rust-lang.org/std/task/struct.RawWakerVTable.html
+[vtable]: {{< api-url "std" >}}/task/struct.RawWakerVTable.html
 
 ### A better run queue
 
@@ -644,7 +644,7 @@ once (between [64 and 128 bytes][lwn]). We want that data to be as relevant as
 possible.
 
 [astaire]: https://github.com/carllerche/astaire/blob/6b612e8f614f7351257e2957bd9092aea9ac3781/src/core/cell.rs#L205-L217
-[vtable]: https://doc.rust-lang.org/std/task/struct.RawWakerVTable.html
+[vtable]: {{< api-url "std" >}}/task/struct.RawWakerVTable.html
 [lwn]: https://lwn.net/Articles/252125/
 
 ### Reducing atomic reference counting
@@ -723,9 +723,9 @@ be pushed into the run queue again. The specifics of how this is managed are
 beyond the scope of this article, but I urge you to further investigate this in
 the source.
 
-[arc]: https://doc.rust-lang.org/std/sync/struct.Arc.html
-[`wake`]: https://doc.rust-lang.org/std/task/struct.Waker.html#method.wake
-[`wake_by_ref`]: https://doc.rust-lang.org/std/task/struct.Waker.html#method.wake_by_ref
+[arc]: {{< api-url "std" >}}/sync/struct.Arc.html
+[`wake`]: {{< api-url "std" >}}/task/struct.Waker.html#method.wake
+[`wake_by_ref`]: {{< api-url "std" >}}/task/struct.Waker.html#method.wake_by_ref
 
 ## Fearless (unsafe) concurrency with Loom
 

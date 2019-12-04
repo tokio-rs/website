@@ -146,8 +146,8 @@ For now it's just important to know that futures have an associated type,
 function is the function that the Tokio runtime calls to check if the future is
 complete.
 
-[`Future`]: https://doc.rust-lang.org/std/future/trait.Future.html
+[`Future`]: {{< api-url "std" >}}/future/trait.Future.html
 [`futures`]: https://docs.rs/futures
-[standard library]: https://doc.rust-lang.org/std/
+[standard library]: {{< api-url "std" >}}
 [c10k]: https://en.wikipedia.org/wiki/C10k_problem
 [mio]: https://github.com/tokio-rs/mio

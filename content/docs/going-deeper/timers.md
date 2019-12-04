@@ -162,10 +162,10 @@ thread.
 That said, the timer implementation is thread safe and supports usage from
 any thread.
 
-[timer]: {{< api-url "tokio" >}}/timer/index.html
-[delay]: {{< api-url "tokio" >}}/timer/struct.Delay.html
-[timeout]: {{< api-url "tokio" >}}/timer/struct.Timeout.html
-[interval]: {{< api-url "tokio" >}}/timer/struct.Interval.html
-[runtime]: {{< api-url "tokio" >}}/runtime/index.html
-[ext]: {{< api-url "tokio" >}}/util/trait.FutureExt.html
-[`timeout`]: {{< api-url "tokio" >}}/util/trait.FutureExt.html#method.timeout
+[timer]: {{< api-url "tokio01" >}}/timer/index.html
+[delay]: {{< api-url "tokio01" >}}/timer/struct.Delay.html
+[timeout]: {{< api-url "tokio01" >}}/timer/struct.Timeout.html
+[interval]: {{< api-url "tokio01" >}}/timer/struct.Interval.html
+[runtime]: {{< api-url "tokio01" >}}/runtime/index.html
+[ext]: {{< api-url "tokio01" >}}/util/trait.FutureExt.html
+[`timeout`]: {{< api-url "tokio01" >}}/util/trait.FutureExt.html#method.timeout

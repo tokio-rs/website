@@ -351,7 +351,7 @@ resolve(my_host)
 
 This is much shorter and does the same thing.
 
-[`futures`]: {{< api-url "futures" >}}
-[`notify`]: {{< api-url "futures" >}}/executor/trait.Notify.html#tymethod.notify
-[`task::current()`]: {{< api-url "futures" >}}/task/fn.current.html
-[`AndThen`]: {{< api-url "futures" >}}/future/struct.AndThen.html
+[`futures`]: {{< api-url "futures01" >}}
+[`notify`]: {{< api-url "futures01" >}}/executor/trait.Notify.html#tymethod.notify
+[`task::current()`]: {{< api-url "futures01" >}}/task/fn.current.html
+[`AndThen`]: {{< api-url "futures01" >}}/future/struct.AndThen.html

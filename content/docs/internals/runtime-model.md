@@ -79,7 +79,7 @@ ready. The executor schedules the task, which leads to `MyTask::poll` being
 called again. This time, given that `my_resource` is ready, the value will be
 returned from `my_resource.poll()` and the task is able to complete.
 
-[Future]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
+[Future]: {{< api-url "futures01" >}}/future/trait.Future.html
 
 ## Cooperative scheduling
 
@@ -358,12 +358,12 @@ current thread and drains the `scheduled` linked list.
 
 [`current_thread`]: http://docs.rs/tokio-current-thread
 [`thread_pool`]: https://docs.rs/tokio-threadpool
-[Spawn]: https://docs.rs/futures/0.1/futures/executor/struct.Spawn.html
-[poll_future_notify]: https://docs.rs/futures/0.1/futures/executor/struct.Spawn.html#method.poll_future_notify
-[current]: https://docs.rs/futures/0.1/futures/task/fn.current.html
-[notify]: https://docs.rs/futures/0.1/futures/task/struct.Task.html#method.notify
-[`Notify`]: https://docs.rs/futures/0.1/futures/executor/trait.Notify.html
-[Notify::notify]: https://docs.rs/futures/0.1/futures/executor/trait.Notify.html#tymethod.notify
+[Spawn]: {{< api-url "futures01" >}}/executor/struct.Spawn.html
+[poll_future_notify]: {{< api-url "futures01" >}}/executor/struct.Spawn.html#method.poll_future_notify
+[current]: {{< api-url "futures01" >}}/task/fn.current.html
+[notify]: {{< api-url "futures01" >}}/task/struct.Task.html#method.notify
+[`Notify`]: {{< api-url "futures01" >}}/executor/trait.Notify.html
+[Notify::notify]: {{< api-url "futures01" >}}/executor/trait.Notify.html#tymethod.notify
 
 # Resources, drivers, and runtimes
 
@@ -421,4 +421,4 @@ strategies is most successful.
 
 <!-- TODO: Expand -->
 
-[`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html
+[`Future`]: {{< api-url "futures01" >}}/future/trait.Future.html

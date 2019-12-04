@@ -183,9 +183,9 @@ upwards through all the `with_default` calls and can be returned or used in any
 other way. If you want to wait for all the other futures to finish too, there's
 also `executor.run` which can be executed afterwards.
 
-[runtime `Builder`]: {{< api-url "tokio" >}}/runtime/struct.Builder.html
+[runtime `Builder`]: {{< api-url "tokio01" >}}/runtime/struct.Builder.html
 [`Park`]: {{< api-url "tokio-executor" >}}/park/trait.Park.html
-[`Reactor`]: {{< api-url "tokio" >}}/reactor/struct.Reactor.html
+[`Reactor`]: {{< api-url "tokio01" >}}/reactor/struct.Reactor.html
 [mio]: https://crates.io/crates/mio
 [`CurrentThread`]: https://docs.rs/tokio-current-thread/0.1.4/tokio_current_thread/struct.CurrentThread.html
 [`Timer`]: {{< api-url "tokio-timer" >}}/tokio_timer/timer/struct.Timer.html

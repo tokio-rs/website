@@ -303,6 +303,6 @@ where
 [often enough]: {{< ref "/docs/futures/combinators.md" >}}#when-to-use-combinators
 [shutdown]: {{< api-url "tokio-io" >}}/trait.AsyncWrite.html#tymethod.shutdown
 [non-blocking I/O]: {{< ref "/docs/internals/net.md" >}}
-[`read_exact`]: {{< api-url "tokio" >}}/io/fn.read_exact.html
-[`write_all`]: {{< api-url "tokio" >}}/io/fn.write_all.html
-[`Write`]: https://doc.rust-lang.org/std/io/trait.Write.html
+[`read_exact`]: {{< api-url "tokio01" >}}/io/fn.read_exact.html
+[`write_all`]: {{< api-url "tokio01" >}}/io/fn.write_all.html
+[`Write`]: {{< api-url "std" >}}/io/trait.Write.html

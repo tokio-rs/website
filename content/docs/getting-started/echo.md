@@ -186,7 +186,7 @@ The full code can be found [here][full-code].
 
 [full-code]: https://github.com/tokio-rs/tokio/blob/master/examples/echo.rs
 [hello world]: {{< ref "/docs/getting-started/hello-world.md" >}}
-[`StreamExt::next()`]: https://docs.rs/futures/0.3/futures/stream/trait.StreamExt.html#method.next
+[`StreamExt::next()`]: {{< api-url "futures" >}}/stream/trait.StreamExt.html#method.next
 [`io::copy`]: {{< api-url "tokio" >}}/io/fn.copy.html
 [`split`]: {{< api-url "tokio" >}}/io/trait.AsyncRead.html#method.split
 [`tokio::spawn`]: {{< api-url "tokio" >}}/fn.spawn.html

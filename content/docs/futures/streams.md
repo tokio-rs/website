@@ -407,30 +407,30 @@ the requested behavior. Using these adapter combinators, it is possible to:
 * Combine multiple streams together ([`zip`], [`chain`], [`select`]).
 
 [interval]: https://docs.rs/tokio/0.1/tokio/timer/struct.Interval.html
-[trait-dox]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html
-[mod-dox]: https://docs.rs/futures/0.1/futures/stream/index.html
-[`unfold`]: https://docs.rs/futures/0.1/futures/stream/fn.unfold.html
-[`take`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.take
-[`for_each`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.for_each
+[trait-dox]: {{< api-url "futures01" >}}/stream/trait.Stream.html
+[mod-dox]: {{< api-url "futures01" >}}/stream/index.html
+[`unfold`]: {{< api-url "futures01" >}}/stream/fn.unfold.html
+[`take`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.take
+[`for_each`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.for_each
 [returning futures]: {{< ref "/docs/futures/combinators.md#returning-futures" >}}#
-[`once`]: https://docs.rs/futures/0.1/futures/stream/fn.once.html
-[`iter_ok`]: https://docs.rs/futures/0.1/futures/stream/fn.iter_ok.html
-[`iter_result`]: https://docs.rs/futures/0.1/futures/stream/fn.iter_result.html
-[`empty`]: https://docs.rs/futures/0.1/futures/stream/fn.empty.html
-[`IntoIterator`]: https://doc.rust-lang.org/std/iter/trait.IntoIterator.html
-[`Iterator`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html
-[`map`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.map
-[`map_err`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.map_err
-[`and_then`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.and_then
-[`or_else`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.or_else
-[`filter`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.filter
-[`filter_map`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.filter_map
-[`for_each`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.for_each
-[`fold`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.fold
-[`take`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.take
-[`take_while`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.take_while
-[`skip`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.skip
-[`skip_while`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.skip_while
-[`zip`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.zip
-[`chain`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.chain
-[`select`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html#method.select
+[`once`]: {{< api-url "futures01" >}}/stream/fn.once.html
+[`iter_ok`]: {{< api-url "futures01" >}}/stream/fn.iter_ok.html
+[`iter_result`]: {{< api-url "futures01" >}}/stream/fn.iter_result.html
+[`empty`]: {{< api-url "futures01" >}}/stream/fn.empty.html
+[`IntoIterator`]: {{< api-url "std" >}}/iter/trait.IntoIterator.html
+[`Iterator`]: {{< api-url "std" >}}/iter/trait.Iterator.html
+[`map`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.map
+[`map_err`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.map_err
+[`and_then`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.and_then
+[`or_else`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.or_else
+[`filter`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.filter
+[`filter_map`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.filter_map
+[`for_each`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.for_each
+[`fold`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.fold
+[`take`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.take
+[`take_while`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.take_while
+[`skip`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.skip
+[`skip_while`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.skip_while
+[`zip`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.zip
+[`chain`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.chain
+[`select`]: {{< api-url "futures01" >}}/stream/trait.Stream.html#method.select

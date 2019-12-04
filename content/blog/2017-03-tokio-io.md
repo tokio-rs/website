@@ -216,7 +216,7 @@ implementations. More on this coming soon!
 [`Codec`]: https://docs.rs/tokio-core/0.1.9/tokio_core/io/trait.Codec.html
 [`Stream`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html
 [`Sink`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html
-[`std::io`]: https://doc.rust-lang.org/std/io/
+[`std::io`]: {{< api-url "std" >}}/io/
 [`AsyncWrite`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncWrite.html
 [`AsyncRead`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncRead.html
 [`split`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncRead.html#method.split
