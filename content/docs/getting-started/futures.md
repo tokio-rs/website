@@ -111,7 +111,7 @@ finds the function associated with it and calls it immediately. This is a
 
 The rust asynchronous model is **pull** based. Instead of a `Future`
 being responsible for pushing the data into a callback, it relies on **something
-else** asking it if it is complete or not. In the case of Tokio, that **something
+else** asking it it is complete or not. In the case of Tokio, that **something
 else** is the Tokio runtime.
 
 Using a poll based model offers [many advantages], including being a zero cost
