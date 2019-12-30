@@ -8,7 +8,7 @@ menu:
 
 In the previous section we explored `async fn` Futures which allow us to represent
 a value that will be available "at some point in the future". We mentioned that
-a Rust `Future` requires **something** to poll it for completion and hinted that
+a Rust `Future` requires **something** to poll it for completion and said that
 the **something** is the Tokio runtime.
 
 ## Tokio runtime
