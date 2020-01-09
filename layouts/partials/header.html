@@ -33,12 +33,17 @@
       {{ end }}
     </title>
   </head>
-  <body>
+  <body class='{{ .Site.Params.Status }}
+             {{ if ne .Site.Params.Status "default" }}alt{{ end }}'>
     <header class="navbar navbar-expand navbar-dark flex-column flex-md-row tk-navbar">
       <a class="navbar-brand" href="/">
         <img src="/img/Tokio_Mark_White.png" class="align-middle" alt="">
       </a>
       <div class="collapse navbar-collapse">
+        {{ if ne .Site.Params.Status "default" }}
+        <p class="warn">this site contains {{.Site.Params.Status}} docs, if you are new here, we recommend tokio.rs</p>
+        <p class="version">{{.Site.Params.Version}}</p>
+        {{ end }}
         <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link {{ if .IsHome }} active {{ end }}" href="/">Home</a>
