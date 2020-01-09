@@ -55,7 +55,7 @@ or lightweight cooperative multi-tasking
 tokio = { version = "0.2", features = ["macros", "rt-core"] }
 ```
 
-## TCPStream connect
+## TcpStream connect
 
 As we start to build the app, we'll need more features.  The line of code
 where we call `TcpStream::connect` requires two features: 
@@ -89,4 +89,3 @@ lists all of the features and their dependencies.
 
 
 [`API reference`]: https://docs.rs/tokio/0.2.8/tokio/
-
