@@ -55,6 +55,20 @@ img {
   z-index: 1071;
 }
 
+.preview .tk-navbar {
+  background-color: #db9900;
+}
+
+.archive .tk-navbar {
+  background-color: #555;
+}
+
+.alt-banner {
+  background-color: #09569e;
+  font-size: 14px;
+  text-decoration: none!important;
+}
+
 .tk-navbar .navbar-nav-svg {
   display: inline-block;
   width: 1rem;
