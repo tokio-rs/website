@@ -25,7 +25,7 @@ tokio = { version = "0.2", features = ["full"] }
 
 Then replace `main.rs` with our "hello world" code:
 
-```rust
+```rust,no_run
 # #![deny(deprecated)]
 # #![allow(unused_imports)]
 
