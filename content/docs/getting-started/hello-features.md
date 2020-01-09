@@ -81,11 +81,10 @@ Writing to the stream requires `io-util`:
 
 ## Learn more about features
 
-The team is working to annotate the [`API reference`] to indicate which
-features are need for different APIs.  For now, you can check out the tokio
-[Cargo.toml](https://github.com/tokio-rs/tokio/blob/master/tokio/Cargo.toml)
-lists all of the features and their dependencies.
-
+The [`API reference`] includes annotations that indicate which features are
+needed for different APIs.  Please [`open an issue`] for any missing info, and
+the team will get it fixed up asap!
 
 
 [`API reference`]: https://docs.rs/tokio/
+[`open an issue`]: https://github.com/tokio-rs/tokio/issues/new
