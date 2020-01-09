@@ -88,4 +88,4 @@ lists all of the features and their dependencies.
 
 
 
-[`API reference`]: https://docs.rs/tokio/0.2.8/tokio/
+[`API reference`]: https://docs.rs/tokio/
