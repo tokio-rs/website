@@ -27,7 +27,6 @@ Then replace `main.rs` with our "hello world" code:
 
 ```rust,no_run
 # #![deny(deprecated)]
-# #![allow(unused_imports)]
 
 use tokio::net::TcpStream;
 use tokio::prelude::*;

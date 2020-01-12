@@ -35,7 +35,7 @@ Let's take a look at our tiny client app and see what features are needed.
 
 If we change our code, so that it only uses the `#[tokio::main]` macro:
 
-```
+```rust
 #[tokio::main]
 async fn main() {
     println!("doing nothing yet");
@@ -44,14 +44,14 @@ async fn main() {
 
 then we can choose whether to use threads (commonly used for servers):
 
-```
+```toml
 tokio = { version = "0.2", features = ["macros", "rt-threaded"] }
 ```
 
 or lightweight cooperative multi-tasking
 (often required for low-profile clients):
 
-```
+```toml
 tokio = { version = "0.2", features = ["macros", "rt-core"] }
 ```
 
@@ -61,8 +61,16 @@ As we start to build the app, we'll need more features.  The line of code
 where we call `TcpStream::connect` requires two features:
 
 
-```
-    let stream = TcpStream::connect("127.0.0.1:6142").await.unwrap();
+```rust,no_run
+# #![deny(deprecated)]
+# #![allow(unused_mut)]
+# #![allow(unused_variables)]
+# use tokio::net::TcpStream;
+
+# #[tokio::main]
+# async fn main() {
+    let mut stream = TcpStream::connect("127.0.0.1:6142").await.unwrap();
+# }
 ```
 
 
@@ -71,13 +79,40 @@ will need to do a DNS lookup just in case.
 2. `tcp` for handling the TCP connection
 
 
+Since our example uses a specific ip address, we can reduce dependendencies
+further by creating a [`std::net::SocketAddr`]:
+
+```rust,no_run
+# #![deny(deprecated)]
+# #![allow(unused_mut)]
+# #![allow(unused_variables)]
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use tokio::net::TcpStream;
+
+#[tokio::main]
+async fn main() {
+  let addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 6142);
+  let mut stream = TcpStream::connect(addr).await;
+}
+```
+
 ## Writing to the socket
 
 The `write` method is defined in [`tokio::io::AsyncWriteExt`] which requires
 `io-util`.
 
-```
+```rust,no_run
+# #![deny(deprecated)]
+# #![allow(unused_variables)]
+# use tokio::net::TcpStream;
+# use tokio::prelude::*;
+
+# #[tokio::main]
+# async fn main() {
+#    let mut stream = TcpStream::connect("127.0.0.1:6142").await.unwrap();
     let result = stream.write(b"hello world\n").await;
+# }
+
 ```
 
 The `write` method in our example is declared with `use tokio::prelude::*`.
@@ -92,8 +127,9 @@ If anything missing, please [`open an issue`] and one of the Tokio elves
 will figure out where it is declared and will fix it asap!
 
 [`feature groups`]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-features-section
-[`API reference`]: https://docs.rs/tokio/
+[`std::net::SocketAddr`]: https://doc.rust-lang.org/std/net/enum.SocketAddr.html
 [`tokio::io::AsyncWriteExt`]: https://docs.rs/tokio/*/tokio/io/trait.AsyncWriteExt.html
 [`tokio prelude`]: https://docs.rs/tokio/0.2.9/tokio/prelude/index.html
 [`Rust prelude pattern`]: https://doc.rust-lang.org/std/prelude/index.html#other-preludes
+[`API reference`]: https://docs.rs/tokio/
 [`open an issue`]: https://github.com/tokio-rs/tokio/issues/new
