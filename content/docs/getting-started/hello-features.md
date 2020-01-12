@@ -1,5 +1,5 @@
 ---
-title: "Tokio Features"
+title: "Features Groups"
 weight : 1020
 menu:
   docs:
@@ -7,10 +7,10 @@ menu:
 ---
 
 Feel free to skip this section, and just use `features = ["full"]` while
-learning. This section provides some examples of how and when to specify
-tokio features. 
+learning. This section provides some examples of how and when to choose
+specific [`feature groups`] in `Cargo.toml`.
 
-## Often using all features is fine 
+## Often using all features is fine
 
 When writing an app, we'll often use all of Tokio's features to accelerate
 our development time:
@@ -49,7 +49,7 @@ tokio = { version = "0.2", features = ["macros", "rt-threaded"] }
 ```
 
 or lightweight cooperative multi-tasking
-(often required for low-profile clients): 
+(often required for low-profile clients):
 
 ```
 tokio = { version = "0.2", features = ["macros", "rt-core"] }
@@ -58,7 +58,7 @@ tokio = { version = "0.2", features = ["macros", "rt-core"] }
 ## TcpStream connect
 
 As we start to build the app, we'll need more features.  The line of code
-where we call `TcpStream::connect` requires two features: 
+where we call `TcpStream::connect` requires two features:
 
 
 ```
@@ -66,26 +66,34 @@ where we call `TcpStream::connect` requires two features:
 ```
 
 
-1. `dns` for converting the string `127.0.0.1:6142` to an IP address -- Tokio 
+1. `dns` for converting the string `127.0.0.1:6142` to an IP address -- Tokio
 will need to do a DNS lookup just in case.
 2. `tcp` for handling the TCP connection
 
 
 ## Writing to the socket
 
-Writing to the stream requires `io-util`:
+The `write` method is defined in [`tokio::io::AsyncWriteExt`] which requires
+`io-util`.
 
 ```
     let result = stream.write(b"hello world\n").await;
 ```
 
+The `write` method in our example is declared with `use tokio::prelude::*`.
+The [`tokio prelude`] follows the [`Rust prelude pattern`] to make using
+multiple types more convenient.  We could be more explicit by declaring `use tokio::io::AsyncWriteExt`:
+
+
 ## Learn more about features
 
-The team is working to annotate the [`API reference`] to indicate which
-features are need for different APIs.  For now, you can check out the tokio
-[Cargo.toml](https://github.com/tokio-rs/tokio/blob/master/tokio/Cargo.toml)
-lists all of the features and their dependencies.
+The [`API reference`] indicates which features are need for different APIs.
+If anything missing, please [`open an issue`] and one of the Tokio elves
+will figure out where it is declared and will fix it asap!
 
-
-
+[`feature groups`]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-features-section
 [`API reference`]: https://docs.rs/tokio/
+[`tokio::io::AsyncWriteExt`]: https://docs.rs/tokio/*/tokio/io/trait.AsyncWriteExt.html
+[`tokio prelude`]: https://docs.rs/tokio/0.2.9/tokio/prelude/index.html
+[`Rust prelude pattern`]: https://doc.rust-lang.org/std/prelude/index.html#other-preludes
+[`open an issue`]: https://github.com/tokio-rs/tokio/issues/new
