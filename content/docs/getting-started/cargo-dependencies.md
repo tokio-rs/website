@@ -1,5 +1,5 @@
 ---
-title: "Features Groups"
+title: "Cargo dependencies"
 weight : 1020
 menu:
   docs:
