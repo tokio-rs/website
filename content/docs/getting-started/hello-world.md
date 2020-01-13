@@ -1,5 +1,5 @@
 ---
-title: "Hello World!"
+title: "Hello world!"
 weight : 1010
 menu:
   docs:
@@ -83,7 +83,7 @@ type `]`). Then at the telnet prompt (`telnet >`), typing `quit` will close
 the connection and exit the program.  (Closing the Telnet/TCP connection
 also causes socat to quit.)
 
-# Hello world in Rust
+# Let's write some code!
 
 Next we'll write some code to create a TCP stream and write “hello, world!”
 to the stream using Tokio.
