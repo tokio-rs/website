@@ -24,17 +24,17 @@ default and see how this differs from Tokio's asynchronous model.
 First, let's talk briefly about the synchronous (or blocking) model that the
 Rust [standard library] uses.
 
-```rust
+```rust,no_run
 # use std::io::prelude::*;
 # use std::net::TcpStream;
-# fn dox(mut socket: TcpStream) {
-// let socket = ...;
+# fn main() {
+let mut socket = TcpStream::connect("127.0.0.1:8080").unwrap();
 let mut buf = [0; 1024];
 let n = socket.read(&mut buf).unwrap();
 
 // Do something with &buf[..n];
+# drop(n);
 # }
-# fn main() {}
 ```
 
 When `socket.read` is called, either the socket has pending data in its receive
@@ -76,7 +76,7 @@ similar to writing synchronous code. The compiler will then transform the code
 to generate the state machines needed to use non-blocking sockets.
 
 When calling an `async fn`, such as `TcpStream::connect`, instead of blocking
-the current thread waitin for completion, a value representing the computation
+the current thread waiting for completion, a value representing the computation
 is immediately returned. This value implements the [`Future`] trait. There is no
 guarantee as to when or where the computation will happen. The computation may
 happen immediately or it may be lazy (it usually is lazy). When the caller
@@ -109,9 +109,9 @@ When the process receives the I/O notification from the operating system, it
 finds the function associated with it and calls it immediately. This is a
 **push** based model because the value is **pushed** into the callback.
 
-The rust asynchronous model uses a **pull** based model. Instead of a `Future`
+The rust asynchronous model is **pull** based. Instead of a `Future`
 being responsible for pushing the data into a callback, it relies on **something
-else** asking it it is complete or not. In the case of Tokio, that **something
+else** asking if it is complete or not. In the case of Tokio, that **something
 else** is the Tokio runtime.
 
 Using a poll based model offers [many advantages], including being a zero cost
@@ -126,7 +126,10 @@ We'll take a closer look at this poll based model in the next section.
 
 The `Future` trait is as follows:
 
-```rust,ignore
+```rust,no_run
+use std::pin::Pin;
+use std::task::{Context, Poll};
+
 pub trait Future {
     /// The type of value produced on completion.
     type Output;
@@ -135,6 +138,7 @@ pub trait Future {
     /// the current task for wakeup if the value is not yet available.
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output>;
 }
+# fn main() {}
 ```
 
 For now it's just important to know that futures have an associated type,
