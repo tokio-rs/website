@@ -69,7 +69,6 @@ where we call `TcpStream::connect` requires two features:
 # #![allow(unused_mut)]
 # #![allow(unused_variables)]
 # use tokio::net::TcpStream;
-
 # #[tokio::main]
 # async fn main() {
     let mut stream = TcpStream::connect("127.0.0.1:6142").await.unwrap();
@@ -109,7 +108,6 @@ The `write` method is defined in [`tokio::io::AsyncWriteExt`] which requires
 # #![allow(unused_variables)]
 # use tokio::net::TcpStream;
 # use tokio::prelude::*;
-
 # #[tokio::main]
 # async fn main() {
 #    let mut stream = TcpStream::connect("127.0.0.1:6142").await.unwrap();
