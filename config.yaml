@@ -26,6 +26,9 @@ menu:
       name: "API documentation"
       url: "https://docs.rs/tokio"
       weight: 9000
+    - identifier: "network_utils"
+      name: "Network Utilities"
+      weight: 10000
 
 
 params:
