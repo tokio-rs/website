@@ -1,9 +1,6 @@
 ---
 title: "Introduction"
 weight: 8001
-menu:
-  docs:
-    parent: "internals"
 ---
 
 The internals section provides an in-depth guide of Tokio's internals. It

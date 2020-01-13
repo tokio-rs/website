@@ -1,9 +1,6 @@
 ---
 title: "Runtime model"
 weight: 8010
-menu:
-  docs:
-    parent: "internals"
 ---
 
 Applications written using Tokio are organized across a large number of small,

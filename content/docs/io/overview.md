@@ -1,9 +1,6 @@
 ---
 title: "I/O Overview"
 weight : 3010
-menu:
-  docs:
-    parent: io
 ---
 
 The Rust standard library provides support for networking and I/O, such
