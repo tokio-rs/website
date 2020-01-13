@@ -408,7 +408,7 @@ tokio::run(lazy(|| {
     // Spawn the background task:
     tokio::spawn(coordinator_task(rx));
 
-    // Spawn a few tasks that use the coordinator to requst RTTs.
+    // Spawn a few tasks that use the coordinator to request RTTs.
     for _ in 0..4 {
         let tx = tx.clone();
 
