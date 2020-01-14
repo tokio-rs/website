@@ -150,5 +150,5 @@ tasks.  Tokio implements [async] syntax to improve readability of futures.
 # Get started with Tokio
 
 If you like to read code first, complete examples can be found
-[here](https://github.com/tokio-rs/tokio/tree/*/tokio/examples), or
+[here](https://github.com/tokio-rs/tokio/tree/master/examples), or
 keep reading for a step-by-step tutorial.
