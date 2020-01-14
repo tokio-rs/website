@@ -1,150 +1,145 @@
 ---
-title: "Hello World!"
+title: "Hello world!"
 weight : 1010
 menu:
   docs:
     parent: getting_started
 ---
 
-To kick off our tour of Tokio, we will start with the obligatory "hello world"
-example. This program will create a TCP stream and write "hello, world!" to the stream.
-The difference between this and a Rust program that writes to a TCP stream without Tokio
-is that this program won't block program execution when the stream is created or when
-our "hello, world!" message is written to the stream.
+This guide assumes that a knowledge of the [Rust programming language] and are
+using Rust `1.39.0` or higher. To use Tokio with earlier versions of Rust,
+please check out the [Tokio 0.1 docs].
 
-Before we begin you should have a very basic understanding of how TCP streams
-work. Having an understanding of Rust’s [standard library
-implementation](https://doc.rust-lang.org/std/net/struct.TcpStream.html) is also
-helpful.
+To check version of Rust on the command line:
+```bash
+rustc --version
+rustc 1.39.0 (4560ea788 2019-11-04)
+```
 
-Let's get started.
+In version `1.39.0`, [Rust introduced async-await], see the [Async Book] for
+in-depth documentation of these new Rust language features. This guide also
+seeks to provide a practical, hands-on introduction for all of the Rust language
+features that are needed for programming with Tokio.
 
-First, generate a new crate.
+Also, most readers will have some experience with writing networking code
+using the [Rust standard library] or another language, though folks who are
+new to network programming should be able to follow along.
+
+# Introducing asynchronous programming
+
+As our first introduction to [asynchronous programming](../overview) with
+Tokio, we will start with a tiny app that sends "hello, world!" over a
+network connection.
+
+The difference between Tokio and a Rust program written using the standard
+library is that Tokio has the flexibility to avoid blocking program execution
+when the stream is created or when our “hello, world!” message is written
+to the stream.
+
+Tokio's [`net`] module provides the same abstraction over networking as
+the corresponding modules in `std` except asynchronously.
+
+# Communicating through a network connection
+
+When developing network code, it's helpful to use tools that let us simulate
+each end of the connection. We've chosen two to allow us to receive text
+(*listen* on a socket and *read* data) and send text (*write* data).
+
+We'll start by sending "hello" over a reliable networking connection ([`TCP`]).
+Before writing code in Rust, let's install and use some network tools to
+manually do what our code will do later in the guide.
+
+Install [`socat`](../network-utilities/socat), which is a network utility that
+we'll use to simulate a server. Then type the following command to print
+out everything that is received on port 6142 (a somewhat arbitrary number
+we have chosen for this example):
+
+```bash
+socat TCP-LISTEN:6142, fork stdout
+```
+
+An easy way to simulate a client (for a text-based protocol) is to use
+[`telnet`]. To connect to our simulated server, we'll open a different
+window so we can see two terminals side-by-side and type the following on the
+command-line:
+
+```bash
+telnet localhost 6142
+```
+
+Telnet will output something like this:
+```bash
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+```
+
+Now if we type `hello` and press return, we should see `hello` printed by
+socat.
+
+To *escape* from our TCP session (`^]`), we need to hold down `Ctrl` key and
+type `]`). Then at the telnet prompt (`telnet >`), typing `quit` will close
+the connection and exit the program.
+
+Let's quit telnet and write some Rust code to send some text to our server.
+We'll leave socat running, so we can connect to it with our new app!
+
+# Let's write some code!
+
+Next we'll write some code to create a TCP stream and write “hello, world!”
+to the stream using Tokio.
+
+Let's get started by generating a new Rust app:
 
 ```bash
 $ cargo new hello-world
 $ cd hello-world
 ```
 
-Next, add the necessary dependencies in `Cargo.toml`:
+For a quick start, we'll add the Tokio crate with all Tokio of its features
+to our Cargo manifest, by adding the following text to `Cargo.toml`.
 
 ```toml
 [dependencies]
 tokio = { version = "0.2", features = ["full"] }
 ```
 
-Tokio requires specifying the requested components using feature flags. This
-allows the user to only include what is needed to run the application, resulting
-in smaller binaries. For getting started, we depend on `full`, which includes
-all components.
+Then we'll replace `main.rs` with our "hello world" code:
 
-Next, add the following to `main.rs`:
-
-```rust
+```rust,no_run
 # #![deny(deprecated)]
-# #![allow(unused_imports)]
 
-use tokio::io;
 use tokio::net::TcpStream;
 use tokio::prelude::*;
 
 #[tokio::main]
 async fn main() {
-    // application comes here
+    let mut stream = TcpStream::connect("127.0.0.1:6142").await.unwrap();
+    println!("created stream");
+
+    let result = stream.write(b"hello world\n").await;
+    println!("wrote to stream; success={:?}", result.is_ok());
 }
 ```
 
-Here we use Tokio's own [`io`] and [`net`] modules. These modules provide the same
-abstractions over networking and I/O-operations as the corresponding modules in
-`std` with a difference: all actions are performed asynchronously.
+The `#[tokio::main]` macro provides common boilerplate for setting up the
+tokio runtime, so that we can write `main()` as an [`async function`]. This
+enables us to call asynchronous functions and write sequential code as if
+they were blocking by using the Rust `await` keyword.
 
-Next is the Tokio application entry point. This is an `async` main function
-annotated with `#[tokio::main]`. This is the function that first runs when the
-binary is executed. The `#[tokio::main]` annotation informs Tokio that this is
-where the runtime (all the infrastructure needed to power Tokio) is started.
-
-# Creating the TCP stream
-
-The first step is to create the `TcpStream`. We use the `TcpStream` implementation
-provided by Tokio.
-
-```rust,no_run
-# #![deny(deprecated)]
-#
-# use tokio::net::TcpStream;
-#[tokio::main]
-async fn main() {
-    // Connect to port 6142 on localhost
-    let stream = TcpStream::connect("127.0.0.1:6142").await.unwrap();
-
-    // Following snippets come here...
-# drop(stream);
-}
-```
-
-`TcpStream::connect` is an _asynchronous_ function. No work is done during the
-function call. Instead, `.await` is called to pause the current task until the
-connect has completed. Once the connect has completed, the task resumes. The
-`.await` call does **not** block the current thread.
-
-Next, we do work with the TCP stream.
-
-# Writing data
-
-Our goal is to write `"hello world\n"` to the stream.
-
-```rust,no_run
-# #![deny(deprecated)]
-#
-# use tokio::net::TcpStream;
-# use tokio::prelude::*;
-# #[tokio::main]
-# async fn main() {
-// Connect to port 6142 on localhost
-let mut stream = TcpStream::connect("127.0.0.1:6142").await.unwrap();
-
-stream.write_all(b"hello world\n").await.unwrap();
-
-println!("wrote to stream");
-# }
-```
-
-The [`write_all`] function is implemented for all "stream" like types. It is
-provided by the [`AsyncWriteExt`] trait. Again, the function is asynchronous, so
-no work is done unless `.await` is called. We call `.await` to perform the
-write.
-
-You can find the full example [here][full-code].
-
-# Running the code
-
-[Netcat] is a tool for quickly creating TCP sockets from the command line. The following
-command starts a listening TCP socket on the previously specified port.
-
-```bash
-$ nc -l 6142
-```
-> The command above is used with the GNU version of netcat that comes stock on many
-> unix based operating systems. The following command can be used with the
-> [NMap.org][NMap.org] version: `$ ncat -l 6142`
-
-In a different terminal we'll run our project.
-
-```bash
-$ cargo run
-```
-
-If everything goes well, you should see `hello world` printed from Netcat.
+Now when we run our app with `cargo run` (in a different window from where
+we are running socat), we should see socat print `hello world`.
 
 # Next steps
 
-We've only dipped our toes into Tokio and its asynchronous model. The next page in
-the guide will start digging a bit deeper into Futures and the Tokio runtime model.
+Now that we have successfully built a tiny client to get a feel for network
+programming with Tokio, we'll dive into more detail about how everything works.
 
-[`io`]: https://docs.rs/tokio/0.2/tokio/io/index.html
-[`net`]: https://docs.rs/tokio/0.2/tokio/net/index.html
-[`write_all`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html#method.write_all
-[`AsyncWriteExt`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html
-[full-code]: https://github.com/tokio-rs/tokio/blob/master/examples/hello_world.rs
-[Netcat]: http://netcat.sourceforge.net/
-[Nmap.org]: https://nmap.org
+[Rust programming language]: https://www.rust-lang.org/
+[Tokio 0.1 docs]: https://v0-1--tokio.netlify.com/docs/getting-started/hello-world/
+[Rust introduced async-await]: https://blog.rust-lang.org/2019/11/07/Async-await-stable.html
+[Async Book]: https://rust-lang.github.io/async-book/index.html
+[Rust standard library]: https://doc.rust-lang.org/std/net/index.html
+[`TCP`]: (https://tools.ietf.org/html/rfc793
+[`net`]: https://docs.rs/tokio/*/tokio/net/index.html
+[`async function`]: https://doc.rust-lang.org/reference/items/functions.html#async-functions
