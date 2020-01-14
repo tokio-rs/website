@@ -136,7 +136,7 @@ Now that we have successfully built a tiny client to get a feel for network
 programming with Tokio, we'll dive into more detail about how everything works.
 
 [Rust programming language]: https://www.rust-lang.org/
-[Tokio 0.1 docs]: https://v0-1--tokio.netlify.com/
+[Tokio 0.1 docs]: https://v0-1--tokio.netlify.com/docs/getting-started/hello-world/
 [Rust introduced async-await]: https://blog.rust-lang.org/2019/11/07/Async-await-stable.html
 [Async Book]: https://rust-lang.github.io/async-book/index.html
 [Rust standard library]: https://doc.rust-lang.org/std/net/index.html
