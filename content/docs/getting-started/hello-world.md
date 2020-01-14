@@ -32,7 +32,7 @@ Tokio, we will start with a tiny app that sends "hello, world!" over a
 network connection.
 
 The difference between Tokio and a Rust program written using the standard
-library is that Tokio has the flexibility to block program execution
+library is that Tokio has the flexibility to avoid blocking program execution
 when the stream is created or when our “hello, world!” message is written
 to the stream.
 
@@ -55,7 +55,7 @@ out everything that is received on port 6142 (a somewhat arbitrary number
 we have chosen for this example):
 
 ```bash
-socat TCP-LISTEN:6142 stdout
+socat TCP-LISTEN:6142, fork stdout
 ```
 
 An easy way to simulate a client (for a text-based protocol) is to use
@@ -77,11 +77,12 @@ Escape character is '^]'.
 Now if we type `hello` and press return, we should see `hello` printed by
 socat.
 
-Let's quit telnet and write some Rust code to send some text to our server.
 To *escape* from our TCP session (`^]`), we need to hold down `Ctrl` key and
 type `]`). Then at the telnet prompt (`telnet >`), typing `quit` will close
-the connection and exit the program.  (Closing the Telnet/TCP connection
-also causes socat to quit.)
+the connection and exit the program.
+
+Let's quit telnet and write some Rust code to send some text to our server.
+We'll leave socat running, so we can connect to it with our new app!
 
 # Let's write some code!
 
@@ -126,18 +127,8 @@ tokio runtime, so that we can write `main()` as an [`async function`]. This
 enables us to call asynchronous functions and write sequential code as if
 they were blocking by using the Rust `await` keyword.
 
-# Running our app
-
-Our app connects to a socket over TCP and writes to it. Let's run the socat
-command again to test our app:
-
-```
-socat TCP-LISTEN:6142 stdout
-```
-
-Now when we run our app with `cargo run` (which will need to be in a different
-window from where we are running socat), we should see socat print
-`hello world`.
+Now when we run our app with `cargo run` (in a different window from where
+we are running socat), we should see socat print `hello world`.
 
 # Next steps
 
