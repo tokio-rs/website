@@ -109,7 +109,7 @@ When the process receives the I/O notification from the operating system, it
 finds the function associated with it and calls it immediately. This is a
 **push** based model because the value is **pushed** into the callback.
 
-The rust asynchronous model uses a **pull** based model. Instead of a `Future`
+The rust asynchronous model is **pull** based. Instead of a `Future`
 being responsible for pushing the data into a callback, it relies on **something
 else** asking if it is complete or not. In the case of Tokio, that **something
 else** is the Tokio runtime.

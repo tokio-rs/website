@@ -1,9 +1,6 @@
 ---
 title: "Non-blocking I/O"
 weight: 8020
-menu:
-  docs:
-    parent: "internals"
 ---
 
 This section describes the network resources and drivers provided by Tokio. This

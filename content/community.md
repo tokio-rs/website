@@ -6,7 +6,7 @@ description = "Get help, discuss problems, and join the fun"
 # Communication
 
 The Tokio community is most readily found on
-[its gitter channel](https://gitter.im/tokio-rs/tokio), where you're welcome to
+[its Discord](https://discord.gg/tokio), where you're welcome to
 ask questions, report problems, or pitch ideas.
 
 # Issues

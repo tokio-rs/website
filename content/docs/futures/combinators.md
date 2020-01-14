@@ -1,9 +1,6 @@
 ---
 title: "Combinators"
 weight : 2040
-menu:
-  docs:
-    parent: futures
 ---
 
 Often times, Future implementations follow similar patterns. To help reduce

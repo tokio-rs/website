@@ -1,9 +1,6 @@
 ---
 title: "Spawning"
 weight : 2060
-menu:
-  docs:
-    parent: futures
 ---
 
 Tokio based applications are organized in terms of Tasks. A task is a small unit
@@ -411,7 +408,7 @@ tokio::run(lazy(|| {
     // Spawn the background task:
     tokio::spawn(coordinator_task(rx));
 
-    // Spawn a few tasks that use the coordinator to requst RTTs.
+    // Spawn a few tasks that use the coordinator to request RTTs.
     for _ in 0..4 {
         let tx = tx.clone();
 
@@ -432,7 +429,7 @@ tokio::run(lazy(|| {
 # When not to spawn tasks
 
 If the amount of coordination via message passing and synchronization primitives
-outweighs the parallism benefits from spawning tasks, then maintaining a single
+outweighs the parallelism benefits from spawning tasks, then maintaining a single
 task is preferred.
 
 For example, it is generally better to maintain reading from and writing to a

@@ -1,10 +1,6 @@
 ---
 title: "Overview"
 weight : 2010
-menu:
-  docs:
-    parent: futures
-    identifier: "futures_overview"
 ---
 
 Futures, hinted at earlier in the guide, are the building block used to manage

@@ -1,9 +1,6 @@
 ---
 title: "Implementing futures"
 weight : 2020
-menu:
-  docs:
-    parent: futures
 ---
 
 Implementing futures is very common when using Tokio. Let's start with a very

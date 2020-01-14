@@ -1,9 +1,6 @@
 ---
 title: "Getting asynchronous"
 weight : 2030
-menu:
-  docs:
-    parent: futures
 ---
 
 Futures are all about managing asynchronicity. Implementing a future that

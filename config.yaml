@@ -10,18 +10,6 @@ menu:
     - identifier: "getting_started"
       name: "Getting started"
       weight: 1000
-    - identifier: "futures"
-      name: "[0.1] Working with futures"
-      weight: 2000
-    - identifier: "io"
-      name: "[0.1] I/O with Tokio"
-      weight: 3000
-    - identifier: "going_deeper"
-      name: "[0.1] Going deeper"
-      weight: 7000
-    - identifier: "internals"
-      name: "[0.1] Tokio internals"
-      weight: 8000
     - identifier: "reference"
       name: "API documentation"
       url: "https://docs.rs/tokio"

@@ -1,9 +1,6 @@
 ---
 title: "Futures: In Depth"
 weight : 7010
-menu:
-  docs:
-    parent: going_deeper
 ---
 
 Futures, hinted at earlier in the guide, are the building block used to manage
