@@ -55,7 +55,7 @@ out everything that is received on port 6142 (a somewhat arbitrary number
 we have chosen for this example):
 
 ```bash
-socat TCP-LISTEN:6142, fork stdout
+socat TCP-LISTEN:6142,fork stdout
 ```
 
 An easy way to simulate a client (for a text-based protocol) is to use
