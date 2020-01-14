@@ -223,6 +223,7 @@ img {
 }
 
 .tk-sidenav {
+  padding-left: 15px;
   display: none;
 }
 
