@@ -58,7 +58,7 @@ async fn main() {
 Again spawning tasks can happen within other futures or streams allowing
 multiple things to happen concurrently. In the above example we're spawning the
 inner future from within the outer stream. Each time we get a value from the
-stream we'll simply run inner future.
+stream we'll simply run an inner future.
 
 In the next section, we'll take a look at a more involved example than our hello-
 world example that takes everything we've learned so far into account.
