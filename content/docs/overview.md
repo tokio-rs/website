@@ -14,17 +14,27 @@ More specifically, Tokio is an event-driven, non-blocking I/O platform
 for writing asynchronous applications with Rust. At a high level, it
 provides a few major components:
 
-* A multithreaded, work-stealing based task [scheduler].
-* A [reactor] backed by the operating system's event queue (epoll, kqueue,
-  IOCP, etc...).
-* Asynchronous [TCP and UDP][net] sockets.
+* Tools for [working with asynchronous tasks][tasks], including
+  [synchronization primitives and channels][sync] and [timeouts, delays, and
+  intervals][time].
+* APIs for [performing asynchronous I/O][io], including [TCP and UDP][net] sockets,
+  [filesystem][fs] operations, and [process] and [signal] management.
+* A [runtime] for executing asynchronous code, including a task scheduler,
+  an I/O driver backed by the operating system's event queue (epoll, kqueue,
+  IOCP, etc...), and a high performance timer.
 
 These components provide the runtime components necessary for building
 an asynchronous application.
 
-[net]: https://docs.rs/tokio/*/tokio/net/index.html
-[reactor]: https://docs.rs/tokio/*/tokio/reactor/index.html
-[scheduler]: https://tokio-rs.github.io/tokio/doc/tokio/runtime/index.html
+[tasks]:  https://docs.rs/tokio/*/tokio/#working-with-tasks
+[sync]:   https://docs.rs/tokio/*/tokio/sync/index.html
+[time]:   https://docs.rs/tokio/*/tokio/time/index.html
+[io]:     https://docs.rs/tokio/*/tokio/#asynchronous-io
+[net]:    https://docs.rs/tokio/*/tokio/net/index.html
+[fs]:     https://docs.rs/tokio/*/tokio/fs/index.html
+[process]:https://docs.rs/tokio/*/tokio/process/index.html
+[signal]: https://docs.rs/tokio/*/tokio/signal/index.html
+[runtime]:https://docs.rs/tokio/*/tokio/runtime/index.html
 
 # Fast
 
