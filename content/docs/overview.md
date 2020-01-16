@@ -14,17 +14,27 @@ More specifically, Tokio is an event-driven, non-blocking I/O platform
 for writing asynchronous applications with Rust. At a high level, it
 provides a few major components:
 
-* A multithreaded, work-stealing based task [scheduler].
-* A [reactor] backed by the operating system's event queue (epoll, kqueue,
-  IOCP, etc...).
-* Asynchronous [TCP and UDP][net] sockets.
+* Tools for [working with asynchronous tasks][tasks], including
+  [synchronization primitives and channels][sync] and [timeouts, delays, and
+  intervals][time].
+* APIs for [performing asynchronous I/O][io], including [TCP and UDP][net] sockets,
+  [filesystem][fs] operations, and [process] and [signal] management.
+* A [runtime] for executing asynchronous code, including a task scheduler,
+  an I/O driver backed by the operating system's event queue (epoll, kqueue,
+  IOCP, etc...), and a high performance timer.
 
 These components provide the runtime components necessary for building
 an asynchronous application.
 
-[net]: https://docs.rs/tokio/0.1/tokio/net/index.html
-[reactor]: https://docs.rs/tokio/0.1/tokio/reactor/index.html
-[scheduler]: https://tokio-rs.github.io/tokio/doc/tokio/runtime/index.html
+[tasks]:  https://docs.rs/tokio/*/tokio/#working-with-tasks
+[sync]:   https://docs.rs/tokio/*/tokio/sync/index.html
+[time]:   https://docs.rs/tokio/*/tokio/time/index.html
+[io]:     https://docs.rs/tokio/*/tokio/#asynchronous-io
+[net]:    https://docs.rs/tokio/*/tokio/net/index.html
+[fs]:     https://docs.rs/tokio/*/tokio/fs/index.html
+[process]:https://docs.rs/tokio/*/tokio/process/index.html
+[signal]: https://docs.rs/tokio/*/tokio/signal/index.html
+[runtime]:https://docs.rs/tokio/*/tokio/runtime/index.html
 
 # Fast
 
@@ -147,51 +157,8 @@ tasks.  Tokio implements [async] syntax to improve readability of futures.
 [`hyper`]: https://hyper.rs/guides/
 [`actix`]: https://actix.rs/book/actix/
 
-# Example
+# Get started with Tokio
 
-A basic TCP echo server with Tokio:
-
-```rust
-extern crate tokio;
-
-use tokio::prelude::*;
-use tokio::io::copy;
-use tokio::net::TcpListener;
-
-fn main() {
-# }
-# fn hax() {
-    // Bind the server's socket.
-    let addr = "127.0.0.1:12345".parse().unwrap();
-    let listener = TcpListener::bind(&addr)
-        .expect("unable to bind TCP listener");
-
-    // Pull out a stream of sockets for incoming connections
-    let server = listener.incoming()
-        .map_err(|e| eprintln!("accept failed = {:?}", e))
-        .for_each(|sock| {
-            // Split up the reading and writing parts of the
-            // socket.
-            let (reader, writer) = sock.split();
-
-            // A future that echos the data and returns how
-            // many bytes were copied...
-            let bytes_copied = copy(reader, writer);
-
-            // ... after which we'll print what happened.
-            let handle_conn = bytes_copied.map(|amt| {
-                println!("wrote {:} bytes", amt.0)
-            }).map_err(|err| {
-                eprintln!("IO error {:?}", err)
-            });
-
-            // Spawn the future as a concurrent task.
-            tokio::spawn(handle_conn)
-        });
-
-    // Start the Tokio runtime
-    tokio::run(server);
-}
-```
-
-More examples can be found [here](https://github.com/tokio-rs/tokio/tree/v0.1.x/tokio/examples).
+If you like to read code first, complete examples can be found
+[here](https://github.com/tokio-rs/tokio/tree/master/examples), or
+keep reading for a step-by-step tutorial.
