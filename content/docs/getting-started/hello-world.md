@@ -59,7 +59,7 @@ socat TCP-LISTEN:6142,fork stdout
 ```
 
 An easy way to simulate a client (for a text-based protocol) is to use
-[`telnet`]. To connect to our simulated server, we'll open a different
+[`telnet`](../../network-utilities/telnet). To connect to our simulated server, we'll open a different
 window so we can see two terminals side-by-side and type the following on the
 command-line:
 
