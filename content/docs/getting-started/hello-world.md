@@ -27,7 +27,7 @@ new to network programming should be able to follow along.
 
 # Introducing asynchronous programming
 
-As our first introduction to [asynchronous programming](../overview) with
+As our first introduction to [asynchronous programming](../../overview) with
 Tokio, we will start with a tiny app that sends "hello, world!" over a
 network connection.
 
@@ -49,7 +49,7 @@ We'll start by sending "hello" over a reliable networking connection ([`TCP`]).
 Before writing code in Rust, let's install and use some network tools to
 manually do what our code will do later in the guide.
 
-Install [`socat`](../network-utilities/socat), which is a network utility that
+Install [`socat`](../../network-utilities/socat), which is a network utility that
 we'll use to simulate a server. Then type the following command to print
 out everything that is received on port 6142 (a somewhat arbitrary number
 we have chosen for this example):
