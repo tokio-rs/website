@@ -35,7 +35,7 @@ async fn main() {
 }
 ```
 
-This code will do nothing while the compiler produces the warning below, reminding you
+This code will do nothing. Therefore, the compiler produces the warning below, reminding you
 that the future must be awaited in order for it to be executed.
 
 ```text
