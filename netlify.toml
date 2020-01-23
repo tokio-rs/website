@@ -16,3 +16,10 @@
 
   [context.branch-deploy]
   command = "hugo -b $DEPLOY_PRIME_URL"
+
+  [[redirects]]
+  from = "/docs"
+  to = "/docs/getting-started/hello-world/"
+  status = 301
+  force = false
+  query = {path = ":path"}
