@@ -1,5 +1,6 @@
 ---
 title: "socat"
+weight: 9200
 menu:
   docs:
     parent: network_utils

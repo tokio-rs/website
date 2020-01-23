@@ -1,6 +1,7 @@
 ---
 title: "Returning futures"
 weight: 7080
+draft: true
 ---
 
 [`Future`]: https://docs.rs/futures/0.1/futures/future/trait.Future.html

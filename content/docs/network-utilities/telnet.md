@@ -1,5 +1,6 @@
 ---
 title: "telnet"
+weight: 9300
 menu:
   docs:
     parent: network_utils
