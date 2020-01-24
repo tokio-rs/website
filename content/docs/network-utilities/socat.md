@@ -8,7 +8,7 @@ menu:
 [socat](http://www.dest-unreach.org/socat/) provides the ability to redirect
 input and outputs. See [install instructions](#how-to-install) with links below for quick references on getting set up on most operating systems.
 
-# How it works
+## How it works
 
 First a quick introduction to `socat`...
 
@@ -16,13 +16,13 @@ First a quick introduction to `socat`...
 
 (c) 2018 Julia Evans, for more programming zines and comics, see [wizardzines.com/](https://wizardzines.com/)
 
-Examples in the comic included as text in our **cheat sheet** below for easy copy/paste.
+Examples in the comic included as text in our *cheat sheet* below for easy copy/paste.
 
-# Cheat sheet
+## Cheat sheet
 
 `-v` option provides verbose output to stdout which is very useful for debugging
 
-## TCP proxy
+### TCP proxy
 Proxy from local HTTP port to remote server:
 ```
 socat -v TCP-LISTEN:1337 TCP:example.com:80
@@ -32,14 +32,14 @@ now if you go to localhost:1337 you will see a response from http://example.com
 is outside of the scope of this socat cheat sheet, but you can test this with
 `curl --resolve example.com:80:localhost:1334 example.com`.
 
-## SSL
+### SSL
 In real life, most servers will require SSL, which can be added on 
 (where `verify=0` won't check the SSL cert, which is fine for most debug /
 learning use cases).
 
 socat -v TCP-LISTEN:1337 ssl:example.com:80,verify=0
 
-## Unix domain socket
+### Unix domain socket
 expose a [unix domain socket](http://man7.org/linux/man-pages/man7/unix.7.html) on port 1337
 ```
 socat TCP-LISTEN:1337 UNIX-CONNECT:/path
@@ -47,27 +47,27 @@ socat TCP-LISTEN:1337 UNIX-CONNECT:/path
 
 
 
-# How to install
+## How to install
 
-## Debian / Ubuntu Linux
+### Debian / Ubuntu Linux
 
 ```bash
 sudo apt-get update && sudo apt-get install socat
 ```
 
-## Fedora, CentOS, RedHat
+### Fedora, CentOS, RedHat
 
 ```bash
 sudo yum install socat
 ```
 
-## Mac Homebrew
+### Mac Homebrew
 
 ```bash
 brew install socat
 ```
 
-## Windows
+### Windows
 
 [download](https://sourceforge.net/projects/unix-utils/files/socat/)
 
