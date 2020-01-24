@@ -10,6 +10,9 @@ menu:
     - identifier: "getting_started"
       name: "Getting started"
       weight: 1000
+    - identifier: "topics"
+      name: "Topics"
+      weight: 2000
     - identifier: "reference"
       name: "API documentation"
       url: "https://docs.rs/tokio"
@@ -19,6 +22,7 @@ menu:
       weight: 10000
 
 
+# URL params used in /layouts/shortcodes
 params:
   tokioDocsURL: "https://docs.rs/tokio/0.1/tokio"
   tokioExecutorDocsURL: "https://docs.rs/tokio-executor/0.1/tokio_executor"
@@ -32,3 +36,4 @@ params:
   protoDocsURL: "https://tokio-rs.github.io/tokio-proto/tokio_proto"
   serviceDocsURL: "https://tokio-rs.github.io/tokio-service/tokio_service"
   bytesDocsURL: "https://docs.rs/bytes/0.4/bytes"
+  tokio01URL: "https://v0-1--tokio.netlify.com/"

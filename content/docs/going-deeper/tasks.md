@@ -1,6 +1,7 @@
 ---
 title: "Tasks"
 weight : 7020
+draft: true
 ---
 
 Tasks are the application's "unit of logic". They are similar to [Go's

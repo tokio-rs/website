@@ -1,6 +1,6 @@
 ---
 title: "Example: An Echo Server"
-weight : 1040
+weight : 1018
 menu:
   docs:
     parent: getting_started

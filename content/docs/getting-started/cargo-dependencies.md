@@ -1,6 +1,6 @@
 ---
 title: "Cargo dependencies"
-weight : 1020
+weight : 1015
 menu:
   docs:
     parent: getting_started
