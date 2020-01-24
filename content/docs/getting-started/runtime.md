@@ -31,7 +31,7 @@ from within other async tasks. Tasks are the application’s “unit of logic”
 They are similar to [Go’s goroutine] and [Erlang’s process], but asynchronous.
 In other words, tasks are asynchronous green threads.
 
-Tasks are passed to the runtime, which handle scheduling the task. The runtime
+Tasks are passed to the runtime, which handles scheduling the task. The runtime
 is usually scheduling many tasks across a single or small set of threads. Tasks
 must not perform computation-heavy logic or they will prevent other tasks from
 executing. So don’t try to compute the fibonacci sequence as a task!
