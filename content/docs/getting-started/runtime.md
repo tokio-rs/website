@@ -21,8 +21,12 @@ current thread and process all spawned tasks in place. The
 distributes load across multiple threads. The `threaded_scheduler` is the
 default for applications and the `basic_scheduler` is the default for tests.
 
-It's important to remember that all async tasks **must** be spawned on the
-runtime or no work will be performed:
+Ultimately all asynchronous code must be polled to do any work. Polling the `Future` is
+the job of the Tokio runtime, but you must tell Tokio about the `Future` for this to
+happen.  You can directly tell Tokio about the `Future` with the [`tokio::spawn`]
+function, but you can also use `.await` inside something Tokio already knows about. In
+this example, we don't tell Tokio about the `Future` created by the asynchronous function
+[`TcpStream::connect`].
 
 ```rust
 # #![allow(unused_must_use)]
@@ -93,3 +97,5 @@ world example that takes everything we've learned so far into account.
 [`Runtime`]: https://docs.rs/tokio/0.2/tokio/runtime/struct.Runtime.html
 [`basic_scheduler`]: https://docs.rs/tokio/0.2/tokio/runtime/struct.Builder.html#method.basic_scheduler
 [`threaded_scheduler`]: https://docs.rs/tokio/0.2/tokio/runtime/struct.Builder.html#method.threaded_scheduler
+[`tokio::spawn`]: https://docs.rs/tokio/0.2/tokio/fn.spawn.html
+[`TcpStream::connect`]: https://docs.rs/tokio/0.2/tokio/net/struct.TcpStream.html#method.connect
