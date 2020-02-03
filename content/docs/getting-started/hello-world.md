@@ -6,24 +6,24 @@ menu:
     parent: getting_started
 ---
 
-This guide assumes that a knowledge of the [Rust programming language] and are
-using Rust `1.39.0` or higher. To use Tokio with earlier versions of Rust,
+This guide assumes that you have some knowledge of the [Rust programming language] 
+and are using Rust `1.39.0` or higher. To use Tokio with earlier versions of Rust,
 please check out the [Tokio 0.1 docs].
 
-To check version of Rust on the command line:
+To check your version of Rust on the command line:
 ```bash
 rustc --version
 rustc 1.39.0 (4560ea788 2019-11-04)
 ```
 
-In version `1.39.0`, [Rust introduced async-await], see the [Async Book] for
+In version `1.39.0` [Rust introduced async-await], see the [Async Book] for
 in-depth documentation of these new Rust language features. This guide also
 seeks to provide a practical, hands-on introduction for all of the Rust language
 features that are needed for programming with Tokio.
 
 Also, most readers will have some experience with writing networking code
 using the [Rust standard library] or another language, though folks who are
-new to network programming should be able to follow along.
+new to network programming should also be able to follow along.
 
 # Introducing asynchronous programming
 
@@ -60,7 +60,7 @@ socat TCP-LISTEN:6142,fork stdout
 
 An easy way to simulate a client (for a text-based protocol) is to use
 [`telnet`](../../network-utilities/telnet). To connect to our simulated server, we'll open a different
-window so we can see two terminals side-by-side and type the following on the
+window (so we can see two terminals side-by-side) and type the following on the
 command-line:
 
 ```bash
