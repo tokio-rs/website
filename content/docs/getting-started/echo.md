@@ -66,8 +66,7 @@ async fn main() {
     let mut listener = TcpListener::bind(addr).await.unwrap();
 
     // Here we convert the `TcpListener` to a stream of incoming connections
-    // with the `incoming` method. We then define how to process each element in
-    // the stream with the `for_each` combinator method
+    // with the `incoming` method.
     let server = async move {
         let mut incoming = listener.incoming();
         while let Some(socket_res) = incoming.next().await {
