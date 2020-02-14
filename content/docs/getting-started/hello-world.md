@@ -67,6 +67,12 @@ command-line:
 telnet localhost 6142
 ```
 
+or, if you are in macOS:
+
+```bash
+nc -vt localhost 6142
+```
+
 Telnet will output something like this:
 ```bash
 Trying 127.0.0.1...
