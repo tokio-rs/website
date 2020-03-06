@@ -6,7 +6,7 @@ menu:
     parent: getting_started
 ---
 
-This guide assumes that you have some knowledge of the [Rust programming language] 
+This guide assumes that you have some knowledge of the [Rust programming language]
 and are using Rust `1.39.0` or higher. To use Tokio with earlier versions of Rust,
 please check out the [Tokio 0.1 docs].
 
@@ -140,6 +140,6 @@ programming with Tokio, we'll dive into more detail about how everything works.
 [Rust introduced async-await]: https://blog.rust-lang.org/2019/11/07/Async-await-stable.html
 [Async Book]: https://rust-lang.github.io/async-book/index.html
 [Rust standard library]: https://doc.rust-lang.org/std/net/index.html
-[`TCP`]: (https://tools.ietf.org/html/rfc793
+[`TCP`]: https://tools.ietf.org/html/rfc793
 [`net`]: https://docs.rs/tokio/*/tokio/net/index.html
 [`async function`]: https://doc.rust-lang.org/reference/items/functions.html#async-functions

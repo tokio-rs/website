@@ -20,7 +20,7 @@ The full code can be found [here][full-code].
 
 First, generate a new crate.
 
-```shell
+```bash
 $ cargo new --bin echo-server
 cd echo-server
 ```
