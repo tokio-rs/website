@@ -180,11 +180,11 @@ version will include this new functionality. Also, if Tokio's types are used
 from **outside** of the Tokio runtime, they will behave as they did before.
 
 There is more work that should happen on this topic. It is still how unclear how
-task budgets should work with "sub schedulers" (e.g.
+task budgets should work with "sub-schedulers" (e.g.
 [`FuturesUnordered`][futunord]). The task budget APIs should eventually be
-exposed so third party libs can integrate with them. It also would be nice to
+exposed publicly so that third party libs can integrate with them. It also would be nice to
 figure out a way to generalize this concept so more than just Tokio users can
-take advantage of this.
+take advantage of it.
 
 We hope you find your tail latencies improve after this release. Either way, we
 will be interested to hear how this change impacted real-world deployments. Feel
