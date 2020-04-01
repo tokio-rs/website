@@ -128,7 +128,7 @@ compensate.
 
 This idea is not new. The first occurence of this strategy that I am aware of is
 in the .NET thread pool and was introduced more than ten years ago.
-Unfortunately, the strategy has a number of problems and because of this, has
+Unfortunately, the strategy has a number of problems and because of this, it has
 not been featured in other thread pools / schedulers (golang, java, erlang,
 ...).
 
