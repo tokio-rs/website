@@ -30,7 +30,7 @@ opportunity to yield back to the scheduler. In the above example,
 no pending sockets, control is yielded back to the scheduler.
 
 This system works well in most cases. However, when a system comes under load,
-it is possible for an asynchronous resource to never be "not ready". For
+it is possible for an asynchronous resource to always be ready. For
 example, consider an echo server:
 
 ```rust
@@ -50,9 +50,10 @@ tokio::spawn(async move {
 });
 ```
 
-If data is received faster than it can be processed, it is possible that, by the
-time the processing of a data chunk completes, more data has already been
-received. In this case, `.await` will never yield control back to the scheduler,
+
+If data is received faster than it can be processed, it is possible that more
+data will have already been received by the time the processing of a data chunk
+completes. In this case, `.await` will never yield control back to the scheduler,
 other tasks will not be scheduled, resulting in starvation and large latency
 variance.
 
@@ -64,8 +65,8 @@ A common solution to this problem is preemption. OS threads will interrupt
 thread execution every so often in order to ensure fair scheduling of all
 threads. Runtimes that have full control over execution (Go, Erlang, etc.)
 will also use preemption to ensure fair scheduling of tasks. This is
-accomplished by injecting yield points when compiling code that check if the
-task has been executing for long enough and yielding back to the scheduler.
+accomplished by injecting yield points — code which checks if the task has been
+executing for long enough and yields back to the scheduler if so — at compile-time.
 Unfortunately, Tokio is not able to use this technique as Rust's `async` generators
 do not provide any mechanism for executors (like Tokio) to inject such yield points.
 
@@ -74,30 +75,30 @@ do not provide any mechanism for executors (like Tokio) to inject such yield poi
 Even though Tokio is not able to **preempt**, there is still an opportunity to
 nudge a task to yield back to the scheduler. As of [0.2.14], each Tokio task has
 an operation budget. This budget is reset when the scheduler switches to the
-task. Each Tokio resource (socket, timer, channel, ...) is now aware of this
+task. Each Tokio resource (socket, timer, channel, ...) is aware of this
 budget. As long as the task has budget remaining, the resource operates as it did
 previously. Each asynchronous operation (actions that users must `.await` on)
-decrement the task's budget. Once the task is out of budget, all resources will
-become "not ready" until the task yields back to the scheduler, at which point,
-the budget is reset.
+decrements the task's budget. Once the task is out of budget, all resources will
+perpetually return "not ready" until the task yields back to the scheduler. At that point,
+the budget is reset, and future `.await`s on Tokio resources will again function normally.
 
-Going back to the echo server example from above. When the task is scheduled, it
+Let's go back to the echo server example from above. When the task is scheduled, it
 is assigned a budget of 128 operations. When `socket.read(..)` and
 `socket.write(..)` are called, the budget is decremented. If the budget is zero,
 the task yields back to the scheduler. If either `read` or `write` cannot
 proceed due to the underlying socket not being ready (no pending data or a full
 send buffer), then the task also yields back to the scheduler.
 
-The idea originated from a conversation I was having with [Ryan Dahl][ry]. He is
+The idea originated from a conversation I had with [Ryan Dahl][ry]. He is
 using Tokio as the underlying runtime for [Deno][deno]. When doing some HTTP
-experimentation (a while back) with [Hyper], he was seeing some high tail
+experimentation  with [Hyper] a while back, he was seeing some high tail
 latencies in some benchmarks. The problem was due to a loop not yielding back to
 the scheduler under load. Hyper ended up fixing the problem by hand in this one
 case, but Ryan mentioned that, when he worked on [node.js][node], they handled
 the problem by adding **per resource** limits. So, if a TCP socket was always
 ready, it would force a yield every so often. I mentioned this conversation to
-[Jon Gjenset][jonhoo], and he ended up coming up with the idea of placing the
-limit on the task itself instead of on each resource.
+[Jon Gjenset][jonhoo], and he came up with the idea of placing the limit on
+the task itself instead of on each resource.
 
 The end result is that Tokio should be able to provide more consistent runtime
 behavior under load. While the exact heuristics will most likely be tweaked over
@@ -111,26 +112,26 @@ bigger version, see also the original [PR comment][pr] for more details.
 
 ## A note on blocking
 
-While automatic cooperative task yielding improves many cases, it cannot preempt
-tasks. Users of Tokio must still take care to avoid CPU intensive work and using
-blocking APIs. The [`spawn_blocking`][spawn_blocking] function can be used to
-"asyncify" these sorts of tasks by running them on a thread pool.
+Although automatic cooperative task yielding improves performance in many cases,
+it cannot preempt tasks. Users of Tokio must still take care to avoid both CPU
+intensive work and blocking APIs. The [`spawn_blocking`][spawn_blocking] function
+can be used to "asyncify" these sorts of tasks by running them on a thread pool
+where blocking is allowed.
 
 Tokio does not, and will not attempt to detect blocking tasks and automatically
 compensate by adding threads to the scheduler. This question has come up a
-number of times in the past so allow me to elaborate.
+number of times in the past, so allow me to elaborate.
 
 For context, the idea is for the scheduler to include a monitoring thread. This
 thread would poll scheduler threads every so often and check that workers are
 making progress. If a worker is not making progress, it is assumed that the
-worker is executing a blocking task and a new thread should be spawned to
+worker is executing a blocking task, and a new thread should be spawned to
 compensate.
 
 This idea is not new. The first occurence of this strategy that I am aware of is
-in the .NET thread pool and was introduced more than ten years ago.
+in the .NET thread pool, and was introduced more than ten years ago.
 Unfortunately, the strategy has a number of problems and because of this, it has
-not been featured in other thread pools / schedulers (golang, java, erlang,
-...).
+not been featured in other thread pools / schedulers (Go, Java, Erlang, etc.).
 
 The first problem is that it is very hard to define "progress". A naive
 definition of progress is whether or not a task has been scheduled for over some
@@ -152,9 +153,9 @@ worse.
 The stuttering problem can be managed with the .NET thread pool, in part,
 because the pool is designed to schedule **coarse** tasks, i.e. tasks that
 execute in the order of hundreds of milliseconds to multiple seconds. However,
-asynchronous task schedulers are designed to schedule tasks that should run in
+in Rust, asynchronous task schedulers are designed to schedule tasks that should run in
 the order of microseconds to tens of milliseconds at most. In this case, any
-stutttering problem from a heuristic based scheduler will result in far greater
+stutttering problem from a heuristic-based scheduler will result in far greater
 latency variations.
 
 The most common follow-up question I've received after this is "doesn't the Go
