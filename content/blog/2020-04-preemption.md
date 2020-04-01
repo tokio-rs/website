@@ -23,7 +23,7 @@ loop {
 
 The Rust compiler transforms this code into a state machine. The Tokio runtime
 executes these state machines, multiplexing many tasks on a handful of threads.
-Tokio's scheduler requires that the generated task state machine yields control
+Tokio's scheduler requires that the generated task's state machine yields control
 back to the scheduler in order to multiplex tasks. Each `.await` call is an
 opportunity to yield back to the scheduler. In the above example,
 `listener.accept().await` will return a socket if one is pending. If there are
