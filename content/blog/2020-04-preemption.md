@@ -1,5 +1,5 @@
 +++
-date = "2020-03-31"
+date = "2020-04-01"
 title = "Reducing tail latencies with automatic cooperative task yielding"
 description = "April 1, 2020"
 menu = "blog"
@@ -58,17 +58,19 @@ other tasks will not be scheduled, resulting in starvation and large latency
 variance.
 
 Currently, the answer to this problem is that the user of Tokio is responsible
-for adding yield points every so often. In practice, very few actually do this
-and end up being vulnerable to this sort of problem.
+for adding [yield points][yield_now] in both the application and libraries. In
+practice, very few actually do this and end up being vulnerable to this sort of
+problem.
 
-A common solution to this problem is preemption. OS threads will interrupt
-thread execution every so often in order to ensure fair scheduling of all
-threads. Runtimes that have full control over execution (Go, Erlang, etc.)
-will also use preemption to ensure fair scheduling of tasks. This is
-accomplished by injecting yield points — code which checks if the task has been
-executing for long enough and yields back to the scheduler if so — at compile-time.
-Unfortunately, Tokio is not able to use this technique as Rust's `async` generators
-do not provide any mechanism for executors (like Tokio) to inject such yield points.
+A common solution to this problem is preemption. With normal OS threads, the
+kernel will interrupt execution every so often in order to ensure fair
+scheduling of all threads. Runtimes that have full control over execution (Go,
+Erlang, etc.) will also use preemption to ensure fair scheduling of tasks. This
+is accomplished by injecting yield points — code which checks if the task has
+been executing for long enough and yields back to the scheduler if so — at
+compile-time.  Unfortunately, Tokio is not able to use this technique as Rust's
+`async` generators do not provide any mechanism for executors (like Tokio) to
+inject such yield points.
 
 ## Per-task operation budget
 
@@ -93,12 +95,12 @@ The idea originated from a conversation I had with [Ryan Dahl][ry]. He is
 using Tokio as the underlying runtime for [Deno][deno]. When doing some HTTP
 experimentation  with [Hyper] a while back, he was seeing some high tail
 latencies in some benchmarks. The problem was due to a loop not yielding back to
-the scheduler under load. Hyper ended up fixing the problem by hand in this one
-case, but Ryan mentioned that, when he worked on [node.js][node], they handled
-the problem by adding **per resource** limits. So, if a TCP socket was always
-ready, it would force a yield every so often. I mentioned this conversation to
-[Jon Gjenset][jonhoo], and he came up with the idea of placing the limit on
-the task itself instead of on each resource.
+the scheduler under load. Hyper ended up [fixing][hpr] the problem by hand in
+this one case, but Ryan mentioned that, when he worked on [node.js][node], they
+handled the problem by adding **per resource** limits. So, if a TCP socket was
+always ready, it would force a yield every so often. I mentioned this
+conversation to [Jon Gjenset][jonhoo], and he came up with the idea of placing
+the limit on the task itself instead of on each resource.
 
 The end result is that Tokio should be able to provide more consistent runtime
 behavior under load. While the exact heuristics will most likely be tweaked over
@@ -176,9 +178,11 @@ just been introduced is the best we have found for reducing tail latencies.
 [ry]: https://github.com/ry
 [deno]: https://github.com/denoland/deno
 [Hyper]: github.com/hyperium/hyper/
+[hpr]: https://github.com/hyperium/hyper/pull/1829
 [node]: https://nodejs.org
 [jonhoo]: https://github.com/jonhoo/
 [pr]: https://github.com/tokio-rs/tokio/pull/2160#issuecomment-579004856
 [spawn_blocking]: https://docs.rs/tokio/0.2/tokio/task/fn.spawn_blocking.html
 [block_in_place]: https://docs.rs/tokio/0.2/tokio/task/fn.block_in_place.html
 [hill]: https://en.wikipedia.org/wiki/Hill_climbing
+[yield_now]: https://docs.rs/tokio/0.2/tokio/task/fn.yield_now.html
