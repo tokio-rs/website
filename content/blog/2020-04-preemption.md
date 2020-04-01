@@ -186,6 +186,10 @@ exposed so third party libs can integrate with them. It also would be nice to
 figure out a way to generalize this concept so more than just Tokio users can
 take advantage of this.
 
+We hope you find your tail latencies improve after this release. Either way, we
+will be interested to hear how this change impacted real-world deployments. Feel
+free to comment on [this](https://github.com/tokio-rs/tokio/issues/2359) issue.
+
 <div style="text-align:right">&mdash;Carl Lerche</div>
 
 
