@@ -153,7 +153,7 @@ The stuttering problem can be managed with the .NET thread pool, in part,
 because the pool is designed to schedule **coarse** tasks, i.e. tasks that
 execute in the order of hundreds of milliseconds to multiple seconds. However,
 asynchronous task schedulers are designed to schedule tasks that should run in
-the order of micro seconds to tens of milliseconds at most. In this case, any
+the order of microseconds to tens of milliseconds at most. In this case, any
 stutttering problem from a heuristic based scheduler will result in far greater
 latency variations.
 
