@@ -62,7 +62,7 @@ and end up being vulnerable to this sort of problem.
 
 A common solution to this problem is preemption. OS threads will interrupt
 thread execution every so often in order to ensure fair scheduling of all
-threads. Runtimes that have full control over execution (golang, erlang, ...)
+threads. Runtimes that have full control over execution (Go, Erlang, etc.)
 will also use preemption to ensure fair scheduling of tasks. This is
 accomplished by injecting yield points when compiling code that check if the
 task has been executing for long enough and yielding back to the scheduler.
