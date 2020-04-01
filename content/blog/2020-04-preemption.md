@@ -75,7 +75,7 @@ Even though Tokio is not able to **preempt**, there is still an opportunity to
 nudge a task to yield back to the scheduler. As of [0.2.14], each Tokio task has
 an operation budget. This budget is reset when the scheduler switches to the
 task. Each Tokio resource (socket, timer, channel, ...) is now aware of this
-budget. As long as the task as budget remaining, the resource operates as it did
+budget. As long as the task has budget remaining, the resource operates as it did
 previously. Each asynchronous operation (actions that users must `.await` on)
 decrement the task's budget. Once the task is out of budget, all resources will
 become "not ready" until the task yields back to the scheduler, at which point,
