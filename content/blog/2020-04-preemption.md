@@ -102,7 +102,7 @@ limit on the task itself instead of on each resource.
 The end result is that Tokio should be able to provide more consistent runtime
 behavior under load. While the exact heuristics will most likely be tweaked over
 time, initial measurements show that, in some cases, tail latencies are reduced
-almost 3x.
+by almost 3x.
 
 [![benchmark](https://user-images.githubusercontent.com/176295/73222456-4a103300-4131-11ea-9131-4e437ecb9a04.png)](https://user-images.githubusercontent.com/176295/73222456-4a103300-4131-11ea-9131-4e437ecb9a04.png)
 
