@@ -80,9 +80,10 @@ an operation budget. This budget is reset when the scheduler switches to the
 task. Each Tokio resource (socket, timer, channel, ...) is aware of this
 budget. As long as the task has budget remaining, the resource operates as it did
 previously. Each asynchronous operation (actions that users must `.await` on)
-decrements the task's budget. Once the task is out of budget, all resources will
-perpetually return "not ready" until the task yields back to the scheduler. At that point,
-the budget is reset, and future `.await`s on Tokio resources will again function normally.
+decrements the task's budget. Once the task is out of budget, all Tokio
+resources will perpetually return "not ready" until the task yields back to the
+scheduler. At that point, the budget is reset, and future `.await`s on Tokio
+resources will again function normally.
 
 Let's go back to the echo server example from above. When the task is scheduled, it
 is assigned a budget of 128 operations pr "tick". The number 128 was picked
@@ -178,6 +179,13 @@ not need to change anything to gain this benefit. Simply upgrading the Tokio
 version will include this new functionality. Also, if Tokio's types are used
 from **outside** of the Tokio runtime, they will behave as they did before.
 
+There is more work that should happen on this topic. It is still how unclear how
+task budgets should work with "sub schedulers" (e.g.
+[`FuturesUnordered`][futunord]). The task budget APIs should eventually be
+exposed so third party libs can integrate with them. It also would be nice to
+figure out a way to generalize this concept so more than just Tokio users can
+take advantage of this.
+
 <div style="text-align:right">&mdash;Carl Lerche</div>
 
 
@@ -196,3 +204,4 @@ from **outside** of the Tokio runtime, they will behave as they did before.
 [yield_now]: https://docs.rs/tokio/0.2/tokio/task/fn.yield_now.html
 [Noria]: https://github.com/mit-pdos/noria
 [stutter]: http://joeduffyblog.com/2006/07/08/clr-thread-pool-injection-stuttering-problems/
+[futunord]: https://docs.rs/futures/0.3.4/futures/stream/struct.FuturesUnordered.html
