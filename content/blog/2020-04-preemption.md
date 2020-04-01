@@ -157,7 +157,7 @@ the order of microseconds to tens of milliseconds at most. In this case, any
 stutttering problem from a heuristic based scheduler will result in far greater
 latency variations.
 
-The most common follow up question I've received after this is "doesn't the Go
+The most common follow-up question I've received after this is "doesn't the Go
 scheduler automatically detect blocked tasks?". The short answer is: no. Doing
 so would result in the same stuttering problems as mentioned above. Also, Go has
 no need to have generalized blocked task detection because Go is able to
