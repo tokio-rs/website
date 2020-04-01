@@ -66,8 +66,8 @@ threads. Runtimes that have full control over execution (Go, Erlang, etc.)
 will also use preemption to ensure fair scheduling of tasks. This is
 accomplished by injecting yield points when compiling code that check if the
 task has been executing for long enough and yielding back to the scheduler.
-Unfortunately, Tokio is not able to use this technique as `async` Rust does not
-inject any sort of yield point.
+Unfortunately, Tokio is not able to use this technique as Rust's `async` generators
+do not provide any mechanism for executors (like Tokio) to inject such yield points.
 
 ## Per-task operation budget
 
