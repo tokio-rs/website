@@ -86,7 +86,7 @@ is assigned a budget of 128 operations. When `socket.read(..)` and
 `socket.write(..)` are called, the budget is decremented. If the budget is zero,
 the task yields back to the scheduler. If either `read` or `write` cannot
 proceed due to the underlying socket not being ready (no pending data or a full
-send buffer), then the task also yield back to the scheduler.
+send buffer), then the task also yields back to the scheduler.
 
 The idea originated from a conversation I was having with [Ryan Dahl][ry]. He is
 using Tokio as the underlying runtime for [Deno][deno]. When doing some HTTP
