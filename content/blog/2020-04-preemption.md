@@ -107,7 +107,7 @@ almost 3x.
 [![benchmark](https://user-images.githubusercontent.com/176295/73222456-4a103300-4131-11ea-9131-4e437ecb9a04.png)](https://user-images.githubusercontent.com/176295/73222456-4a103300-4131-11ea-9131-4e437ecb9a04.png)
 
 "master" is before the automatic yielding and "preempt" is after. Click for a
-bigger version, also see the original [PR comment][pr] for more details.
+bigger version, see also the original [PR comment][pr] for more details.
 
 ## A note on blocking
 
