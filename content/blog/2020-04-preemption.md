@@ -85,7 +85,9 @@ perpetually return "not ready" until the task yields back to the scheduler. At t
 the budget is reset, and future `.await`s on Tokio resources will again function normally.
 
 Let's go back to the echo server example from above. When the task is scheduled, it
-is assigned a budget of 128 operations. When `socket.read(..)` and
+is assigned a budget of 128 operations pr "tick". The number 128 was picked
+mostly because it felt good and seemed to work well with the cases we were
+testing against ([Noria] and HTTP). When `socket.read(..)` and
 `socket.write(..)` are called, the budget is decremented. If the budget is zero,
 the task yields back to the scheduler. If either `read` or `write` cannot
 proceed due to the underlying socket not being ready (no pending data or a full
@@ -142,13 +144,14 @@ for more than 100ms, then that worker is flagged as blocked and a new thread is
 spawned. In this definition, how does one detect scenarios where spawning a new
 thread **reduces** throughput? This can happen when the scheduler is generally
 under load and adding threads would make the situation much worse. To combat
-this, the .NET thread pool uses [hill climbing][hill].
+this, the .NET thread pool uses [hill climbing][hill]. [This article][hill2]
+provides a good overview of how it works.
 
 The second problem is that any automatic detection strategy will be vulnerable
 to bursty or otherwise uneven workloads. This specific problem has been the bane
-of the .NET thread pool and is known as the "stuttering" problem. The hill
-climbing strategy requires some period of time (hundreds of milliseconds) to
-adapt to load changes. This time period is needed, in part, to be able to
+of the .NET thread pool and is known as the ["stuttering" problem][stutter]. The
+hill climbing strategy requires some period of time (hundreds of milliseconds)
+to adapt to load changes. This time period is needed, in part, to be able to
 determine that adding threads is improving the situation and not making it
 worse.
 
@@ -165,11 +168,15 @@ scheduler automatically detect blocked tasks?". The short answer is: no. Doing
 so would result in the same stuttering problems as mentioned above. Also, Go has
 no need to have generalized blocked task detection because Go is able to
 preempt. What the Go scheduler **does** do is annotate potentially blocking
-system calls. This is roughly equivalent to the Tokio APIs
-[`spawn_blocking`][spawn_blocking] and [`block_in_place`][block_in_place].
+system calls. This is roughly equivalent to the Tokio's
+[`block_in_place`][block_in_place].
 
 In short, as of now, the automatic cooperative task yielding strategy that has
 just been introduced is the best we have found for reducing tail latencies.
+Because this strategy only requires Tokio's types to opt-in, the end user does
+not need to change anything to gain this benefit. Simply upgrading the Tokio
+version will include this new functionality. Also, if Tokio's types are used
+from **outside** of the Tokio runtime, they will behave as they did before.
 
 <div style="text-align:right">&mdash;Carl Lerche</div>
 
@@ -185,4 +192,7 @@ just been introduced is the best we have found for reducing tail latencies.
 [spawn_blocking]: https://docs.rs/tokio/0.2/tokio/task/fn.spawn_blocking.html
 [block_in_place]: https://docs.rs/tokio/0.2/tokio/task/fn.block_in_place.html
 [hill]: https://en.wikipedia.org/wiki/Hill_climbing
+[hill2]: https://mattwarren.org/2017/04/13/The-CLR-Thread-Pool-Thread-Injection-Algorithm/
 [yield_now]: https://docs.rs/tokio/0.2/tokio/task/fn.yield_now.html
+[Noria]: https://github.com/mit-pdos/noria
+[stutter]: http://joeduffyblog.com/2006/07/08/clr-thread-pool-injection-stuttering-problems/
