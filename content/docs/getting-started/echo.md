@@ -151,10 +151,10 @@ let server = {
 
             match tokio::io::copy(&mut reader, &mut writer).await {
               Ok(amt) => {
-                println!("wrote {} bytes", amt);
+                println!("{}: wrote a total of {} bytes", peer_addr, amt);
               }
               Err(err) => {
-                eprintln!("IO error {:?}", err);
+                eprintln!("{}: IO error {:?}", peer_addr, err);
               }
             }
           });
