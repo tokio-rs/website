@@ -77,7 +77,7 @@ async fn main() {
                 }
                 Err(err) => {
                     // Handle error by printing to STDOUT.
-                    println!("accept error = {:?}", err);
+                    eprintln!("accept error = {:?}", err);
                 }
             }
         }
@@ -139,16 +139,15 @@ Let's take a look at the connection accept code again.
 let server = {
   async move {
     let mut incoming = listener.incoming();
-    while let Some(conn) = incoming.next().await {
-      match conn {
-        Err(e) => eprintln!("accept failed = {:?}", e),
-        Ok(mut sock) => {
+    while let Some(socket_res) = incoming.next().await {
+      match socket_res {
+        Ok(mut socket) => {
           // Spawn the future that echos the data and returns how
           // many bytes were copied as a concurrent task.
           tokio::spawn(async move {
             // Split up the reading and writing parts of the
             // socket.
-            let (mut reader, mut writer) = sock.split();
+            let (mut reader, mut writer) = socket.split();
 
             match tokio::io::copy(&mut reader, &mut writer).await {
               Ok(amt) => {
@@ -160,6 +159,7 @@ let server = {
             }
           });
         }
+        Err(err) => eprintln!("accept err {:?}", err)
       }
     }
   }
