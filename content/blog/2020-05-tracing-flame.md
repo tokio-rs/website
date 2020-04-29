@@ -22,7 +22,18 @@ use to create a flamegraph.
 
 # Speeding Up Vector
 
+run tests with flame
+
+run same tests with perf
+
+compare flamegraphs
+
+find something that looks slow
+
+fix it
+
 # Conclusion
+
 
 <div style="text-align:right">&mdash;Jane Lusby</div>
 
