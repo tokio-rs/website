@@ -56,6 +56,11 @@ socat TCP-LISTEN:1337 UNIX-CONNECT:/path
 sudo apt-get update && sudo apt-get install socat
 ```
 
+### Arch Linux
+```bash
+sudo pacman -S socat
+```
+
 ### Fedora, CentOS, RedHat
 
 ```bash
