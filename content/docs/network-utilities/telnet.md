@@ -25,6 +25,11 @@ sudo apt-get update && sudo apt-get install telnet
 
 ```
 
+### Arch Linux
+```bash
+sudo pacman -S telnet
+```
+
 ## Fedora, CentOS, RedHat
 
 ```bash
