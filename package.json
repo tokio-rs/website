@@ -1,0 +1,21 @@
+{
+  "name": "tokio-website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && next export",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.28",
+    "@fortawesome/free-brands-svg-icons": "^5.13.0",
+    "@fortawesome/free-solid-svg-icons": "^5.13.0",
+    "@fortawesome/react-fontawesome": "^0.1.9",
+    "bulma": "^0.8.2",
+    "next": "9.4.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "sass": "^1.26.5"
+  }
+}

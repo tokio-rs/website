@@ -1,0 +1,13 @@
+$body-font-size: 1.06em;
+$family-primary: 'Roboto', sans-serif;
+
+$navbar-background-color: black;
+$navbar-item-color: white;
+$navbar-height: 5rem;
+$navbar-item-img-max-height: 5rem;
+
+@import "../node_modules/bulma/bulma.sass";
+
+.navbar svg {
+    max-height: 14px;
+}
