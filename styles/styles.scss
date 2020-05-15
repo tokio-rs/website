@@ -24,3 +24,22 @@ $navbar-padding-horizontal: 5rem;
         background-color: red;
     }
 }
+
+.hero {
+    .container {
+        max-width: 600px;
+    }
+    &.tk-intro {
+        padding: 1rem;
+        .title {
+            color: rgba(0, 0, 0, 1);
+            font-size: 2.4em;
+            line-height: 1.2em;
+            padding-bottom: 0.25em;
+        }
+        .subtitle {
+            font-weight: 300;
+            font-size: $body-font-size;
+        }
+    }
+}

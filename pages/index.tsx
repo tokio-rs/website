@@ -3,9 +3,9 @@ import Layout from '../components/layout'
 export default function Home() {
   return (
     <Layout>
-      <section className="hero is-primary">
+      <section className="hero is-primary tk-intro">
         <div className="hero-body">
-          <div className="container">
+          <div className="container has-text-centered">
             <h1 className="title">
               The asynchronous run-time for the Rust programming language
             </h1>
@@ -14,13 +14,13 @@ export default function Home() {
               building fast, reliable, and lightweight network applications. It leverages Rust's
               ownership and concurrency model to ensure thread safety.
             </h2>
-            <a class="button">Get Started</a>
+            <a className="button">Get Started</a>
           </div>
         </div>
       </section>
       <section className="hero">
-        <div className="hero-body">
-          <div className="container">
+        <div className="hero-body ">
+          <div className="container has-text-centered">
             <h1 className="title">
               Built by the community, for the community.
             </h1>
