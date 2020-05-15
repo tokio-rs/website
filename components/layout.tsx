@@ -26,14 +26,6 @@ export default function Layout({ children }) {
                     </div>
                 </div>
             </nav>
-            <section className="section">
-                <div className="container">
-                    <h1 className="title">
-                        Hello World
-                        </h1>
-                    {children}
-                </div>
-            </section>
         </>
     )
 }
