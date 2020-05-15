@@ -10,11 +10,7 @@ export default function Navigation() {
 
   return (
     <>
-      <nav
-        className="navbar"
-        role="navigation"
-        aria-label="main navigation"
-      >
+      <nav className="navbar" role="navigation" aria-label="main navigation">
         <div className="container">
           <div className="navbar-brand">
             <Brand />
@@ -69,11 +65,13 @@ function Brand() {
 }
 
 function Docs() {
+  const items = ["Libraries", "Docs", "Community"].map((txt) => (
+    <a className={classnames("navbar-item", styles.spacing)}>{txt}</a>
+  ));
+
   return (
     <>
-      <a className="navbar-item">Libraries</a>
-      <a className="navbar-item">Docs</a>
-      <a className="navbar-item">Community</a>
+      {items}
     </>
   );
 }
