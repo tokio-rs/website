@@ -24,6 +24,10 @@ $navbar-item-img-max-height: 5rem;
 @import "../node_modules/bulma/bulma.sass";
 
 .hero {
+    .title {
+        font-size: 1.7em;
+    }
+
     &.tk-intro {
         padding: 0.8rem;
         .container {
@@ -37,6 +41,27 @@ $navbar-item-img-max-height: 5rem;
         .subtitle {
             font-weight: 300;
             font-size: $body-font-size;
+        }
+    }
+
+    &.tk-users {
+        .container {
+            max-width: 1150px;
+        }
+        .title {
+            font-size: 1.8em;
+            margin-bottom: 1.6em;
+        }
+        .column {
+            padding: 20px 00px;
+        }
+        // .image {
+        //     height: 40px;
+        //     width: 140px;
+        // }
+        .image img {
+            max-height: 40px;
+            max-width: 140px;
         }
     }
 }

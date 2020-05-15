@@ -18,15 +18,22 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="hero">
+      <section className="hero tk-users">
         <div className="hero-body ">
           <div className="container has-text-centered">
             <h1 className="title">
               Built by the community, for the community.
             </h1>
-            <h2 className="subtitle">
-              TODO: logos
-            </h2>
+            <nav className="container columns is-multiline is-centered is-vcentered">
+              <div className="column is-3"><img src="/img/logos/linkerd.svg" /></div>
+              <div className="column is-3"><img src="/img/logos/azure.svg" /></div>
+              <div className="column is-3"><img src="/img/logos/pingcap.svg" /></div>
+              <div className="column is-3"><img src="/img/logos/comcast.svg" /></div>
+              <div className="column is-3"><img src="/img/logos/dropbox.svg" /></div>
+              <div className="column is-3"><img src="/img/logos/facebook.svg" /></div>
+              <div className="column is-3"><img src="/img/logos/smart-things.svg" /></div>
+              <div className="column is-3"><img src="/img/logos/one-signal.svg" /></div>
+            </nav>
           </div>
         </div>
       </section>
