@@ -1,4 +1,17 @@
-$primary: #FAF8F4;
+// Tokio color palette
+$cream: #FAF8F4;
+$magenta: #C83895;
+$red: #E7544C;
+$orange: #F5A623;
+$yellow: #E2B619;
+$green: #95CA51;
+$blue: #5396D1;
+$purple: #A674E5;
+
+// Bulma color variables
+$primary: $cream;
+$primary-invert: black;
+$title-color: black;
 
 $body-font-size: 1.06em;
 $family-primary: 'Roboto', sans-serif;
@@ -11,13 +24,12 @@ $navbar-item-img-max-height: 5rem;
 @import "../node_modules/bulma/bulma.sass";
 
 .hero {
-    .container {
-        max-width: 600px;
-    }
     &.tk-intro {
-        padding: 1rem;
+        padding: 0.8rem;
+        .container {
+            max-width: 600px;
+        }
         .title {
-            color: rgba(0, 0, 0, 1);
             font-size: 2.4em;
             line-height: 1.2em;
             padding-bottom: 0.25em;
@@ -28,4 +40,3 @@ $navbar-item-img-max-height: 5rem;
         }
     }
 }
-
