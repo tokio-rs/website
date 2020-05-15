@@ -11,12 +11,12 @@ export default function Layout({ children }) {
                 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet"></link>
             </Head>
             <body>
-                <nav className="navbar" className="navbar" role="navigation" aria-label="main navigation">
+                <nav className="navbar" role="navigation" aria-label="main navigation">
                     <div className="container">
                         <div className="navbar-brand">
                             <Link href="/">
                                 <a className="navbar-item">
-                                    <img src="/img/tokio-horizontal.svg" width="133" height="56"/>
+                                    <img src="/img/tokio-horizontal.svg" width="133" height="56" />
                                 </a>
                             </Link>
                         </div>
@@ -25,7 +25,7 @@ export default function Layout({ children }) {
                                 <a className="navbar-item">Libraries</a>
                                 <a className="navbar-item">Docs</a>
                                 <a className="navbar-item">Community</a>
-                                
+
                                 <a className="navbar-item" href="https://twitter.com/tokio_rs">
                                     <span className="icon">
                                         <FontAwesomeIcon icon={['fab', 'twitter']} />
@@ -75,4 +75,4 @@ export default function Layout({ children }) {
         // </body>
         // </html>
     )
-  }
+}
