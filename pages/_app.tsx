@@ -1,6 +1,6 @@
 import '../styles/styles.scss'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { fab, faGithub, faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { faGithub, faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
 
 library.add(faGithub, faDiscord, faTwitter)
 

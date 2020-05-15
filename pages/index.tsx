@@ -25,7 +25,7 @@ export default function Home() {
               Built by the community, for the community.
             </h1>
             <nav className="container columns is-multiline is-centered is-vcentered">
-              <div className="column is-3"><img src="/img/logos/linkerd.svg" /></div>
+              <div className="column is-3"><a href="#"><img src="/img/logos/linkerd.svg" /></a></div>
               <div className="column is-3"><img src="/img/logos/azure.svg" /></div>
               <div className="column is-3"><img src="/img/logos/pingcap.svg" /></div>
               <div className="column is-3"><img src="/img/logos/comcast.svg" /></div>
