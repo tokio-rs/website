@@ -115,10 +115,14 @@ $card-media-margin: 1rem;
         margin-right: 0.4rem;
       }
     }
+    .learn-more {
+      font-weight: 600;
+    }
   }
 
   .tk-lib-tokio {
-    .title {
+    .title,
+    .learn-more a {
       color: $tk-lib-tokio;
 
       // Align the logo
@@ -132,7 +136,8 @@ $card-media-margin: 1rem;
   }
 
   .tk-lib-hyper {
-    .title {
+    .title,
+    .learn-more a {
       color: $tk-lib-hyper;
 
       // Align the logo
@@ -146,7 +151,8 @@ $card-media-margin: 1rem;
   }
 
   .tk-lib-tonic {
-    .title {
+    .title,
+    .learn-more a {
       color: $tk-lib-tonic;
 
       // Align the logos

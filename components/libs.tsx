@@ -37,6 +37,9 @@ export default function Libs() {
           </div>
           <div className="content">
             <h2 className="subtitle">{desc}</h2>
+            <p className="learn-more has-text-right">
+              <a href="#">Learn more ➔</a>
+            </p>
           </div>
         </div>
       </div>
