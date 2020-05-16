@@ -104,18 +104,27 @@ $card-shadow: 0;
     }
 
     .tk-lib-tokio {
+        .title {
+            color: $tk-lib-tokio;
+        }
         .card {
             border-color: $tk-lib-tokio;
         }
     }
 
     .tk-lib-hyper {
+        .title {
+            color: $tk-lib-hyper;
+        }
         .card {
             border-color: $tk-lib-hyper;
         }
     }
 
     .tk-lib-tonic {
+        .title {
+            color: $tk-lib-tonic;
+        }
         .card {
             border-color: $tk-lib-tonic;
         }
