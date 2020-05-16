@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { GitHub, Twitter, Discord } from "./icons";
 import { useState } from "react";
 
 import styles from "./nav.module.scss";
@@ -79,17 +79,17 @@ function SocialLinks() {
     <>
       <a className="navbar-item" href="https://twitter.com/tokio_rs">
         <span className="icon">
-          <FontAwesomeIcon icon={["fab", "twitter"]} />
+          <Twitter />
         </span>
       </a>
       <a className="navbar-item" href="https://github.com/tokio-rs/tokio">
         <span className="icon">
-          <FontAwesomeIcon icon={["fab", "github"]} />{" "}
+          <GitHub />
         </span>
       </a>
       <a className="navbar-item" href="https://discord.gg/tokio">
         <span className="icon">
-          <FontAwesomeIcon icon={["fab", "discord"]} />
+          <Discord />
         </span>
       </a>
     </>
