@@ -22,16 +22,16 @@ export default function Libs() {
         <div className="card">
           <div className="card-content">
             <div className="media">
-              <div className="media-left">
-                <figure className="image">
-                  <img src={`/img/icons/${id}.svg`}/>
-                </figure>
-              </div>
               <div className="media-content">
-                <p className="title is-4">{name}</p>
+                <h1 className="title is-4">
+                <img src={`/img/icons/${id}.svg`} style={{verticalAlign: 'middle'}}/>&nbsp;
+                  {name}
+                </h1>
               </div>
             </div>
-            <div className="content">{desc}</div>
+            <div className="content">
+              <h2 className="subtitle">{desc}</h2>
+            </div>
           </div>
         </div>
       </div>

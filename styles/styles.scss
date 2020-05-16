@@ -30,6 +30,8 @@ $navbar-item-img-max-height: 5rem;
 
 // Bulma card variables
 $card-shadow: 0;
+$card-content-padding: 1rem;
+$card-media-margin: 1rem;
 
 @import "../node_modules/bulma/bulma.sass";
 
@@ -90,11 +92,11 @@ $card-shadow: 0;
         .title {
             padding-bottom: 0.25em;
         }
+    }
 
-        .subtitle {
-            font-weight: 300;
-            font-size: $body-font-size;
-        }
+    .subtitle {
+        font-weight: 300;
+        font-size: $body-font-size;
     }
 
     .card {

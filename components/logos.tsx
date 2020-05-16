@@ -9,7 +9,7 @@ export default function Logos() {
         { name: 'smart-things', url: 'https://www.smartthings.com' },
         { name: 'one-signal', url: 'https://onesignal.com' },
     ].map(({name, url}) => (
-        <div className="column is-3"><a href={url} rel="nofollow"><img src={`/img/logos/${name}.svg`} /></a></div>
+        <div key={name} className="column is-3"><a href={url} rel="nofollow"><img src={`/img/logos/${name}.svg`} /></a></div>
       ));
 
   return (
