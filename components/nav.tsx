@@ -66,7 +66,7 @@ function Brand() {
 
 function Docs() {
   const items = ["Libraries", "Docs", "Community"].map((txt) => (
-    <a className={classnames("navbar-item", styles.spacing)}>{txt}</a>
+    <a key={txt} className={classnames("navbar-item", styles.spacing)}>{txt}</a>
   ));
 
   return (
