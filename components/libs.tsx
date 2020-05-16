@@ -24,7 +24,7 @@ export default function Libs() {
             <div className="media">
               <div className="media-content">
                 <h1 className="title is-4">
-                <img src={`/img/icons/${id}.svg`} style={{verticalAlign: 'middle'}}/>&nbsp;
+                <img src={`/img/icons/${id}.svg`}/>
                   {name}
                 </h1>
               </div>

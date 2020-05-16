@@ -94,6 +94,10 @@ $card-media-margin: 1rem;
         }
     }
 
+    .title {
+        font-size: 1.6rem;
+    }
+
     .subtitle {
         font-weight: 300;
         font-size: $body-font-size;
@@ -105,9 +109,22 @@ $card-media-margin: 1rem;
         border-radius: 4px;
     }
 
+    .tk-lib {
+        .title {
+            img {
+                margin-right: 0.4rem;
+            }
+        }
+    }
+
     .tk-lib-tokio {
         .title {
             color: $tk-lib-tokio;
+
+            // Align the logo
+            img {
+                vertical-align: -30%;
+            }
         }
         .card {
             border-color: $tk-lib-tokio;
@@ -117,6 +134,11 @@ $card-media-margin: 1rem;
     .tk-lib-hyper {
         .title {
             color: $tk-lib-hyper;
+
+            // Align the logo
+            img {
+                vertical-align: -60%;
+            }
         }
         .card {
             border-color: $tk-lib-hyper;
@@ -126,6 +148,11 @@ $card-media-margin: 1rem;
     .tk-lib-tonic {
         .title {
             color: $tk-lib-tonic;
+
+            // Align the logos
+            img {
+                vertical-align: -30%;
+            }
         }
         .card {
             border-color: $tk-lib-tonic;
