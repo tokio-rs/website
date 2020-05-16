@@ -17,7 +17,7 @@ export default function Home() {
               network applications. It leverages Rust's ownership and
               concurrency model to ensure thread safety.
             </h2>
-            <a className="button">Get Started</a>
+            <a className="button is-link is-medium">Get Started</a>
           </div>
         </div>
       </section>

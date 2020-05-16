@@ -58,6 +58,12 @@ $card-media-margin: 1rem;
       font-weight: 300;
       font-size: $body-font-size;
     }
+    .button {
+      background-color: $tk-lib-tokio;
+      font-weight: 500;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
   }
 
   &.tk-users {
