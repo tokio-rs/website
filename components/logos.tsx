@@ -1,10 +1,3 @@
-// import classnames from "classnames";
-// import Link from "next/link";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { useState } from "react";
-
-// import styles from "./nav.module.scss";
-
 export default function Logos() {
     const items = [
         { name: 'linkerd', url: 'https://linkerd.io' },
@@ -15,7 +8,6 @@ export default function Logos() {
         { name: 'facebook', url: 'https://www.facebook.com' },
         { name: 'smart-things', url: 'https://www.smartthings.com' },
         { name: 'one-signal', url: 'https://onesignal.com' },
-        // "Libraries", "Docs", "Community"
     ].map(({name, url}) => (
         <div className="column is-3"><a href={url} rel="nofollow"><img src={`/img/logos/${name}.svg`} /></a></div>
       ));
