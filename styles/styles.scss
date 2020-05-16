@@ -1,12 +1,12 @@
 // Tokio color palette
-$cream: #FAF8F4;
-$magenta: #C83895;
-$red: #E7544C;
-$orange: #F5A623;
-$yellow: #E2B619;
-$green: #95CA51;
-$blue: #5396D1;
-$purple: #A674E5;
+$cream: #faf8f4;
+$magenta: #c83895;
+$red: #e7544c;
+$orange: #f5a623;
+$yellow: #e2b619;
+$green: #95ca51;
+$blue: #5396d1;
+$purple: #a674e5;
 
 // Each color is associated with a library
 $tk-lib-tokio: $magenta;
@@ -20,7 +20,7 @@ $title-color: black;
 
 // Bulma text variables
 $body-font-size: 1.06em;
-$family-primary: 'Roboto', sans-serif;
+$family-primary: "Roboto", sans-serif;
 
 // Bulma navbar variables
 $navbar-background-color: black;
@@ -36,126 +36,126 @@ $card-media-margin: 1rem;
 @import "../node_modules/bulma/bulma.sass";
 
 .container {
-    max-width: 1150px;
+  max-width: 1150px;
 }
 
 .hero {
+  .title {
+    font-size: 1.7em;
+  }
+
+  &.tk-intro {
+    padding: 0.8rem;
+    .container {
+      max-width: 600px;
+    }
     .title {
-        font-size: 1.7em;
+      font-size: 2.4em;
+      line-height: 1.2em;
+      padding-bottom: 0.25em;
     }
+    .subtitle {
+      font-weight: 300;
+      font-size: $body-font-size;
+    }
+  }
 
-    &.tk-intro {
-        padding: 0.8rem;
-        .container {
-            max-width: 600px;
-        }
-        .title {
-            font-size: 2.4em;
-            line-height: 1.2em;
-            padding-bottom: 0.25em;
-        }
-        .subtitle {
-            font-weight: 300;
-            font-size: $body-font-size;
-        }
+  &.tk-users {
+    .title {
+      font-size: 1.8em;
+      margin-bottom: 1em;
     }
-
-    &.tk-users {
-        .title {
-            font-size: 1.8em;
-            margin-bottom: 1em;
-        }
-        .column {
-            padding: 20px 00px;
-        }
-        // .image {
-        //     height: 40px;
-        //     width: 140px;
-        // }
-        .image img {
-            max-height: 40px;
-            max-width: 140px;
-        }
+    .column {
+      padding: 20px 00px;
     }
+    // .image {
+    //     height: 40px;
+    //     width: 140px;
+    // }
+    .image img {
+      max-height: 40px;
+      max-width: 140px;
+    }
+  }
 }
 
 .tk-libs {
-    background-color: $cream;
+  background-color: $cream;
 
-    .container {
-        padding: 2em 5em;
-    }
+  .container {
+    padding: 2em 5em;
+  }
 
-    .hero {
-        margin: 2em;
-
-        .title {
-            padding-bottom: 0.25em;
-        }
-    }
+  .hero {
+    margin: 2em;
 
     .title {
-        font-size: 1.6rem;
+      padding-bottom: 0.25em;
     }
+  }
 
-    .subtitle {
-        font-weight: 300;
-        font-size: $body-font-size;
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .subtitle {
+    font-weight: 300;
+    font-size: $body-font-size;
+  }
+
+  .card {
+    margin: 0.75em;
+    border: 2px solid black;
+    border-radius: 4px;
+  }
+
+  .tk-lib {
+    .title {
+      img {
+        margin-right: 0.4rem;
+      }
     }
+  }
 
+  .tk-lib-tokio {
+    .title {
+      color: $tk-lib-tokio;
+
+      // Align the logo
+      img {
+        vertical-align: -30%;
+      }
+    }
     .card {
-        margin: 0.75em;
-        border: 2px solid black;
-        border-radius: 4px;
+      border-color: $tk-lib-tokio;
     }
+  }
 
-    .tk-lib {
-        .title {
-            img {
-                margin-right: 0.4rem;
-            }
-        }
+  .tk-lib-hyper {
+    .title {
+      color: $tk-lib-hyper;
+
+      // Align the logo
+      img {
+        vertical-align: -60%;
+      }
     }
-
-    .tk-lib-tokio {
-        .title {
-            color: $tk-lib-tokio;
-
-            // Align the logo
-            img {
-                vertical-align: -30%;
-            }
-        }
-        .card {
-            border-color: $tk-lib-tokio;
-        }
+    .card {
+      border-color: $tk-lib-hyper;
     }
+  }
 
-    .tk-lib-hyper {
-        .title {
-            color: $tk-lib-hyper;
+  .tk-lib-tonic {
+    .title {
+      color: $tk-lib-tonic;
 
-            // Align the logo
-            img {
-                vertical-align: -60%;
-            }
-        }
-        .card {
-            border-color: $tk-lib-hyper;
-        }
+      // Align the logos
+      img {
+        vertical-align: -30%;
+      }
     }
-
-    .tk-lib-tonic {
-        .title {
-            color: $tk-lib-tonic;
-
-            // Align the logos
-            img {
-                vertical-align: -30%;
-            }
-        }
-        .card {
-            border-color: $tk-lib-tonic;
-        }
+    .card {
+      border-color: $tk-lib-tonic;
     }
+  }
 }

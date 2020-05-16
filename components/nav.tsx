@@ -66,14 +66,12 @@ function Brand() {
 
 function Docs() {
   const items = ["Libraries", "Docs", "Community"].map((txt) => (
-    <a key={txt} className={classnames("navbar-item", styles.spacing)}>{txt}</a>
+    <a key={txt} className={classnames("navbar-item", styles.spacing)}>
+      {txt}
+    </a>
   ));
 
-  return (
-    <>
-      {items}
-    </>
-  );
+  return <>{items}</>;
 }
 
 function SocialLinks() {

@@ -1,11 +1,15 @@
-import '../styles/styles.scss'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faGithub, faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import "../styles/styles.scss";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import {
+  faGithub,
+  faDiscord,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons";
 
-library.add(faGithub, faDiscord, faTwitter)
+library.add(faGithub, faDiscord, faTwitter);
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return <Component {...pageProps} />;
 }
 
 // Only uncomment this method if you have blocking data requirements for
@@ -20,4 +24,4 @@ function MyApp({ Component, pageProps }) {
 //   return { ...appProps }
 // }
 
-export default MyApp
+export default MyApp;
