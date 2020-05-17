@@ -114,20 +114,11 @@ $card-media-margin: 1rem;
   }
 }
 
-.tk-libs {
-  background-color: $cream;
-
-  .container {
+.tk-libs,
+.tk-stack {
+  > .container {
     padding: 2em 1em;
-    max-width: 1020px;
-  }
-
-  .hero {
-    margin: 2em;
-
-    .title {
-      padding-bottom: 0.55em;
-    }
+    max-width: 1050;
   }
 
   .title {
@@ -137,6 +128,18 @@ $card-media-margin: 1rem;
   .subtitle {
     font-weight: 300;
     font-size: $body-font-size;
+  }
+}
+
+.tk-libs {
+  background-color: $cream;
+
+  .hero {
+    margin: 2em;
+
+    .title {
+      padding-bottom: 0.55em;
+    }
   }
 
   .card {
@@ -199,5 +202,20 @@ $card-media-margin: 1rem;
     .card {
       border-color: $tk-lib-tonic;
     }
+  }
+}
+
+.tk-stack {
+  .menu {
+    font-size: 0.9rem;
+  }
+
+  .card {
+    margin: 6rem 0;
+  }
+
+  .tk-stack-fig {
+    position: sticky;
+    top: 0;
   }
 }

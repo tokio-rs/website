@@ -1,6 +1,7 @@
 import Layout from "../components/layout";
 import Libs from "../components/libs";
 import Logos from "../components/logos";
+import Stack from "../components/stack";
 
 export default function Home() {
   return (
@@ -23,6 +24,7 @@ export default function Home() {
       </section>
       <Logos />
       <Libs />
+      <Stack />
     </Layout>
   );
 }
