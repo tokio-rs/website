@@ -11,7 +11,9 @@ export default function Logos() {
   ].map(({ name, url }) => (
     <div key={name} className="column is-3">
       <a href={url} rel="nofollow">
-        <img src={`/img/logos/${name}.svg`} />
+        <figure className="image">
+          <img src={`/img/logos/${name}.svg`} />
+        </figure>
       </a>
     </div>
   ));
@@ -19,12 +21,12 @@ export default function Logos() {
   return (
     <>
       <section className="hero tk-users">
-        <div className="hero-body ">
+        <div className="hero-body">
           <div className="container has-text-centered">
             <h1 className="title">
               Built by the community, for the community.
             </h1>
-            <nav className="container columns is-multiline is-centered is-vcentered">
+            <nav className="container columns is-multiline is-mobile is-centered is-vcentered">
               {items}
             </nav>
           </div>

@@ -106,13 +106,10 @@ $card-media-margin: 1rem;
     .column {
       padding: 20px 00px;
     }
-    // .image {
-    //     height: 40px;
-    //     width: 140px;
-    // }
     .image img {
-      max-height: 40px;
-      max-width: 140px;
+      width: 70%;
+      max-width: 8rem;
+      margin: 0 auto;
     }
   }
 }
