@@ -118,7 +118,8 @@ $card-media-margin: 1rem;
   background-color: $cream;
 
   .container {
-    padding: 2em 5em;
+    padding: 2em 1em;
+    max-width: 1020px;
   }
 
   .hero {
