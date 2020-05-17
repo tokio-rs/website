@@ -49,7 +49,7 @@ export default function Stack() {
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
     },
   ].map(({ id, name, desc }) => (
-    <div className="card">
+    <div key={id} className="card">
       <div className="card-content">
         <div className="media">
           <div className="media-content">
