@@ -2,7 +2,7 @@ export default function Stack() {
   const items = [
     {
       id: "stack",
-      name: "The stack",
+      name: "The Tokio stack",
       desc:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
     },
@@ -67,13 +67,6 @@ export default function Stack() {
         </div>
       </div>
     </div>
-
-    // <div key={id} className="container">
-    //     <h1 className="title">{name}</h1>
-    //     <h2 className="subtitle">
-    //         {desc}
-    //     </h2>
-    // </div>
   ));
 
   return (

@@ -41,6 +41,10 @@ $card-shadow: 0;
 $card-content-padding: 1rem;
 $card-media-margin: 1rem;
 
+// Footer
+$footer-background-color: black;
+$footer-color: white;
+
 @import "../node_modules/bulma/bulma.sass";
 
 .container {
@@ -211,11 +215,15 @@ $card-media-margin: 1rem;
   }
 
   .card {
-    margin: 6rem 0;
+    margin: 10rem 0;
   }
 
   .tk-stack-fig {
     position: sticky;
     top: 0;
   }
+}
+
+.footer {
+  min-height: 600px;
 }
