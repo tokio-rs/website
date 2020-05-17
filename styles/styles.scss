@@ -7,6 +7,8 @@ $yellow: #e2b619;
 $green: #95ca51;
 $blue: #5396d1;
 $purple: #a674e5;
+$dark-gray: #606060;
+$gray: #a0a0a0;
 
 // Each color is associated with a library
 $tk-lib-tokio: $magenta;
@@ -23,10 +25,16 @@ $body-font-size: 1.06em;
 $family-primary: "Roboto", sans-serif;
 
 // Bulma navbar variables
-$navbar-background-color: black;
 $navbar-item-color: white;
+$navbar-item-hover-color: white;
+$navbar-item-active-color: white;
+$navbar-background-color: black;
+$navbar-item-hover-background-color: black;
+$navbar-item-active-background-color: black;
 $navbar-height: 5rem;
 $navbar-item-img-max-height: 5rem;
+$navbar-padding-vertical: 0;
+$navbar-padding-horizontal: 1rem;
 
 // Bulma card variables
 $card-shadow: 0;
@@ -37,6 +45,30 @@ $card-media-margin: 1rem;
 
 .container {
   max-width: 1150px;
+}
+
+.navbar {
+  hr {
+    background-color: $gray;
+    height: 2rem;
+    width: 1px;
+    margin: 1rem 1.5rem;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+  .navbar-item {
+    &.navbar-text {
+      font-size: 1.06em;
+      padding: 0 1.5rem;
+    }
+    &.navbar-icon {
+      padding: 0 1rem;
+    }
+    .icon {
+      height: 1.8rem;
+      width: 1.8rem;
+    }
+  }
 }
 
 .hero {
@@ -96,7 +128,7 @@ $card-media-margin: 1rem;
     margin: 2em;
 
     .title {
-      padding-bottom: 0.25em;
+      padding-bottom: 0.55em;
     }
   }
 

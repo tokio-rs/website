@@ -3,14 +3,16 @@ import Link from "next/link";
 import { GitHub, Twitter, Discord } from "./icons";
 import { useState } from "react";
 
-import styles from "./nav.module.scss";
-
 export default function Navigation() {
   const [expanded, setExpanded] = useState(false);
 
   return (
     <>
-      <nav className="navbar" role="navigation" aria-label="main navigation">
+      <nav
+        className="navbar is-spaced"
+        role="navigation"
+        aria-label="main navigation"
+      >
         <div className="container">
           <div className="navbar-brand">
             <Brand />
@@ -35,16 +37,7 @@ export default function Navigation() {
           >
             <div className="navbar-end">
               <Docs />
-
-              <hr
-                className={classnames(
-                  "has-text-light",
-                  "has-background-light",
-                  "is-hidden-touch",
-                  styles.divider
-                )}
-              />
-
+              <hr className="is-hidden-touch" />
               <SocialLinks />
             </div>
           </div>
@@ -66,7 +59,7 @@ function Brand() {
 
 function Docs() {
   const items = ["Libraries", "Docs", "Community"].map((txt) => (
-    <a key={txt} className={classnames("navbar-item", styles.spacing)}>
+    <a key={txt} className="navbar-item navbar-text">
       {txt}
     </a>
   ));
@@ -77,17 +70,23 @@ function Docs() {
 function SocialLinks() {
   return (
     <>
-      <a className="navbar-item" href="https://twitter.com/tokio_rs">
+      <a
+        className="navbar-item navbar-icon"
+        href="https://twitter.com/tokio_rs"
+      >
         <span className="icon">
           <Twitter />
         </span>
       </a>
-      <a className="navbar-item" href="https://github.com/tokio-rs/tokio">
+      <a
+        className="navbar-item navbar-icon"
+        href="https://github.com/tokio-rs/tokio"
+      >
         <span className="icon">
           <GitHub />
         </span>
       </a>
-      <a className="navbar-item" href="https://discord.gg/tokio">
+      <a className="navbar-item navbar-icon" href="https://discord.gg/tokio">
         <span className="icon">
           <Discord />
         </span>
