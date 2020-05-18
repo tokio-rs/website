@@ -11,9 +11,19 @@ $dark-gray: #606060;
 $gray: #a0a0a0;
 
 // Each color is associated with a library
-$tk-lib-tokio: $magenta;
+$tk-lib-runtime: $magenta;
 $tk-lib-hyper: $orange;
 $tk-lib-tonic: $yellow;
+$tk-lib-tower: $green;
+$tk-lib-mio: $red;
+$tk-lib-tracing: $purple;
+$tk-lib-bytes: $blue;
+
+// Per lib styling: [ name, color, size, logo-adjust ]
+$libs: "tokio" black 3.8rem -60%, "runtime" $tk-lib-runtime 2.2rem -22%,
+  "hyper" $tk-lib-hyper 100% -50%, "tonic" $tk-lib-tonic 100% -25%,
+  "tower" $tk-lib-tower 100% -52%, "mio" $tk-lib-mio 100% -41%,
+  "tracing" $tk-lib-tracing 100% -31%, "bytes" $tk-lib-bytes 100% -30%;
 
 // Bulma color variables
 $primary: $cream;
@@ -95,7 +105,7 @@ $footer-color: white;
       font-size: $body-font-size;
     }
     .button {
-      background-color: $tk-lib-tokio;
+      background-color: $tk-lib-runtime;
       font-weight: 500;
       padding-left: 2rem;
       padding-right: 2rem;
@@ -118,7 +128,7 @@ $footer-color: white;
   }
 }
 
-.tk-libs,
+.tk-features,
 .tk-stack {
   > .container {
     padding: 2em 1em;
@@ -126,7 +136,7 @@ $footer-color: white;
   }
 
   .title {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
 
   .subtitle {
@@ -135,7 +145,7 @@ $footer-color: white;
   }
 }
 
-.tk-libs {
+.tk-features {
   background-color: $cream;
 
   .hero {
@@ -163,10 +173,10 @@ $footer-color: white;
     }
   }
 
-  .tk-lib-tokio {
+  .tk-lib-runtime {
     .title,
     .learn-more a {
-      color: $tk-lib-tokio;
+      color: $tk-lib-runtime;
 
       // Align the logo
       img {
@@ -174,7 +184,7 @@ $footer-color: white;
       }
     }
     .card {
-      border-color: $tk-lib-tokio;
+      border-color: $tk-lib-runtime;
     }
   }
 
@@ -212,20 +222,53 @@ $footer-color: white;
 .tk-stack {
   .menu {
     font-size: 0.9rem;
-    margin-top: 40px;
-    margin-bottom: 50px;
+  }
+
+  // Used to anchor the sticky elements
+  .anchor {
+    position: sticky;
+    height: 25rem;
+    top: 10%;
+
+    > :first-child {
+      display: block;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
   }
 
   .card {
     margin: 15rem 0;
   }
+  .card:first-child {
+    margin-top: 5rem;
+  }
+  .card:last-child {
+    margin-bottom: 7.5rem;
+  }
 
-  .tk-stack-fig {
-    position: sticky;
-    top: 0;
+  .tk-libs {
+    .title img {
+      margin-right: 0.5rem;
+    }
+  }
+
+  // Per lib styling
+  @each $name, $color, $size, $adjust in $libs {
+    .tk-lib-#{$name} {
+      .title,
+      .learn-more a {
+        color: $color;
+      }
+      .title img {
+        vertical-align: $adjust;
+        height: $size;
+      }
+    }
   }
 }
 
 .footer {
-  min-height: 600px;
+  min-height: 400px;
 }

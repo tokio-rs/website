@@ -3,7 +3,7 @@ import classnames from "classnames";
 export default function Libs() {
   const items = [
     {
-      id: "tokio",
+      id: "runtime",
       name: "Tokio Runtime",
       desc:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
@@ -48,7 +48,7 @@ export default function Libs() {
 
   return (
     <>
-      <section className="tk-libs">
+      <section className="tk-features">
         <div className="container">
           <div className="columns is-multiline">
             <div className="column is-half">

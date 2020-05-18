@@ -1,60 +1,71 @@
+import classnames from "classnames";
+
 export default function Stack() {
-  const items = [
+  const data = [
     {
-      id: "stack",
-      name: "The Tokio stack",
+      id: "tokio",
+      short: "Stack",
+      name: "The stack",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
     {
       id: "runtime",
       name: "Runtime",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
     {
       id: "hyper",
       name: "Hyper",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
     {
       id: "tonic",
       name: "Tonic",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
     {
       id: "tower",
       name: "Tower",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
     {
       id: "mio",
       name: "Mio",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
     {
       id: "tracing",
       name: "Tracing",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
     {
       id: "bytes",
       name: "Bytes",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
-  ].map(({ id, name, desc }) => (
+  ];
+
+  const menu = data.map(({ id, short, name }) => (
+    <li key={id}>
+      <a>{short || name}</a>
+    </li>
+  ));
+
+  const items = data.map(({ id, name, desc }) => (
     <div key={id} className="card">
-      <div className="card-content">
+      <div className={classnames("card-content", `tk-lib-${id}`)}>
         <div className="media">
           <div className="media-content">
             <h1 className="title is-4">
-              {/* <img src={`/img/icons/${id}.svg`} /> */}
+              <img src={`/img/icons/${id}.svg`} />
               {name}
             </h1>
           </div>
@@ -75,45 +86,16 @@ export default function Stack() {
         <div className="container">
           <div className="columns">
             <div className="column is-1 tk-menu">
-              <aside
-                className="menu"
-                style={{ position: "sticky", top: "80px" }}
-              >
-                <ul className="menu-list">
-                  <li>
-                    <a>Tokio</a>
-                  </li>
-                  <li>
-                    <a>Runtime</a>
-                  </li>
-                  <li>
-                    <a>Hyper</a>
-                  </li>
-                  <li>
-                    <a>Tonic</a>
-                  </li>
-                  <li>
-                    <a>Tower</a>
-                  </li>
-                  <li>
-                    <a>Mio</a>
-                  </li>
-                  <li>
-                    <a>Tracing</a>
-                  </li>
-                  <li>
-                    <a>Bytes</a>
-                  </li>
-                </ul>
-              </aside>
+              <div className="container anchor">
+                <aside className="menu wut">
+                  <ul className="menu-list">{menu}</ul>
+                </aside>
+              </div>
             </div>
-            <div className="column is-5">{items}</div>
+            <div className="column is-5 tk-libs">{items}</div>
             <div className="column is-half">
-              <div
-                className="container"
-                style={{ position: "sticky", top: "40px" }}
-              >
-                <img src="/img/stack-all.svg" />
+              <div className="container anchor">
+                <img src="/img/stack-all.svg" className="wut" />
               </div>
             </div>
           </div>
