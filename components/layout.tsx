@@ -18,7 +18,7 @@ export default function Layout({ children }) {
       </Head>
       <Navigation />
       {children}
-      <Footer/>
+      <Footer />
     </>
   );
 }

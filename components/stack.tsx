@@ -75,7 +75,10 @@ export default function Stack() {
         <div className="container">
           <div className="columns">
             <div className="column is-1 tk-menu">
-              <aside className="menu" style={{ position: "sticky", top: 0 }}>
+              <aside
+                className="menu"
+                style={{ position: "sticky", top: "80px" }}
+              >
                 <ul className="menu-list">
                   <li>
                     <a>Tokio</a>
@@ -106,7 +109,10 @@ export default function Stack() {
             </div>
             <div className="column is-5">{items}</div>
             <div className="column is-half">
-              <div className="container" style={{ position: "sticky", top: 0 }}>
+              <div
+                className="container"
+                style={{ position: "sticky", top: "40px" }}
+              >
                 <img src="/img/stack-all.svg" />
               </div>
             </div>
