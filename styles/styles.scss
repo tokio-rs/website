@@ -8,6 +8,7 @@ $green: #95ca51;
 $blue: #5396d1;
 $purple: #a674e5;
 $dark-gray: #606060;
+$light-gray: #f0f0f0;
 $gray: #a0a0a0;
 
 // Each color is associated with a library
@@ -57,10 +58,6 @@ $footer-color: white;
 
 @import "../node_modules/bulma/bulma.sass";
 
-.container {
-  max-width: 1150px;
-}
-
 .navbar {
   hr {
     background-color: $gray;
@@ -82,6 +79,12 @@ $footer-color: white;
       height: 1.8rem;
       width: 1.8rem;
     }
+  }
+}
+
+.tk-landing {
+  .container {
+    max-width: 1150px;
   }
 }
 
@@ -265,6 +268,36 @@ $footer-color: white;
         vertical-align: $adjust;
         height: $size;
       }
+    }
+  }
+}
+
+.tk-docs {
+  min-height: 500px;
+
+  .tk-docs-nav {
+    background-color: $light-gray;
+  }
+
+  .tk-content {
+    color: black;
+    font-weight: 300;
+    font-size: 1.13rem;
+    max-width: 660px;
+    margin-left: 8%;
+    margin-right: 30px;
+    // padding: 2rem 10rem;
+    // padding-left: 10rem;
+    // padding-top: 2rem;
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1.2rem;
+      font-weight: 400;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
     }
   }
 }
