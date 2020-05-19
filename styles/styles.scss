@@ -1,6 +1,7 @@
 // Tokio color palette
 $cream: #faf8f4;
 $magenta: #c83895;
+$magenta-dark: #ab307f;
 $red: #e7544c;
 $orange: #f5a623;
 $yellow: #e2b619;
@@ -283,21 +284,50 @@ $footer-color: white;
     color: black;
     font-weight: 300;
     font-size: 1.13rem;
-    max-width: 660px;
+    max-width: 800px;
     margin-left: 8%;
     margin-right: 30px;
-    // padding: 2rem 10rem;
-    // padding-left: 10rem;
-    // padding-top: 2rem;
 
-    h1 {
+    h1.title {
       font-size: 2.5rem;
-      margin-bottom: 1.2rem;
+      // margin-bottom: 1.2rem;
       font-weight: 400;
     }
 
-    p {
-      margin-bottom: 1.5rem;
+    h1:not(.title) {
+      font-size: 1.8rem;
+      padding-bottom: 0.5rem;
+      border-bottom: solid 1px $light-gray;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    a {
+      color: $magenta;
+      font-weight: 400;
+    }
+    a:hover {
+      color: $magenta-dark;
+    }
+
+    // Smaller bullet size
+    li {
+      list-style-type: none;
+      position: relative; /* It's needed for setting position to absolute in the next rule. */
+    }
+    li:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+
+    li::before {
+      content: "·";
+      position: absolute;
+      left: -1.1rem;
+      top: -1.15rem;
+      font-size: 2.7rem;
     }
   }
 }
