@@ -1,4 +1,5 @@
 import Layout from "../components/layout";
+import Footer from "../components/footer";
 import Libs from "../components/libs";
 import Logos from "../components/logos";
 import Stack from "../components/stack";
@@ -27,6 +28,7 @@ export default function Home() {
         <Libs />
         <Stack />
       </div>
+      <Footer />
     </Layout>
   );
 }

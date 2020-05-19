@@ -114,6 +114,9 @@ $footer-color: white;
       padding-left: 2rem;
       padding-right: 2rem;
     }
+    .button:hover {
+      background-color: $magenta-dark;
+    }
   }
 
   &.tk-users {
