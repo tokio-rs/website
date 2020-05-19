@@ -2,15 +2,14 @@
  * Generates pages from markdown content located in the `content` directory.
  */
 import Layout from "../components/layout";
-import content from "../src/content"
-
+import content from "../src/content";
 
 export async function getStaticPaths() {
   const paths = content.getPaths().map((path) => {
     return {
       params: {
         page: path,
-      }
+      },
     };
   });
 
@@ -29,8 +28,8 @@ export async function getStaticProps({ params }) {
   return {
     props: {
       postData: rendered,
-    }
-  }
+    },
+  };
 }
 
 export default function Page({ postData }) {
@@ -39,8 +38,10 @@ export default function Page({ postData }) {
       <div className="columns is-marginless tk-docs">
         <div className="column is-one-quarter tk-docs-nav">LEFT</div>
         <div className="column is-three-quarters">
-          <section className="section tk-content" dangerouslySetInnerHTML={{ __html: postData.html }}>
-          </section>
+          <section
+            className="section tk-content"
+            dangerouslySetInnerHTML={{ __html: postData.html }}
+          ></section>
         </div>
       </div>
     </Layout>
