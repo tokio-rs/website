@@ -290,6 +290,7 @@ $footer-color: white;
     max-width: 800px;
     margin-left: 8%;
     margin-right: 30px;
+    padding-bottom: 10rem;
 
     h1.title {
       font-size: 2.5rem;
@@ -331,6 +332,10 @@ $footer-color: white;
       left: -1.1rem;
       top: -1.15rem;
       font-size: 2.7rem;
+    }
+
+    code {
+      color: $dark-gray;
     }
   }
 }
