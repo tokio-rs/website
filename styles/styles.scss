@@ -48,6 +48,11 @@ $navbar-item-img-max-height: 5rem;
 $navbar-padding-vertical: 0;
 $navbar-padding-horizontal: 1rem;
 
+// Bulma menu variables
+$menu-item-color: $dark-gray;
+$menu-item-active-color: black;
+$menu-item-active-background-color: white;
+
 // Bulma card variables
 $card-shadow: 0;
 $card-content-padding: 1rem;
@@ -281,6 +286,16 @@ $footer-color: white;
 
   .tk-docs-nav {
     background-color: $light-gray;
+  }
+
+  .menu {
+    .menu-label a {
+      color: $dark-gray;
+    }
+
+    .is-active {
+      font-weight: 500;
+    }
   }
 
   .tk-content {

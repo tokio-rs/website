@@ -87,7 +87,7 @@ export default function Stack() {
           <div className="columns">
             <div className="column is-1 tk-menu">
               <div className="container anchor">
-                <aside className="menu wut">
+                <aside className="menu">
                   <ul className="menu-list">{menu}</ul>
                 </aside>
               </div>
@@ -95,7 +95,7 @@ export default function Stack() {
             <div className="column is-5 tk-libs">{items}</div>
             <div className="column is-half">
               <div className="container anchor">
-                <img src="/img/stack-all.svg" className="wut" />
+                <img src="/img/stack-all.svg" />
               </div>
             </div>
           </div>
