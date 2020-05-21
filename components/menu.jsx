@@ -22,7 +22,6 @@ export default function Menu({ data }) {
                   <>
                     <ul>
                       {pagesFor(page.pages).map((page) => {
-                        console.debug("KEY", page.key);
                         return (
                           <>
                             <li key={page.key}>
