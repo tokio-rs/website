@@ -4,6 +4,7 @@ import matter from "gray-matter";
 import remark from "remark";
 import html from "remark-html";
 
+import Content from "../components/content";
 import Layout from "../components/layout";
 
 const siteMap = {
@@ -18,65 +19,12 @@ const siteMap = {
 
 const contentDir = path.join(process.cwd(), "content");
 
-export default function Page({ menu, html, meta: { title } }) {
+export default function Page({ menu, body, meta: { title } }) {
   return (
     <>
-        <Layout>
-            <div className="columns is-marginless tk-docs">
-                <div className="column is-one-quarter tk-docs-nav" style={{padding: "4rem 0 0 1rem"}}>
-
-                    <aside className="menu" style={{position: "sticky", top: "4rem", maxWidth: "250px", marginLeft: "auto"}}>
-                        <p className="menu-label">
-                            Tokio
-                        </p>
-                        <ul className="menu-list">
-
-                        {pagesFor(menu).map((page) => {
-                          const hasChildren = page.pages !== undefined;
-
-                          console.log("key", page.key);
-
-                          return (
-                            <>
-                              <li key={page.key}>
-                                <a href={page.href}>{titleFor(page)}</a>
-                                {hasChildren && (
-                                  <>
-                                    <ul>
-                                      {pagesFor(page.pages).map((page) => {
-                                        console.debug("KEY", page.key);
-                                        return (
-                                            <>
-                                                <li key={page.key}>
-                                                    <a href={page.href}>{page.title}</a>
-                                                </li>
-                                            </>
-                                        );
-                                      })}
-                                    </ul>
-                                  </>
-                                )}
-                              </li>
-                            </>
-                          );
-                        })}
-
-                        </ul>
-                        <p className="menu-label">
-                            <img src="/img/left-arrow.svg" style={{ display: "inline-block", verticalAlign: "middle", height: "0.8rem", marginRight: "0.5rem"}}/>
-                            <a>All Libraries</a>
-                        </p>
-                    </aside>
-
-                </div>
-                <div className="column is-three-quarters">
-                <section className="section content tk-content">
-                    <h1 className="title">{title}</h1>
-                    <div dangerouslySetInnerHTML={{ __html: html }} />
-                </section>
-                </div>
-            </div>
-        </Layout>
+      <Layout>
+        <Content title={title} menu={menu} body={body} />]
+      </Layout>
     </>
   );
 }
@@ -97,23 +45,21 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const [base,] = params.slug;
-  const page = loadPage(params.slug.join(path.sep))
+  const [base] = params.slug;
+  const page = loadPage(params.slug.join(path.sep));
 
   // Get the sub-menu for the current page.
   const menu = normalize(siteMap[base], base);
 
   // Use remark to convert markdown into HTML string
-  const processedContent = await remark()
-    .use(html)
-    .process(page.content);
+  const processedContent = await remark().use(html).process(page.content);
 
   const contentHtml = processedContent.toString();
 
   return {
     props: {
       slug: params.slug,
-      html: contentHtml,
+      body: contentHtml,
       menu,
       meta: page.data,
     },
@@ -181,16 +127,8 @@ function normalize(menu, root) {
   return out;
 }
 
-function pagesFor(menu) {
-  return Object.entries(menu).map(([, page]) => page);
-}
-
-function titleFor(page) {
-  return page.title;
-}
-
 function loadPage(path) {
-  const fullPath = `${contentDir}/${path}.md`
+  const fullPath = `${contentDir}/${path}.md`;
 
   const fileContents = fs.readFileSync(fullPath, "utf-8");
 

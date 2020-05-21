@@ -58,7 +58,7 @@ function Brand() {
 }
 
 function Docs() {
-  const items = ["Libraries", "Docs", "Community"].map((txt) => (
+  const items = ["Libraries", "Docs", "Community", "Blog"].map((txt) => (
     <a key={txt} className="navbar-item navbar-text">
       {txt}
     </a>
