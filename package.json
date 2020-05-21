@@ -6,11 +6,12 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "fmt": "prettier --write '{components,pages,src,styles}/**/*.{js,jsx,ts,tsx,scss}'"
+    "fmt": "prettier --write '{components,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'"
   },
   "dependencies": {
     "bulma": "^0.8.2",
     "classnames": "^2.2.6",
+    "glob": "^7.1.6",
     "gray-matter": "^4.0.2",
     "next": "9.4.0",
     "react": "16.13.1",

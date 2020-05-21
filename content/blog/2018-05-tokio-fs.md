@@ -1,9 +1,9 @@
 ---
-date = "2018-05-02"
-title = "New Tokio release, now with filesystem support"
-description = "May 5, 2018"
-menu = "blog"
-weight = 993
+date: "2018-05-02"
+title: "New Tokio release, now with filesystem support"
+description: "May 5, 2018"
+menu: "blog"
+weight: 993
 ---
 
 It took a bit longer than I had initially hoped (as it always does), but a new

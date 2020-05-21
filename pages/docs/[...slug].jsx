@@ -1,4 +1,4 @@
-import { getPaths, getProps } from "../../lib/content";
+import { getMenuPaths, getProps } from "../../lib/content";
 
 import Content from "../../components/content";
 import Layout from "../../components/layout";
@@ -22,7 +22,7 @@ export default function Page({ title, menu, body }) {
 }
 
 export async function getStaticPaths() {
-  return getPaths(menu);
+  return getMenuPaths(menu);
 }
 
 export async function getStaticProps({ params: { slug }}) {

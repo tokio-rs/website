@@ -1,9 +1,9 @@
 ---
-date = "2019-08-14"
-title = "Diagnostics with Tracing"
-description = "August 14, 2019"
-menu = "blog"
-weight = 987
+date: "2019-08-14"
+title: "Diagnostics with Tracing"
+description: "August 14, 2019"
+menu: "blog"
+weight: 987
 ---
 
 Effectively developing systems and operating them in production requires

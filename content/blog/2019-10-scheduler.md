@@ -1,9 +1,9 @@
 ---
-date = "2019-10-13"
-title = "Making the Tokio scheduler 10x faster"
-description = "October 13, 2019"
-menu = "blog"
-weight = 986
+date: "2019-10-13"
+title: "Making the Tokio scheduler 10x faster"
+description: "October 13, 2019"
+menu: "blog"
+weight: 986
 ---
 
 We've been hard at work on the next major revision of Tokio, Rust's asynchronous

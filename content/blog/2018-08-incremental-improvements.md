@@ -1,9 +1,9 @@
 ---
-date = "2018-08-24"
-title = "Tokio 0.1.8 with many incremental improvements"
-description = "August 24, 2018"
-menu = "blog"
-weight = 992
+date: "2018-08-24"
+title: "Tokio 0.1.8 with many incremental improvements"
+description: "August 24, 2018"
+menu: "blog"
+weight: 992
 ---
 
 It took a bit longer than I had initially hoped (as it always does), but a new
