@@ -18,7 +18,7 @@ const siteMap = {
 
 const contentDir = path.join(process.cwd(), "content");
 
-export default function Page({ title, html }) {
+export default function Page({ menu, html, meta: { title } }) {
   return (
     <>
         <Layout>
@@ -30,18 +30,37 @@ export default function Page({ title, html }) {
                             Tokio
                         </p>
                         <ul className="menu-list">
-                            <li><a>Overview</a></li>
-                            <li>
-                            <a className="is-active">Getting Started</a>
-                            <ul>
-                                <li><a>Hello world!</a></li>
-                                <li><a>Cargo dependencies</a></li>
-                                <li><a>Example: An Echo Server</a></li>
-                            </ul>
-                            </li>
-                            <li><a>Going Deeper</a></li>
-                            <li><a>I/O</a></li>
-                            <li><a>Internals</a></li>
+
+                        {pagesFor(menu).map((page) => {
+                          const hasChildren = page.pages !== undefined;
+
+                          console.log("key", page.key);
+
+                          return (
+                            <>
+                              <li key={page.key}>
+                                <a href={page.href}>{titleFor(page)}</a>
+                                {hasChildren && (
+                                  <>
+                                    <ul>
+                                      {pagesFor(page.pages).map((page) => {
+                                        console.debug("KEY", page.key);
+                                        return (
+                                            <>
+                                                <li key={page.key}>
+                                                    <a href={page.href}>{page.title}</a>
+                                                </li>
+                                            </>
+                                        );
+                                      })}
+                                    </ul>
+                                  </>
+                                )}
+                              </li>
+                            </>
+                          );
+                        })}
+
                         </ul>
                         <p className="menu-label">
                             <img src="/img/left-arrow.svg" style={{ display: "inline-block", verticalAlign: "middle", height: "0.8rem", marginRight: "0.5rem"}}/>
@@ -78,16 +97,16 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const fullPath = `${[contentDir, ...params.slug].join(path.sep)}.md`;
-  const fileContents = fs.readFileSync(fullPath, "utf-8");
+  const [base,] = params.slug;
+  const page = loadPage(params.slug.join(path.sep))
 
-  // Use gray-matter to parse the post metadata section
-  const matterResult = matter(fileContents);
+  // Get the sub-menu for the current page.
+  const menu = normalize(siteMap[base], base);
 
   // Use remark to convert markdown into HTML string
   const processedContent = await remark()
     .use(html)
-    .process(matterResult.content);
+    .process(page.content);
 
   const contentHtml = processedContent.toString();
 
@@ -95,7 +114,8 @@ export async function getStaticProps({ params }) {
     props: {
       slug: params.slug,
       html: contentHtml,
-      ...matterResult.data
+      menu,
+      meta: page.data,
     },
   };
 }
@@ -119,5 +139,61 @@ function collectPaths(level = siteMap, prefix = "") {
   return out;
 }
 
-// Load all front matter for markdown files in `/content` directory
-function loadPages() {}
+// Normalize the sitemap using front matter
+function normalize(menu, root) {
+  let out = {};
+
+  // Level 1 of menu may be single pages or contain a sub structure
+  for (const l1 of Object.keys(menu)) {
+    if (!menu[l1].pages) {
+      // Single page
+      const base = `${root}/${l1}`;
+      const page = loadPage(base).data;
+
+      out[l1] = {
+        key: l1,
+        title: page.title,
+        href: `/${base}`,
+      };
+    } else {
+      // Load front matter for sub pages
+      let submenu = {};
+
+      for (const l2 of menu[l1].pages) {
+        const base = `${root}/${l1}/${l2}`;
+        const page = loadPage(base).data;
+
+        submenu[l2] = {
+          key: l2,
+          title: page.title,
+          href: `/${base}`,
+        };
+      }
+
+      out[l1] = {
+        key: l1,
+        title: menu[l1].title,
+        pages: submenu,
+      };
+    }
+  }
+
+  return out;
+}
+
+function pagesFor(menu) {
+  return Object.entries(menu).map(([, page]) => page);
+}
+
+function titleFor(page) {
+  return page.title;
+}
+
+function loadPage(path) {
+  const fullPath = `${contentDir}/${path}.md`
+
+  const fileContents = fs.readFileSync(fullPath, "utf-8");
+
+  // Use gray-matter to parse the post metadata section
+  return matter(fileContents);
+}
