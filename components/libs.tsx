@@ -4,19 +4,25 @@ export default function Libs() {
   const items = [
     {
       id: "runtime",
-      name: "Tokio Runtime",
+      name: "Reliable",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
+        "Leveraging Rust's type system, APIs are memory-safe, thread-safe, and misuse-resistant. Tokio helps prevent common bugs, such as unbounded queues and task starvation."
     },
     {
       id: "hyper",
-      name: "Hyper",
+      name: "Fast",
       desc:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
     },
     {
       id: "tonic",
-      name: "Tonic",
+      name: "Easy",
+      desc:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
+    },
+    {
+      id: "tower",
+      name: "Flexible",
       desc:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
     },
@@ -30,7 +36,6 @@ export default function Libs() {
           <div className="media">
             <div className="media-content">
               <h1 className="title is-4">
-                <img src={`/img/icons/${id}.svg`} />
                 {name}
               </h1>
             </div>
@@ -51,16 +56,6 @@ export default function Libs() {
       <section className="tk-features">
         <div className="container">
           <div className="columns is-multiline">
-            <div className="column is-half">
-              <div className="hero is-medium">
-                <h1 className="title">Fast. Reliable. Lightweight.</h1>
-                <h2 className="subtitle">
-                  Building on top of Rust, Tokio provides blazingly fast
-                  performance, making it an ideal choice for high performance
-                  server applications.
-                </h2>
-              </div>
-            </div>
             {items}
           </div>
         </div>

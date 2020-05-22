@@ -102,7 +102,7 @@ $footer-color: white;
   &.tk-intro {
     padding: 0.8rem;
     .container {
-      max-width: 700px;
+      max-width: 650px;
     }
     .title {
       font-size: 2.4em;
@@ -185,48 +185,15 @@ $footer-color: white;
     }
   }
 
-  .tk-lib-runtime {
-    .title,
-    .learn-more a {
-      color: $tk-lib-runtime;
-
-      // Align the logo
-      img {
-        vertical-align: -30%;
+  @each $name, $color, $size, $adjust in $libs {
+    .tk-lib-#{$name} {
+      .title,
+      .learn-more a {
+        color: $color;
       }
-    }
-    .card {
-      border-color: $tk-lib-runtime;
-    }
-  }
-
-  .tk-lib-hyper {
-    .title,
-    .learn-more a {
-      color: $tk-lib-hyper;
-
-      // Align the logo
-      img {
-        vertical-align: -60%;
+      .card {
+        border-color: $color;
       }
-    }
-    .card {
-      border-color: $tk-lib-hyper;
-    }
-  }
-
-  .tk-lib-tonic {
-    .title,
-    .learn-more a {
-      color: $tk-lib-tonic;
-
-      // Align the logos
-      img {
-        vertical-align: -30%;
-      }
-    }
-    .card {
-      border-color: $tk-lib-tonic;
     }
   }
 }
