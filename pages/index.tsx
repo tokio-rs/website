@@ -5,6 +5,8 @@ import Logos from "../components/logos";
 import Stack from "../components/stack";
 import * as api from "../lib/api";
 
+const gettingStarted = "/docs/overview";
+
 export default function Home({ app }) {
   return (
     <Layout blog={app.blog}>
@@ -21,7 +23,9 @@ export default function Home({ app }) {
                 network applications. It leverages Rust's ownership and
                 concurrency model to ensure thread safety.
               </h2>
-              <a className="button is-link is-medium">Get Started</a>
+              <a href={gettingStarted} className="button is-link is-medium">
+                Get Started
+              </a>
             </div>
           </div>
         </section>

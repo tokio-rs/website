@@ -55,7 +55,7 @@ export default function Stack() {
 
   const menu = data.map(({ id, short, name }) => (
     <li key={id}>
-      <a>{short || name}</a>
+      <a href={`#tk-lib-${id}`}>{short || name}</a>
     </li>
   ));
 
@@ -64,6 +64,15 @@ export default function Stack() {
       <div className={classnames("card-content", `tk-lib-${id}`)}>
         <div className="media">
           <div className="media-content">
+            <a
+              id={`tk-lib-${id}`}
+              style={{
+                display: "block",
+                position: "relative",
+                top: "-13rem",
+                visibility: "hidden",
+              }}
+            ></a>
             <h1 className="title is-4">
               <img src={`/img/icons/${id}.svg`} />
               {name}
@@ -87,7 +96,7 @@ export default function Stack() {
           <div className="columns">
             <div className="column is-1 tk-menu">
               <div className="container anchor">
-                <aside className="menu">
+                <aside className="menu wut">
                   <ul className="menu-list">{menu}</ul>
                 </aside>
               </div>

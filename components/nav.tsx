@@ -59,8 +59,8 @@ function Brand() {
 
 function Links({ blog }) {
   const links = Object.entries({
-    Docs: "#",
-    Community: "#",
+    Docs: "/docs/overview",
+    // Community: "#",
     Blog: blog.href,
   }).map(([name, href]) => (
     <a key={name} href={href} className="navbar-item navbar-text">
