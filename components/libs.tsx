@@ -18,7 +18,7 @@ export default function Libs() {
       id: "tonic",
       name: "Easy",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris. Phasellus nec iaculis mauris. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     },
     {
       id: "tower",
@@ -29,7 +29,7 @@ export default function Libs() {
   ].map(({ id, name, desc }) => (
     <div
       key={id}
-      className={classnames("column", "is-half", "tk-lib", `tk-lib-${id}`)}
+      className={classnames("column", "is-half", "is-flex", "tk-lib", `tk-lib-${id}`)}
     >
       <div className="card">
         <div className="card-content">
