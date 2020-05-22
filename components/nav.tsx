@@ -3,7 +3,7 @@ import Link from "next/link";
 import { GitHub, Twitter, Discord } from "./icons";
 import { useState } from "react";
 
-export default function Navigation() {
+export default function Navigation({ blog }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -36,7 +36,7 @@ export default function Navigation() {
             })}
           >
             <div className="navbar-end">
-              <Docs />
+              <Links blog={blog} />
               <hr className="is-hidden-touch" />
               <SocialLinks />
             </div>
@@ -57,14 +57,18 @@ function Brand() {
   );
 }
 
-function Docs() {
-  const items = ["Libraries", "Docs", "Community", "Blog"].map((txt) => (
-    <a key={txt} className="navbar-item navbar-text">
-      {txt}
+function Links({ blog }) {
+  const links = Object.entries({
+    Docs: "#",
+    Community: "#",
+    Blog: blog.href,
+  }).map(([name, href]) => (
+    <a key={name} href={href} className="navbar-item navbar-text">
+      {name}
     </a>
   ));
 
-  return <>{items}</>;
+  return <>{links}</>;
 }
 
 function SocialLinks() {

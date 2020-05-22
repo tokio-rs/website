@@ -1,26 +1,16 @@
-import { getDateOrderedPaths, getProps } from "../../lib/content";
-
-import Content from "../../components/content";
-import Layout from "../../components/layout";
+import * as content from "../../lib/api";
+import Page from "../../lib/page";
 
 const menuSize = 10;
 
-export default function Page({ title, menu, body }) {
-  return (
-    <>
-      <Layout>
-        <Content title={title} menu={menu} body={body} />]
-      </Layout>
-    </>
-  );
-}
+export default Page;
 
 export async function getStaticPaths() {
-    const paths = getDateOrderedPaths("blog").map((page) => {
-        return {
-            params: { slug: [ page.key ]},
-        };
-    });
+  const paths = content.getDateOrderedPaths("blog").map((page) => {
+    return {
+      params: { slug: [page.key] },
+    };
+  });
 
   return {
     paths,
@@ -28,24 +18,22 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps({ params: { slug }}) {
-    const paths = getDateOrderedPaths("blog");
+export async function getStaticProps({ params: { slug } }) {
+  const paths = content.getDateOrderedPaths("blog");
 
-    let menu = {};
+  let menu = {};
 
-    let i = 0;
-    for (const page of paths) {
-        if (i == menuSize) {
-            break;
-        }
-
-        i += 1;
-
-        console.debug(page);
-        menu[page.key] = page;
+  let i = 0;
+  for (const page of paths) {
+    if (i == menuSize) {
+      break;
     }
 
-    console.debug(menu);
+    i += 1;
 
-  return getProps(menu, "blog", slug);
+    console.debug(page);
+    menu[page.key] = page;
+  }
+
+  return content.getProps(menu, "blog", slug);
 }

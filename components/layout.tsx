@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Navigation from "./nav";
 
-export default function Layout({ children }) {
+export default function Layout({ blog, children }) {
   return (
     <>
       <Head>
@@ -15,7 +15,7 @@ export default function Layout({ children }) {
           rel="stylesheet"
         ></link>
       </Head>
-      <Navigation />
+      <Navigation blog={blog} />
       {children}
     </>
   );

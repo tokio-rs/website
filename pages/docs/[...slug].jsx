@@ -1,7 +1,5 @@
-import { getMenuPaths, getProps } from "../../lib/content";
-
-import Content from "../../components/content";
-import Layout from "../../components/layout";
+import * as api from "../../lib/api";
+import Page from "../../lib/page";
 
 const menu = {
   overview: {},
@@ -11,20 +9,12 @@ const menu = {
   },
 };
 
-export default function Page({ title, menu, body }) {
-  return (
-    <>
-      <Layout>
-        <Content title={title} menu={menu} body={body} />]
-      </Layout>
-    </>
-  );
-}
+export default Page;
 
 export async function getStaticPaths() {
-  return getMenuPaths(menu);
+  return api.getMenuPaths(menu);
 }
 
-export async function getStaticProps({ params: { slug }}) {
-  return getProps(menu, "docs", slug);
+export async function getStaticProps({ params: { slug } }) {
+  return api.withAppProps(await api.getProps(menu, "docs", slug));
 }

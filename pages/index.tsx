@@ -3,10 +3,11 @@ import Footer from "../components/footer";
 import Libs from "../components/libs";
 import Logos from "../components/logos";
 import Stack from "../components/stack";
+import * as api from "../lib/api";
 
-export default function Home() {
+export default function Home({ app }) {
   return (
-    <Layout>
+    <Layout blog={app.blog}>
       <div className="tk-landing">
         <section className="hero is-primary tk-intro">
           <div className="hero-body">
@@ -31,4 +32,8 @@ export default function Home() {
       <Footer />
     </Layout>
   );
+}
+
+export async function getStaticProps() {
+  return await api.withAppProps();
 }
