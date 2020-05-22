@@ -15,7 +15,7 @@ export default function Home({ app }) {
           <div className="hero-body">
             <div className="container has-text-centered">
               <h1 className="title">
-                The asynchronous run-time for the Rust programming language
+                Build reliable network applications with the Rust programming language.
               </h1>
               <h2 className="subtitle">
                 Tokio is an open source library providing an asynchronous, event
