@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "fmt": "prettier --write '{components,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'"
+    "fmt": "prettier --write --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss,md}'"
   },
   "dependencies": {
     "bulma": "^0.8.2",

@@ -2,7 +2,7 @@ import * as api from "../../lib/api";
 import Page from "../../lib/page";
 
 const menu = {
-  "overview": {
+  overview: {
     title: "Overview",
     pages: ["reliable", "fast", "easy", "flexible"],
   },

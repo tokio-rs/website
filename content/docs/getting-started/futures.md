@@ -37,8 +37,8 @@ When `socket.read` is called, either the socket has pending data in its receive
 buffer or it does not. If there is pending data, the call to `read` will return
 immediately and `buf` will be filled with that data. However, if there is no
 pending data, the `read` function will block the current thread until data is
-received. Once the data is received, `buf` will be filled with this newly received
-data and the `read` function will return.
+received. Once the data is received, `buf` will be filled with this newly
+received data and the `read` function will return.
 
 In order to perform reads on many different sockets concurrently, a thread per
 socket is required. Using a thread per socket does not scale up very well to
@@ -47,10 +47,10 @@ large numbers of sockets. This is known as the [c10k] problem.
 # Non-blocking sockets
 
 The way to avoid blocking a thread when performing an operation like read is to
-not block the thread! Non-blocking sockets allow performing operations, like read,
-without blocking the thread. When the socket has no pending data in its receive
-buffer, the `read` function returns immediately, indicating that the socket was "not
-ready" to perform the read operation.
+not block the thread! Non-blocking sockets allow performing operations, like
+read, without blocking the thread. When the socket has no pending data in its
+receive buffer, the `read` function returns immediately, indicating that the
+socket was "not ready" to perform the read operation.
 
 With non-blocking sockets, instead of blocking the thread and waiting on data to
 arrive, the thread is able to perform **other** work. Once data arrives on the
@@ -105,8 +105,8 @@ When the process receives the I/O notification from the operating system, it
 finds the function associated with it and calls it immediately. This is a
 **push** based model because the value is **pushed** into the callback.
 
-The rust asynchronous model is **pull** based. Instead of a `Future`
-being responsible for pushing the data into a callback, it relies on **something
+The rust asynchronous model is **pull** based. Instead of a `Future` being
+responsible for pushing the data into a callback, it relies on **something
 else** asking if it is complete or not. In the case of Tokio, that **something
 else** is the Tokio runtime.
 
@@ -142,7 +142,7 @@ For now it's just important to know that futures have an associated type,
 function is the function that the Tokio runtime calls to check if the future is
 complete.
 
-[`Future`]: https://doc.rust-lang.org/std/future/trait.Future.html
+[`future`]: https://doc.rust-lang.org/std/future/trait.Future.html
 [`futures`]: https://docs.rs/futures
 [standard library]: https://doc.rust-lang.org/std/
 [c10k]: https://en.wikipedia.org/wiki/C10k_problem

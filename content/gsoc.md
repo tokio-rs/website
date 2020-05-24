@@ -1,6 +1,5 @@
 ---
-title = "Google Summer of Code"
-description = ""
+title = "Google Summer of Code" description = ""
 ---
 
 This is the list of ideas for students wishing to apply to Google Summer of
@@ -27,14 +26,14 @@ visualize the data.
 
 ### Expected outcomes
 
-* A Tokio Trace subscriber that listens to all events
-* A gRPC server that exports instrumentation data to connected clients.
-* A console based UI that allows users to query and visualize the data.
+- A Tokio Trace subscriber that listens to all events
+- A gRPC server that exports instrumentation data to connected clients.
+- A console based UI that allows users to query and visualize the data.
 
 ### Skills
 
-* Rust
-* gRPC
+- Rust
+- gRPC
 
 ### Difficulty level
 
@@ -54,21 +53,23 @@ The goal of the project is to make it possible to use loom to check concurrent
 code in 10 seconds or less. This requires:
 
 1. Making the loom runtime faster
-1. Implement [bounded exploration](https://www.microsoft.com/en-us/research/publication/bounded-partial-order-reduction).
+1. Implement
+   [bounded exploration](https://www.microsoft.com/en-us/research/publication/bounded-partial-order-reduction).
 
 ### Expected outcomes
 
-Tokio's loom based tests complete in 10 seconds or less on a modern personal computer.
+Tokio's loom based tests complete in 10 seconds or less on a modern personal
+computer.
 
 ### Stretch goals
 
-* Add atomic fence support.
-* Increase C11 memory model coverage.
+- Add atomic fence support.
+- Increase C11 memory model coverage.
 
 ### Skills
 
-* Rust
-* Concurrency
+- Rust
+- Concurrency
 
 ### Difficulty level
 
@@ -90,8 +91,8 @@ The windows Mio implementation is rewritten using the strategy used by wepoll.
 
 ### Skills
 
-* Rust
-* Windows networking
+- Rust
+- Windows networking
 
 ### Difficulty level
 
@@ -108,18 +109,21 @@ that the entire flow can be done via the GitHub issue tracker.
 
 ### Expected outcomes
 
-* Changelog entries are generated based off of data in PRs including title and labels.
-* Crates are released on a weekly (configurable) basis.
-* A bot opens a PR for the release
-* When the release PR is merged, the crate is pushed to crates.io.
-* A Github status check is used to ensure that PRs include enough data to generate a changelog entry.
-* An automated GitHub action that merges master into PRs when there are no merge conflicts.
+- Changelog entries are generated based off of data in PRs including title and
+  labels.
+- Crates are released on a weekly (configurable) basis.
+- A bot opens a PR for the release
+- When the release PR is merged, the crate is pushed to crates.io.
+- A Github status check is used to ensure that PRs include enough data to
+  generate a changelog entry.
+- An automated GitHub action that merges master into PRs when there are no merge
+  conflicts.
 
 ### Skills
 
-* GitHub
-* TravisCI
-* Bash
+- GitHub
+- TravisCI
+- Bash
 
 ### Difficulty level
 
@@ -136,15 +140,15 @@ features and performance, can be achieved by implementing a custom library.
 
 ### Expected outcomes
 
-* A handlebars based templating library is implemented.
-* Templates are compiled ahead of time using a procedural macro.
-* Templates are rendered into a rope data structure.
-* A rope data structure is implemented.
+- A handlebars based templating library is implemented.
+- Templates are compiled ahead of time using a procedural macro.
+- Templates are rendered into a rope data structure.
+- A rope data structure is implemented.
 
 ### Skills
 
-* Rust
-* Parsing
+- Rust
+- Parsing
 
 ### Difficulty level
 
@@ -163,13 +167,13 @@ socket.
 
 ### Expected outcomes
 
-* A procedural macro generating server related boilerplate.
-* Multiple services are able to respond on a single socket.
+- A procedural macro generating server related boilerplate.
+- Multiple services are able to respond on a single socket.
 
 ### Skills
 
-* Rust
-* gRPC
+- Rust
+- gRPC
 
 ### Difficulty level
 

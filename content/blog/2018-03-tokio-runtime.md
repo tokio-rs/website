@@ -65,11 +65,11 @@ implementation provided by Tokio is designed for use cases where many
 
 ## Using the Tokio Runtime
 
-As illustrated in the example above, the easiest way to use the Tokio runtime
-is with two functions:
+As illustrated in the example above, the easiest way to use the Tokio runtime is
+with two functions:
 
-* `tokio::run`
-* `tokio::spawn`.
+- `tokio::run`
+- `tokio::spawn`.
 
 The first function takes a future to seed the application and starts the
 runtime. Roughly, it does the following:
@@ -88,7 +88,7 @@ futures onto the thread pool using `tokio::spawn`.
 Alternatively, the [`Runtime`] type can be used directly. This allows for more
 flexibility around setting up and using the runtime.
 
-[`Runtime`]: #
+[`runtime`]: #
 
 ## Future improvements
 

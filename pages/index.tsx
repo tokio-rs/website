@@ -18,8 +18,11 @@ export default function Home({ app }) {
                 Build reliable network applications without compromising speed.
               </h1>
               <h2 className="subtitle">
-              Tokio is an asynchronous runtime for the Rust programming language. It provides the building blocks needed for writing network applications. It gives the flexibility to target a wide range of systems, from large servers with dozens of cores to small embedded devices.
-
+                Tokio is an asynchronous runtime for the Rust programming
+                language. It provides the building blocks needed for writing
+                network applications. It gives the flexibility to target a wide
+                range of systems, from large servers with dozens of cores to
+                small embedded devices.
                 {/* Tokio is an open source library providing an asynchronous, event
                 driven platform for building fast, reliable, and lightweight
                 network applications. It leverages Rust's ownership and
