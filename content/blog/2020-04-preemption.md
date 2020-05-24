@@ -2,8 +2,6 @@
 date: "2020-04-01"
 title: "Reducing tail latencies with automatic cooperative task yielding"
 description: "April 1, 2020"
-menu: "blog"
-weight: 982
 ---
 
 Tokio is a runtime for asynchronous Rust applications. It allows writing code

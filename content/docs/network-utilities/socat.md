@@ -1,9 +1,5 @@
 ---
 title: "socat"
-weight: 9200
-menu:
-  docs:
-    parent: network_utils
 ---
 
 [socat](http://www.dest-unreach.org/socat/) provides the ability to redirect

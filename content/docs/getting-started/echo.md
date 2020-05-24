@@ -1,9 +1,5 @@
 ---
 title: "Example: An Echo Server"
-weight : 1018
-menu:
-  docs:
-    parent: getting_started
 ---
 
 We're going to use what has been covered so far to build an echo server. This is a

@@ -1,9 +1,5 @@
 ---
 title: "async fn"
-weight : 1020
-menu:
-  docs:
-    parent: topics
 ---
 
 Let's take a closer look at Rust's `async fn` feature. Tokio is built on top of

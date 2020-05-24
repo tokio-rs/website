@@ -1,9 +1,5 @@
 ---
 title: "telnet"
-weight: 9300
-menu:
-  docs:
-    parent: network_utils
 ---
 The word "telnet" often refers to the Telnet client, since the command to
 run the client has the same name as the protocol. This page is about the

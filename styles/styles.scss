@@ -1,7 +1,8 @@
+@use 'sass:color';
+
 // Tokio color palette
 $cream: #faf8f4;
 $magenta: #c83895;
-$magenta-dark: #ab307f;
 $red: #e7544c;
 $orange: #f5a623;
 $yellow: #e2b619;
@@ -64,6 +65,11 @@ $footer-color: white;
 
 @import "../node_modules/bulma/bulma.sass";
 
+// Darken colors
+@function darken($color) {
+  @return color.scale($color, $lightness: -15%);
+}
+
 .navbar {
   hr {
     background-color: $gray;
@@ -111,6 +117,7 @@ $footer-color: white;
     }
     .subtitle {
       font-weight: 300;
+      line-height: 1.5rem;
       font-size: $body-font-size;
     }
     .button {
@@ -120,7 +127,7 @@ $footer-color: white;
       padding-right: 2rem;
     }
     .button:hover {
-      background-color: $magenta-dark;
+      background-color: darken($magenta);
     }
   }
 
@@ -145,6 +152,10 @@ $footer-color: white;
   > .container {
     padding: 2em 1em;
     max-width: 1050;
+  }
+
+  code {
+    color: $dark-gray;
   }
 
   .title {
@@ -180,6 +191,9 @@ $footer-color: white;
         margin-right: 0.4rem;
       }
     }
+    .subtitle {
+      line-height: 1.5rem;
+    }
     .learn-more {
       font-weight: 600;
     }
@@ -190,6 +204,9 @@ $footer-color: white;
       .title,
       .learn-more a {
         color: $color;
+      }
+      .learn-more a:hover {
+        color: darken($color);
       }
       .card {
         border-color: $color;
@@ -249,7 +266,7 @@ $footer-color: white;
 }
 
 .tk-docs {
-  min-height: 500px;
+  // min-height: 500px;
 
   .tk-docs-nav {
     background-color: $light-gray;
@@ -296,7 +313,7 @@ $footer-color: white;
       font-weight: 400;
     }
     a:hover {
-      color: $magenta-dark;
+      color: darken($magenta);
     }
 
     // Smaller bullet size

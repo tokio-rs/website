@@ -1,9 +1,5 @@
 ---
 title: "Runtime"
-weight : 1030
-menu:
-  docs:
-    parent: topics
 ---
 
 In the previous section we explored `async fn` Futures which allow us to represent

@@ -1,9 +1,5 @@
 ---
 title: "Cargo dependencies"
-weight : 1015
-menu:
-  docs:
-    parent: getting_started
 ---
 
 Feel free to skip this section, and just use `features = ["full"]` while

@@ -31,7 +31,6 @@ export async function getStaticProps({ params: { slug } }) {
 
     i += 1;
 
-    console.debug(page);
     menu[page.key] = page;
   }
 

@@ -2,8 +2,6 @@
 date: "2018-10-04"
 title: "Announcing the Tokio Doc Push (we need you!)"
 description: "October 04, 2018"
-menu: "blog"
-weight: 990
 ---
 
 In the past, there has been reoccurring feedback that Tokio is hard to

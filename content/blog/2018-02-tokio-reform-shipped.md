@@ -2,8 +2,6 @@
 date: "2018-02-07"
 title: "Tokio Reform is Shipped and the Road to 0.2"
 description: "07 February 2018"
-menu: "blog"
-weight: 996
 ---
 
 Hi all!

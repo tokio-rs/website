@@ -2,8 +2,6 @@
 date: "2018-08-27"
 title: "Experimental async / await support for Tokio"
 description: "August 27, 2018"
-menu: "blog"
-weight: 991
 ---
 
 Happy Monday!

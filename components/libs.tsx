@@ -6,25 +6,24 @@ export default function Libs() {
       id: "runtime",
       name: "Reliable",
       desc:
-        "Leveraging Rust's type system, APIs are memory-safe, thread-safe, and misuse-resistant. Tokio helps prevent common bugs, such as unbounded queues and task starvation."
+        "Tokio's APIs are memory-safe, thread-safe, and misuse-resistant. This helps prevent common bugs, such as unbounded queues, buffer overflows, and task starvation."
     },
     {
       id: "hyper",
       name: "Fast",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
+        "Building on top of Rust, Tokio provides a multi-threaded, work-stealing scheduler. Applications can process hundreds of thousands of requests per second with minimal overhead.",
     },
     {
       id: "tonic",
       name: "Easy",
-      desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris. Phasellus nec iaculis mauris. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      desc: <><code>async</code>/<code>await</code> removes the complexity of writing asynchronous applications. Paired with Tokio's utilities and vibrant ecosystem, writing applications is a breeze.</>
     },
     {
       id: "tower",
       name: "Flexible",
       desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.",
+        "The needs of a server application differ from that of an embedded device. Tokio provides the knobs needed to tune it to your use case.",
     },
   ].map(({ id, name, desc }) => (
     <div
@@ -42,10 +41,11 @@ export default function Libs() {
           </div>
           <div className="content">
             <h2 className="subtitle">{desc}</h2>
-            <p className="learn-more has-text-right">
+
+          </div>
+          <p className="learn-more has-text-right">
               <a href="#">Learn more ➔</a>
             </p>
-          </div>
         </div>
       </div>
     </div>

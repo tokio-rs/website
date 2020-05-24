@@ -1,6 +1,5 @@
 ---
 title: "Network Utilities"
-weight: 9000
 ---
 
 This section is not about Tokio. For network programming, testing and debugging,

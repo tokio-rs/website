@@ -2,8 +2,6 @@
 date: "2017-09-19"
 title: "An RFC for a Tokio revamp"
 description: "19 September 2017"
-menu: "blog"
-weight: 997
 ---
 
 Hi there, Tokio community!

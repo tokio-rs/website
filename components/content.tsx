@@ -11,7 +11,7 @@ export default function Content({ menu, title, body }) {
           <Menu data={menu} />
         </div>
         <div className="column is-three-quarters">
-          <section className="section content tk-content">
+          <section className="section content tk-content" style={{minHeight: "90vh"}}>
             <h1 className="title">{title}</h1>
             <div dangerouslySetInnerHTML={{ __html: body }} />
           </section>

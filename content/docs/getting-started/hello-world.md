@@ -1,9 +1,5 @@
 ---
 title: "Hello world!"
-weight : 1010
-menu:
-  docs:
-    parent: getting_started
 ---
 
 This guide assumes that you have some knowledge of the [Rust programming language]
