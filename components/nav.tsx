@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useState } from "react";
 import classnames from "classnames";
 import Link from "next/link";
-import { GitHubIcon, TwitterIcon, DiscordIcon } from "./icons";
+import SocialLinks from "./social-links";
 
 // TODO: what is this thing??
 type Blog = any;
@@ -32,12 +32,6 @@ const Links: FC<{ blog: Blog }> = ({ blog }) => {
 
   return <>{links}</>;
 };
-
-const SocialLink: FC = ({ children }) => (
-  <a className="navbar-item navbar-icon" href="https://twitter.com/tokio_rs">
-    {children}
-  </a>
-);
 
 const Navigation: FC<{ blog: Blog }> = ({ blog }) => {
   const [expanded, setExpanded] = useState(false);
@@ -79,15 +73,7 @@ const Navigation: FC<{ blog: Blog }> = ({ blog }) => {
 
             <hr className="is-hidden-touch" />
 
-            <SocialLink>
-              <TwitterIcon />
-            </SocialLink>
-            <SocialLink>
-              <GitHubIcon />
-            </SocialLink>
-            <SocialLink>
-              <DiscordIcon />
-            </SocialLink>
+            <SocialLinks />
           </div>
         </div>
       </div>
