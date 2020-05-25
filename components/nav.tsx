@@ -1,63 +1,25 @@
+import React, { FC, useCallback, useState } from "react";
 import classnames from "classnames";
 import Link from "next/link";
-import { GitHub, Twitter, Discord } from "./icons";
-import { useState } from "react";
+import { GitHubIcon, TwitterIcon, DiscordIcon } from "./icons";
 
-export default function Navigation({ blog }) {
-  const [expanded, setExpanded] = useState(false);
+// TODO: what is this thing??
+type Blog = any;
 
-  return (
-    <>
-      <nav
-        className="navbar is-spaced"
-        role="navigation"
-        aria-label="main navigation"
-      >
-        <div className="container">
-          <div className="navbar-brand">
-            <Brand />
-            <a
-              role="button"
-              className={classnames("navbar-burger", {
-                "is-active": expanded,
-              })}
-              aria-label="menu"
-              aria-expanded="false"
-              onClick={() => setExpanded(!expanded)}
-            >
-              <span aria-hidden="true"></span>
-              <span aria-hidden="true"></span>
-              <span aria-hidden="true"></span>
-            </a>
-          </div>
-          <div
-            className={classnames("navbar-menu", {
-              "is-active": expanded,
-            })}
-          >
-            <div className="navbar-end">
-              <Links blog={blog} />
-              <hr className="is-hidden-touch" />
-              <SocialLinks />
-            </div>
-          </div>
-        </div>
-      </nav>
-    </>
-  );
-}
+const Brand: FC = () => (
+  <Link href="/">
+    <a className="navbar-item">
+      <img
+        src="/img/tokio-horizontal.svg"
+        alt="tokio-logo"
+        width="133"
+        height="56"
+      />
+    </a>
+  </Link>
+);
 
-function Brand() {
-  return (
-    <Link href="/">
-      <a className="navbar-item">
-        <img src="/img/tokio-horizontal.svg" width="133" height="56" />
-      </a>
-    </Link>
-  );
-}
-
-function Links({ blog }) {
+const Links: FC<{ blog: Blog }> = ({ blog }) => {
   const links = Object.entries({
     Docs: "/docs/overview",
     // Community: "#",
@@ -69,32 +31,68 @@ function Links({ blog }) {
   ));
 
   return <>{links}</>;
-}
+};
 
-function SocialLinks() {
+const SocialLink: FC = ({ children }) => (
+  <a className="navbar-item navbar-icon" href="https://twitter.com/tokio_rs">
+    {children}
+  </a>
+);
+
+const Navigation: FC<{ blog: Blog }> = ({ blog }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  const toggleNav = useCallback(() => {
+    setExpanded((prev) => !prev);
+  }, []);
+
   return (
-    <>
-      <a
-        className="navbar-item navbar-icon"
-        href="https://twitter.com/tokio_rs"
-      >
-        <span className="icon">
-          <Twitter />
-        </span>
-      </a>
-      <a
-        className="navbar-item navbar-icon"
-        href="https://github.com/tokio-rs/tokio"
-      >
-        <span className="icon">
-          <GitHub />
-        </span>
-      </a>
-      <a className="navbar-item navbar-icon" href="https://discord.gg/tokio">
-        <span className="icon">
-          <Discord />
-        </span>
-      </a>
-    </>
+    <nav
+      className="navbar is-spaced"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <div className="container">
+        <div className="navbar-brand">
+          <Brand />
+          <a
+            role="button"
+            className={classnames("navbar-burger", {
+              "is-active": expanded,
+            })}
+            aria-label="menu"
+            aria-expanded="false"
+            onClick={() => toggleNav()}
+          >
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+          </a>
+        </div>
+        <div
+          className={classnames("navbar-menu", {
+            "is-active": expanded,
+          })}
+        >
+          <div className="navbar-end">
+            <Links blog={blog} />
+
+            <hr className="is-hidden-touch" />
+
+            <SocialLink>
+              <TwitterIcon />
+            </SocialLink>
+            <SocialLink>
+              <GitHubIcon />
+            </SocialLink>
+            <SocialLink>
+              <DiscordIcon />
+            </SocialLink>
+          </div>
+        </div>
+      </div>
+    </nav>
   );
-}
+};
+
+export default Navigation;

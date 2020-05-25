@@ -1,22 +1,26 @@
+import React, { FC, ReactNode } from "react";
+
 import Head from "next/head";
 import Navigation from "./nav";
 
-export default function Layout({ blog, children }) {
-  return (
-    <>
-      <Head>
-        <title>Tokio</title>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1"
-        ></meta>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet"
-        ></link>
-      </Head>
-      <Navigation blog={blog} />
-      {children}
-    </>
-  );
-}
+type Props = {
+  blog: any; // TODO: Don't know what this is yet...
+  children: ReactNode;
+};
+
+const Layout: FC<Props> = ({ blog, children }) => (
+  <>
+    <Head>
+      <title>Tokio</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </Head>
+    <Navigation blog={blog} />
+    {children}
+  </>
+);
+
+export default Layout;

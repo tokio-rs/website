@@ -1,7 +1,5 @@
-export default function Footer() {
-  return (
-    <>
-      <footer className="footer">{/* TODO: impl */}</footer>
-    </>
-  );
-}
+import React, { FC } from "react";
+
+const Footer: FC = () => <footer className="footer">{/* TODO: impl */}</footer>;
+
+export default Footer;

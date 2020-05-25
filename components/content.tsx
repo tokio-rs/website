@@ -1,5 +1,9 @@
 import Menu from "../components/menu";
 
+// const Props = {
+//   menu:
+// }
+
 export default function Content({ menu, title, body }) {
   return (
     <>
