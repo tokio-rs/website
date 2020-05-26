@@ -2,15 +2,7 @@ export default function Menu({ slug, data }) {
   console.log("ROUTE", slug);
 
   return (
-    <aside
-      className="menu"
-      style={{
-        position: "sticky",
-        top: "4rem",
-        maxWidth: "250px",
-        marginLeft: "auto",
-      }}
-    >
+    <aside className="menu">
       <p className="menu-label">Tokio</p>
       <ul className="menu-list">
         {pagesFor(data).map((page) => {

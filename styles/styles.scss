@@ -279,6 +279,10 @@ $footer-color: white;
 
   .menu {
     font-size: $body-font-size;
+    position: sticky;
+    top: 4rem;
+    max-width: 300px;
+    margin-left: auto;
 
     .menu-label a {
       color: $dark-gray;
