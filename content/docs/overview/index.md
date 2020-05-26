@@ -1,7 +1,5 @@
 ---
-title: "What is Tokio?"
-weight: 1
-menu: "docs"
+title: "Overview"
 ---
 
 Tokio allows developers to write asynchronous programs in the Rust programming

@@ -3,15 +3,12 @@ import Page from "../../lib/page";
 
 const menu = {
   overview: {
-    title: "Overview",
     pages: ["reliable", "fast", "easy", "flexible"],
   },
   "getting-started": {
-    title: "Getting Started",
     pages: ["hello-world", "cargo-dependencies", "echo"],
   },
   topics: {
-    title: "Topics",
     pages: ["concurrency"],
   },
   api: {
