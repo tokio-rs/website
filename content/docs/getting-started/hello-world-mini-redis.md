@@ -30,9 +30,10 @@ Tokio, we will start with a tiny app that sets the key "hello" and the value
 
 # Mini-redis
 
-[mini-redis] is an incomplete, idiomatic implementation of a Redis client and server
-built with Tokio with the intent to provide a larger example of writing a Tokio application.
-We'll be interacting with it in this guide. To install it with cargo, on your Terminal client do:
+[mini-redis] is an incomplete, idiomatic implementation of a Redis client and
+server built with Tokio with the intent to provide a larger example of writing a
+Tokio application. We'll be interacting with it in this guide. To install it
+with cargo, on your Terminal client do:
 
 ```bash
 cargo install mini-redis
@@ -40,8 +41,8 @@ cargo install mini-redis
 
 # Let's write some code!
 
-Next we'll write some code to instantiate a [mini-redis] client connection and `set` the `"hello"`
-key with the `world` value, and then `get`'s it
+Next we'll write some code to instantiate a [mini-redis] client connection and
+`set` the `"hello"` key with the `world` value, and then `get`'s it
 
 Let's get started by generating a new Rust app:
 
@@ -50,8 +51,9 @@ $ cargo new hello-world
 $ cd hello-world
 ```
 
-For a quick start, we'll add the Tokio crate with all Tokio of its features, along with mini-redis to
-our Cargo manifest, by adding the following text to `Cargo.toml`.
+For a quick start, we'll add the Tokio crate with all Tokio of its features,
+along with mini-redis to our Cargo manifest, by adding the following text to
+`Cargo.toml`.
 
 ```toml
 [dependencies]
@@ -83,10 +85,11 @@ pub async fn main() -> Result<()> {
 The `#[tokio::main]` macro provides common boilerplate for setting up the tokio
 runtime, so that we can write `main()` as an [`async function`]. This enables us
 to call asynchronous functions and write sequential code as if they were
-blocking by using the Rust `await` keyword, like shown in the set and get instructions.
-[`Result`] is used to ease error handling.
+blocking by using the Rust `await` keyword, like shown in the set and get
+instructions. [`Result`] is used to ease error handling.
 
 # Running
+
 To run our example we first need to start the mini-redis server:
 
 ```bash
@@ -94,10 +97,10 @@ RUST_LOG=debug server
 ```
 
 Then we can run our example with:
+
 ```bash
 RUST_LOG=cargo run
 ```
-
 
 # Next steps
 
@@ -116,4 +119,4 @@ programming with Tokio, we'll dive into more detail about how everything works.
 [`async function`]:
   https://doc.rust-lang.org/reference/items/functions.html#async-functions
 [mini-redis]: https://github.com/tokio-rs/mini-redis
-[`Result`]: https://github.com/tokio-rs/mini-redis/blob/master/src/lib.rs#L71
+[`result`]: https://github.com/tokio-rs/mini-redis/blob/master/src/lib.rs#L71

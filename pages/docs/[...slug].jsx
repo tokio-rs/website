@@ -10,6 +10,14 @@ const menu = {
     title: "Getting Started",
     pages: ["hello-world", "cargo-dependencies", "echo"],
   },
+  topics: {
+    title: "Topics",
+    pages: ["concurrency"],
+  },
+  api: {
+    title: "Api documentation",
+    href: "https://docs.rs/tokio",
+  },
 };
 
 export default Page;

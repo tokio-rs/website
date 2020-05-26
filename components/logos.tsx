@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 
 type Organization = {
   name: string;
   url: string;
-}
+};
 
 const ORGANIZATIONS: Organization[] = [
   { name: "linkerd", url: "https://linkerd.io" },
@@ -14,32 +14,31 @@ const ORGANIZATIONS: Organization[] = [
   { name: "facebook", url: "https://www.facebook.com" },
   { name: "smart-things", url: "https://www.smartthings.com" },
   { name: "one-signal", url: "https://onesignal.com" },
-]
+];
 
-const Logo: FC<{org: Organization}> = ({org}) => (
+const Logo: FC<{ org: Organization }> = ({ org }) => (
   <div key={org.name} className="column is-3">
     <a href={org.url} rel="nofollow">
       <figure className="image">
-        <img src={`/img/logos/${org.name}.svg`} alt={org.name}/>
+        <img src={`/img/logos/${org.name}.svg`} alt={org.name} />
       </figure>
     </a>
   </div>
-)
+);
 
 const Logos: FC = () => (
   <section className="hero tk-users">
     <div className="hero-body">
       <div className="container has-text-centered">
-        <h1 className="title">
-          Built by the community, for the community.
-        </h1>
+        <h1 className="title">Built by the community, for the community.</h1>
         <nav className="container columns is-multiline is-mobile is-centered is-vcentered">
-          {ORGANIZATIONS.map((org) => <Logo key={org.name} org={org}/>)}
+          {ORGANIZATIONS.map((org) => (
+            <Logo key={org.name} org={org} />
+          ))}
         </nav>
       </div>
     </div>
   </section>
-)
+);
 
 export default Logos;
-

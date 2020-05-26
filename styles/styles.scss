@@ -53,6 +53,11 @@ $navbar-padding-horizontal: 1rem;
 $menu-item-color: $dark-gray;
 $menu-item-active-color: black;
 $menu-item-active-background-color: white;
+$menu-list-border-left: 0;
+$menu-item-hover-color: $magenta;
+$menu-item-hover-background-color: transparent;
+$menu-label-spacing: 1.3rem;
+$menu-nested-list-margin: 0 0.5rem 0rem 0rem;
 
 // Bulma card variables
 $card-shadow: 0;
@@ -81,7 +86,7 @@ $footer-color: white;
   }
   .navbar-item {
     &.navbar-text {
-      font-size: 1.06em;
+      font-size: $body-font-size;
       padding: 0 1.5rem;
     }
     &.navbar-icon {
@@ -273,12 +278,23 @@ $footer-color: white;
   }
 
   .menu {
+    font-size: $body-font-size;
+
     .menu-label a {
       color: $dark-gray;
     }
 
-    .is-active {
-      font-weight: 500;
+    li.is-active {
+      background-color: white;
+
+      > ul {
+        padding-bottom: 0.5rem;
+      }
+
+      > a {
+        font-weight: 400;
+        color: black;
+      }
     }
   }
 

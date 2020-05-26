@@ -1,4 +1,6 @@
-export default function Menu({ data }) {
+export default function Menu({ slug, data }) {
+  console.log("ROUTE", slug);
+
   return (
     <aside
       className="menu"
@@ -12,19 +14,24 @@ export default function Menu({ data }) {
       <p className="menu-label">Tokio</p>
       <ul className="menu-list">
         {pagesFor(data).map((page) => {
-          const hasChildren = page.pages !== undefined;
+          const isActive = slug.startsWith(page.slug);
+          const hasChildren = isActive && page.pages !== undefined;
+          const className = isActive ? "is-active" : "";
 
           return (
             <>
-              <li key={page.key}>
+              <li key={page.key} className={className}>
                 <a href={page.href}>{page.title}</a>
                 {hasChildren && (
                   <>
                     <ul>
                       {pagesFor(page.pages).map((page) => {
+                        const className = slug.startsWith(page.slug)
+                          ? "is-active"
+                          : "";
                         return (
                           <>
-                            <li key={page.key}>
+                            <li key={page.key} className={className}>
                               <a href={page.href}>{page.title}</a>
                             </li>
                           </>
@@ -38,10 +45,19 @@ export default function Menu({ data }) {
           );
         })}
       </ul>
-      {/* <p className="menu-label">
-        <img src="/img/left-arrow.svg" style={{ display: "inline-block", verticalAlign: "middle", height: "0.8rem", marginRight: "0.5rem"}}/>
+      {/* TODO: hook this up, only when needed */}
+      <p className="menu-label">
+        <img
+          src="/img/left-arrow.svg"
+          style={{
+            display: "inline-block",
+            verticalAlign: "middle",
+            height: "0.8rem",
+            marginRight: "0.5rem",
+          }}
+        />
         <a>All Libraries</a>
-    </p> */}
+      </p>
     </aside>
   );
 }

@@ -1,7 +1,7 @@
 import Menu from "../components/menu";
 import ReactMarkdown from "react-markdown/with-html";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
+import { docco } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 
 const CodeBlock = ({ language, value }) => {
   return (
@@ -15,7 +15,7 @@ const CodeBlock = ({ language, value }) => {
 //   menu:
 // }
 
-export default function Content({ menu, title, body }) {
+export default function Content({ menu, slug, title, body }) {
   return (
     <>
       <div className="columns is-marginless tk-docs">
@@ -23,7 +23,7 @@ export default function Content({ menu, title, body }) {
           className="column is-one-quarter tk-docs-nav"
           style={{ padding: "4rem 0 0 1rem" }}
         >
-          <Menu data={menu} />
+          <Menu slug={slug} data={menu} />
         </div>
         <div className="column is-three-quarters">
           <section
