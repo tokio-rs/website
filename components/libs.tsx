@@ -72,7 +72,7 @@ const Libs: FC = () => (
     <div className="container">
       <div className="columns is-multiline">
         {LIBS.map((lib) => (
-          <Lib lib={lib} />
+          <Lib lib={lib} key={lib.id} />
         ))}
       </div>
     </div>

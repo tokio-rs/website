@@ -13,7 +13,7 @@ const DATA = [
     icon: <GitHubIcon />,
   },
   {
-    name: "twitter",
+    name: "discord",
     url: "https://discord.gg/tokio",
     icon: <DiscordIcon />,
   },
