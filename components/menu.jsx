@@ -1,6 +1,4 @@
 export default function Menu({ slug, data }) {
-  console.log("ROUTE", slug);
-
   return (
     <aside className="menu">
       <p className="menu-label">Tokio</p>

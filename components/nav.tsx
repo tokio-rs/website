@@ -21,7 +21,7 @@ const Brand: FC = () => (
 
 const Links: FC<{ blog: Blog }> = ({ blog }) => {
   const links = Object.entries({
-    Docs: "/docs/overview",
+    Docs: "/tokio",
     // Community: "#",
     Blog: blog.href,
   }).map(([name, href]) => (

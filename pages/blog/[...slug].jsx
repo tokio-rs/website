@@ -34,5 +34,5 @@ export async function getStaticProps({ params: { slug } }) {
     menu[page.key] = page;
   }
 
-  return content.getProps(menu, "blog", slug);
+  return content.getProps({ blog: menu }, `blog/${slug}`);
 }
