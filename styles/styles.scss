@@ -225,17 +225,23 @@ $footer-color: white;
     font-size: 0.9rem;
   }
 
+  img.tk-stack-active {
+    opacity: 1.0 !important;
+  }
+
   // Used to anchor the sticky elements
   .anchor {
     position: sticky;
     height: 25rem;
     top: 10%;
 
-    > :first-child {
+    > img {
       display: block;
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
+      opacity: 0.3;
+      transition: opacity 0.2s ease-in-out;
     }
   }
 

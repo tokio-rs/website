@@ -17,6 +17,7 @@ const Layout: FC<Props> = ({ blog, children }) => (
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
         rel="stylesheet"
       />
+      <script defer src="/tk-stack.js"></script>
     </Head>
     <Navigation blog={blog} />
     {children}

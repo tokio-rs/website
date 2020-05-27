@@ -11,6 +11,16 @@ type StackLayer = {
 const PLACEHOLDER =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
+const STACK_SVG_IDS: string[] = [
+  "tracing",
+  "bytes",
+  "mio",
+  "runtime",
+  "hyper",
+  "tower",
+  "tonic"
+];
+
 const STACK_LAYERS: StackLayer[] = [
   {
     id: "tokio",
@@ -73,7 +83,7 @@ const Menu: FC = () => (
 
 const Layer: FC<{ layer: StackLayer }> = ({ layer }) => (
   <div className="card">
-    <div className={classnames("card-content", `tk-lib-${layer.id}`)}>
+    <div id={"tk-lib-stack-" + layer.id} className={classnames("card-content", `tk-lib-${layer.id}`)}>
       <div className="media">
         <div className="media-content">
           <a
@@ -116,7 +126,9 @@ export default function Stack() {
 
           <div className="column is-half">
             <div className="container anchor">
-              <img src="/img/stack-all.svg" />
+              {STACK_SVG_IDS.map((id) => (
+                <img key={id} className="tk-stack-active" data-stack-id={id} src={"/img/stack-" + id + ".svg"} />
+              ))}
             </div>
           </div>
         </div>
