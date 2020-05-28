@@ -1,6 +1,6 @@
 ---
 title: Tokio is Fast
-menu: "Fast"
+menu: "Speed"
 ---
 
 Hello world

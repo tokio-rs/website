@@ -35,6 +35,7 @@ $title-color: black;
 
 // Bulma text variables
 $body-font-size: 1.06em;
+$menu-font-size: 1rem;
 $family-primary: "Roboto", sans-serif;
 
 // Bulma navbar variables
@@ -50,14 +51,16 @@ $navbar-padding-vertical: 0;
 $navbar-padding-horizontal: 1rem;
 
 // Bulma menu variables
+$menu-label-font-size: 0.9rem;
 $menu-item-color: $dark-gray;
 $menu-item-active-color: black;
 $menu-item-active-background-color: white;
 $menu-list-border-left: 0;
 $menu-item-hover-color: $magenta;
 $menu-item-hover-background-color: transparent;
-$menu-label-spacing: 1.3rem;
+$menu-label-spacing: 0.5rem;
 $menu-nested-list-margin: 0 0.5rem 0rem 0rem;
+$menu-list-link-padding: 0.6rem 0.75rem;
 
 // Bulma card variables
 $card-shadow: 0;
@@ -226,7 +229,7 @@ $footer-color: white;
   }
 
   img.tk-stack-active {
-    opacity: 1.0 !important;
+    opacity: 1 !important;
   }
 
   // Used to anchor the sticky elements
@@ -284,14 +287,30 @@ $footer-color: white;
   }
 
   .menu {
-    font-size: $body-font-size;
+    font-size: $menu-font-size;
     position: sticky;
     top: 4rem;
-    max-width: 300px;
+    max-width: 260px;
     margin-left: auto;
+    padding-bottom: 4rem;
 
     .menu-label a {
       color: $dark-gray;
+    }
+
+    .tk-menu-back {
+      margin-top: 1rem;
+    }
+
+    li {
+      > a {
+        line-height: 1.2;
+
+        b {
+          display: block;
+          margin-bottom: 0.4rem;
+        }
+      }
     }
 
     li.is-active {

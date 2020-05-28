@@ -1,6 +1,6 @@
 ---
 title: Tokio is Reliable
-menu: "Reliable"
+menu: "Reliability"
 ---
 
 Tokio's number one goal is to enable secure and reliable applications. While

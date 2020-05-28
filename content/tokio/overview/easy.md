@@ -1,6 +1,6 @@
 ---
 title: Tokio is Easy
-menu: "Easy"
+menu: "Ease of use"
 ---
 
 Hello world

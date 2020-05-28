@@ -1,6 +1,6 @@
 ---
 title: Tokio is Flexible
-menu: "Flexible"
+menu: "Flexibility"
 ---
 
 Hello world

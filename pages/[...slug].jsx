@@ -3,18 +3,21 @@ import Page from "../lib/page";
 
 const menu = {
   tokio: {
-    overview: {
-      pages: ["reliable", "fast", "easy", "flexible"],
-    },
-    "getting-started": {
-      pages: ["hello-world", "cargo-dependencies", "echo"],
-    },
-    topics: {
-      pages: ["concurrency"],
-    },
-    api: {
-      title: "API documentation",
-      href: "https://docs.rs/tokio",
+    title: "Tokio",
+    nested: {
+      overview: {
+        nested: ["reliable", "fast", "easy", "flexible"],
+      },
+      "getting-started": {
+        nested: ["hello-world", "cargo-dependencies", "echo"],
+      },
+      topics: {
+        nested: ["concurrency"],
+      },
+      api: {
+        title: "API documentation",
+        href: "https://docs.rs/tokio",
+      },
     },
   },
 };

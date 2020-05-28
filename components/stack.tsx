@@ -18,7 +18,7 @@ const STACK_SVG_IDS: string[] = [
   "runtime",
   "hyper",
   "tower",
-  "tonic"
+  "tonic",
 ];
 
 const STACK_LAYERS: StackLayer[] = [
@@ -83,7 +83,10 @@ const Menu: FC = () => (
 
 const Layer: FC<{ layer: StackLayer }> = ({ layer }) => (
   <div className="card">
-    <div id={"tk-lib-stack-" + layer.id} className={classnames("card-content", `tk-lib-${layer.id}`)}>
+    <div
+      id={"tk-lib-stack-" + layer.id}
+      className={classnames("card-content", `tk-lib-${layer.id}`)}
+    >
       <div className="media">
         <div className="media-content">
           <a
@@ -127,7 +130,12 @@ export default function Stack() {
           <div className="column is-half">
             <div className="container anchor">
               {STACK_SVG_IDS.map((id) => (
-                <img key={id} className="tk-stack-active" data-stack-id={id} src={"/img/stack-" + id + ".svg"} />
+                <img
+                  key={id}
+                  className="tk-stack-active"
+                  data-stack-id={id}
+                  src={"/img/stack-" + id + ".svg"}
+                />
               ))}
             </div>
           </div>

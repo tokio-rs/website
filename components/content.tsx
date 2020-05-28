@@ -15,7 +15,7 @@ const CodeBlock = ({ language, value }) => {
 //   menu:
 // }
 
-export default function Content({ menu, slug, title, body }) {
+export default function Content({ menu, href, title, body }) {
   return (
     <>
       <div className="columns is-marginless tk-docs">
@@ -23,7 +23,7 @@ export default function Content({ menu, slug, title, body }) {
           className="column is-one-quarter tk-docs-nav"
           style={{ padding: "4rem 0 0 1rem" }}
         >
-          <Menu slug={slug} data={menu} />
+          <Menu href={href} menu={menu} />
         </div>
         <div className="column is-three-quarters">
           <section
