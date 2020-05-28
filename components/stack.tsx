@@ -137,6 +137,8 @@ export default function Stack() {
                   src={"/img/stack-" + id + ".svg"}
                 />
               ))}
+              {/* Special handling */}
+              <img id="tk-stack-lines" data-stack-id="lines" src="/img/stack-lines.svg" />
             </div>
           </div>
         </div>
