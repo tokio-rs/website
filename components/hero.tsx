@@ -7,12 +7,13 @@ const icons = [
   "hyper",
   "mio",
   "runtime",
+  "runtime2",
   "tonic",
   "tower",
   "tracing",
 ].map((id) => (
   <div key={id} id={`tk-float-${id}`} className="tk-float">
-    <img src={`/img/icons/${id}.svg`} />
+    <img src={`/img/icons/${id == "runtime2" ? "runtime" : id}.svg`} />
   </div>
 ));
 

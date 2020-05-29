@@ -220,6 +220,11 @@ $footer-color: white;
       right: -210px;
       @include spin-left(50px, 9s);
     }
+    #tk-float-runtime2 {
+      bottom: 10px;
+      left: -210px;
+      @include spin-left(50px, 9s);
+    }
     #tk-float-tracing {
       top: 0;
       right: -190px;
