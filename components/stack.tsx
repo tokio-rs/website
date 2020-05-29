@@ -138,7 +138,11 @@ export default function Stack() {
                 />
               ))}
               {/* Special handling */}
-              <img id="tk-stack-lines" data-stack-id="lines" src="/img/stack-lines.svg" />
+              <img
+                id="tk-stack-lines"
+                data-stack-id="lines"
+                src="/img/stack-lines.svg"
+              />
             </div>
           </div>
         </div>

@@ -139,6 +139,94 @@ $footer-color: white;
     }
   }
 
+  .tk-hero-bg {
+    position: relative;
+    min-width: 50%;
+
+    .tk-float {
+      user-select: none;
+      position: absolute;
+      will-change: transform;
+      z-index: 0;
+
+      img {
+        will-change: transform;
+      }
+    }
+
+    @mixin spin-right($radius, $dur) {
+      width: $radius;
+      height: $radius;
+      animation: spin-right $dur linear infinite;
+
+      img {
+        animation: spin-left $dur linear infinite;
+      }
+    }
+
+    @mixin spin-left($radius, $dur, $dur2: $dur) {
+      width: $radius;
+      height: $radius;
+      animation: spin-left $dur linear infinite;
+
+      img {
+        animation: spin-right $dur2 linear infinite;
+      }
+    }
+
+    @keyframes spin-right {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(-360deg);
+      }
+    }
+    @keyframes spin-left {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    #tk-float-hyper {
+      top: -30px;
+      left: calc(-20%);
+      @include spin-right(60px, 6s);
+    }
+    #tk-float-tonic {
+      top: 60px;
+      left: -200px;
+      @include spin-left(80px, 30s);
+    }
+    #tk-float-tower {
+      bottom: -10px;
+      @include spin-left(50px, 4s, 4.1s);
+    }
+    #tk-float-bytes {
+      top: 110px;
+      right: -120px;
+      @include spin-right(50px, 8s);
+    }
+    #tk-float-mio {
+      bottom: 0px;
+      right: 15px;
+      @include spin-right(60px, 10s);
+    }
+    #tk-float-runtime {
+      bottom: 35px;
+      right: -210px;
+      @include spin-left(50px, 9s);
+    }
+    #tk-float-tracing {
+      top: 0;
+      right: -190px;
+      @include spin-left(75px, 18s, 15s);
+    }
+  }
+
   &.tk-users {
     .title {
       font-size: 1.8em;
