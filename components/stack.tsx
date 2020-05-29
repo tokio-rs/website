@@ -6,20 +6,11 @@ type StackLayer = {
   short?: string;
   name: string;
   desc: string;
+  zIndex: number,
 };
 
 const PLACEHOLDER =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
-const STACK_SVG_IDS: string[] = [
-  "tracing",
-  "bytes",
-  "mio",
-  "runtime",
-  "hyper",
-  "tower",
-  "tonic",
-];
 
 const STACK_LAYERS: StackLayer[] = [
   {
@@ -27,51 +18,59 @@ const STACK_LAYERS: StackLayer[] = [
     short: "Stack",
     name: "The stack",
     desc: PLACEHOLDER,
+    zIndex: 0,
   },
   {
     id: "runtime",
     name: "Runtime",
     desc: PLACEHOLDER,
+    zIndex: 3,
   },
   {
     id: "hyper",
     name: "Hyper",
     desc: PLACEHOLDER,
+    zIndex: 4,
   },
   {
     id: "tonic",
     name: "Tonic",
     desc: PLACEHOLDER,
+    zIndex: 6,
   },
   {
     id: "tower",
     name: "Tower",
     desc: PLACEHOLDER,
+    zIndex: 5,
   },
   {
     id: "mio",
     name: "Mio",
     desc: PLACEHOLDER,
+    zIndex: 2,
   },
   {
     id: "tracing",
     name: "Tracing",
     desc: PLACEHOLDER,
+    zIndex: 0,
   },
   {
     id: "bytes",
     name: "Bytes",
     desc: PLACEHOLDER,
+    zIndex: 1,
   },
 ];
 
 const Menu: FC = () => (
   <div className="column is-1 tk-menu">
     <div className="container anchor">
-      <aside className="menu wut">
+      <aside className="menu">
         <ul className="menu-list">
           {STACK_LAYERS.map((layer) => (
-            <li key={layer.id}>
+            <li key={layer.id} className={`tk-lib-${layer.id}`}>
               <a href={`#tk-lib-${layer.id}`}>{layer.short || layer.name}</a>{" "}
             </li>
           ))}
@@ -129,12 +128,13 @@ export default function Stack() {
 
           <div className="column is-half">
             <div className="container anchor">
-              {STACK_SVG_IDS.map((id) => (
+              {STACK_LAYERS.slice(1).map(({id, zIndex}) => (
                 <img
                   key={id}
                   className="tk-stack-active"
                   data-stack-id={id}
                   src={"/img/stack-" + id + ".svg"}
+                  style={{zIndex: zIndex}}
                 />
               ))}
               {/* Special handling */}
@@ -142,6 +142,7 @@ export default function Stack() {
                 id="tk-stack-lines"
                 data-stack-id="lines"
                 src="/img/stack-lines.svg"
+                style={{zIndex: 7}}
               />
             </div>
           </div>

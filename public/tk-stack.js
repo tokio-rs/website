@@ -1,4 +1,4 @@
-function onscrollUpdateStacks(stackElems, lines) {
+function onscrollUpdateStacks(stackElems, links, lines) {
   var i;
   var stackBox = stackElems[0][0].getBoundingClientRect();
   var stackMid = (stackBox.top + 3*stackBox.bottom) / 4.0;
@@ -38,6 +38,13 @@ function onscrollUpdateStacks(stackElems, lines) {
   }
 
   if (didUpdate) {
+    for (var i = 0; i < links.length; ++i) {
+      links[i].classList.remove("is-active");
+    }
+
+    links[current+1].classList.add("is-active");
+
+    console.log("didUpdate", current);
     if (current != -1 && stackElems[current][0].dataset.stackId == "tracing") {
       lines.classList.add("tk-stack-active");
     } else {
@@ -48,11 +55,13 @@ function onscrollUpdateStacks(stackElems, lines) {
 
 document.addEventListener("DOMContentLoaded", function() {
   var stack = document.getElementsByClassName("tk-stack-active");
+  var links = document.querySelectorAll(".tk-stack .menu li");
   var lines = document.getElementById("tk-stack-lines");
 
   var stackElems = [];
   for (var i = 0; i < stack.length; ++i) {
     var stackId = stack[i].dataset.stackId;
+    console.log("i=", i, ", stackId=", stackId);
     var div = document.getElementById("tk-lib-stack-" + stackId);
     // The boolean stores whether it is currently opaque.
     stackElems.push([stack[i], div, true]);
@@ -60,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   if (stackElems.length > 0) {
     var fn = function() {
-      onscrollUpdateStacks(stackElems, lines);
+      onscrollUpdateStacks(stackElems, links, lines);
     };
     window.addEventListener("scroll", fn);
     window.addEventListener("resize", fn);

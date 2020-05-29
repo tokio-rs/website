@@ -319,6 +319,34 @@ $footer-color: white;
 .tk-stack {
   .menu {
     font-size: 0.9rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    li {
+      line-height: 0.5;
+      font-weight: 400;
+    }
+
+    li.is-active {
+      font-weight: 500;
+    }
+
+    @each $name, $color, $size, $adjust in $libs {
+      .tk-lib-#{$name} {
+        a:hover {
+          color: $color;
+        }
+
+        &.is-active {
+          background-color: $color;
+
+          a {
+            color: white;
+          }
+        }
+      }
+    }
   }
 
   img.tk-stack-active {
@@ -334,9 +362,7 @@ $footer-color: white;
     > img {
       display: block;
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      opacity: 0.2;
+      opacity: 0.15;
       transition: opacity 0.5s ease-in-out;
     }
     #tk-stack-lines:not(.tk-stack-active) {
