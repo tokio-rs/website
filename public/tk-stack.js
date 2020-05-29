@@ -33,7 +33,7 @@ function onscrollUpdateStacks(stackElems, lines) {
     if (shouldBeOpaque) {
       stackElems[i][0].classList.add("tk-stack-active");
 
-      if (stackId == "tracing") {
+      if (current != -1 && stackId == "tracing") {
         lines.classList.add("tk-stack-active");
       }
     } else {
@@ -74,56 +74,4 @@ document.addEventListener("DOMContentLoaded", function() {
     window.addEventListener("resize", fn);
     setTimeout(fn);
   }
-
-  // setTimeout(function() {
-  //   var hero = document.getElementById("tk-hero-bg");
-  //   var dimensions = hero.getBoundingClientRect();
-  
-  //   let width = dimensions.width
-  //   let height = dimensions.height;
-  
-  //   console.log("DIMENSIONS", hero, width, height);
-  
-  //   let newHeight;
-  //   let newWidth;
-  
-  //   function genNewWidth() {
-  //     newWidth = Math.floor(Math.random() * width);
-  //   }
-  //   function genNewHeight() {
-  //     newHeight = Math.floor(Math.random() * height );
-  //   }
-  
-  //   function setPos(ele) {
-  //     ele.style.top = newHeight + 'px';
-  //     ele.style.left = newWidth + 'px';
-  //   }
-  
-  //   function moveObj(arr) {
-  //     for(let i = 0; i < arr.length; i++) {
-  //       genNewWidth();
-  //       genNewHeight();
-  //       setPos(arr[i]);
-  //     }
-  //   }
-  //   function moveObjRandomly(arr) {
-  //     for(let i = 0; i < Math.floor(Math.random() * arr.length); i++) {
-  //       genNewWidth();
-  //       genNewHeight();
-  //       setPos(arr[i]);
-  //     }
-  //   }
-  
-  //   let arrs = document.querySelectorAll('.tk-float');
-  
-  //   function moveArrs() {
-  //     moveObj(arrs);
-  //   }
-  //   function moveArrsRandomly() {
-  //     moveObjRandomly(arrs);
-  //   }
-  //   moveObj(arrs);
-  //   setTimeout(moveArrs, 1000);
-  //   setInterval(moveArrsRandomly, 5000);
-  // });
 });
