@@ -266,6 +266,7 @@ $footer-color: white;
   .subtitle {
     font-weight: 300;
     font-size: $body-font-size;
+    line-height: 1.4;
   }
 }
 
@@ -507,5 +508,5 @@ $footer-color: white;
 }
 
 .footer {
-  min-height: 400px;
+  min-height: 40vh;
 }
