@@ -44,7 +44,6 @@ function onscrollUpdateStacks(stackElems, links, lines) {
 
     links[current+1].classList.add("is-active");
 
-    console.log("didUpdate", current);
     if (current != -1 && stackElems[current][0].dataset.stackId == "tracing") {
       lines.classList.add("tk-stack-active");
     } else {
@@ -61,7 +60,6 @@ document.addEventListener("DOMContentLoaded", function() {
   var stackElems = [];
   for (var i = 0; i < stack.length; ++i) {
     var stackId = stack[i].dataset.stackId;
-    console.log("i=", i, ", stackId=", stackId);
     var div = document.getElementById("tk-lib-stack-" + stackId);
     // The boolean stores whether it is currently opaque.
     stackElems.push([stack[i], div, true]);

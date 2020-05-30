@@ -78,12 +78,12 @@ const STACK_LAYERS: StackLayer[] = [
 ];
 
 const Menu: FC = () => (
-  <div className="column is-1 tk-menu">
+  <div className="column is-1 tk-menu is-hidden-touch">
     <div className="container anchor">
       <aside className="menu">
         <ul className="menu-list">
           {STACK_LAYERS.map((layer) => (
-            <li key={layer.id} className={`tk-lib-${layer.id}`}>
+            <li key={layer.id} className={`tk-lib-${layer.id} ${layer.id == "tokio" ? "is-active" : ""}`}>
               <a href={`#tk-lib-${layer.id}`}>{layer.short || layer.name}</a>{" "}
             </li>
           ))}
@@ -135,13 +135,13 @@ export default function Stack() {
         <div className="columns">
           <Menu />
 
-          <div className="column is-5 tk-libs">
+          <div className="column is-5-desktop is-half-tablet tk-libs">
             {STACK_LAYERS.map((l) => (
               <Layer layer={l} key={l.id} />
             ))}
           </div>
 
-          <div className="column is-half">
+          <div className="column is-half is-hidden-mobile">
             <div className="container anchor">
               {STACK_LAYERS.slice(1).map(({ id, zIndex }) => (
                 <img
