@@ -57,6 +57,9 @@ document.addEventListener("DOMContentLoaded", function() {
   var links = document.querySelectorAll(".tk-stack .menu li");
   var lines = document.getElementById("tk-stack-lines");
 
+  // Done in JS so that when JS is not enabled, no links are enabled.
+  links[0].classList.add("is-active");
+
   var stackElems = [];
   for (var i = 0; i < stack.length; ++i) {
     var stackId = stack[i].dataset.stackId;

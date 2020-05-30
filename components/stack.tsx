@@ -83,7 +83,7 @@ const Menu: FC = () => (
       <aside className="menu">
         <ul className="menu-list">
           {STACK_LAYERS.map((layer) => (
-            <li key={layer.id} className={`tk-lib-${layer.id} ${layer.id == "tokio" ? "is-active" : ""}`}>
+            <li key={layer.id} className={`tk-lib-${layer.id}`}>
               <a href={`#tk-lib-${layer.id}`}>{layer.short || layer.name}</a>{" "}
             </li>
           ))}
