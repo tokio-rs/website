@@ -22,7 +22,7 @@ const Hero: FC = () => (
     <div className="hero-body">
       <div className="container tk-hero-bg">
         {icons}
-        <div className="container has-text-centered">
+        <div className="container has-text-centered has-text-left-mobile">
           <h1 className="title">
             Build reliable network applications without compromising speed.
           </h1>

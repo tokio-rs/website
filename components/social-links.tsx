@@ -22,7 +22,7 @@ const DATA = [
 const SocialLinks: FC = () => (
   <>
     {DATA.map((link) => (
-      <a className="navbar-item navbar-icon" href={link.url} key={link.name}>
+      <a className="navbar-item navbar-icon tk-social" href={link.url} key={link.name}>
         {link.icon}
       </a>
     ))}

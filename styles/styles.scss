@@ -36,6 +36,7 @@ $title-color: black;
 // Bulma text variables
 $body-font-size: 1.06em;
 $menu-font-size: 1rem;
+$tablet: 600px;
 $family-primary: "Roboto", sans-serif;
 
 // Bulma navbar variables
@@ -49,6 +50,7 @@ $navbar-height: 5rem;
 $navbar-item-img-max-height: 5rem;
 $navbar-padding-vertical: 0;
 $navbar-padding-horizontal: 1rem;
+$navbar-breakpoint: $tablet;
 
 // Bulma menu variables
 $menu-label-font-size: 0.9rem;
@@ -79,6 +81,9 @@ $footer-color: white;
 }
 
 .navbar {
+  .navbar-brand {
+    background-color: black;
+  }
   .container {
     max-width: 1150px;
   }
@@ -103,6 +108,41 @@ $footer-color: white;
       width: 1.8rem;
     }
   }
+  @include mobile {
+    .navbar-menu {
+      display: block;
+      z-index: -1;
+  
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+
+      transition: transform .2s ease-in-out;
+    }
+    .navbar-menu.is-active {
+      opacity: 1;
+      transform: translateY(100%);
+      transition: transform .2s ease-in-out;
+      pointer-events: auto;
+    }
+    .navbar-end {
+      .navbar-item {
+        margin-bottom: 1.7rem;
+
+        &:first-child {
+          margin-top: 0.5rem;
+        }
+      }
+
+      .tk-social, .tk-social.navbar-icon {
+        align-items: center;
+        display: inline-block;
+        padding-left: 1.7rem;
+        margin-bottom: 0;
+      }
+    }
+  }
 }
 
 .tk-landing {
@@ -112,19 +152,32 @@ $footer-color: white;
 }
 
 .hero {
+  @include mobile {
+    .hero-body {
+      padding: 1.5rem;
+    }
+
+    .button {
+      font-size: 1.1rem;
+    }
+  }
+
   .title {
     font-size: 1.7em;
   }
 
   &.tk-intro {
-    padding: 0.8rem;
+    .title {
+      padding-bottom: 0.25em;
+
+      @include tablet {
+        font-size: 2.4em;
+        line-height: 1.2em;
+      }
+    }
+
     .container {
       max-width: 650px;
-    }
-    .title {
-      font-size: 2.4em;
-      line-height: 1.2em;
-      padding-bottom: 0.25em;
     }
     .subtitle {
       font-weight: 300;
@@ -266,6 +319,10 @@ $footer-color: white;
 
   .title {
     font-size: 1.8rem;
+
+    @include mobile {
+      font-size: 1.6rem;
+    }
   }
 
   .subtitle {

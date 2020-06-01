@@ -71,7 +71,7 @@ const Navigation: FC<{ blog: Blog }> = ({ blog }) => {
           <div className="navbar-end">
             <Links blog={blog} />
 
-            <hr className="is-hidden-touch" />
+            <hr className="is-hidden-mobile" />
 
             <SocialLinks />
           </div>
