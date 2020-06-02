@@ -420,7 +420,9 @@ $footer-color: white;
   .anchor {
     position: sticky;
     height: 25rem;
-    top: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 13rem;
 
     > img {
       display: block;
@@ -463,7 +465,7 @@ $footer-color: white;
       margin-top: 5rem;
     }
     .card:last-child {
-      margin-bottom: 7.5rem;
+      margin-bottom: 15rem;
     }
   }
 
@@ -594,8 +596,6 @@ $footer-color: white;
 }
 
 .footer {
-  min-height: 40vh;
-
   .tk-help {
     position: relative;
     font-size: $body-font-size;
