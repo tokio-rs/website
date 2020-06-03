@@ -112,18 +112,18 @@ $footer-color: white;
     .navbar-menu {
       display: block;
       z-index: -1;
-  
+
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
 
-      transition: transform .2s ease-in-out;
+      transition: transform 0.2s ease-in-out;
     }
     .navbar-menu.is-active {
       opacity: 1;
       transform: translateY(100%);
-      transition: transform .2s ease-in-out;
+      transition: transform 0.2s ease-in-out;
       pointer-events: auto;
     }
     .navbar-end {
@@ -135,7 +135,8 @@ $footer-color: white;
         }
       }
 
-      .tk-social, .tk-social.navbar-icon {
+      .tk-social,
+      .tk-social.navbar-icon {
         align-items: center;
         display: inline-block;
         padding-left: 1.7rem;
@@ -501,7 +502,7 @@ $footer-color: white;
     font-size: $menu-font-size;
     position: sticky;
     top: 4rem;
-    max-width: 260px;
+    max-width: 280px;
     margin-left: auto;
     padding-bottom: 4rem;
 
@@ -609,15 +610,14 @@ $footer-color: white;
         display: block;
         margin-top: 1rem;
       }
-    }
 
-    .icon {
-      margin-left: 0.5rem;
+      .icon {
+        margin-left: 0.5rem;
 
-      svg {
-        height: 2rem;
-        width: 2rem;
-        transform: translateY(0.6rem);
+        svg {
+          height: 2rem;
+          width: 2rem;
+        }
       }
     }
   }
@@ -631,12 +631,62 @@ $footer-color: white;
     }
   }
 
-  .tk-footer-libs, .tk-footer-libs a {
+  .tk-footer-libs,
+  .tk-footer-libs a {
     color: white;
   }
 
   .tk-lib-name {
     font-weight: 600;
+  }
+}
+
+.tk-help-links {
+  .icon {
+    svg {
+      transform: translateY(30%);
+    }
+  }
+}
+
+.tk-doc-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid $light-gray;
+
+  .tk-next,
+  .tk-prev {
+    font-size: 0.9rem;
+
+    a {
+      font-weight: 500;
+    }
+
+    .tk-arrow {
+      display: inline-block;
+      width: 1.4rem;
+      height: 1.4rem;
+      vertical-align: 0%;
+    }
+  }
+
+  .tk-help-links {
+    font-size: 0.9rem;
+
+    .icon {
+      margin-left: 0.3rem;
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+    .tk-svg-path {
+      fill: black !important;
+    }
+  }
+
+  .tk-edit-this-page {
+    font-size: 0.9rem;
   }
 }
 
@@ -646,7 +696,7 @@ $footer-color: white;
  *
  */
 
- /*
+/*
 Docco style used in http://jashkenas.github.com/docco/ converted by Simon Madine (@thingsinjars)
 */
 

@@ -30,7 +30,7 @@ export default function Menu({ href, menu }) {
       {/* TODO: hook this up, only when needed */}
       <p className="menu-label tk-menu-back">
         <img
-          src="/img/left-arrow.svg"
+          src="/img/arrow-left-small.svg"
           style={{
             display: "inline-block",
             verticalAlign: "middle",
