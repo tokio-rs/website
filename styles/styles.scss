@@ -590,7 +590,7 @@ $footer-color: white;
     }
 
     code {
-      color: $dark-gray;
+      color: black;
     }
   }
 }
@@ -638,4 +638,112 @@ $footer-color: white;
   .tk-lib-name {
     font-weight: 600;
   }
+}
+
+/*
+ *
+ * Syntax highlighting
+ *
+ */
+
+ /*
+Docco style used in http://jashkenas.github.com/docco/ converted by Simon Madine (@thingsinjars)
+*/
+
+// .hljs {
+//   display: block;
+//   overflow-x: auto;
+//   padding: 0.5em;
+//   color: #000;
+//   background: #f8f8ff;
+// }
+
+.hljs-comment,
+.hljs-quote {
+  color: $gray;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: $magenta;
+}
+
+// .hljs-literal {
+//   color: $dark-gray;
+//   font-weight: bold;
+// }
+
+.hljs-number {
+  color: darken($green);
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: darken($green);
+}
+
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-section,
+.hljs-type {
+  color: $blue;
+}
+
+.hljs-params {
+  color: $purple;
+}
+
+.hljs-title {
+  color: $purple;
+  font-weight: bold;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+  color: darken($blue);
+  font-weight: normal;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: darken($green);
+}
+
+.hljs-regexp,
+.hljs-link {
+  color: $green;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: $purple;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: darken($yellow);
+}
+
+.hljs-meta {
+  color: $dark-gray;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: $red;
+}
+
+.hljs-addition {
+  background: $green;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
 }

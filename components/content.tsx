@@ -1,19 +1,14 @@
 import Menu from "../components/menu";
 import ReactMarkdown from "react-markdown/with-html";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { docco } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 
 const CodeBlock = ({ language, value }) => {
   return (
-    <SyntaxHighlighter style={docco} language={language}>
+    <SyntaxHighlighter useInlineStyles={false} language={language}>
       {value}
     </SyntaxHighlighter>
   );
 };
-
-// const Props = {
-//   menu:
-// }
 
 export default function Content({ menu, href, title, body }) {
   return (
