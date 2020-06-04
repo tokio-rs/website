@@ -42,7 +42,7 @@ export default function Menu({ href, menu }) {
         <a href="#" onClick={() => toggleExpand()}>
           TABLE OF CONTENTS
           <span className="icon">
-            <span class="tk-arrow"></span>
+            <span className="tk-arrow"></span>
           </span>
         </a>
       </div>

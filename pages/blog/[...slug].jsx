@@ -1,6 +1,5 @@
 import * as content from "../../lib/api";
 import Page from "../../lib/page";
-import util from "util";
 
 const menuSize = 8;
 
@@ -24,17 +23,34 @@ export async function getStaticProps({ params: { slug } }) {
 
   let years = {};
 
+  const page = content.loadPage(`blog/${slug}`);
+  let didSee = false;
+
   let i = 0;
-  for (const page of paths) {
+  for (const p of paths) {
     if (i == menuSize) {
       break;
     }
 
     i += 1;
 
-    delete page.body;
+    delete p.body;
 
-    const date = new Date(page.date);
+    if (p.href == page.href) {
+      didSee = true;
+    } else if (!didSee) {
+      page.next = {
+        title: p.menuTitle || p.title,
+        href: p.href,
+      };
+    } else if (!page.prev) {
+      page.prev = {
+        title: p.menuTitle || p.title,
+        href: p.href,
+      };
+    }
+
+    const date = new Date(p.date);
 
     const year = date.getFullYear().toString();
 
@@ -46,7 +62,7 @@ export async function getStaticProps({ params: { slug } }) {
       };
     }
 
-    years[year].nested.push(page);
+    years[year].nested.push({ page: p });
   }
 
   let menu = [];
@@ -56,8 +72,6 @@ export async function getStaticProps({ params: { slug } }) {
   }
 
   menu.sort((a, b) => b.key - a.key);
-
-  const page = content.loadPage(`blog/${slug}`);
 
   return content.withAppProps({
     props: {

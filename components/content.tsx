@@ -30,24 +30,24 @@ export default function Content({ menu, href, title, next, prev, body }) {
               <div className="level">
                 <div className="level-left">
                   <div className="level-item tk-prev">
-                    {next && (
-                      <a href={next.href}>
+                    {prev && (
+                      <a href={prev.href}>
                         <span
                           className="tk-arrow"
                           style={{ marginRight: "0.5rem" }}
                         >
                           <img src="/img/arrow-left.svg" />
                         </span>
-                        {next.title}
+                        {prev.title}
                       </a>
                     )}
                   </div>
                 </div>
                 <div className="level-right">
                   <div className="level-item tk-next">
-                    {prev && (
-                      <a href={prev.href}>
-                        {prev.title}
+                    {next && (
+                      <a href={next.href}>
+                        {next.title}
                         <span
                           className="tk-arrow"
                           style={{ marginLeft: "0.5rem" }}
