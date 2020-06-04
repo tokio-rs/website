@@ -492,19 +492,116 @@ $footer-color: white;
 }
 
 .tk-docs {
-  // min-height: 500px;
-
   .tk-docs-nav {
     background-color: $light-gray;
+
+    @include mobile {
+      padding: 0;
+    }
+
+    @include tablet {
+      padding: 4rem 0 0 1rem;
+    }
   }
 
   .menu {
     font-size: $menu-font-size;
-    position: sticky;
-    top: 4rem;
-    max-width: 280px;
-    margin-left: auto;
-    padding-bottom: 4rem;
+    position: relative;
+    z-index: 2;
+
+    @include tablet {
+      position: sticky;
+      top: 4rem;
+      max-width: 280px;
+      margin-left: auto;
+      padding-bottom: 4rem;
+    }
+
+    @include mobile {
+      .tk-toc {
+        position: relative;
+        padding: 0.75rem;
+        z-index: 3;
+        font-size: 1.1rem;
+        font-weight: 500;
+        background-color: $light-gray;
+
+        a {
+          display: block;
+          position: relative;
+          width: 100%;
+          color: black;
+
+          .icon {
+            position: absolute;
+            right: 15px;
+            transform: scale(0.8);
+          }
+        }
+
+        .tk-arrow {
+          width: 13px;
+          height: 13px;
+          display: inline-block;
+          position: relative;
+          bottom: -5px;
+          right: -10px;
+          transition: 0.4s ease;
+          margin-top: 2px;
+          text-align: left;
+          transform: rotate(45deg);
+          // float: right;
+
+          &:before,
+          &:after {
+            position: absolute;
+            content: "";
+            display: "inline-block";
+            width: 12px;
+            height: 3px;
+            background-color: black;
+            transition: 0.4s ease;
+          }
+
+          &:after {
+            position: absolute;
+            transform: rotate(90deg);
+            top: -5px;
+            left: 5px;
+          }
+        }
+
+        &.is-active {
+          .tk-arrow {
+            transform: rotate(45deg) translate(-5px, -5px);
+
+            &:before {
+              transform: translate(10px, 0);
+            }
+            &:after {
+              transform: rotate(90deg) translate(10px, 0);
+            }
+          }
+        }
+      }
+
+      .tk-menu-body {
+        background-color: $light-gray;
+        padding: 0.75rem;
+        position: absolute;
+        z-index: -1;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transition: transform 0.2s ease-in-out;
+
+        &.is-active {
+          transform: translateY(100%);
+          transition: transform 0.2s ease-in-out;
+        }
+      }
+    }
 
     .menu-label a {
       color: $dark-gray;
@@ -540,18 +637,34 @@ $footer-color: white;
   }
 
   .tk-content {
+    position: relative;
     color: black;
     font-weight: 300;
-    font-size: 1.13rem;
-    max-width: 800px;
-    margin-left: 8%;
-    margin-right: 30px;
-    padding-bottom: 10rem;
+
+    @include mobile {
+      padding: 0;
+      font-size: 1rem;
+    }
+
+    @include tablet {
+      font-size: $body-font-size;
+      min-height: 90vh;
+      padding-bottom: 10rem;
+      max-width: 800px;
+      // margin-left: calc(0.75rem + 3%);
+      // margin-right: 30px;
+    }
 
     h1.title {
-      font-size: 2.5rem;
-      // margin-bottom: 1.2rem;
       font-weight: 400;
+
+      @mobile {
+        font-size: 2rem;
+      }
+
+      @tablet {
+        font-size: 2.5rem;
+      }
     }
 
     h1:not(.title) {

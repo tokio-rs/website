@@ -1,3 +1,6 @@
+import { useCallback, useState } from "react";
+import classnames from "classnames";
+
 const monthNames = [
   "January",
   "February",
@@ -23,23 +26,44 @@ export default function Menu({ href, menu }) {
     );
   });
 
+  const [expanded, setExpanded] = useState(false);
+
+  const toggleExpand = useCallback(() => {
+    setExpanded((prev) => !prev);
+  }, []);
+
   return (
     <aside className="menu">
-      {groups}
+      <div
+        className={classnames("tk-toc is-hidden-tablet", {
+          "is-active": expanded,
+        })}
+      >
+        <a href="#" onClick={() => toggleExpand()}>
+          TABLE OF CONTENTS
+          <span className="icon">
+            <span class="tk-arrow"></span>
+          </span>
+        </a>
+      </div>
 
-      {/* TODO: hook this up, only when needed */}
-      <p className="menu-label tk-menu-back">
-        <img
-          src="/img/arrow-left-small.svg"
-          style={{
-            display: "inline-block",
-            verticalAlign: "middle",
-            height: "0.8rem",
-            marginRight: "0.5rem",
-          }}
-        />
-        <a>All Libraries</a>
-      </p>
+      <div className={classnames("tk-menu-body", { "is-active": expanded })}>
+        {groups}
+
+        {/* TODO: hook this up, only when needed */}
+        <p className="menu-label tk-menu-back">
+          <img
+            src="/img/arrow-left-small.svg"
+            style={{
+              display: "inline-block",
+              verticalAlign: "middle",
+              height: "0.8rem",
+              marginRight: "0.5rem",
+            }}
+          />
+          <a>All Libraries</a>
+        </p>
+      </div>
     </aside>
   );
 }
