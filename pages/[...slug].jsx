@@ -14,6 +14,7 @@ const menu = {
       topics: {
         nested: ["concurrency"],
       },
+      glossary: {},
       api: {
         title: "API documentation",
         href: "https://docs.rs/tokio",
