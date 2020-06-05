@@ -650,9 +650,43 @@ $footer-color: white;
       font-size: $body-font-size;
       min-height: 90vh;
       padding-bottom: 10rem;
-      max-width: 800px;
-      // margin-left: calc(0.75rem + 3%);
-      // margin-right: 30px;
+      max-width: 1220px;
+    }
+
+    .tk-content-summary {
+      @media screen and (max-width: 1100px) {
+        display: none;
+      }
+
+      font-size: 0.9rem;
+
+      a {
+        color: $gray;
+        font-weight: 500;
+
+        &:hover {
+          color: darken($gray);
+        }
+      }
+
+      ul {
+        list-style-type: none;
+        margin-left: 1.5em;
+        li {
+          margin-bottom: 0.5em;
+        }
+      }
+
+      > ul {
+        border-left: solid 1px $light-gray;
+        padding-left: 2rem;
+        margin: 0;
+      }
+
+      .tk-content-summary-menu {
+        position: sticky;
+        top: 4rem;
+      }
     }
 
     h1.title {
@@ -672,10 +706,15 @@ $footer-color: white;
       padding-bottom: 0.5rem;
       border-bottom: solid 1px $light-gray;
     }
-
     h2 {
       font-size: 1.2rem;
       margin-bottom: 1rem;
+    }
+    h3 {
+      font-size: 1.1rem;
+    }
+    h4 {
+      font-size: 1rem;
     }
 
     a {
@@ -687,20 +726,22 @@ $footer-color: white;
     }
 
     // Smaller bullet size
-    li {
-      list-style-type: none;
-      position: relative; /* It's needed for setting position to absolute in the next rule. */
-    }
-    li:not(:last-child) {
-      margin-bottom: 1rem;
-    }
+    .tk-markdown {
+      li {
+        list-style-type: none;
+        position: relative; /* It's needed for setting position to absolute in the next rule. */
+      }
+      li:not(:last-child) {
+        margin-bottom: 1rem;
+      }
 
-    li::before {
-      content: "·";
-      position: absolute;
-      left: -1.1rem;
-      top: -1.15rem;
-      font-size: 2.7rem;
+      li::before {
+        content: "·";
+        position: absolute;
+        left: -1.1rem;
+        top: -1.15rem;
+        font-size: 2.7rem;
+      }
     }
 
     code {

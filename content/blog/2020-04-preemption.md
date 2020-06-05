@@ -69,7 +69,7 @@ compile-time. Unfortunately, Tokio is not able to use this technique as Rust's
 `async` generators do not provide any mechanism for executors (like Tokio) to
 inject such yield points.
 
-## Per-task operation budget
+# Per-task operation budget
 
 Even though Tokio is not able to **preempt**, there is still an opportunity to
 nudge a task to yield back to the scheduler. As of [0.2.14], each Tokio task has
@@ -112,7 +112,7 @@ by almost 3x.
 "master" is before the automatic yielding and "preempt" is after. Click for a
 bigger version, see also the original [PR comment][pr] for more details.
 
-## A note on blocking
+# A note on blocking
 
 Although automatic cooperative task yielding improves performance in many cases,
 it cannot preempt tasks. Users of Tokio must still take care to avoid both CPU
