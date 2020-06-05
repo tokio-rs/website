@@ -2,23 +2,20 @@
 title: "Overview"
 ---
 
-Tokio allows developers to write asynchronous programs in the Rust programming
-language. Instead of synchronously waiting for long-running operations (like
-reading a file or waiting for a timer to complete) before moving on to the next
-thing, Tokio allows developers to write programs where execution continues while
-the long-running operations are in progress.
+Tokio is a collections of resources that allow developers to write safe, fast and reliable asynchronous applications. Leveraging Rust's powerful features, Tokio leverages the type system and trait resolution to empower
+developers to push the limits.
 
 More specifically, Tokio is an event-driven, non-blocking I/O platform for
-writing asynchronous applications with Rust. At a high level, it provides a few
-major components:
+writing asynchronous applications with Rust. At a high level, it provides 
+a few major components:
 
 - Tools for [working with asynchronous tasks][tasks], including [synchronization
   primitives and channels][sync] and [timeouts, delays, and intervals][time].
 - APIs for [performing asynchronous I/O][io], including [TCP and UDP][net]
   sockets, [filesystem][fs] operations, and [process] and [signal] management.
-- A [runtime] for executing asynchronous code, including a task scheduler, an
-  I/O driver backed by the operating system's event queue (epoll, kqueue, IOCP,
-  etc...), and a high performance timer.
+- A [runtime] for executing asynchronous code, including a task 
+  scheduler, an I/O driver backed by the operating system's event queue 
+  (epoll, kqueue, IOCP, etc...), and a high performance timer.
 
 These components provide the runtime components necessary for building an
 asynchronous application.
@@ -33,128 +30,47 @@ asynchronous application.
 [signal]: https://docs.rs/tokio/*/tokio/signal/index.html
 [runtime]: https://docs.rs/tokio/*/tokio/runtime/index.html
 
+
 # Fast
 
-Tokio is built on the Rust programming language, which is itself very fast.
-Applications built with Tokio will get those same benefits. Tokio's design is
-also geared towards enabling applications to be as fast as possible.
-
-## Zero-cost abstractions
-
-Tokio is built around [futures]. Futures aren't a new idea, but the way Tokio
-uses them is [unique][poll]. Unlike futures from other languages, Tokio's
-futures compile down to a state machine. There is no added overhead from
-synchronization, allocation, or other costs common with future implementations.
-
-Note that providing zero-cost abstractions does not mean that Tokio itself has
-no cost. It means that using Tokio results in an end product with equivalent
-overhead to not using Tokio.
-
-[poll]: /docs/getting-started/futures#poll-based-futures
-[futures]: /docs/getting-started/futures
-
-## Concurrency
-
-Out of the box, Tokio provides a multi-threaded, [work-stealing], scheduler. So,
-when you start the Tokio runtime, you are already using all of your computer's
-CPU cores.
-
-Modern computers increase their performance by adding cores, so being able to
-utilize many cores is critical for writing fast applications.
-
-[work-stealing]: https://en.wikipedia.org/wiki/Work_stealing
-
-## Non-blocking I/O
-
-When hitting the network, Tokio will use the most efficient system available to
-the operating system. On Linux this means [epoll], bsd platforms provide
-[kqueue], and Windows has [I/O completion ports][iocp].
-
-This allows multiplexing many sockets on a single thread and receiving operating
-system notifications in batches, thus reducing system calls. All this leads to
-less overhead for the application.
-
-[epoll]: http://man7.org/linux/man-pages/man7/epoll.7.html
-[kqueue]: https://www.freebsd.org/cgi/man.cgi?query=kqueue&sektion=2
-[iocp]:
-  https://docs.microsoft.com/en-us/windows/desktop/fileio/i-o-completion-ports
+Tokio is _fast_. Built on top of the Rust programming language, which
+itself is fast. Tokio takes advantage of adding minimal overhead and
+allowing the user to tune it to their needs. This allows Tokio to be
+used in many situations and continue to perform well. 
 
 # Reliable
 
-While Tokio cannot prevent all bugs, it is designed to minimize them. It does
-this by providing APIs that are hard to misuse. At the end of the day, you can
-ship applications to production with confidence.
+Tokio is built on top of Rust's strong type system and novel trait
+resolution. This enables users to build software with the ability to
+focus on the task at hand instead of worrying if their code will work.
+Generally, if it compiles it will work.
 
-## Ownership and type system
+Tokio also contains a very large test suite from integration tests to
+proper concurrency tests using the [loom] model checker to provide the
+upmost confidence.
 
-Rust's ownership model and type system enables implementing system level
-applications without the fear of memory unsafety. It prevents classic bugs such
-as accessing uninitialized memory and use after free. It does this without
-adding any run-time overhead.
+Tokio also focuses heavily on providing consistent behavior with no
+surprises. This means low latencies with un-heard of tail latencies.
+Tokio's major goal is to allow users to deploy predictable software
+that will perform the same day in and day out.
 
-Further, APIs are able to leverage the type system to provide hard to misuse
-APIs. For example, `Mutex` does not require the user to explicitly unlock.
+[loom]: https://github.com/tokio-rs/loom
 
-## Backpressure
+# Easy
 
-In push based systems, when a producer produces data faster than the consumer
-can process, data will start backing up. Pending data is stored in memory.
-Unless the producer stops producing, the system will eventually run out of
-memory and crash. The ability for a consumer to inform the producer to slow down
-is backpressure.
+Tokio follows very closely to the standard libraries naming convention
+when it makes sense. This allows easy conversion between code written with
+only the standard library to code written with tokio. With the strong type
+system the ability to deliver correct code easily is unparalleled.
 
-Because Tokio uses a [poll] based model, the problem mostly just goes away.
-Producers are lazy by default. They will not produce any data unless the
-consumer asks them to. This is built into Tokio's foundation.
+# Flexible
 
-## Cancellation
+Tokio provides multiple variations of the runtime. Everything from a
+[work-stealing] runtime to a runtime that can run tasks that never get
+sent across threads. Each of these runtimes come with many knobs to allow
+users to tune them to their needs.
 
-Because of Tokio's [poll] based model, computations do no work unless they are
-polled. Dependents of that computation hold a [future][futures] representing the
-result of that computation. If the result is no longer needed, the future is
-dropped. At this point, the computation will no longer be polled and thus
-perform no more work.
-
-Thanks to Rust's ownership model, the computation is able to implement `drop`
-handles to detect the future being dropped. This allows it to perform any
-necessary cleanup work.
-
-# Lightweight
-
-Tokio scales well without adding overhead to the application, allowing it to
-thrive in resource constrained environments.
-
-## No garbage collector
-
-Because Tokio is built on Rust, the compiled executable includes minimal
-language run-time. The end product is similar to what C++ would produce. This
-means, no garbage collector, no virtual machine, no JIT compilation, and no
-stack manipulation. Write your server applications without fear of
-[stop-the-world][gc] pauses.
-
-It is possible to use Tokio without incurring any runtime allocations, making it
-a good fit for [real-time] use cases.
-
-[gc]:
-  https://en.wikipedia.org/wiki/Garbage_collection_(computer_science)#Disadvantages
-[real-time]: https://en.wikipedia.org/wiki/Real-time_computing
-
-## Modular
-
-While Tokio provides a lot out of the box, it is all organized very modularly.
-Each component lives in a separate library. If needed, applications may opt to
-pick and choose the needed components and avoid pulling in the rest.
-
-Tokio leverages [`mio`] for the system event queue and [`futures`] for defining
-tasks. Tokio implements [async] syntax to improve readability of futures. [Many]
-libraries are implemented using Tokio, including [`hyper`] and [`actix`].
-
-[`mio`]: https://github.com/tokio-rs/mio
-[`futures`]: https://docs.rs/futures/*/futures/
-[async]: https://tokio.rs/blog/2018-08-async-await/
-[many]: https://crates.io/crates/tokio/reverse_dependencies
-[`hyper`]: https://hyper.rs/guides/
-[`actix`]: https://actix.rs/book/actix/
+[work-stealing]: https://en.wikipedia.org/wiki/Work_stealing
 
 # Get started with Tokio
 
