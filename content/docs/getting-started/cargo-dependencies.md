@@ -81,7 +81,7 @@ will need to do a DNS lookup just in case.
 2. `tcp` for handling the TCP connection
 
 
-Since our example uses a specific ip address, we can reduce dependendencies
+Since our example uses a specific ip address, we can reduce dependencies
 further by creating a [`std::net::SocketAddr`]:
 
 ```rust,no_run
