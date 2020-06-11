@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "fmt": "prettier --write --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss,md}'"
+    "fmt": "prettier --write --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'"
   },
   "dependencies": {
     "bulma": "^0.8.2",
@@ -19,6 +19,7 @@
     "react-dom": "16.13.1",
     "react-markdown": "^4.3.1",
     "react-syntax-highlighter": "^12.2.1",
+    "remark-custom-blocks": "^2.5.0",
     "sass": "^1.26.5"
   },
   "devDependencies": {

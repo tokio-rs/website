@@ -80,6 +80,17 @@ $footer-color: white;
   @return color.scale($color, $lightness: -15%);
 }
 
+@function lighten($color) {
+  @return color.scale($color, $lightness: 93%);
+}
+
+a,
+a:hover,
+a:focus,
+a:active {
+  outline: none;
+}
+
 .navbar {
   .navbar-brand {
     background-color: black;
@@ -108,6 +119,7 @@ $footer-color: white;
       width: 1.8rem;
     }
   }
+
   @include mobile {
     .navbar-menu {
       display: block;
@@ -653,11 +665,18 @@ $footer-color: white;
       max-width: 1220px;
     }
 
-    .tk-content-summary {
-      @media screen and (max-width: 1100px) {
+    @media screen and (max-width: 1100px) {
+      .tk-content-summary {
         display: none;
       }
 
+      .tk-markdown {
+        flex: none;
+        width: 100%;
+      }
+    }
+
+    .tk-content-summary {
       font-size: 0.9rem;
 
       a {
@@ -741,6 +760,20 @@ $footer-color: white;
         left: -1.1rem;
         top: -1.15rem;
         font-size: 2.7rem;
+      }
+
+      .is-warning {
+        background: lighten($magenta);
+        color: $magenta;
+
+        strong,
+        code {
+          color: $magenta;
+        }
+      }
+
+      blockquote.is-warning {
+        border-left-color: $magenta;
       }
     }
 
