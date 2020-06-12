@@ -62,14 +62,14 @@ async fn process(socket: TcpStream) {
 Now, run this accept loop:
 
 ```bash
-cargo run
+$ cargo run
 ```
 
 In a separate terminal window, run the `hello-redis` example (the SET/GET
 command from the previous section):
 
 ```bash
-cargo run --example hello-redis
+$ cargo run --example hello-redis
 ```
 
 The output should be:
@@ -97,7 +97,7 @@ We want our Redis server to process **many** concurrent requests. To do this, we
 need to add some concurrency.
 
 [[info]]
-| Concurrency does not mean parallism. Because Tokio is asynchronous, many
+| Concurrency does not require parallism. Because Tokio is asynchronous, many
 | requests can be processed concurrently on a single thread.
 
 To process connections concurrently, a new task is spawned for each inbound
@@ -123,12 +123,106 @@ async fn main() {
 
 ## Tasks
 
-A Tokio task is an asynchronous green thread. Tasks are the unit of execution
-managed by the scheduler. Spawning the task submits the task to the Tokio
-scheduler, which then ensures that the task executes when it has work to do. In
-our case, this happens when data arrives on the socket from the remote
-connection, or when the remote connection is ready to accept our response.
+A Tokio task is an asynchronous green thread. They are created by passing an
+`async` block to `tokio::spawn`. The `tokio::spawn` function returns a
+`JoinHandle`, which the caller may use to interact with the spawned task. The
+`async` block may have a return value. The caller may obtain the return value
+using `.await` on the `JoinHandle`.
+
+For example:
+
+```rust
+#[tokio::main]
+async fn main() {
+    let handle = tokio::spawn(async {
+        // Do some async work
+        "return value"
+    });
+
+    // Do some other work
+
+    let out = handle.await.unwrap();
+    println!("GOT {}", out);
+}
+```
+
+Awaiting on `JoinHandle` returns a `Result`. When a task encounters an error
+during execution, the `JoinHandle` will return an `Err`. This happens when the
+task either panics, or if the task is forcefully cancelled by the runtime
+shutting down.
+
+Tasks are the unit of execution managed by the scheduler. Spawning the task
+submits it to the Tokio scheduler, which then ensures that the task executes
+when it has work to do. The spawned task may be executed on the same thread
+as where it was spawned, or it may execute on a different runtime thread. The
+task can also be moved between threads after being spawned.
 
 Tasks in Tokio are very lightweight. Under the hood, they require only a single
 allocation and 64 bytes of memory. Applications should feel free to spawn
 thousands, if not millions of tasks.
+
+# Store values
+
+We will now implement the `process` function to handle incoming commands. We
+will use a `HashMap` to store values. `SET` commands will insert into the
+`HashMap` and `GET` values will load them. Additionally, we will use a loop to
+accept more than one command per connection.
+
+```rust
+async fn process(socket: TcpStream) {
+    use mini_redis::Command::{self, Get, Set};
+    use std::collections::HashMap;
+
+    // A hashmap is used to store data
+    let mut db = HashMap::new();
+
+    // Connection, provided by `mini-redis`, handles parsing frames from
+    // the socket
+    let mut connection = Connection::new(socket);
+
+    // Use `read_frame` to receive a command from the connection.
+    while let Some(frame) = connection.read_frame().await.unwrap() {
+        let response = match Command::from_frame(frame).unwrap() {
+            Set(cmd) => {
+                db.insert(cmd.key().to_string(), cmd.value().clone());
+                Frame::Simple("OK".to_string())
+            }
+            Get(cmd) => {
+                if let Some(value) = db.get(cmd.key()) {
+                    Frame::Bulk(value.clone())
+                } else {
+                    Frame::Null
+                }
+            }
+            cmd => panic!("unimplemented {:?}", cmd),
+        };
+
+        // Write the response to the client
+        connection.write_frame(&response).await.unwrap();
+    }
+}
+```
+
+Now, start the server:
+
+```bash
+$ cargo run
+```
+
+and in a separate terminal window, run the `hello-tokio` example:
+
+```bash
+$ cargo run --example hello-redis
+```
+
+Now, the output will be:
+
+```text
+got value from the server; success=Some(b"world")
+```
+
+We can now get and set values, but there is a problem: The values are not
+shared between connections. If another socket connects and tries to `GET`
+the `hello` key, it will not find anything.
+
+In the next section, we will implement persisting data for all sockets.
