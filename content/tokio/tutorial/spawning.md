@@ -161,6 +161,94 @@ Tasks in Tokio are very lightweight. Under the hood, they require only a single
 allocation and 64 bytes of memory. Applications should feel free to spawn
 thousands, if not millions of tasks.
 
+## `Send` bound
+
+Tasks spawned by `tokio::spawn` **must** implement `Send`. This allows the Tokio
+runtime to move the tasks between threads while they are suspended at an
+`.await`.
+
+Tasks are `Send` when **all** data that is held **across** `.await` calls is
+`Send`. This is a bit subtle. When `.await` is called, the task yields back to
+the scheduler. The next time the task is executed, it resumes from the point it
+last yielded. To make this work, all state that is used **after** `.await` must
+be saved by the task. If this state is `Send`, i.e. can be moved across threads,
+then the task itself can be moved across threads. Similarly, if the state is not
+`Send`, then neither is the task.
+
+For example, this works:
+
+```rust
+use tokio::task::yield_now;
+use std::rc::Rc;
+
+#[tokio::main]
+async fn main() {
+    tokio::spawn(async {
+        // The scope forces `rc` to drop before `.await`.
+        {
+            let rc = Rc::new("hello");
+            println!("{}", rc);
+        }
+
+        // `rc` is no longer used. It is **not** persisted when
+        // the task yields to the scheduler
+        yield_now().await;
+    });
+}
+```
+
+This does not:
+
+```rust
+use tokio::task::yield_now;
+use std::rc::Rc;
+
+#[tokio::main]
+async fn main() {
+    tokio::spawn(async {
+        let rc = Rc::new("hello");
+
+        // `rc` is used after `.await`. It must be persisted to
+        // the task's state.
+        yield_now().await;
+
+        println!("{}", rc);
+    });
+}
+```
+
+Attempting to compile the snippet results in:
+
+```text
+error: future cannot be sent between threads safely
+   --> src/main.rs:6:5
+    |
+6   |     tokio::spawn(async {
+    |     ^^^^^^^^^^^^ future created by async block is not `Send`
+    | 
+   ::: [..]spawn.rs:127:21
+    |
+127 |         T: Future + Send + 'static,
+    |                     ---- required by this bound in
+    |                          `tokio::task::spawn::spawn`
+    |
+    = help: within `impl std::future::Future`, the trait
+    |       `std::marker::Send` is not  implemented for
+    |       `std::rc::Rc<&str>`
+note: future is not `Send` as this value is used across an await
+   --> src/main.rs:10:9
+    |
+7   |         let rc = Rc::new("hello");
+    |             -- has type `std::rc::Rc<&str>` which is not `Send`
+...
+10  |         yield_now().await;
+    |         ^^^^^^^^^^^^^^^^^ await occurs here, with `rc` maybe
+    |                           used later
+11  |         println!("{}", rc);
+12  |     });
+    |     - `rc` is later dropped here
+```
+
 # Store values
 
 We will now implement the `process` function to handle incoming commands. We
