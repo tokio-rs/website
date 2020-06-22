@@ -18,6 +18,27 @@ a later section. Right now, the shared state is a `HashMap` and the operations
 are `insert` and `get`. Both of these operations are near-instant, so we
 will use a `Mutex`.
 
+# Add `bytes` dependency
+
+Instead of using `Vec<u8>`, the Mini-Redis crate uses `Bytes` from the [`bytes`]
+crate. The goal of `Bytes` is to provide a robust byte array structure for
+network programming. The biggest feature it adds over `Vec<u8>` is shallow
+cloning. In other words, calling `clone()` on a `Bytes` instance does not copy
+the underlying data. Instead, a `Bytes` instance is a reference-counted handle
+to some underlying data. The `Bytes` type is roughly an `Arc<Vec<u8>>` but with
+some added capabilities.
+
+To depend on `bytes`, add the following to your `Cargo.toml` in the
+`[dependencies]` section:
+
+```toml
+bytes = "0.5"
+```
+
+Then run `cargo install`.
+
+[`bytes`]: https://docs.rs/bytes/0.5/bytes/struct.Bytes.html
+
 # Initialize the `HashMap`
 
 The `HashMap` will be shared across many tasks and potentially many threads. To
@@ -26,9 +47,10 @@ support this, it is wrapped in `Arc<Mutex<_>>`.
 First, for convenience, add the following after the `use` statements.
 
 ```rust
+use bytes::Bytes;
 use std::sync::{Arc, Mutex};
 
-type Db = Arc<Mutex<HashMap<String, Vec<u8>>>>;
+type Db = Arc<Mutex<HashMap<String, Bytes>>;
 ```
 
 Then, update the `main` function to initialize the `HashMap` and pass an `Arc`
@@ -94,13 +116,13 @@ async fn process(socket: TcpStream, db: Db) {
         let response = match Command::from_frame(frame).unwrap() {
             Set(cmd) => {
                 let mut db = db.lock().unwrap();
-                db.insert(cmd.key().to_string(), cmd.value().to_vec());
+                db.insert(cmd.key().to_string(), cmd.value().clone());
                 Frame::Simple("OK".to_string())
             }           
             Get(cmd) => {
                 let db = db.lock().unwrap();
                 if let Some(value) = db.get(cmd.key()) {
-                    Frame::Bulk(value.clone().into())
+                    Frame::Bulk(value.clone())
                 } else {
                     Frame::Null
                 }
