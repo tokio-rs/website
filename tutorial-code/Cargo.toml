@@ -5,4 +5,5 @@ members = [
     "spawning",
     "shared-state",
     "channels",
+    "io",
 ]
