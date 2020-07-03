@@ -665,7 +665,7 @@ a:active {
       max-width: 1220px;
     }
 
-    @media screen and (max-width: 1100px) {
+    @media screen and (max-width: 1400px) {
       .tk-content-summary {
         display: none;
       }
@@ -894,6 +894,11 @@ Docco style used in http://jashkenas.github.com/docco/ converted by Simon Madine
 //   color: #000;
 //   background: #f8f8ff;
 // }
+
+.hljs {
+  display: block;
+  overflow-x: scroll;
+}
 
 .hljs-comment,
 .hljs-quote {

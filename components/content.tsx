@@ -168,7 +168,7 @@ export default function Content({ menu, href, title, next, prev, body }) {
         <div className="column is-three-quarters tk-content">
           <section className="section content">
             <div className="columns">
-              <div className="column tk-markdown">
+              <div className="column is-two-thirds tk-markdown">
                 <h1 className="title">{title}</h1>
                 <ReactMarkdown
                   escapeHtml={false}
