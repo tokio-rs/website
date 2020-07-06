@@ -8,6 +8,13 @@ import GithubSlugger from "github-slugger";
 import CustomBlocks from "remark-custom-blocks";
 
 const CodeBlock = ({ language, value }) => {
+  // Remove lines starting with `# `. This is code to make the doc tests pass
+  // but should not be displayed.
+  value = value
+    .split("\n")
+    .filter((line) => !line.startsWith("# "))
+    .join("\n");
+
   return (
     <SyntaxHighlighter useInlineStyles={false} language={language}>
       {value}

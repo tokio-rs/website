@@ -161,6 +161,67 @@ Tasks in Tokio are very lightweight. Under the hood, they require only a single
 allocation and 64 bytes of memory. Applications should feel free to spawn
 thousands, if not millions of tasks.
 
+## `'static` bound
+
+Tasks spawned by `tokio::spawn` **must** be `'static`. The expression being
+spawned must not borrow any data.
+
+For example, the following will not compile:
+
+```rust
+use tokio::task;
+
+#[tokio::main]
+async fn main() {
+    let v = vec![1, 2, 3];
+
+    task::spawn(async {
+        println!("Here's a vec: {:?}", v);
+    });
+}
+```
+
+Attempting to compile this results in the following error:
+
+```text
+error[E0373]: async block may outlive the current function, but
+              it borrows `v`, which is owned by the current function
+ --> src/main.rs:7:23
+  |
+7 |       task::spawn(async {
+  |  _______________________^
+8 | |         println!("Here's a vec: {:?}", v);
+  | |                                        - `v` is borrowed here
+9 | |     });
+  | |_____^ may outlive borrowed value `v`
+  |
+note: function requires argument type to outlive `'static`
+ --> src/main.rs:7:17
+  |
+7 |       task::spawn(async {
+  |  _________________^
+8 | |         println!("Here's a vector: {:?}", v);
+9 | |     });
+  | |_____^
+help: to force the async block to take ownership of `v` (and any other
+      referenced variables), use the `move` keyword
+  |
+7 |     task::spawn(async move {
+8 |         println!("Here's a vec: {:?}", v);
+9 |     });
+  |
+```
+
+This happens because, by default, variables are not **moved** into async blocks.
+The `v` vector remains owned by the `main` function. The `println!` line borrows
+`v`. The rust compiler helpfully explains this to us and even suggests the fix!
+Changing line 7 to `task::spawn(async move {` will instruct the compiler to
+**move** `v` into the spawned task. Now, the task owns all of its data, making
+it `'static`.
+
+If a single piece of data must be accessible from more than one task
+concurrently, then it must be shared by a tool such as `Arc`.
+
 ## `Send` bound
 
 Tasks spawned by `tokio::spawn` **must** implement `Send`. This allows the Tokio
