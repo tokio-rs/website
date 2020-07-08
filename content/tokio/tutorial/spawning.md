@@ -32,6 +32,7 @@ it to stdout and respond with an error.
 use tokio::net::{TcpListener, TcpStream};
 use mini_redis::{Connection, Frame};
 
+# fn dox() {
 #[tokio::main]
 async fn main() {
     // Bind the listener to the address
@@ -43,6 +44,7 @@ async fn main() {
         process(socket).await;
     }
 }
+# }
 
 async fn process(socket: TcpStream) {
     // The `Connection` lets us read/write redis **frames** instead of
@@ -106,6 +108,9 @@ connection. The connection is processed on this task.
 The accept loop becomes:
 
 ```rust
+use tokio::net::TcpListener;
+
+# fn dox() {
 #[tokio::main]
 async fn main() {
     let mut listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
@@ -119,6 +124,8 @@ async fn main() {
         });
     }
 }
+# }
+# async fn process(_: tokio::net::TcpStream) {}
 ```
 
 ## Tasks
@@ -169,6 +176,7 @@ spawned must not borrow any data.
 For example, the following will not compile:
 
 ```rust
+# /*
 use tokio::task;
 
 #[tokio::main]
@@ -179,6 +187,7 @@ async fn main() {
         println!("Here's a vec: {:?}", v);
     });
 }
+# */
 ```
 
 Attempting to compile this results in the following error:
@@ -267,6 +276,7 @@ use std::rc::Rc;
 #[tokio::main]
 async fn main() {
     tokio::spawn(async {
+# /*
         let rc = Rc::new("hello");
 
         // `rc` is used after `.await`. It must be persisted to
@@ -274,6 +284,7 @@ async fn main() {
         yield_now().await;
 
         println!("{}", rc);
+# */
     });
 }
 ```
@@ -318,6 +329,9 @@ will use a `HashMap` to store values. `SET` commands will insert into the
 accept more than one command per connection.
 
 ```rust
+use tokio::net::TcpStream;
+use mini_redis::{Connection, Frame};
+
 async fn process(socket: TcpStream) {
     use mini_redis::Command::{self, Get, Set};
     use std::collections::HashMap;

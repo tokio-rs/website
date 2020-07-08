@@ -100,11 +100,15 @@ Similarly to an async block, an async function is an easy way to create a
 function whose body becomes a future. All async functions can be rewritten into
 ordinary functions that return a future:
 
-```
+```rust
 async fn do_stuff(i: i32) -> String {
     // do stuff
     format!("The integer is {}.", i)
 }
+```
+
+```rust
+use std::future::Future;
 
 // the async function above is the same as this:
 fn do_stuff(i: i32) -> impl Future<Output = String> {
@@ -160,9 +164,12 @@ stream of values. It is commonly used together with a `while let` loop like this
 ```
 use tokio::stream::StreamExt; // for next()
 
+# async fn dox() {
+# let mut stream = tokio::stream::empty::<()>();
 while let Some(item) = stream.next().await {
-    ...
+    // do something
 }
+# }
 ```
 
 The word stream is confusingly sometimes used to refer to the [`AsyncRead`] and

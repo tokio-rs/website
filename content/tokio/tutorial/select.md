@@ -31,10 +31,10 @@ async fn main() {
 
     tokio::select! {
         val = rx1 => {
-            println!("rx1 completed first with {}", val);
+            println!("rx1 completed first with {:?}", val);
         }
         val = rx2 => {
-            println!("rx2 completed first with {}", val);
+            println!("rx2 completed first with {:?}", val);
         }
     }
 }
@@ -58,7 +58,7 @@ computation is awaiting the `oneshot::Receiver` for each channel. The
 The `select!` macro can handle more than two branches. The current limit is 64
 branches. Each branch is structured as:
 
-```
+```text
 <pattern> = <async expression> => <handler>,
 ```
 
@@ -109,8 +109,12 @@ async fn main() {
 Here, we select on a oneshot and accepting sockets from a `TcpListener`.
 
 ```rust
+use tokio::net::TcpListener;
+use tokio::sync::oneshot;
+use std::io;
+
 #[tokio::main]
-async fn main() {
+async fn main() -> io::Result<()> {
     let (tx, rx) = oneshot::channel();
 
     tokio::spawn(async move {
@@ -125,12 +129,18 @@ async fn main() {
                 let (socket, _) = listener.accept().await?;
                 tokio::spawn(async move { process(socket) });
             }
+
+            // Help the rust type inferencer out
+            Ok::<_, io::Error>(())
         } => {}
-        _ => rx => {
+        _ = rx => {
             println!("terminating accept loop");
         }
     }
+
+    Ok(())
 }
+# async fn process(_: tokio::net::TcpStream) {}
 ```
 
 The accept loop runs until an error is encountered or `rx` receives a value. The
@@ -152,6 +162,7 @@ async fn computation2() -> String {
 # unimplemented!();
 }
 
+# fn dox() {
 #[tokio::main]
 async fn main() {
     let out = tokio::select! {
@@ -161,6 +172,7 @@ async fn main() {
 
     println!("Got = {}", out);
 }
+# }
 ```
 
 Because of this, it is required that the `<handler>` expression for **each**
@@ -177,10 +189,15 @@ from a handler immediately propagates the error out of the `select!` expression.
 Let's look at the accept loop example again:
 
 ```rust
+use tokio::net::TcpListener;
+use tokio::sync::oneshot;
+use std::io;
+
 #[tokio::main]
 async fn main() -> io::Result<()> {
     // [setup `rx` oneshot channel]
 # let (tx, rx) = oneshot::channel();
+# tx.send(()).unwrap();
 
     let mut listener = TcpListener::bind("localhost:3465").await?;
 
@@ -190,16 +207,20 @@ async fn main() -> io::Result<()> {
                 let (socket, _) = listener.accept().await?;
                 tokio::spawn(async move { process(socket) });
             }
+
+            // Help the rust type inferencer out
+            Ok::<_, io::Error>(())
         } => {
             res?;
         }
-        _ => rx => {
+        _ = rx => {
             println!("terminating accept loop");
         }
     }
 
     Ok(())
 }
+# async fn process(_: tokio::net::TcpStream) {}
 ```
 
 Notice `listener.accept().await?`. The `?` operator propagates the error out of
@@ -211,7 +232,7 @@ statement will propagate an error out of the `main` function.
 
 Recall that the `select!` macro branch syntax was defined as:
 
-```
+```text
 <pattern> = <async expression> => <handler>,
 ```
 
@@ -224,13 +245,13 @@ use tokio::sync::mpsc;
 
 #[tokio::main]
 async fn main() {
-    let (tx1, rx1) = mpsc::channel(128);
-    let (tx2, rx2) = mpsc::channel(128);
+    let (mut tx1, mut rx1) = mpsc::channel(128);
+    let (mut tx2, mut rx2) = mpsc::channel(128);
 
     tokio::spawn(async move {
         // Do something w/ `tx1` and `tx2`
-# tx1.send(1).unwrap();
-# tx2.send(2).unwrap();
+# tx1.send(1).await.unwrap();
+# tx2.send(2).await.unwrap();
     });
 
     tokio::select! {
@@ -240,7 +261,7 @@ async fn main() {
         Some(v) = rx2.recv() => {
             println!("Got {:?} from rx2", v);
         }
-        else {
+        else => {
             println!("Both channels closed");
         }
     }
@@ -281,17 +302,19 @@ async fn race(
 ) -> io::Result<()> {
     tokio::select! {
         Ok(_) = async {
-            let socket = TcpStream::connect(addr1).await?;
+            let mut socket = TcpStream::connect(addr1).await?;
             socket.write_all(data).await?;
-            Ok(())
+            Ok::<_, io::Error>(())
         } => {}
         Ok(_) = async {
-            let socket = TcpStream::connect(addr1).await?;
+            let mut socket = TcpStream::connect(addr1).await?;
             socket.write_all(data).await?;
-            Ok(())
+            Ok::<_, io::Error>(())
         } => {}
         else => {}
-    }
+    };
+
+    Ok(())
 }
 # fn main() {}
 ```
@@ -347,17 +370,18 @@ use tokio::sync::mpsc;
 
 #[tokio::main]
 async fn main() {
-    let (tx1, rx1) = mpsc::channel(128);
-    let (tx2, rx2) = mpsc::channel(128);
-    let (tx3, rx3) = mpsc::channel(128);
-# tokio::spawn(async move { drop((tx1, tx2, tx3)) });
+    let (tx1, mut rx1) = mpsc::channel(128);
+    let (tx2, mut rx2) = mpsc::channel(128);
+    let (tx3, mut rx3) = mpsc::channel(128);
+# tx1.clone().send("hello").await.unwrap();
+# drop((tx1, tx2, tx3));
 
     loop {
         let msg = tokio::select! {
             Some(msg) = rx1.recv() => msg,
             Some(msg) = rx2.recv() => msg,
             Some(msg) = rx3.recv() => msg,
-            else { break }
+            else => { break }
         };
 
         println!("Got {}", msg);

@@ -37,6 +37,7 @@ closed.
 use tokio::fs::File;
 use tokio::io::{self, AsyncReadExt};
 
+# fn dox() {
 #[tokio::main]
 async fn main() -> io::Result<()> {
     let mut f = File::open("foo.txt").await?;
@@ -48,6 +49,7 @@ async fn main() -> io::Result<()> {
     println!("The bytes: {:?}", &buffer[..n]);
     Ok(())
 }
+# }
 ```
 
 ## `async fn read_to_end()`
@@ -59,6 +61,7 @@ EOF.
 use tokio::io::{self, AsyncReadExt};
 use tokio::fs::File;
 
+# fn dox() {
 #[tokio::main]
 async fn main() -> io::Result<()> {
     let mut f = File::open("foo.txt").await?;
@@ -68,6 +71,7 @@ async fn main() -> io::Result<()> {
     f.read_to_end(&mut buffer).await?;
     Ok(())
 }
+# }
 ```
 
 ## `async fn write()`
@@ -79,6 +83,7 @@ many bytes were written.
 use tokio::io::{self, AsyncWriteExt};
 use tokio::fs::File;
 
+# fn dox() {
 #[tokio::main]
 async fn main() -> io::Result<()> {
     let mut file = File::create("foo.txt").await?;
@@ -89,6 +94,7 @@ async fn main() -> io::Result<()> {
     println!("Wrote the first {} bytes of 'some bytes'.", n);
     Ok(())
 }
+# }
 ```
 
 ## `async fn write_all()`
@@ -100,6 +106,7 @@ writer.
 use tokio::io::{self, AsyncWriteExt};
 use tokio::fs::File;
 
+# fn dox() {
 #[tokio::main]
 async fn main() -> io::Result<()> {
     let mut buffer = File::create("foo.txt").await?;
@@ -107,6 +114,7 @@ async fn main() -> io::Result<()> {
     buffer.write_all(b"some bytes").await?;
     Ok(())
 }
+# }
 ```
 
 Both traits include a number of other helpful methods. See the API docs for a
@@ -121,12 +129,19 @@ helpful utility functions as well as APIs for working with [standard in][stdin],
 into a writer.
 
 ```rust
+use tokio::fs::File;
 use tokio::io;
 
-let mut reader: &[u8] = b"hello";
-let mut file = File::create("foo.txt").await?;
+# fn dox() {
+#[tokio::main]
+async fn main() -> io::Result<()> {
+    let mut reader: &[u8] = b"hello";
+    let mut file = File::create("foo.txt").await?;
 
-io::copy(&mut reader, &mut file).await?;
+    io::copy(&mut reader, &mut file).await?;
+    Ok(())
+}
+# }
 ```
 
 Note that this uses the fact that byte arrays also implement `AsyncRead`.
@@ -153,6 +168,7 @@ each accepted socket.
 use tokio::io;
 use tokio::net::TcpListener;
 
+# fn dox() {
 #[tokio::main]
 async fn main() -> io::Result<()> {
     let mut listener = TcpListener::bind("127.0.0.1:6142").await.unwrap();
@@ -165,6 +181,7 @@ async fn main() -> io::Result<()> {
         });
     }
 }
+# }
 ```
 
 As seen earlier, this utility function takes a reader and a writer and copies
@@ -173,7 +190,7 @@ single value implements **both** `AsyncRead` and `AsyncWrite`. Because
 `io::copy` requires `&mut` for both the reader and the writer, the socket cannot
 be used for both arguments.
 
-```rust
+```rust,compile_fail
 // This fails to compile
 io::copy(&mut socket, &mut socket).await
 ```
@@ -192,19 +209,23 @@ tasks.
 For example, the echo client could handle concurrent reads and writes like this:
 
 ```rust
-use tokio::io;
+use tokio::io::{self, AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 
+# fn dox() {
 #[tokio::main]
 async fn main() -> io::Result<()> {
     let socket = TcpStream::connect("127.0.0.1:6142").await?;
-    let (rd, wr) = io::split(socket);
+    let (mut rd, mut wr) = io::split(socket);
 
     // Write data in the background
     let write_task = tokio::spawn(async move {
         wr.write_all(b"hello\r\n").await?;
         wr.write_all(b"world\r\n").await?;
-        Ok(())
+
+        // Sometimes, the rust type inferencer needs
+        // a little help
+        Ok::<_, io::Error>(())
     });
 
     let mut buf = vec![0; 128];
@@ -216,11 +237,12 @@ async fn main() -> io::Result<()> {
             break;
         }
 
-        println!("GOT {:?}", buf[..n]);
+        println!("GOT {:?}", &buf[..n]);
     }
 
     Ok(())
 }
+# }
 ```
 
 Because `io::split` supports **any** value that implements `AsyncRead +
@@ -239,6 +261,9 @@ Because `io::copy()` is called on a the same task that owns the `TcpStream`, we
 can use [`TcpStream::split`]. The task that processes the echo logic becomes:
 
 ```rust
+# use tokio::io;
+# use tokio::net::TcpStream;
+# fn dox(mut socket: TcpStream) {
 tokio::spawn(async move {
     let (mut rd, mut wr) = socket.split();
     
@@ -246,6 +271,7 @@ tokio::spawn(async move {
         eprintln!("failed to copy");
     }
 });
+# }
 ```
 
 You can find the entire code [here][full].
@@ -264,6 +290,7 @@ The full echo server is as follows.
 use tokio::io::{self, AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpListener;
 
+# fn dox() {
 #[tokio::main]
 async fn main() -> io::Result<()> {
     let mut listener = TcpListener::bind("127.0.0.1:6142").await.unwrap();
@@ -297,6 +324,7 @@ async fn main() -> io::Result<()> {
         });
     }
 }
+# }
 ```
 
 Let's break it down. First, since the `AsyncRead` and `AsyncWrite` utilities are
@@ -325,6 +353,7 @@ If the buffer is represented by a stack array, the internal structure for tasks
 spawned per accepted socket might look something like:
 
 ```rust
+# /*
 struct Task {
     // internal task fields here
     task: enum {
@@ -339,6 +368,7 @@ struct Task {
 
     }
 }
+# */
 ```
 
 If a stack array is used as the buffer type, it will be stored *inline* in the
@@ -361,14 +391,20 @@ When the read half of the TCP stream is shut down, a call to `read()` returns
 break from the read loop on EOF is a common source of bugs.
 
 ```rust
+# use tokio::io::AsyncReadExt;
+# use tokio::net::TcpStream;
+# async fn dox(mut socket: TcpStream) {
+# let mut buf = vec![0_u8; 1024];
 loop {
     match socket.read(&mut buf).await {
         // Return value of `Ok(0)` signifies that the remote has
         // closed
         Ok(0) => return,
         // ... other cases handled here
+# _ => unreachable!(),
     }
 }
+# }
 ```
 
 Forgetting to break from the read loop usually results in a 100% CPU infinite

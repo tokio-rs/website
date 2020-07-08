@@ -8,6 +8,8 @@ to a stream of frames. A frame is a unit of data transmitted between two peers.
 The Redis protocol frame is as follows:
 
 ```rust
+use bytes::Bytes;
+
 enum Frame {
     Simple(String),
     Error(String),
@@ -24,21 +26,27 @@ parsing and implementation happen at a higher level.
 For HTTP, a frame might look like:
 
 ```rust
+# use bytes::Bytes;
+# type Method = ();
+# type Uri = ();
+# type Version = ();
+# type HeaderMap = ();
+# type StatusCode = ();
 enum HttpFrame {
     RequestHead {
         method: Method,
         uri: Uri,
         version: Version,
         headers: HeaderMap,
-    }
+    },
     ResponseHead {
         status: StatusCode,
-        version: Versi5on,
+        version: Version,
         headers: HeaderMap,
-    }
+    },
     BodyChunk {
         chunk: Bytes,
-    }
+    },
 }
 ```
 
@@ -46,6 +54,7 @@ To implement framing for Mini-Redis, we will implement a `Connection` struct
 that wraps a `TcpStream` and reads/writes `mini_redis::Frame` values.
 
 ```rust
+use tokio::net::TcpStream;
 use mini_redis::{Frame, Result};
 
 struct Connection {
@@ -58,11 +67,19 @@ impl Connection {
     /// 
     /// Returns `None` if EOF is reached
     pub async fn read_frame(&mut self)
-        -> Result<Option<Frame>> { ... }
+        -> Result<Option<Frame>>
+    {
+        // implementation here
+# unimplemented!();
+    }
 
     /// Write a frame to the connection.
     pub async fn write_frame(&mut self, frame: &Frame)
-        -> Result<()> { ...}
+        -> Result<()>
+    {
+        // implementation here
+# unimplemented!();
+    }
 }
 ```
 
@@ -108,8 +125,16 @@ impl Connection {
 Next, we implement the `read_frame()` method.
 
 ```rust
+use tokio::io::AsyncReadExt;
 use bytes::Buf;
+use mini_redis::Result;
 
+# struct Connection {
+#   stream: tokio::net::TcpStream,
+#   buffer: bytes::BytesMut,
+# }
+# struct Frame {}
+# impl Connection {
 pub async fn read_frame(&mut self)
     -> Result<Option<Frame>>
 {
@@ -139,6 +164,8 @@ pub async fn read_frame(&mut self)
         }
     }
 }
+# fn parse_frame(&self) -> Result<Option<Frame>> { unimplemented!() }
+# }
 ```
 
 Let's break this down. The `read_frame` method operates in a loop. First,
@@ -165,6 +192,8 @@ First, consider how we would implement the same read loop using `read()`.
 `Vec<u8>` could be used instead of `BytesMut`.
 
 ```rust
+use tokio::net::TcpStream;
+
 pub struct Connection {
     stream: TcpStream,
     buffer: Vec<u8>,
@@ -177,6 +206,7 @@ impl Connection {
             stream,
             // Allocate the buffer with 4kb of capacity.
             buffer: vec![0; 4096],
+            cursor: 0,
         }
     }
 }
@@ -185,6 +215,15 @@ impl Connection {
 And the `read_frame()` function on `Connection`:
 
 ```rust
+use mini_redis::{Frame, Result};
+
+# use tokio::io::AsyncReadExt;
+# pub struct Connection {
+#     stream: tokio::net::TcpStream,
+#     buffer: Vec<u8>,
+#     cursor: usize,
+# }
+# impl Connection {
 pub async fn read_frame(&mut self)
     -> Result<Option<Frame>>
 {
@@ -202,7 +241,7 @@ pub async fn read_frame(&mut self)
         // Read into the buffer, tracking the number
         // of bytes read
         let n = self.stream.read(
-            &mut self.buffer[self.cursor..]).await?
+            &mut self.buffer[self.cursor..]).await?;
 
         if 0 == n {
             if self.cursor == 0 {
@@ -216,6 +255,8 @@ pub async fn read_frame(&mut self)
         }
     }
 }
+# fn parse_frame(&mut self) -> Result<Option<Frame>> { unimplemented!() }
+# }
 ```
 
 When working with byte arrays and `read`, we must also maintain a cursor
@@ -263,11 +304,18 @@ cursor points to the end of the frame.
 For the `Buf` type, we will use [`std::io::Cursor<&[u8]>`][`Cursor`].
 
 ```rust
-use frame::Error::Incomplete;
+use mini_redis::{Frame, Result};
+use mini_redis::frame::Error::Incomplete;
+use bytes::Buf;
 use std::io::Cursor;
 
+# pub struct Connection {
+#     stream: tokio::net::TcpStream,
+#     buffer: bytes::BytesMut,
+# }
+# impl Connection {
 fn parse_frame(&mut self)
-    -> crate::Result<Option<Frame>>
+    -> Result<Option<Frame>>
 {
     // Create the `T: Buf` type.
     let mut buf = Cursor::new(&self.buffer[..]);
@@ -297,6 +345,7 @@ fn parse_frame(&mut self)
         Err(e) => Err(e.into()),
     }
 }
+# }
 ```
 
 The full [`Frame::check`][check] function can be found [here][check]. We will
@@ -346,6 +395,8 @@ First, the `Connection` struct is updated:
 
 ```rust
 use tokio::io::BufWriter;
+use tokio::net::TcpStream;
+use bytes::BytesMut;
 
 pub struct Connection {
     stream: BufWriter<TcpStream>,
@@ -365,8 +416,14 @@ impl Connection {
 Next, `write_frame()` is implemented.
 
 ```rust
-use tokio::io::AsyncWriteExt;
+use tokio::io::{self, AsyncWriteExt};
+use mini_redis::Frame;
 
+# struct Connection {
+#   stream: tokio::io::BufWriter<tokio::net::TcpStream>,
+#   buffer: bytes::BytesMut,
+# }
+# impl Connection {
 async fn write_value(&mut self, frame: &Frame)
     -> io::Result<()>
 {
@@ -403,6 +460,8 @@ async fn write_value(&mut self, frame: &Frame)
 
     Ok(())
 }
+# async fn write_decimal(&mut self, val: u64) -> io::Result<()> { unimplemented!() }
+# }
 ```
 
 The functions used here are provided by [`AsyncWriteExt`]. They are available on

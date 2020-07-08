@@ -48,9 +48,10 @@ First, for convenience, add the following after the `use` statements.
 
 ```rust
 use bytes::Bytes;
+use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
-type Db = Arc<Mutex<HashMap<String, Bytes>>;
+type Db = Arc<Mutex<HashMap<String, Bytes>>>;
 ```
 
 Then, update the `main` function to initialize the `HashMap` and pass an `Arc`
@@ -60,6 +61,11 @@ Throughout Tokio, the term **handle** is used to reference a value that provides
 access to some shared state.
 
 ```rust
+use tokio::net::TcpListener;
+use std::collections::HashMap;
+use std::sync::{Arc, Mutex};
+
+# fn dox() {
 #[tokio::main]
 async fn main() {
     let mut listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
@@ -77,6 +83,9 @@ async fn main() {
         process(socket, db).await;
     }
 }
+# }
+# type Db = Arc<Mutex<HashMap<(), ()>>>;
+# async fn process(_: tokio::net::TcpStream, _: Db) {}
 ```
 
 ## On using `std::sync::Mutex`
@@ -105,6 +114,12 @@ shared handle to the `HashMap` as an argument. It also needs to lock the
 `HashMap` before using it.
 
 ```rust
+use tokio::net::TcpStream;
+use mini_redis::{Connection, Frame};
+# use std::collections::HashMap;
+# use std::sync::{Arc, Mutex};
+# type Db = Arc<Mutex<HashMap<String, bytes::Bytes>>>;
+
 async fn process(socket: TcpStream, db: Db) {
     use mini_redis::Command::{self, Get, Set};
 
@@ -162,6 +177,8 @@ this, instead of having a single `Mutex<HashMap<_, _>>` instance, we would
 introduce `N` distinct instances.
 
 ```rust
+# use std::collections::HashMap;
+# use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Vec<Mutex<HashMap<String, Vec<u8>>>>>;
 ```
 
@@ -170,8 +187,10 @@ key is used to identify which shard it is part of. Then, the key is looked up in
 the `HashMap`.
 
 ```rust
+# /*
 let shard = db[hash(key) % db.len()].lock().unwrap();
 shard.insert(key, value);
+# */
 ```
 
 [basic]: https://docs.rs/tokio/0.2/tokio/runtime/index.html#basic-scheduler
