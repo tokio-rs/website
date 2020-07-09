@@ -80,12 +80,14 @@ let mut client = client::connect("127.0.0.1:6379").await?;
 # }
 ```
 
-The `client::connect` function is provided by the `mini-redis` crate. It
+The [`client::connect`] function is provided by the `mini-redis` crate. It
 asynchronously establishes a TCP connection with the specified remote address.
 Once the connection is established, a `client` handle is returned. Even though
 the operation is performed asynchronously, the code we write **looks**
 synchronous. The only indication that the operation is asynchronous is the
 `.await` operator.
+
+[`client::connect`]: https://docs.rs/mini-redis/0.1/mini_redis/client/fn.connect.html
 
 ## What is asynchronous programming?
 
@@ -132,7 +134,7 @@ fn` yield control back to the thread. The thread may do other work while the
 operation processes in the background.
 
 [[warning]]
-| Note, while other languages implement [`async/await`], Rust takes a unique
+| Although other languages implement [`async/await`] too, Rust takes a unique
 | approach. Primarily, Rust's async operations are **lazy**. This results in
 | different runtime semantics than other languages.
 
