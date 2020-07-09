@@ -186,11 +186,9 @@ Then, finding the cell for any given key becomes a two step process. First, the
 key is used to identify which shard it is part of. Then, the key is looked up in
 the `HashMap`.
 
-```rust
-# /*
+```rust,compile_fail
 let shard = db[hash(key) % db.len()].lock().unwrap();
 shard.insert(key, value);
-# */
 ```
 
 [basic]: https://docs.rs/tokio/0.2/tokio/runtime/index.html#basic-scheduler

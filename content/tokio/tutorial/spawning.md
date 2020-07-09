@@ -175,8 +175,7 @@ spawned must not borrow any data.
 
 For example, the following will not compile:
 
-```rust
-# /*
+```rust,compile_fail
 use tokio::task;
 
 #[tokio::main]
@@ -187,7 +186,6 @@ async fn main() {
         println!("Here's a vec: {:?}", v);
     });
 }
-# */
 ```
 
 Attempting to compile this results in the following error:
@@ -269,14 +267,13 @@ async fn main() {
 
 This does not:
 
-```rust
+```rust,compile_fail
 use tokio::task::yield_now;
 use std::rc::Rc;
 
 #[tokio::main]
 async fn main() {
     tokio::spawn(async {
-# /*
         let rc = Rc::new("hello");
 
         // `rc` is used after `.await`. It must be persisted to
@@ -284,7 +281,6 @@ async fn main() {
         yield_now().await;
 
         println!("{}", rc);
-# */
     });
 }
 ```

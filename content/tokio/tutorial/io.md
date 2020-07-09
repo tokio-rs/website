@@ -352,8 +352,7 @@ data that needs to be stored for a specific call to `.await`.
 If the buffer is represented by a stack array, the internal structure for tasks
 spawned per accepted socket might look something like:
 
-```rust
-# /*
+```rust,compile_fail
 struct Task {
     // internal task fields here
     task: enum {
@@ -368,7 +367,6 @@ struct Task {
 
     }
 }
-# */
 ```
 
 If a stack array is used as the buffer type, it will be stored *inline* in the
