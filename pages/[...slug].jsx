@@ -16,6 +16,7 @@ const menu = {
           "channels",
           "io",
           "framing",
+          "async",
           "select",
         ],
       },

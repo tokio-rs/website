@@ -6,4 +6,5 @@ members = [
     "shared-state",
     "channels",
     "io",
+    "mini-tokio",
 ]
