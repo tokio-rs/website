@@ -7,19 +7,19 @@ type Organization = {
 
 const ORGANIZATIONS: Organization[] = [
   { name: "linkerd", url: "https://linkerd.io" },
+  { name: "aws", url: "https://aws.amazon.com" },
   { name: "azure", url: "https://azure.microsoft.com" },
   { name: "pingcap", url: "https://pingcap.com" },
   { name: "comcast", url: "https://www.comcast.com" },
   { name: "dropbox", url: "https://www.dropbox.com" },
   { name: "facebook", url: "https://www.facebook.com" },
-  { name: "smart-things", url: "https://www.smartthings.com" },
   { name: "one-signal", url: "https://onesignal.com" },
 ];
 
 const Logo: FC<{ org: Organization }> = ({ org }) => (
   <div key={org.name} className="column is-3">
     <a href={org.url} rel="nofollow">
-      <figure className="image">
+      <figure className={`image ${org.name}`}>
         <img src={`/img/logos/${org.name}.svg`} alt={org.name} />
       </figure>
     </a>
