@@ -91,12 +91,12 @@ synchronous. The only indication that the operation is asynchronous is the
 
 ## What is asynchronous programming?
 
-With synchronous programming, a program executes in the same order that it is
-written. The first line executes, the the next, and so on. When the program
-encounters an operation that cannot be completed immediately, it blocks until
-the operation completes. For example, establishing a TCP connection requires an
-exchange with a peer over the network takes some amount of time. During this
-time, the thread is blocked.
+Most computer programs execute in the same order that it is written. The first
+line executes, then the next, and so on.  With synchronous programming, when a
+program encounters an operation that cannot be completed immediately, it will
+block until the operation completes. For example, establishing a TCP connection
+requires an exchange with a peer over the network takes some amount of time. 
+During this time, the thread is blocked.
 
 With asynchronous programming, operations that cannot complete immediately are
 suspended to the background. The thread is not blocked, and can continue running
