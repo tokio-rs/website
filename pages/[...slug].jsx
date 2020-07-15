@@ -20,9 +20,6 @@ const menu = {
           "select",
         ],
       },
-      topics: {
-        nested: ["async", "concurrency", "features"],
-      },
       glossary: {},
       api: {
         title: "API documentation",

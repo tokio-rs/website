@@ -51,7 +51,7 @@ export default function Menu({ href, menu }) {
         {groups}
 
         {/* TODO: hook this up, only when needed */}
-        <p className="menu-label tk-menu-back">
+        {/* <p className="menu-label tk-menu-back">
           <img
             src="/img/arrow-left-small.svg"
             style={{
@@ -62,7 +62,7 @@ export default function Menu({ href, menu }) {
             }}
           />
           <a>All Libraries</a>
-        </p>
+        </p> */}
       </div>
     </aside>
   );
