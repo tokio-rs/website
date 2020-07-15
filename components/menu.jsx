@@ -95,7 +95,7 @@ function Level1({ href, menu }) {
         {link}
         {hasNested && (
           <ul>
-            <Level2 href={href} menu={entry.nested} />
+            <Level2 href={href} menu={entry} />
           </ul>
         )}
       </li>
@@ -106,7 +106,7 @@ function Level1({ href, menu }) {
 }
 
 function Level2({ href, menu }) {
-  const items = pagesFor(menu).map((page) => {
+  const items = pagesFor(menu.nested).map((page) => {
     const className = href.startsWith(page.href) ? "is-active" : "";
     return (
       <li key={page.key} className={className}>
@@ -114,6 +114,15 @@ function Level2({ href, menu }) {
       </li>
     );
   });
+
+  if (menu.data.subtitle) {
+    const className = href == menu.href ? "is-active" : "";
+    items.unshift((
+      <li key={menu.key} className={className}>
+        <a href={menu.href}>{menu.data.subtitle}</a>
+      </li>
+    ));
+  }
 
   return <ul>{items}</ul>;
 }
