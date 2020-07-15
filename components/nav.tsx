@@ -21,8 +21,8 @@ const Brand: FC = () => (
 
 const Links: FC<{ blog: Blog }> = ({ blog }) => {
   const links = Object.entries({
-    About: "/tokio/overview",
     Learn: "/tokio/tutorial",
+    "API Docs": "https://docs.rs/tokio",
     Blog: blog.href,
   }).map(([name, href]) => (
     <a key={name} href={href} className="navbar-item navbar-text">
