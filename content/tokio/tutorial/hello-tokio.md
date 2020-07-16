@@ -224,7 +224,7 @@ fn main() {
 
 The details of the Tokio runtime will be covered later.
 
-[runtime]: https://docs.rs/tokio/0.2.21/tokio/runtime/index.html
+[runtime]: https://docs.rs/tokio/0.2/tokio/runtime/index.html
 
 ## Cargo features
 
