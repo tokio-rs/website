@@ -321,6 +321,7 @@ use std::thread;
 struct Delay {
     when: Instant,
 }
+
 impl Future for Delay {
     type Output = &'static str;
 
@@ -370,6 +371,11 @@ fix them later.
 Recall the first iteration of `Delay`. Here was the future implementation:
 
 ```rust
+# use std::future::Future;
+# use std::pin::Pin;
+# use std::task::{Context, Poll};
+# use std::time::Instant;
+# struct Delay { when: Instant }
 impl Future for Delay {
     type Output = &'static str;
 
@@ -728,20 +734,21 @@ Using [`Notify`][notify], we can implement a `delay` function using
 use tokio::sync::Notify;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
+use std::thread;
 
 async fn delay(dur: Duration) {
     let when = Instant::now() + dur;
     let notify = Arc::new(Notify::new());
     let notify2 = notify.clone();
 
-    thread::spawn(async move {
+    thread::spawn(move || {
         let now = Instant::now();
 
         if now < when {
             thread::sleep(when - now);
         }
 
-        notify.notify();
+        notify2.notify();
     });
 
 
@@ -752,7 +759,7 @@ async fn delay(dur: Duration) {
 [trait]: https://doc.rust-lang.org/std/future/trait.Future.html
 [pin]: https://doc.rust-lang.org/std/pin/index.html
 [`Waker`]: https://doc.rust-lang.org/std/task/struct.Waker.html
-[mini-tokio]: #
+[mini-tokio]: https://github.com/tokio-rs/website-next/blob/master/tutorial-code/mini-tokio/src/main.rs
 [vtable]: https://doc.rust-lang.org/std/task/struct.RawWakerVTable.html
 [`ArcWake`]: https://docs.rs/futures/0.3/futures/task/trait.ArcWake.html
 [`futures`]: https://docs.rs/futures/

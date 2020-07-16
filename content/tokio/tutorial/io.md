@@ -276,7 +276,7 @@ tokio::spawn(async move {
 
 You can find the entire code [here][full].
 
-[full]: #
+[full]: https://github.com/tokio-rs/website-next/blob/master/tutorial-code/io/src/echo-server-copy.rs
 
 ## Manual copying
 
@@ -411,7 +411,7 @@ The loop then repeats forever.
 
 Full code is found [here][full]
 
-[full]: #
+[full]: https://github.com/tokio-rs/website-next/blob/master/tutorial-code/io/src/echo-server.rs
 [send]: /tokio/tutorial/spawning#send-bound
 
 [`AsyncRead`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncRead.html

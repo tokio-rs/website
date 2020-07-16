@@ -83,9 +83,11 @@ impl Connection {
 }
 ```
 
-You can find the details of the Redis wire protocol [here][proto].
+You can find the details of the Redis wire protocol [here][proto]. The full
+`Connection` code is found [here][full].
 
 [proto]: https://redis.io/topics/protocol
+[full]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/connection.rs
 
 # Buffered reads
 
@@ -100,7 +102,8 @@ To implement this, `Connection` needs a read buffer field. Data is read from the
 socket into the read buffer. When a frame is parsed, the corresponding data is
 removed from the buffer.
 
-We will use [`BytesMut`] as the buffer type. This is a mutable version of [`Bytes`].
+We will use [`BytesMut`] as the buffer type. This is a mutable version of
+[`Bytes`].
 
 ```rust
 use bytes::BytesMut;
@@ -293,8 +296,8 @@ Now, let's look at the `parse_frame()` function. Parsing is done in two steps.
 
 The `mini-redis` crate provides us with a function for both of these steps:
 
-1. [`Frame::check`](#)
-2. [`Frame::parse`](#)
+1. [`Frame::check`](https://docs.rs/mini-redis/0.2/mini_redis/frame/enum.Frame.html#method.check)
+2. [`Frame::parse`](https://docs.rs/mini-redis/0.2/mini_redis/frame/enum.Frame.html#method.check)
 
 We will also reuse the `Buf` abstraction to help. A `Buf` is passed into
 `Frame::check`. As the `check` funtion iterates the passed in buffer, the

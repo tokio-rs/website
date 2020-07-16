@@ -77,7 +77,6 @@ is found [here][full].
 [broadcast]: https://docs.rs/tokio/0.2/tokio/sync/broadcast/index.html
 [watch]: https://docs.rs/tokio/0.2/tokio/sync/watch/index.html
 
-
 # Define the message type
 
 In most cases, when using message passing, the task receiving the messages
