@@ -106,7 +106,7 @@ const Layer: FC<{ layer: StackLayer }> = ({ layer }) => (
             style={{
               display: "block",
               position: "relative",
-              top: "-13rem",
+              top: "-40vh",
               visibility: "hidden",
             }}
           />
