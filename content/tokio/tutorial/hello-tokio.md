@@ -151,8 +151,9 @@ more throughout the guide.
 
 Async functions are called like any other Rust function. However, calling these
 functions does not result in the function body executing. Instead, calling an
-`async fn` returns a value representing the operation. To actually run the
-operation, you should use the `.await` operator on the return value.
+`async fn` returns a value representing the operation, similar conceptually to
+a zero-argument closure. To actually run the operation, you should use the 
+`.await` operator on the return value.
 
 For example, the given program
 
