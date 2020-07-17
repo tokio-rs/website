@@ -165,6 +165,15 @@ tasks are scheduled to execute and they all require access to the mutex, then
 there will be contention. On the other hand, if the [`basic_scheduler`][basic]
 is used, then the mutex will never be contended.
 
+[[info]]
+| The [`basic_scheduler` runtime option][basic-rt] is a lightweight,
+| single-threaded runtime. It is a good choice when only spawning
+| a few tasks and opening a handful of sockets. For example, this
+| option works well when providing a synchronous API bridge on top
+| of an asynchronous client library.
+
+[basic-rt]: https://docs.rs/tokio/0.2/tokio/runtime/struct.Builder.html#method.basic_scheduler
+
 If a contention on a synchronous mutex becomes a problem, the best fix is rarely
 to switch to the Tokio mutex. Instead, options to consider are:
 

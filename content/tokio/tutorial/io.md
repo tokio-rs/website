@@ -257,7 +257,7 @@ zero-cost. There is no `Arc` or `Mutex` needed. `TcpStream` also provides
 [`into_split`] which supports handles that can move across tasks at the cost of
 only an `Arc`.
 
-Because `io::copy()` is called on a the same task that owns the `TcpStream`, we
+Because `io::copy()` is called on the same task that owns the `TcpStream`, we
 can use [`TcpStream::split`]. The task that processes the echo logic becomes:
 
 ```rust

@@ -35,7 +35,7 @@ const LIBS: Library[] = [
     id: "tower",
     name: "Flexible",
     desc:
-      "The needs of a server application differ from that of an embedded device. Tokio provides the knobs needed to tune it to your use case.",
+      "The needs of a server application differ from that of an embedded device. Although Tokio comes with defaults that work well out of the box, it also provides the knobs needed to fine tune to different cases.",
   },
 ];
 
