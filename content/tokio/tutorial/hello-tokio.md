@@ -23,7 +23,7 @@ Next, open `Cargo.toml` and add the following right below `[dependencies]`:
 
 ```toml
 tokio = { version = "0.2", features = ["full"] }
-mini-redis = "0.1"
+mini-redis = "0.2"
 ```
 
 ## Write the code
