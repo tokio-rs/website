@@ -1,8 +1,26 @@
 # Tokio Website
 
-Work in progress.
+The website for the Tokio project. Lives at https://tokio.rs.
 
-## Getting Started
+Besides containing the content for the website, it also includes crates
+containing the example code used in the tutorial. These crates can be compiled
+and ran.
+
+* [hello-tokio](tutorial-code/hello-tokio/src/main.rs)
+* [spawning](tutorial-code/spawning/src/main.rs)
+* [shared-state](tutorial-code/shared-state/src/main.rs)
+* [channels](tutorial-code/channels/src/main.rs)
+* [io](tutorial-code/io)
+    * [echo-server-copy](tutorial-code/io/src/echo-server-copy.rs)
+    * [echo-server](tutorial-code/io/src/echo-server.rs)
+* [mini-tokio](tutorial-code/mini-tokio/src/main.rs)
+
+## Contributing
+
+Thinking about contributing? Great! This should help you get the website running
+locally.
+
+### Getting Started
 
 The website is built using [Next.js] paired with the [Bulma] CSS framework.
 First, make sure you have NPM installed. Next, start the development server:
@@ -16,7 +34,7 @@ Then, open [http://localhost:3000](http://localhost:3000).
 [Next.js]: https://nextjs.org/
 [Bulma]: https://bulma.io/
 
-## Resources
+### Resources
 
 To learn more about Next.js, take a look at the following resources:
 
