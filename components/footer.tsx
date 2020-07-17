@@ -3,7 +3,7 @@ import { DiscordIcon, GitHubIcon, TwitterIcon } from "./icons";
 
 export default function Footer() {
   const libs = [
-    ["Tokio", "/tokio", "https://github.com/tokio-rs/tokio"],
+    ["Tokio", "/tokio/tutorial", "https://github.com/tokio-rs/tokio"],
     ["Hyper", "https://docs.rs/hyper", "https://github.com/hyperium/hyper"],
     ["Tonic", "https://docs.rs/tonic", "https://github.com/hyperium/tonic"],
     ["Tower", "https://docs.rs/tower", "https://github.com/tower-rs/tower"],

@@ -25,7 +25,7 @@ const STACK_LAYERS: StackLayer[] = [
     desc:
       "Including I/O, timer, filesystem, synchronization, and scheduling facilities, the Tokio runtime is the foundation of asynchronous applications.",
     zIndex: 3,
-    href: "/tokio",
+    href: "/tokio/tutorial",
   },
   {
     id: "hyper",
