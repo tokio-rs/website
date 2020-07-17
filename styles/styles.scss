@@ -783,6 +783,13 @@ a:active {
     code {
       color: black;
     }
+
+    a code {
+      color: $magenta;
+    }
+    a:hover code {
+      color: darken($magenta);
+    }
   }
 }
 
