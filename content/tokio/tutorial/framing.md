@@ -363,7 +363,7 @@ advances the cursor by one.
 There are more useful methods on the [`Buf`] trait. Check the [API docs][`Buf`]
 for more details.
 
-[check]: https://github.com/tokio-rs/mini-redis/blob/master/src/frame.rs#L63-L100
+[check]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/frame.rs#L63-L100
 [`Buf::get_u8`]: https://docs.rs/bytes/0.5/bytes/buf/trait.Buf.html#method.get_u8
 [`Buf`]: https://docs.rs/bytes/0.5/bytes/buf/trait.Buf.html
 [`Cursor`]: https://doc.rust-lang.org/stable/std/io/struct.Cursor.html
@@ -490,7 +490,7 @@ include the `flush().await` call in `fn write_frame()`.
 
 
 [buf-writer]: https://docs.rs/tokio/0.2/tokio/io/struct.BufWriter.html
-[write-frame]: https://github.com/tokio-rs/mini-redis/blob/master/src/connection.rs#L159-L184
+[write-frame]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/connection.rs#L159-L184
 [`AsyncWriteExt`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html
 [`write_u8`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html#method.write_u8
-[`write_decimal`]: https://github.com/tokio-rs/mini-redis/blob/master/src/connection.rs#L225-L238
+[`write_decimal`]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/connection.rs#L225-L238
