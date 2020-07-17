@@ -33,15 +33,11 @@ somewhere and are happy to help.
 Readers should already be familiar with the [Rust]. The [Rust book][book] is an
 excellent resource to get started with.
 
-You should already have a basic idea about **what** Tokio is. If not, start
-[here].
-
 While not required, some experience with writing networking code using the [Rust
 standard library][std] or another language can be helpful.
 
 No pre-existing knowledge of Redis is required.
 
-[here]: /tokio/overview
 [rust]: https://rust-lang.org
 [book]: https://doc.rust-lang.org/book/
 [std]: doc.rust-lang.org/std/
