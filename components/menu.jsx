@@ -71,7 +71,7 @@ export default function Menu({ href, menu }) {
 function Level1({ href, menu }) {
   const items = pagesFor(menu).map((entry) => {
     const isActive = href.startsWith(entry.href);
-    const hasNested = isActive && entry.nested !== undefined;
+    const hasNested = entry.nested !== undefined;
     const className = isActive ? "is-active" : "";
 
     let link;
