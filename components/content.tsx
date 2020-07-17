@@ -60,7 +60,8 @@ function flatten(text, child) {
     : React.Children.toArray(child.props.children).reduce(flatten, text);
 }
 
-function Footer({ next, prev }) {
+function Footer({ next, prev, mdPath }) {
+  let edit = `https://github.com/tokio-rs/website-next/edit/master/content/${mdPath}`;
   return (
     <div className="tk-doc-footer">
       <div className="level">
@@ -105,7 +106,7 @@ function Footer({ next, prev }) {
         </div>
         <div className="level-right">
           <div className="level-item tk-edit-this-page">
-            <a href="#">Edit this page</a>
+            <a href={edit}>Edit this page</a>
           </div>
         </div>
       </div>
@@ -159,7 +160,7 @@ function TableOfContents({ headings }) {
   );
 }
 
-export default function Content({ menu, href, title, next, prev, body }) {
+export default function Content({ menu, href, title, next, prev, body, mdPath }) {
   const slugger = new GithubSlugger();
   let headings = [{ level: 1, title, slug: "" }];
   const HeadingRenderer = (props) => {
@@ -190,7 +191,7 @@ export default function Content({ menu, href, title, next, prev, body }) {
                   }}
                   plugins={[[CustomBlocks, Blocks]]}
                 />
-                <Footer next={next} prev={prev} />
+                <Footer next={next} prev={prev} mdPath={mdPath} />
               </div>
               <TableOfContents headings={headings} />
             </div>
