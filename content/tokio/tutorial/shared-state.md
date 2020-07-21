@@ -35,8 +35,6 @@ To depend on `bytes`, add the following to your `Cargo.toml` in the
 bytes = "0.5"
 ```
 
-Then run `cargo install`.
-
 [`bytes`]: https://docs.rs/bytes/0.5/bytes/struct.Bytes.html
 
 # Initialize the `HashMap`

@@ -368,7 +368,7 @@ Now, start the server:
 $ cargo run
 ```
 
-and in a separate terminal window, run the `hello-tokio` example:
+and in a separate terminal window, run the `hello-redis` example:
 
 ```bash
 $ cargo run --example hello-redis
