@@ -55,7 +55,7 @@ const STACK_LAYERS: StackLayer[] = [
     id: "mio",
     name: "Mio",
     desc:
-      "Minimal portable API on top of the operataing-system's evented I/O API.",
+      "Minimal portable API on top of the operating-system's evented I/O API.",
     zIndex: 2,
     href: "https://github.com/tokio-rs/mio",
   },
