@@ -69,7 +69,7 @@ Success!
 
 You can find the full code [here][full].
 
-[full]: https://github.com/tokio-rs/website-next/blob/master/tutorial-code/hello-tokio/src/main.rs
+[full]: https://github.com/tokio-rs/website/blob/master/tutorial-code/hello-tokio/src/main.rs
 
 # Breaking it down
 

@@ -759,7 +759,7 @@ async fn delay(dur: Duration) {
 [trait]: https://doc.rust-lang.org/std/future/trait.Future.html
 [pin]: https://doc.rust-lang.org/std/pin/index.html
 [`Waker`]: https://doc.rust-lang.org/std/task/struct.Waker.html
-[mini-tokio]: https://github.com/tokio-rs/website-next/blob/master/tutorial-code/mini-tokio/src/main.rs
+[mini-tokio]: https://github.com/tokio-rs/website/blob/master/tutorial-code/mini-tokio/src/main.rs
 [vtable]: https://doc.rust-lang.org/std/task/struct.RawWakerVTable.html
 [`ArcWake`]: https://docs.rs/futures/0.3/futures/task/trait.ArcWake.html
 [`futures`]: https://docs.rs/futures/

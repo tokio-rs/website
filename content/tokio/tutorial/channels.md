@@ -440,4 +440,4 @@ capacity. Specific bound values will be application specific.
 
 Taking care and picking good bounds is a big part of writing reliable Tokio applications.
 
-[full]: https://github.com/tokio-rs/website-next/blob/master/tutorial-code/channels/src/main.rs
+[full]: https://github.com/tokio-rs/website/blob/master/tutorial-code/channels/src/main.rs

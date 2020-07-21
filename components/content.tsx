@@ -61,7 +61,7 @@ function flatten(text, child) {
 }
 
 function Footer({ next, prev, mdPath }) {
-  let edit = `https://github.com/tokio-rs/website-next/edit/master/content/${mdPath}`;
+  let edit = `https://github.com/tokio-rs/website/edit/master/content/${mdPath}`;
   return (
     <div className="tk-doc-footer">
       <div className="level">

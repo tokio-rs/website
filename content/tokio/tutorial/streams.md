@@ -56,7 +56,7 @@ Let's go over a slightly more complicated example using the Mini-Redis client.
 
 Full code can be found [here][full].
 
-[full]: https://github.com/tokio-rs/website-next/blob/master/tutorial-code/streams/src/main.rs
+[full]: https://github.com/tokio-rs/website/blob/master/tutorial-code/streams/src/main.rs
 
 ```rust
 use tokio::stream::StreamExt;

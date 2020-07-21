@@ -388,4 +388,4 @@ You can find the full code [here][full].
 
 In the next section, we will implement persisting data for all sockets.
 
-[full]: https://github.com/tokio-rs/website-next/blob/master/tutorial-code/spawning/src/main.rs
+[full]: https://github.com/tokio-rs/website/blob/master/tutorial-code/spawning/src/main.rs
