@@ -31,7 +31,7 @@ const STACK_LAYERS: StackLayer[] = [
     id: "hyper",
     name: "Hyper",
     desc:
-      "An HTTP client and server library supporting both the HTTP 1 and 2 protocols.",
+      "A HTTP client and server library supporting both the HTTP 1 and 2 protocols.",
     zIndex: 4,
     href: "https://github.com/hyperium/hyper",
   },
