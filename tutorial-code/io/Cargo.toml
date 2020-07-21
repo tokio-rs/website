@@ -16,4 +16,4 @@ path = "src/echo-server-copy.rs"
 
 [dependencies]
 tokio = { version = "0.2", features = ["full"] }
-mini-redis = { path = "/home/carllerche/Code/tokio-mini-redis" }
+mini-redis = "0.2"
