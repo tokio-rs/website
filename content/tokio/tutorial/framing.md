@@ -20,7 +20,7 @@ enum Frame {
 }
 ```
 
-Note how the frame only consists of data wihout any semantics. The command
+Note how the frame only consists of data without any semantics. The command
 parsing and implementation happen at a higher level.
 
 For HTTP, a frame might look like:
@@ -300,8 +300,8 @@ The `mini-redis` crate provides us with a function for both of these steps:
 2. [`Frame::parse`](https://docs.rs/mini-redis/0.2/mini_redis/frame/enum.Frame.html#method.check)
 
 We will also reuse the `Buf` abstraction to help. A `Buf` is passed into
-`Frame::check`. As the `check` funtion iterates the passed in buffer, the
-internal cursor will be advanaced. When `check` returns, the buffer's internal
+`Frame::check`. As the `check` function iterates the passed in buffer, the
+internal cursor will be advanced. When `check` returns, the buffer's internal
 cursor points to the end of the frame.
 
 For the `Buf` type, we will use [`std::io::Cursor<&[u8]>`][`Cursor`].
@@ -485,7 +485,7 @@ Another alternative would be to **not** call `flush()` in `write_frame()`.
 Instead, provide a `flush()` function on `Connection`. This would allow the
 caller to write queue multiple small frames in the write buffer then write them
 all to the socket with one `write` syscall. Doing this complicates the
-`Connection` API. Simplicty is one of mini-redis' goals, so we decided to
+`Connection` API. Simplicity is one of mini-redis' goals, so we decided to
 include the `flush().await` call in `fn write_frame()`.
 
 

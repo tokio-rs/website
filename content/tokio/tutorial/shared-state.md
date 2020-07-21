@@ -179,7 +179,7 @@ to switch to the Tokio mutex. Instead, options to consider are:
 - Shard the mutex
 - Restructure the code to avoid the mutex.
 
-In our case, as each *key* is indendent, mutex sharding will work well. To do
+In our case, as each *key* is independent, mutex sharding will work well. To do
 this, instead of having a single `Mutex<HashMap<_, _>>` instance, we would
 introduce `N` distinct instances.
 

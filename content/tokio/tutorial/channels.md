@@ -387,7 +387,7 @@ You can find the entire code [here][full].
 
 # Backpressure and bounded channels
 
-Whenever concurreny or queuing is introduced, it is important to ensure that the
+Whenever concurrency or queuing is introduced, it is important to ensure that the
 queueing is bounded and the system will gracefully handle load. Unbounded queues
 will eventually fill up all available memory and cause the system to fail in
 unpredictable ways.
@@ -408,7 +408,7 @@ loop {
 If the asynchronous operation runs eagerly, the loop will repeatedly queue a new
 `async_op` to run without ensuring the previous operation completed. This
 results in implicit unbounded queuing. Callback based systems and **eager**
-future based systems are particularly susceptable to this.
+future based systems are particularly susceptible to this.
 
 However, with Tokio and asynchronous Rust, the above snippet will **not** result
 in `async_op` running at all. This is because `.await` is never called. If the
