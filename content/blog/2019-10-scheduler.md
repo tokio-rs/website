@@ -1,17 +1,15 @@
-+++
-date = "2019-10-13"
-title = "Making the Tokio scheduler 10x faster"
-description = "October 13, 2019"
-menu = "blog"
-weight = 986
-+++
+---
+date: "2019-10-13"
+title: "Making the Tokio scheduler 10x faster"
+description: "October 13, 2019"
+---
 
 We've been hard at work on the next major revision of Tokio, Rust's asynchronous
 runtime. Today, a complete rewrite of the scheduler has been submitted as a
 [pull request][pr]. The result is huge performance and latency improvements.
 Some benchmarks saw a 10x speed up! It is always unclear how much these kinds of
 improvements impact "full stack" use cases, so we've also tested how these
-scheduler improvements impacted use cases like [Hyper] and [Tonic][Tonic]
+scheduler improvements impacted use cases like [Hyper] and [Tonic][tonic]
 (spoiler: it's really good).
 
 In preparation for working on the new scheduler, I spent time searching for
@@ -49,10 +47,10 @@ Before jumping in, I want to extend some gratitude.
   You did a great job. It is a killer feature.
 - **[@cramertj]** and others who designed `std::task`. It is a huge improvement
   compared to what we had before. Also, a great job there.
-- **[Buoyant]**, the makers of [Linkerd], and more importantly my employer. Thanks
-  for letting me spend so much time on this work. Readers who are in need of a
-  service mesh, check out [Linkerd]. It will soon include all the
-  goodness discussed in this article.
+- **[Buoyant]**, the makers of [Linkerd], and more importantly my employer.
+  Thanks for letting me spend so much time on this work. Readers who are in need
+  of a service mesh, check out [Linkerd]. It will soon include all the goodness
+  discussed in this article.
 - **[Go]** for having such a good scheduler implementation.
 
 Grab a cup of coffee and get yourselves comfortable. This is going to be a long
@@ -63,19 +61,19 @@ article.
 [loom]: https://github.com/carllerche/loom/
 [@withoutboats]: https://github.com/withoutboats
 [@cramertj]: https://github.com/cramertj
-[Buoyant]: https://buoyant.io/
-[Linkerd]: https://linkerd.io/
-[Go]: https://golang.org/
+[buoyant]: https://buoyant.io/
+[linkerd]: https://linkerd.io/
+[go]: https://golang.org/
 
 ## Schedulers, how do they work?
 
 The role of a scheduler is to schedule work. An application is broken up into
 units of work, which we will call _tasks_. A task is _runnable_ when it can make
-progress, and is no longer runnable (or _idle_) when it is blocked on an external
-resource. Tasks are independent in that any number of runnable tasks can execute
-concurrently. The scheduler is responsible for executing tasks in the running
-state until they transition back to idle. Executing a task implies assigning CPU
-time -- a global resource -- to the task.
+progress, and is no longer runnable (or _idle_) when it is blocked on an
+external resource. Tasks are independent in that any number of runnable tasks
+can execute concurrently. The scheduler is responsible for executing tasks in
+the running state until they transition back to idle. Executing a task implies
+assigning CPU time -- a global resource -- to the task.
 
 The article discusses user-space schedulers, i.e., schedulers that run on top of
 operating system threads (which, in turn, are powered by a kernel land
@@ -83,9 +81,9 @@ scheduler). The Tokio scheduler executes Rust futures, which can be though of as
 "asynchronous green threads". This is the [M:N threading][mn] pattern where many
 user land tasks are multiplexed on a few operating system threads.
 
-There are many different ways of modeling a scheduler, each with pros and
-cons. At the most basic level, the scheduler can be modeled as a _run queue_ and
-a _processor_ that drains the queue. A processor is a bit of code that runs on a
+There are many different ways of modeling a scheduler, each with pros and cons.
+At the most basic level, the scheduler can be modeled as a _run queue_ and a
+_processor_ that drains the queue. A processor is a bit of code that runs on a
 thread. In pseudocode, it does:
 
 ```rust
@@ -125,12 +123,15 @@ of wrapping the task with a linked list node. This way, allocations are avoided
 for push and pop operations. It is possible to use a [lock-free push
 operation][mpsc] but popping requires[^1] a mutex to coordinate consumers.
 
-[^1]: It is technically possible to implement a lock-free multi-consumer queue.
+[^1]:
+  It is technically possible to implement a lock-free multi-consumer queue.
   However, in practice the overhead needed to correctly avoid locks is greater
   than just using a mutex.
 
-[intrusive]: https://stackoverflow.com/questions/5004162/what-does-it-mean-for-a-data-structure-to-be-intrusive
-[mpsc]: http://www.1024cores.net/home/lock-free-algorithms/queues/intrusive-mpsc-node-based-queue
+[intrusive]:
+  https://stackoverflow.com/questions/5004162/what-does-it-mean-for-a-data-structure-to-be-intrusive
+[mpsc]:
+  http://www.1024cores.net/home/lock-free-algorithms/queues/intrusive-mpsc-node-based-queue
 
 This approach is commonly used when implementing a general-purpose thread pool,
 as it has several advantages:
@@ -140,11 +141,11 @@ as it has several advantages:
   with the processor loop sketched above.
 
 > A quick note on fairness. Scheduling fairness means that tasks are scheduled
-> first-in, first-out. Tasks that are transitioned to running first are
-> executed first. General purpose schedulers try to be fair, but there are use
-> cases, like parallelizing a computation using fork-join, where the only
-> important factor is how fast the end result is computed and not the
-> fairness of each individual sub task.
+> first-in, first-out. Tasks that are transitioned to running first are executed
+> first. General purpose schedulers try to be fair, but there are use cases,
+> like parallelizing a computation using fork-join, where the only important
+> factor is how fast the end result is computed and not the fairness of each
+> individual sub task.
 
 This scheduler model has a downside. All processors contend on the head of the
 queue. For general-purpose thread pools, this usually is not a deal breaker. The
@@ -167,22 +168,23 @@ not by going faster, but by making more CPU cores available to an application
 (my laptop has 6!). Each core can perform large amounts of computation in tiny
 periods of time. Relatively speaking, actions like cache and memory accesses
 takes [much longer][scaled-latency]. Therefore, for applications to be fast, we
-must maximize the amount of CPU instructions per memory access.  While the
+must maximize the amount of CPU instructions per memory access. While the
 compiler can do a lot of work for us, as developers, we do need to think about
 things like struct layout and memory access patterns.
 
 When it comes to concurrent threads, behavior is pretty similar to a single
 thread **until** concurrent mutations happen to the same cache line or
-[sequential consistency][seq-cst] is requested. Then, the [CPU's cache
-coherence protocol][mesi] will have to start working to ensure that each CPU's
-cache stays up to date.
+[sequential consistency][seq-cst] is requested. Then, the [CPU's cache coherence
+protocol][mesi] will have to start working to ensure that each CPU's cache stays
+up to date.
 
 This is all to say the obvious: avoid cross thread synchronization as much as
 possible because it is slow.
 
 [mech-symp]: https://mechanical-sympathy.blogspot.com
 [scaled-latency]: https://www.prowesscorp.com/computer-latency-at-a-human-scale/
-[seq-cst]: https://en.cppreference.com/w/cpp/atomic/memory_order#Sequentially-consistent_ordering
+[seq-cst]:
+  https://en.cppreference.com/w/cpp/atomic/memory_order#Sequentially-consistent_ordering
 [mesi]: https://en.wikipedia.org/wiki/MESI_protocol
 
 ### Many processors, each with their own run queue
@@ -201,15 +203,15 @@ This is the strategy used by [Seastar]. Because synchronization is almost
 entirely avoided, this strategy can be very fast. However, it's not a silver
 bullet. Unless the workload is entirely uniform, some processors will become
 idle while other processors are under load, resulting in resource
-underutilization.  This happens because tasks are pinned to a specific
-processor. When a bunch of tasks on a single processor are scheduled in a batch,
-that single processor is responsible for working through the spike even if other
+underutilization. This happens because tasks are pinned to a specific processor.
+When a bunch of tasks on a single processor are scheduled in a batch, that
+single processor is responsible for working through the spike even if other
 procesors are idle.
 
 Most "real world" workloads are not uniform. Because of this, general purpose
 schedulers tend to avoid this model.
 
-[Seastar]: http://seastar.io/
+[seastar]: http://seastar.io/
 
 ### Work-stealing scheduler
 
@@ -229,17 +231,20 @@ where the load is not evenly distributed across processors, the scheduler is
 able to redistribute. Because of this characteristic, the work-stealing
 scheduler is the choice of [Go], [Erlang], [Java], and others.
 
-[Go]: https://github.com/golang/go/blob/2df5cdbadf5fbcb23f017c9f00b75dc341a69adf/src/runtime/proc.go
-[Erlang]: https://github.com/erlang/otp/blob/17845f5a18f43b16ecafd1a9f9d289fddee54afd/erts/emulator/beam/erl_process.c
-[Java]: https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ForkJoinPool.html
+[go]:
+  https://github.com/golang/go/blob/2df5cdbadf5fbcb23f017c9f00b75dc341a69adf/src/runtime/proc.go
+[erlang]:
+  https://github.com/erlang/otp/blob/17845f5a18f43b16ecafd1a9f9d289fddee54afd/erts/emulator/beam/erl_process.c
+[java]:
+  https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ForkJoinPool.html
 
 The downside is this approach is far more complicated; the run queue algorithm
 must support the stealing operation and **some** cross processor synchronization
 is required to keep things running smoothly. If not done correctly, the overhead
 to implement the work-stealing model can be greater than the benefits gained.
 
-Consider this case: Processor A is currently running a task and has an empty
-run queue. Processor B is idle; it tries to steal tasks and fails, so it goes to
+Consider this case: Processor A is currently running a task and has an empty run
+queue. Processor B is idle; it tries to steal tasks and fails, so it goes to
 sleep. Then, the task being executed by processor A spawns 20 tasks. The goal
 would be for processor B to wake up and steal some of those newly spawned tasks.
 To achieve this, the work-stealing scheduler requires some heuristic where
@@ -268,13 +273,13 @@ point, the model was that I/O-based tasks would be executed on a single thread
 colocated with the I/O selector (epoll, kqueue, iocp, ...). More CPU bound work
 could be punted to a thread-pool. In this context, the number of active threads
 should be flexible and shutting down idle threads makes more sense. However, the
-model shifted to running *all* async tasks on the work-stealing scheduler, in
+model shifted to running _all_ async tasks on the work-stealing scheduler, in
 which case it makes more sense to keep a small number of threads always active.
 
-Second, it used the [crossbeam][crossbeam] deque implementation.
-This implementation is based on the [Chase-Lev deque][chase-lev], which, for
-reasons described below, is not a good fit for the use case of scheduling
-independent asynchronous tasks.
+Second, it used the [crossbeam][crossbeam] deque implementation. This
+implementation is based on the [Chase-Lev deque][chase-lev], which, for reasons
+described below, is not a good fit for the use case of scheduling independent
+asynchronous tasks.
 
 Third, the implementation was over-complicated. This is due, in part, to this
 being my first scheduler implementation. Also, I was over eager in using atomics
@@ -290,7 +295,8 @@ With tokio approaching its first major breaking release, we can pay all of that
 debt with the lessons learned over those years. It's an exciting time!
 
 [first-ship]: https://tokio.rs/blog/2018-03-tokio-runtime/
-[chase-lev]: https://www.dre.vanderbilt.edu/~schmidt/PDF/work-stealing-dequeue.pdf
+[chase-lev]:
+  https://www.dre.vanderbilt.edu/~schmidt/PDF/work-stealing-dequeue.pdf
 
 ## The next generation Tokio scheduler
 
@@ -310,8 +316,8 @@ _runnable_ and be pushed into the scheduler's run queue. In the new task system,
 the `Waker` struct is two pointers wide, when it used to be much bigger.
 Shrinking the size is important to minimize the overhead of copying the `Waker`
 value around, as well as taking less space in structs, allowing for more
-critical data to fit in the cache line. The custom [vtable] design enables
-a number of optimizations which will be discussed later.
+critical data to fit in the cache line. The custom [vtable] design enables a
+number of optimizations which will be discussed later.
 
 [std_task]: https://doc.rust-lang.org/std/task/index.html
 [cramertj]: https://github.com/cramertj
@@ -347,12 +353,12 @@ investigating if growing the queue is even a requirement. This question is what
 ended up spurring the rewrite of the scheduler. The new scheduler's strategy is
 to use a fixed size per-process queue. When the queue is full, instead of
 growing the local queue, the task is pushed into a global, multi-consumer,
-multi-producer, queue.  Processors will need to occasionally check this global
+multi-producer, queue. Processors will need to occasionally check this global
 queue, but at a much less frequent rate than the local queue.
 
 An early experiment replaced the crossbeam queue with a bounded [mpmc] queue.
 This did not result in much improvement due to the amount of synchronization
-performed by both push and pop.  A key thing to remember about the work-stealing
+performed by both push and pop. A key thing to remember about the work-stealing
 use case is that, under load, there is almost no contention on the queues since
 each processor only accesses its own queue.
 
@@ -427,7 +433,8 @@ in that it prevents certain optimization, but that's it. The first `load` can
 most likely be done safely with `Relaxed` ordering, but there were no measurable
 gains in switching.
 
-[load-store]: https://www.justsoftwaresolutions.co.uk/threading/intel-memory-ordering-and-c++-memory-model.html
+[load-store]:
+  https://www.justsoftwaresolutions.co.uk/threading/intel-memory-ordering-and-c++-memory-model.html
 
 When the queue is full, `push_overflow` is called. This function moves half of
 the tasks in the local queue into the global queue. The global queue is an
@@ -500,7 +507,8 @@ when in the "searching" state, described below.
 
 [crossbeam]: https://github.com/crossbeam-rs/crossbeam
 [epoch]: https://aturon.github.io/blog/2015/08/27/epoch/#epoch-based-reclamation
-[mpmc]: http://www.1024cores.net/home/lock-free-algorithms/queues/bounded-mpmc-queue
+[mpmc]:
+  http://www.1024cores.net/home/lock-free-algorithms/queues/bounded-mpmc-queue
 
 ### Optimizing for message passing patterns
 
@@ -543,7 +551,7 @@ tried, and so on until tasks are found.
 
 In practice, it is common for many processors to finish processing their run
 queue around the same time. This happens when a batch of work arrives (for
-example when `epoll` is polled for socket readiness).  Processors are woken up,
+example when `epoll` is polled for socket readiness). Processors are woken up,
 they acquire tasks, run them, and are finished. This results in all processors
 attempting to steal at the same time, which means many threads attempting to
 access the same queues. This creates contention. Randomly picking the starting
@@ -566,7 +574,7 @@ workers and checks the global queue.
 
 The other critical piece of a work-stealing scheduler is sibling notification.
 This is where a processor notifies a sibling when it observes new tasks. If the
-sibling is sleeping, it wakes up and steals tasks.  The notification action has
+sibling is sleeping, it wakes up and steals tasks. The notification action has
 another critical responsibility. Recall the queue algorithm used weak atomic
 orderings (Acquire / Release). Because of how atomic memory ordering work,
 without additional synchronization, there is no guarantee that a sibling
@@ -600,7 +608,7 @@ processor is now in the searching state. The rest of the scheduled tasks in the
 batch will not notify a processor as there is at least one in the searching
 state. That notified processor will steal half the tasks in the batch, and in
 turn notify another processor. This third processor will wake up, find tasks
-from one of the first two processors and steal half of those.  This results in a
+from one of the first two processors and steal half of those. This results in a
 smooth ramp up of processors as well as rapid load balancing of tasks.
 
 ### Reducing allocations
@@ -619,11 +627,12 @@ struct Task {
 ```
 
 The `Task` struct would then be allocated in a `Box` as well. This has always
-been a wart that I have wanted to fix for a long time (I [first attempted][astaire] to fix
-this in 2014). Since the old Tokio scheduler, two things have changed. First,
-`std::alloc` stabilized. Second, the Future task system switched to an explicit
-[vtable strategy][vtable]. These were the two missing pieces needed to finally
-get rid of the double allocation per task inefficiency.
+been a wart that I have wanted to fix for a long time (I [first
+attempted][astaire] to fix this in 2014). Since the old Tokio scheduler, two
+things have changed. First, `std::alloc` stabilized. Second, the Future task
+system switched to an explicit [vtable strategy][vtable]. These were the two
+missing pieces needed to finally get rid of the double allocation per task
+inefficiency.
 
 Now, the `Task` structure is represented as:
 
@@ -643,7 +652,8 @@ dereferences the task pointer, it will load a cache line sized amount of data at
 once (between [64 and 128 bytes][lwn]). We want that data to be as relevant as
 possible.
 
-[astaire]: https://github.com/carllerche/astaire/blob/6b612e8f614f7351257e2957bd9092aea9ac3781/src/core/cell.rs#L205-L217
+[astaire]:
+  https://github.com/carllerche/astaire/blob/6b612e8f614f7351257e2957bd9092aea9ac3781/src/core/cell.rs#L205-L217
 [vtable]: https://doc.rust-lang.org/std/task/struct.RawWakerVTable.html
 [lwn]: https://lwn.net/Articles/252125/
 
@@ -654,7 +664,7 @@ reduces the amount of atomic reference counts needed. There are many outstanding
 references to the task structure: the scheduler and each waker hold a handle. A
 common way to manage this memory is to use [atomic reference counting][arc].
 This strategy requires an atomic operation each time a reference is cloned and
-an atomic operation each time a reference is dropped.  When the final reference
+an atomic operation each time a reference is dropped. When the final reference
 goes out of scope, the memory is freed.
 
 In the old Tokio scheduler, each waker held a counted reference to the task
@@ -676,7 +686,7 @@ impl Waker {
 When the task is woken, the reference is cloned (atomic increment). The
 reference is then pushed into the run queue. When the processor receives the
 task and is done executing it, it drops the reference resulting in an atomic
-decrement.  These atomic operations add up.
+decrement. These atomic operations add up.
 
 This problem has previously been identified by the designers of the
 `std::future` task system. It was observed that when Waker::wake is called,
@@ -707,7 +717,7 @@ This avoids the overhead of additional reference counting **only if** it is
 possible to take ownership of the waker in order to wake. In my experience, it
 is almost always desirable to wake with `&self` instead. Waking with `self`
 prevents reusing the waker (useful in cases where the resource sends many
-values, i.e.  channels, sockets, ...) it also is more difficult to implement
+values, i.e. channels, sockets, ...) it also is more difficult to implement
 thread-safe waking when `self` is required (the details of this will be left to
 another article).
 
@@ -725,16 +735,17 @@ the source.
 
 [arc]: https://doc.rust-lang.org/std/sync/struct.Arc.html
 [`wake`]: https://doc.rust-lang.org/std/task/struct.Waker.html#method.wake
-[`wake_by_ref`]: https://doc.rust-lang.org/std/task/struct.Waker.html#method.wake_by_ref
+[`wake_by_ref`]:
+  https://doc.rust-lang.org/std/task/struct.Waker.html#method.wake_by_ref
 
 ## Fearless (unsafe) concurrency with Loom
 
 Writing correct, concurrent, lock-free code is really hard. It is better to be
-slow and correct than fast and buggy, especially if those bugs relate to
-memory safety. The best option is to be fast and correct. The new scheduler
-makes some pretty aggressive optimizations and avoids most `std` types in order
-to write more specialized versions. There is quite a bit of `unsafe` code in the
-new scheduler.
+slow and correct than fast and buggy, especially if those bugs relate to memory
+safety. The best option is to be fast and correct. The new scheduler makes some
+pretty aggressive optimizations and avoids most `std` types in order to write
+more specialized versions. There is quite a bit of `unsafe` code in the new
+scheduler.
 
 There are a few ways to test concurrent code. One is to let your users do the
 testing and debugging for you (an attractive option, to be sure). Another is to
@@ -744,7 +755,7 @@ reproduce it short of running the test in a loop again. Also, how long do you
 run that loop for? Ten seconds? Ten minutes? Ten days? This used to be the state
 of testing concurrent code with Rust.
 
-[TSAN]: https://clang.llvm.org/docs/ThreadSanitizer.html
+[tsan]: https://clang.llvm.org/docs/ThreadSanitizer.html
 
 We did not find the status quo acceptable. We want to feel confident (well, as
 confident as we can be) when we ship code -- especially concurrent, lock-free
@@ -808,14 +819,14 @@ and stress testing.
 
 The astute reader might have questioned the claim that loom tests "all possible
 permutations", and would be right to do so. Naive permutation of behavior would
-result in combinatorial explosion at the factorial level. Any non trivial
-test would never complete. This problem has been researched for years and a
-number of algorithms exist to manage the combinatorial explosion. Loom's core
-algorithm is based on [dynamic partial order reduction][dpor]. This algorithm is
-able to prune out permutations that result in identical executions.  Even with
-this, it is possible for the state space to grow too large to complete in a
-reasonable time (few minutes). Loom also allows bounding the search space using
-a bounded variant of dynamic partial order reduction.
+result in combinatorial explosion at the factorial level. Any non trivial test
+would never complete. This problem has been researched for years and a number of
+algorithms exist to manage the combinatorial explosion. Loom's core algorithm is
+based on [dynamic partial order reduction][dpor]. This algorithm is able to
+prune out permutations that result in identical executions. Even with this, it
+is possible for the state space to grow too large to complete in a reasonable
+time (few minutes). Loom also allows bounding the search space using a bounded
+variant of dynamic partial order reduction.
 
 All in all, I am **much** more confident in the scheduler's correctness thanks
 to extensive testing with Loom.
@@ -866,7 +877,8 @@ The improvements from the old scheduler to the new scheduler are very
 impressive. However, how does that carry over to the "real world". It's hard to
 say exactly, but I did try running [Hyper] benchmarks using the new scheduler.
 
-This is the "hello world" Hyper server being benchmarked using `wrk -t1 -c50 -d10`:
+This is the "hello world" Hyper server being benchmarked using
+`wrk -t1 -c50 -d10`:
 
 **Old scheduler**
 
@@ -896,17 +908,18 @@ Transfer/sec:     12.78MB
 
 That's an increase of 34% requests per second just from switching schedulers!
 When I first saw this, I was more than happy. I had originally expected an
-increase of ~5~10%. Then I was sad, because it also meant the old Tokio scheduler
-is not that good, but oh well. Then I remembered that Hyper already tops the
-[TechEmpower] benchmarks. I'm excited to see how the new scheduler will impact
-those rankings.
+increase of ~5~10%. Then I was sad, because it also meant the old Tokio
+scheduler is not that good, but oh well. Then I remembered that Hyper already
+tops the [TechEmpower] benchmarks. I'm excited to see how the new scheduler will
+impact those rankings.
 
 [Tonic], a gRPC client & server, saw about a 10% speed up, which is pretty
 impressive given that Tonic is not yet highly optimized.
 
-[Hyper]: https://github.com/hyperium/hyper/
-[TechEmpower]: https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=plaintext
-[Tonic]: https://github.com/hyperium/tonic
+[hyper]: https://github.com/hyperium/hyper/
+[techempower]:
+  https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=plaintext
+[tonic]: https://github.com/hyperium/tonic
 
 ## Conclusion
 

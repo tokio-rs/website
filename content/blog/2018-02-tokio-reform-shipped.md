@@ -1,10 +1,8 @@
-+++
-date = "2018-02-07"
-title = "Tokio Reform is Shipped and the Road to 0.2"
-description = "07 February 2018"
-menu = "blog"
-weight = 996
-+++
+---
+date: "2018-02-07"
+title: "Tokio Reform is Shipped and the Road to 0.2"
+description: "07 February 2018"
+---
 
 Hi all!
 
@@ -13,10 +11,10 @@ been released to [crates.io] as `tokio` 0.1.
 
 The primary changes are:
 
-* Add a *default* global event loop, eliminating the need for setting up and
+- Add a _default_ global event loop, eliminating the need for setting up and
   managing your own event loop in the vast majority of cases.
 
-* Decouple all task execution functionality from Tokio.
+- Decouple all task execution functionality from Tokio.
 
 ## The new global event loop
 
@@ -33,7 +31,7 @@ executing user submitted tasks.
 
 Now, Tokio provides a reactor to drive I/O resources (like `TcpStream` and
 `UdpSocket`) separately from the task executor. This means that it is easy to
-create Tokio-backed networking types from *any* thread, making it easy to create
+create Tokio-backed networking types from _any_ thread, making it easy to create
 either single or multi threaded Tokio-backed apps.
 
 For task execution, Tokio provides the [`current_thread`] executor, which
@@ -93,9 +91,9 @@ I posted an issue to discuss what to do with that crate
 
 ## Looking Forward
 
-Please try out the changes released today. Again, the next couple of months are a period
-of experimentation before we commit on the next release. So, now is the time to try things
-out and provide feedback.
+Please try out the changes released today. Again, the next couple of months are
+a period of experimentation before we commit on the next release. So, now is the
+time to try things out and provide feedback.
 
 During this time, we'll be integrating this work to build out higher-level
 primitives in [Tower], which is being driven by the production operational needs
@@ -103,12 +101,13 @@ of the [Conduit] project.
 
 <div style="text-align:right">&mdash;Carl Lerche</div>
 
-[reform RFC]: https://github.com/tokio-rs/tokio-rfcs/blob/master/text/0001-tokio-reform.md
+[reform rfc]:
+  https://github.com/tokio-rs/tokio-rfcs/blob/master/text/0001-tokio-reform.md
 [crates.io]: https://crates.io/crates/tokio
 [`current_thread`]: https://docs.rs/tokio-current-thread
 [`tokio-io`]: https://github.com/tokio-rs/tokio-io
 [`futures`]: https://github.com/rust-lang-nursery/futures-rs
 [`mio`]: https://github.com/carllerche/mio
 [`futures` 0.2 release]: #
-[Tower]: https://github.com/tower-rs/tower
-[Conduit]: https://github.com/runconduit/conduit
+[tower]: https://github.com/tower-rs/tower
+[conduit]: https://github.com/runconduit/conduit

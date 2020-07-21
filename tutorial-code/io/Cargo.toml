@@ -1,0 +1,19 @@
+[package]
+name = "io"
+version = "0.1.0"
+authors = ["Carl Lerche <me@carllerche.com>"]
+edition = "2018"
+publish = false
+
+[[bin]]
+name = "echo-server"
+path = "src/echo-server.rs"
+
+[[bin]]
+name = "echo-server-copy"
+path = "src/echo-server-copy.rs"
+
+
+[dependencies]
+tokio = { version = "0.2", features = ["full"] }
+mini-redis = "0.2"

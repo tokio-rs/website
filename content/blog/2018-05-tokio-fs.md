@@ -1,10 +1,8 @@
-+++
-date = "2018-05-02"
-title = "New Tokio release, now with filesystem support"
-description = "May 5, 2018"
-menu = "blog"
-weight = 993
-+++
+---
+date: "2018-05-02"
+title: "New Tokio release, now with filesystem support"
+description: "May 5, 2018"
+---
 
 It took a bit longer than I had initially hoped (as it always does), but a new
 Tokio version has been released. This release includes, among other features, a
@@ -16,9 +14,9 @@ asynchronous context.
 Interacting with files (and other filesystem types) requires\* blocking system
 calls and we all know that blocking and asynchronous do not mix. So,
 historically, when people ask "how do I read from and write to files?", the
-answer is to use a thread pool. The idea is that when a blocking read or
-write must be performed, it is done on a thread pool so that it does not block
-the asynchronous reactor.
+answer is to use a thread pool. The idea is that when a blocking read or write
+must be performed, it is done on a thread pool so that it does not block the
+asynchronous reactor.
 
 Requiring a separate thread pool for performing file operations requires message
 passing. The asynchronous task must send a message to the thread pool asking it
@@ -30,7 +28,7 @@ requires allocating buffers to send the data back and forth.
 Now, with Tokio's new [filesystem APIs][fs], this message passing overhead is no
 longer needed. A new [`File`] type is added. This type looks very similar to the
 type provided by `std`, but it implements `AsyncRead` and `AsyncWrite`, making
-it safe to use *directly* from an asynchronous task running on the Tokio
+it safe to use _directly_ from an asynchronous task running on the Tokio
 runtime.
 
 Because the [`File`] type implements `AsyncRead` and `AsyncWrite`, it can be
@@ -81,8 +79,9 @@ but runs all components on the current thread. This allows running futures that
 do not implement `Send`.
 
 [fs]: https://docs.rs/tokio/0.1/tokio/fs/index.html
-[`File`]: https://docs.rs/tokio/0.1/tokio/fs/struct.File.html
+[`file`]: https://docs.rs/tokio/0.1/tokio/fs/struct.File.html
 [in]: https://docs.rs/tokio/0.1/tokio/io/fn.stdin.html
 [out]: https://docs.rs/tokio/0.1/tokio/io/fn.stdout.html
-[`blocking`]: https://docs.rs/tokio-threadpool/0.1/tokio_threadpool/fn.blocking.html
+[`blocking`]:
+  https://docs.rs/tokio-threadpool/0.1/tokio_threadpool/fn.blocking.html
 [rt]: https://docs.rs/tokio/0.1/tokio/runtime/current_thread/index.html

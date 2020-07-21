@@ -1,5 +1,0 @@
-language: rust
-sudo: false
-
-script:
-  - ci/test.sh

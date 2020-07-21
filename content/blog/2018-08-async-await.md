@@ -1,10 +1,8 @@
-+++
-date = "2018-08-27"
-title = "Experimental async / await support for Tokio"
-description = "August 27, 2018"
-menu = "blog"
-weight = 991
-+++
+---
+date: "2018-08-27"
+title: "Experimental async / await support for Tokio"
+description: "August 27, 2018"
+---
 
 Happy Monday!
 
@@ -19,8 +17,8 @@ Let's dig in a bit.
 ## Getting started
 
 First, Tokio async/await support is provided by a new crate, creatively named
-[`tokio-async-await`]. This crate is a shim on top of `tokio`. It contains all of
-the same types and functions as `tokio` (as re-exports) as well as additional
+[`tokio-async-await`]. This crate is a shim on top of `tokio`. It contains all
+of the same types and functions as `tokio` (as re-exports) as well as additional
 helpers to work with `async` / `await`.
 
 To use [`tokio-async-await`], you need to depend on it from a crate that is
@@ -131,15 +129,14 @@ fn handle(mut stream: TcpStream) {
 Just like `run_async`, there is a `spawn_async` function to spawn async blocks
 as tasks.
 
-Then, to perform the echo logic, we read from the socket into a buffer and
-write the data back to the same socket. Because we are using `async` / `await`,
-we can use an array that looks stack allocated (it actually ends up in the
-heap).
+Then, to perform the echo logic, we read from the socket into a buffer and write
+the data back to the same socket. Because we are using `async` / `await`, we can
+use an array that looks stack allocated (it actually ends up in the heap).
 
 Note that `TcpStream` has `read_async` and `write_all_async` functions. These
-functions perform the same logic as the synchronous equivalents that exist on the
-`Read` and `Write` traits in `std`. The difference, they return futures that can
-be awaited on.
+functions perform the same logic as the synchronous equivalents that exist on
+the `Read` and `Write` traits in `std`. The difference, they return futures that
+can be awaited on.
 
 The `*_async` functions are defined in the `tokio-async-await` crate by using
 extension traits. These traits got imported with the `use tokio::prelude::*;`
@@ -168,5 +165,7 @@ And with that, have a great week!
 <div style="text-align:right">&mdash;Carl Lerche</div>
 
 [`tokio-async-await`]: https://crates.io/crates/tokio-async-await
-[examples]: https://github.com/tokio-rs/tokio/blob/master/tokio-async-await/examples
-[hyper]: https://github.com/tokio-rs/tokio/blob/master/tokio-async-await/examples/src/hyper.rs
+[examples]:
+  https://github.com/tokio-rs/tokio/blob/master/tokio-async-await/examples
+[hyper]:
+  https://github.com/tokio-rs/tokio/blob/master/tokio-async-await/examples/src/hyper.rs

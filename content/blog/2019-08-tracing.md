@@ -1,31 +1,28 @@
-+++
-date = "2019-08-14"
-title = "Diagnostics with Tracing"
-description = "August 14, 2019"
-menu = "blog"
-weight = 987
-+++
+---
+date: "2019-08-14"
+title: "Diagnostics with Tracing"
+description: "August 14, 2019"
+---
 
 Effectively developing systems and operating them in production requires
 visibility into their behavior at runtime. While conventional logging can
 provide some of this visibility, asynchronous software &mdash; like applications
 using the Tokio runtime &mdash; introduces new challenges.
 
-[`tracing`][tracing-crates] is a collection of libraries that provide a framework
-for instrumenting Rust programs to collect structured, context-aware, event
-driven diagnostics. Note that `tracing` was originally released under the name
-`tokio-trace`; the name was changed to reflect that, although it is part of the
-Tokio project, the `tokio` runtime is not required to use `tracing`.
+[`tracing`][tracing-crates] is a collection of libraries that provide a
+framework for instrumenting Rust programs to collect structured, context-aware,
+event driven diagnostics. Note that `tracing` was originally released under the
+name `tokio-trace`; the name was changed to reflect that, although it is part of
+the Tokio project, the `tokio` runtime is not required to use `tracing`.
 
 ## Why do we need another logging library?
 
-Rust already has a robust logging ecosystem based around the
-[log][log-crates] crate's logging facade, with libraries such as
-`env_logger` and `fern` in widespread use. This raises reasonable
-questions&ndash; why is `tracing` necessary, and what benefit does it provide
-that existing libraries don't? To answer these questions, we need to
-consider the challenges introduced by diagnostics in asynchronous
-systems.
+Rust already has a robust logging ecosystem based around the [log][log-crates]
+crate's logging facade, with libraries such as `env_logger` and `fern` in
+widespread use. This raises reasonable questions&ndash; why is `tracing`
+necessary, and what benefit does it provide that existing libraries don't? To
+answer these questions, we need to consider the challenges introduced by
+diagnostics in asynchronous systems.
 
 In synchronous code, we can simply log individual messages as the program
 executes, and expect them to be printed in order. A programmer can interpret the
@@ -39,9 +36,9 @@ DEBUG server::http: received request
 DEBUG server: closing connection
 ```
 
-I can infer that the request from the client with the IP address 106.42.126.8 was
-the one that failed, and that the connection from that client was then closed by
-the server. The _context_ is implied by previous messages: because the
+I can infer that the request from the client with the IP address 106.42.126.8
+was the one that failed, and that the connection from that client was then
+closed by the server. The _context_ is implied by previous messages: because the
 synchronous server must serve each request before accepting the next connection,
 we can determine that any log records occurring after an "accepted
 connection..." message and before a "closing connection" message refer to that
@@ -60,10 +57,10 @@ contextual and causal relationships must be recorded explicitly, rather than
 implied by sequential ordering.
 
 If the log lines in the above example were emitted by a asynchronous
-application, the server task may continue accepting new
-connections while previously-accepted ones are being processed by other tasks; multiple
-requests might be processed concurrently by worker threads. We might see
-something like this:
+application, the server task may continue accepting new connections while
+previously-accepted ones are being processed by other tasks; multiple requests
+might be processed concurrently by worker threads. We might see something like
+this:
 
 ```plain
 DEBUG server: accepted connection from 106.42.126.8:56975
@@ -92,23 +89,23 @@ _dynamic_ runtime contexts in which events occur.
 
 `tracing` is more than a logging library: it implements scoped, contextual, and
 structured diagnostic instrumentation. This allows users to trace logical
-contexts in the application through time, even as the actual flow of execution moves
-between those contexts.
+contexts in the application through time, even as the actual flow of execution
+moves between those contexts.
 
 ### Spans
 
-To record the flow of execution, `tracing` introduces the concept of _spans_. Unlike a log
-line that represents a moment in time, a span models a period of time with a
-beginning and an end. When a program begins executing in a context or performing
-a unit of work, it _enters_ a span, and when it stops executing in that context,
-it _exits_ the span.
+To record the flow of execution, `tracing` introduces the concept of _spans_.
+Unlike a log line that represents a moment in time, a span models a period of
+time with a beginning and an end. When a program begins executing in a context
+or performing a unit of work, it _enters_ a span, and when it stops executing in
+that context, it _exits_ the span.
 
 Any events that occur between when a span is entered and when it is exited are
-considered to have occurred within that span. Similarly,
-spans may be nested: when a thread enters a span inside of another span, it
-is in **both** spans, with the newly-entered span considered the _child_ and the
-outer span the _parent_. We can then construct a tree of nested spans and follow
-them throughout different parts of a program.
+considered to have occurred within that span. Similarly, spans may be nested:
+when a thread enters a span inside of another span, it is in **both** spans,
+with the newly-entered span considered the _child_ and the outer span the
+_parent_. We can then construct a tree of nested spans and follow them
+throughout different parts of a program.
 
 `tracing` also supports _events_, which model instantaneous points in time.
 Events are similar to traditional log messages, but exist within the tree of
@@ -120,10 +117,10 @@ occurred.
 By attaching _structured data_ to spans, we can model contexts. Rather than
 simply recording unstructured, human-readable messages, `tracing`
 instrumentation points record typed key-value data called _fields_. For example,
-in an HTTP server, a span representing an accepted connection might record fields
-such as the client's IP address, the requested path, request method, headers,
-and so on. If we revisit the example above, with the addition of spans, we might
-see something like this:
+in an HTTP server, a span representing an accepted connection might record
+fields such as the client's IP address, the requested path, request method,
+headers, and so on. If we revisit the example above, with the addition of spans,
+we might see something like this:
 
 ```plain
 DEBUG server{client.addr=106.42.126.8:56975}: accepted connection
@@ -142,13 +139,13 @@ happening concurrently in different contexts, we can now follow the flow of the
 request from 106.42.126.8 through the system, and determine that it was the
 request containing the invalid headers that generated the warning.
 
-This machine-readable structured data also gives us the ability to consume diagnostic
-data in more sophisticated ways than simply formatting it to be read by a human.
-For example, we might also consume the above data by counting the number of
-requests recieved for different paths or HTTP methods. By looking at the
-structure of the span tree as well as at key-value data, we can even do things
-like recording the entire lifespan of a request only when it ended with an
-error.
+This machine-readable structured data also gives us the ability to consume
+diagnostic data in more sophisticated ways than simply formatting it to be read
+by a human. For example, we might also consume the above data by counting the
+number of requests recieved for different paths or HTTP methods. By looking at
+the structure of the span tree as well as at key-value data, we can even do
+things like recording the entire lifespan of a request only when it ended with
+an error.
 
 ## A Worked Example
 
@@ -160,13 +157,14 @@ that character duplicated a number of times equal to the value of the
 `Content-Length` header.
 
 We've instrumented the example service using `tracing`, and used the
-[`tracing-subscriber`] crate to implement an admin endpoint that
-allows us to [change the filter configuration][reload] that determines what
-`tracing` instrumentation is enabled at runtime. A load generator runs in the background
-that constantly sends requests for random alphabetic characters to the demo service.
+[`tracing-subscriber`] crate to implement an admin endpoint that allows us to
+[change the filter configuration][reload] that determines what `tracing`
+instrumentation is enabled at runtime. A load generator runs in the background
+that constantly sends requests for random alphabetic characters to the demo
+service.
 
-With a version of the example service instrumented using the [`log`][log-crates] and
-[`env_logger`] crates, we get  output like this:
+With a version of the example service instrumented using the [`log`][log-crates]
+and [`env_logger`] crates, we get output like this:
 
 ```log
 ...
@@ -237,8 +235,8 @@ they occurred are also printed. In particular, each connection and request
 creates its own span. However, these events are recorded very frequently, so the
 logs are still scrolling by quite fast.
 
-If we send a request to the demo app's admin endpoint, we can reload the
-filter configuration to look only at the events recorded by the load generators:
+If we send a request to the demo app's admin endpoint, we can reload the filter
+configuration to look only at the events recorded by the load generators:
 
 ```bash
 :; curl -X PUT localhost:3001/filter -d "gen=debug"
@@ -268,8 +266,8 @@ ERROR load_gen{remote.addr=[::1]:3000}:request{req.method=GET req.path="/"}: gen
 ...
 ```
 
-Looking at the `request` spans output by the load generator, we start to notice a
-pattern. The value of the `req.path` field is always either `"/"` or `"/z"`.
+Looking at the `request` spans output by the load generator, we start to notice
+a pattern. The value of the `req.path` field is always either `"/"` or `"/z"`.
 
 We can reload the filter configuration again, setting the verbosity to maximum
 only when we're inside a span with the field `req.path` with the value `"/"`:
@@ -358,13 +356,15 @@ interactively experimenting with this demo, you can check out the example
 
 [`tower`]: https://crates.io/crates/tower
 [`env_logger`]: https://crates.io/crates/env_logger
-[reload]: https://docs.rs/tracing-subscriber/latest/tracing_subscriber/reload/index.html
-[example]: https://github.com/tokio-rs/tracing/blob/master/tracing-tower/examples/load.rs
-
+[reload]:
+  https://docs.rs/tracing-subscriber/latest/tracing_subscriber/reload/index.html
+[example]:
+  https://github.com/tokio-rs/tracing/blob/master/tracing-tower/examples/load.rs
 
 ## Getting Started with Tracing
 
 `tracing` is available [on crates.io][tracing-crates]:
+
 ```toml
 tracing = "0.1.5"
 ```
@@ -421,50 +421,52 @@ similarly to a logger in conventional logging. Applications must set up a
 
 The `Subscriber` interface is `tracing`'s main extension point; different
 methods and policies for recording and processing trace data can be represented
-as `Subscriber` implementations. Currently, the [`tracing-fmt`][fmt-crates] crate
-provides a `Subscriber` implementation that logs trace data to
-the console, and more implementations are soon to come.
+as `Subscriber` implementations. Currently, the [`tracing-fmt`][fmt-crates]
+crate provides a `Subscriber` implementation that logs trace data to the
+console, and more implementations are soon to come.
 
 More [API documentation][docs] is available on docs.rs, and examples are
 provided in the [`tracing` github repository][github].
 
-[inst]: https://docs.rs/tracing-attributes/latest/tracing_attributes/attr.instrument.html
+[inst]:
+  https://docs.rs/tracing-attributes/latest/tracing_attributes/attr.instrument.html
 [macros]: https://docs.rs/tracing/0.1.5/tracing/#macros
 [subscriber]: https://docs.rs/tracing/0.1.5/tracing/trait.Subscriber.html
-[default-sub]: https://docs.rs/tracing/0.1.5/tracing/dispatcher/index.html#setting-the-default-subscriber
+[default-sub]:
+  https://docs.rs/tracing/0.1.5/tracing/dispatcher/index.html#setting-the-default-subscriber
 [fmt-crates]: https://crates.io/crates/tracing-fmt/
 
 ## Building an Ecosystem
 
-The `tracing` ecosystem is centered around the [`tracing`][tracing-crates] crate,
-which provides the API used to instrument libraries and applications, and the
-[`tracing-core`][core-crates], which provides the minimal, stable kernel of
+The `tracing` ecosystem is centered around the [`tracing`][tracing-crates]
+crate, which provides the API used to instrument libraries and applications, and
+the [`tracing-core`][core-crates], which provides the minimal, stable kernel of
 functionality necessary to connect that instrumentation with `Subscriber`s.
 However, this is just the tip of the iceberg. The [`tokio-rs/tracing`][github]
 repository contains a number of additional crates, in varying degrees of
 stability. These crates include:
 
-* Compatibility layers with other libraries, such as [`tracing-tower`] and
+- Compatibility layers with other libraries, such as [`tracing-tower`] and
   [`tracing-log`].
-* `Subscriber` implementations, such as [`tracing-fmt`].
-* The [`tracing-subscriber`] crate, which provides utilities for implementing
+- `Subscriber` implementations, such as [`tracing-fmt`].
+- The [`tracing-subscriber`] crate, which provides utilities for implementing
   and composing `Subscriber`s.
 
 Stable releases of the central crates have been published to crates.io, and
 `tracing` is already seeing adoption by projects like [Linkerd 2][linkerd] and
 [Vector][vector]. However, there is a lot of future work, including:
 
-* Integrating with distributed tracing systems such as [OpenTelemetry] or
+- Integrating with distributed tracing systems such as [OpenTelemetry] or
   [Jaeger].
-* Building out richer instrumentation in the Tokio runtime.
-* Integration with more libraries and frameworks.
-* Writing `Subscriber`s to implement more ways of collecting trace data, such as
+- Building out richer instrumentation in the Tokio runtime.
+- Integration with more libraries and frameworks.
+- Writing `Subscriber`s to implement more ways of collecting trace data, such as
   metrics, profiling, et cetera.
-* Helping to stabilize experimental crates.
+- Helping to stabilize experimental crates.
 
 Contributions in all these areas will be welcomed eagerly. We're all looking
-forward to seeing what the community will build on top of the platform
-that `tracing` provides!
+forward to seeing what the community will build on top of the platform that
+`tracing` provides!
 
 If you're interested, check out `tracing` [on GitHub][github] or join the
 [Gitter] chat channel!
@@ -473,8 +475,8 @@ If you're interested, check out `tracing` [on GitHub][github] or join the
 
 [linkerd]: https://github.com/linkerd/linkerd2-proxy
 [vector]: https://github.com/timberio/vector
-[OpenTelemetry]: https://opentelemetry.io/
-[Jaeger]: https://www.jaegertracing.io/
+[opentelemetry]: https://opentelemetry.io/
+[jaeger]: https://www.jaegertracing.io/
 [core-crates]: https://crates.io/crates/tracing-core
 [tracing-crates]: https://crates.io/crates/tracing
 [log-crates]: https://crates.io/crates/log

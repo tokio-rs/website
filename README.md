@@ -1,27 +1,46 @@
-# Tokio's Website
+# Tokio Website
 
-The website for the Tokio project. Lives at [https://tokio.rs](https://tokio.rs).
+The website for the Tokio project. Lives at https://tokio.rs.
 
-[![Build Status](https://travis-ci.org/tokio-rs/website.svg?branch=master)](https://travis-ci.org/tokio-rs/website)
+Besides containing the content for the website, it also includes crates
+containing the example code used in the tutorial. These crates can be compiled
+and ran.
 
-## Getting Started
+* [hello-tokio](tutorial-code/hello-tokio/src/main.rs)
+* [spawning](tutorial-code/spawning/src/main.rs)
+* [shared-state](tutorial-code/shared-state/src/main.rs)
+* [channels](tutorial-code/channels/src/main.rs)
+* [io](tutorial-code/io)
+    * [echo-server-copy](tutorial-code/io/src/echo-server-copy.rs)
+    * [echo-server](tutorial-code/io/src/echo-server.rs)
+* [mini-tokio](tutorial-code/mini-tokio/src/main.rs)
 
-Building the website depends on [Hugo](http://gohugo.io). So, first make sure
-that you have it installed. If on OS X and using Homebrew, run the following:
+## Contributing
 
-```sh
-brew update && brew install hugo
+Thinking about contributing? Great! This should help you get the website running
+locally.
+
+### Getting Started
+
+The website is built using [Next.js] paired with the [Bulma] CSS framework.
+First, make sure you have NPM installed. Next, start the development server:
+
+```bash
+npm run dev
 ```
 
-Then, get the website running locally:
+Then, open [http://localhost:3000](http://localhost:3000).
 
-```sh
-git clone https://github.com/tokio-rs/website
-cd website
-hugo server
-```
+[Next.js]: https://nextjs.org/
+[Bulma]: https://bulma.io/
 
-Then visit [http://localhost:1313](http://localhost:1313).
+### Resources
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Bulma documentation](https://bulma.io/documentation/) - learn about Bulma.
 
 ## License
 

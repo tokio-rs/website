@@ -1,48 +1,46 @@
-+++
-date = "2017-03-17"
-title = "Announcing the tokio-io Crate"
-description = "17 March 2017"
-menu = "blog"
-weight = 998
-+++
+---
+date: "2017-03-17"
+title: "Announcing the tokio-io Crate"
+description: "17 March 2017"
+---
 
-Today we're happy to announce a new crate and several new tools to work with
-in the Tokio stack. This represents the culmination of a number of parallel
-updates to various bits and pieces, they just happened to conveniently land all
-around the same time! In a nutshell the improvements are:
+Today we're happy to announce a new crate and several new tools to work with in
+the Tokio stack. This represents the culmination of a number of parallel updates
+to various bits and pieces, they just happened to conveniently land all around
+the same time! In a nutshell the improvements are:
 
-* A new [tokio-io] crate extracted from [tokio-core], deprecating the
+- A new [tokio-io] crate extracted from [tokio-core], deprecating the
   [`tokio_core::io`] module.
-* Introduction of the [bytes] crate to [tokio-io] allowing abstraction over
+- Introduction of the [bytes] crate to [tokio-io] allowing abstraction over
   buffering and leveraging underlying functionality like vectored I/O.
-* Addition of a new method, `close`, to the `Sink` trait to express graceful
+- Addition of a new method, `close`, to the `Sink` trait to express graceful
   shutdown.
 
 These changes improve the organization and abstractions of Tokio to address
 several long-standing concerns and should provide a stable foundation for all
-future development. At the same time, the changes are not breaking since the
-old `io` module is still available in deprecated form. You can start using all
-these crates immediately via `cargo update` and using the most recent `0.1.*`
-versions of the crates!
+future development. At the same time, the changes are not breaking since the old
+`io` module is still available in deprecated form. You can start using all these
+crates immediately via `cargo update` and using the most recent `0.1.*` versions
+of the crates!
 
 Let's dive a bit more into each change in detail to see what's available now.
 
 ## Adding a `tokio-io` crate
 
-The existing [`tokio_core::io`] module gives a number of useful abstractions
-but they're not specific to [tokio-core] itself, and the major purpose of the
-[tokio-io] crate is to provide these core utilities without the implication of
-a runtime. With [tokio-io] crates can depend on asynchronous I/O semantics
-without tying themselves to a particular runtime, for example [tokio-core].
-The [tokio-io] crate is intended to be similar to the [`std::io`] standard
-library module in terms of serving a common abstraction for the asynchronous
-ecosystem. The concepts and traits set forth in [tokio-io] are the foundation
-for all I/O done in the Tokio stack.
+The existing [`tokio_core::io`] module gives a number of useful abstractions but
+they're not specific to [tokio-core] itself, and the major purpose of the
+[tokio-io] crate is to provide these core utilities without the implication of a
+runtime. With [tokio-io] crates can depend on asynchronous I/O semantics without
+tying themselves to a particular runtime, for example [tokio-core]. The
+[tokio-io] crate is intended to be similar to the [`std::io`] standard library
+module in terms of serving a common abstraction for the asynchronous ecosystem.
+The concepts and traits set forth in [tokio-io] are the foundation for all I/O
+done in the Tokio stack.
 
 The primary contents of [tokio-io] are the [`AsyncRead`] and [`AsyncWrite`]
 traits. These two traits are sort of a "split [`Io`] trait" and were chosen to
-demarcate types which implement Tokio-like read/write semantics (nonblocking
-and notifying to a future's task). These traits then integrate with the [bytes]
+demarcate types which implement Tokio-like read/write semantics (nonblocking and
+notifying to a future's task). These traits then integrate with the [bytes]
 crate to provide some convenient functions and retain old functionality like
 [`split`].
 
@@ -55,11 +53,11 @@ A great example of this is that with [tokio-io] we can use the new
 [`length_delimited`] module combined with [tokio-serde-json] to get up and
 running with a JSON RPC server in no time as we'll see later in this post.
 
-Overall with [tokio-io] we were also able to revisit several minor issues in
-the API designed. This in turns empowered us to [close a slew of
-issues][closing] against [tokio-core]. We feel [tokio-io] is a great addition
-to the Tokio stack moving forward. Crates can choose to be abstract over
-[tokio-io] without pulling in runtimes such as [tokio-core], if they'd like.
+Overall with [tokio-io] we were also able to revisit several minor issues in the
+API designed. This in turns empowered us to [close a slew of issues][closing]
+against [tokio-core]. We feel [tokio-io] is a great addition to the Tokio stack
+moving forward. Crates can choose to be abstract over [tokio-io] without pulling
+in runtimes such as [tokio-core], if they'd like.
 
 ## Integration with `bytes`
 
@@ -88,8 +86,8 @@ disjoint views (`BytesMut`), and shared owners with possibly overlapping views
 (`Bytes`).
 
 Overall the [bytes] crate we hope is your one-stop-shop for byte buffer
-abstractions as well as high-quality implementations to get you running
-quickly. We're excited to see what's in store for the [bytes] crate!
+abstractions as well as high-quality implementations to get you running quickly.
+We're excited to see what's in store for the [bytes] crate!
 
 ## Addition of `Sink::close`
 
@@ -108,8 +106,8 @@ issue a TCP-level shutdown. Typically this'll end up bottoming out to the new
 
 ## Addition of `codec::length_delimited`
 
-One large feature that is landing with [tokio-io] is the addition of
-the [`length_delimited`] module (inspired by Netty's
+One large feature that is landing with [tokio-io] is the addition of the
+[`length_delimited`] module (inspired by Netty's
 [`LengthFieldBasedFrameDecoder`]). Many protocols delimit frames by using a
 frame header that includes the length of the frame. As a simple example, take a
 protocol that uses a frame header of a `u32` to delimit the frame payload. Each
@@ -121,8 +119,7 @@ frame on the wire looks like this:
 +----------+--------------------------------+
 ```
 
-Parsing this protocol can easily be handled with
-[`length_delimited::Framed`]:
+Parsing this protocol can easily be handled with [`length_delimited::Framed`]:
 
 ```rust,ignore
 // Bind a server socket
@@ -136,12 +133,11 @@ socket.and_then(|socket| {
 })
 ```
 
-In the above example, `transport` will be a `Sink + Stream` of buffer
-values, where each buffer contains the frame payload. This makes
-encoding and decoding the frame to a value fairly easy to do with
-something like [serde]. For example, using [tokio-serde-json], we can
-quickly implement a JSON based protocol where each frame is length
-delimited and the frame payload is encoded using JSON:
+In the above example, `transport` will be a `Sink + Stream` of buffer values,
+where each buffer contains the frame payload. This makes encoding and decoding
+the frame to a value fairly easy to do with something like [serde]. For example,
+using [tokio-serde-json], we can quickly implement a JSON based protocol where
+each frame is length delimited and the frame payload is encoded using JSON:
 
 ```rust,ignore
 // Bind a server socket
@@ -168,16 +164,19 @@ socket.and_then(|socket| {
 })
 ```
 
-The full example is [here](https://github.com/carllerche/tokio-serde-json/tree/master/examples).
+The full example is
+[here](https://github.com/carllerche/tokio-serde-json/tree/master/examples).
 
-The [`length_delimited`] module contains enough configuration settings to
-handle parsing length delimited frames with more complex frame headers,
-like the HTTP/2.0 protocol.
+The [`length_delimited`] module contains enough configuration settings to handle
+parsing length delimited frames with more complex frame headers, like the
+HTTP/2.0 protocol.
 
 [serde]: https://serde.rs/
 [tokio-serde-json]: https://github.com/carllerche/tokio-serde-json
-[`length_delimited::Framed`]: https://docs.rs/tokio-io/0.1.6/tokio_io/codec/length_delimited/struct.Framed.html
-[`LengthFieldBasedFrameDecoder`]: https://netty.io/4.0/api/io/netty/handler/codec/LengthFieldBasedFrameDecoder.html
+[`length_delimited::framed`]:
+  https://docs.rs/tokio-io/0.1.6/tokio_io/codec/length_delimited/struct.Framed.html
+[`lengthfieldbasedframedecoder`]:
+  https://netty.io/4.0/api/io/netty/handler/codec/LengthFieldBasedFrameDecoder.html
 
 ## What's next?
 
@@ -189,21 +188,24 @@ find a problem! Otherwise we look forward to seeing all of these changes in
 practice!
 
 With the foundations of [tokio-core], [tokio-io], [tokio-service], and
-[tokio-proto] solidifying the Tokio team is looking forward to accommodating
-and implementing more ambitious protocols such as HTTP/2. We're working closely
-with [@seanmonstar][sean] and [Hyper] to develop these foundational HTTP
-libraries as well. Finally we're looking to expand the middleware story in the
-near future with relation to both HTTP and generic [tokio-service]
-implementations. More on this coming soon!
+[tokio-proto] solidifying the Tokio team is looking forward to accommodating and
+implementing more ambitious protocols such as HTTP/2. We're working closely with
+[@seanmonstar][sean] and [Hyper] to develop these foundational HTTP libraries as
+well. Finally we're looking to expand the middleware story in the near future
+with relation to both HTTP and generic [tokio-service] implementations. More on
+this coming soon!
 
-[`AsyncWrite::shutdown`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncWrite.html#tymethod.shutdown
+[`asyncwrite::shutdown`]:
+  https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncWrite.html#tymethod.shutdown
 [`close`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html#method.close
-[`Bytes`]: http://carllerche.github.io/bytes/bytes/struct.Bytes.html
-[`BytesMut`]: http://carllerche.github.io/bytes/bytes/struct.BytesMut.html
-[`read_buf`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncRead.html#method.read_buf
-[`write_buf`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncWrite.html#method.write_buf
-[`Buf`]: http://carllerche.github.io/bytes/bytes/trait.Buf.html
-[`BufMut`]: http://carllerche.github.io/bytes/bytes/trait.BufMut.html
+[`bytes`]: http://carllerche.github.io/bytes/bytes/struct.Bytes.html
+[`bytesmut`]: http://carllerche.github.io/bytes/bytes/struct.BytesMut.html
+[`read_buf`]:
+  https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncRead.html#method.read_buf
+[`write_buf`]:
+  https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncWrite.html#method.write_buf
+[`buf`]: http://carllerche.github.io/bytes/bytes/trait.Buf.html
+[`bufmut`]: http://carllerche.github.io/bytes/bytes/trait.BufMut.html
 [crates.io]: https://crates.io
 [tokio-io]: https://crates.io/crates/tokio-io
 [futures]: https://crates.io/crates/futures
@@ -212,19 +214,22 @@ implementations. More on this coming soon!
 [tokio-proto]: https://crates.io/crates/tokio-proto
 [bytes]: https://crates.io/crates/bytes
 [`tokio_core::io`]: https://docs.rs/tokio-core/0.1.9/tokio_core/io/
-[`Io`]: https://docs.rs/tokio-core/0.1.9/tokio_core/io/trait.Io.html
-[`Codec`]: https://docs.rs/tokio-core/0.1.9/tokio_core/io/trait.Codec.html
-[`Stream`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html
-[`Sink`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html
+[`io`]: https://docs.rs/tokio-core/0.1.9/tokio_core/io/trait.Io.html
+[`codec`]: https://docs.rs/tokio-core/0.1.9/tokio_core/io/trait.Codec.html
+[`stream`]: https://docs.rs/futures/0.1/futures/stream/trait.Stream.html
+[`sink`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html
 [`std::io`]: https://doc.rust-lang.org/std/io/
-[`AsyncWrite`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncWrite.html
-[`AsyncRead`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncRead.html
-[`split`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncRead.html#method.split
-[`Encoder`]: https://docs.rs/tokio-io/0.1.6/tokio_io/codec/trait.Encoder.html
-[`Decoder`]: https://docs.rs/tokio-io/0.1.6/tokio_io/codec/trait.Decoder.html
-[`EasyBuf`]: https://docs.rs/tokio-core/0.1.9/tokio_core/io/struct.EasyBuf.html
-[`length_delimited`]: https://docs.rs/tokio-io/0.1.6/tokio_io/codec/length_delimited/index.html
-[closing]: https://github.com/tokio-rs/tokio-core/issues/61#issuecomment-277568977
+[`asyncwrite`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncWrite.html
+[`asyncread`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncRead.html
+[`split`]:
+  https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncRead.html#method.split
+[`encoder`]: https://docs.rs/tokio-io/0.1.6/tokio_io/codec/trait.Encoder.html
+[`decoder`]: https://docs.rs/tokio-io/0.1.6/tokio_io/codec/trait.Decoder.html
+[`easybuf`]: https://docs.rs/tokio-core/0.1.9/tokio_core/io/struct.EasyBuf.html
+[`length_delimited`]:
+  https://docs.rs/tokio-io/0.1.6/tokio_io/codec/length_delimited/index.html
+[closing]:
+  https://github.com/tokio-rs/tokio-core/issues/61#issuecomment-277568977
 [tokio-serde-json]: https://github.com/carllerche/tokio-serde-json
 [sean]: https://github.com/seanmonstar
-[Hyper]: https://github.com/hyperium/hyper
+[hyper]: https://github.com/hyperium/hyper

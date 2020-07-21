@@ -1,0 +1,1001 @@
+@use 'sass:color';
+
+// Tokio color palette
+$cream: #faf8f4;
+$magenta: #c83895;
+$red: #e7544c;
+$orange: #f5a623;
+$yellow: #e2b619;
+$green: #95ca51;
+$blue: #5396d1;
+$purple: #a674e5;
+$dark-gray: #606060;
+$light-gray: #f0f0f0;
+$gray: #a0a0a0;
+
+// Each color is associated with a library
+$tk-lib-runtime: $magenta;
+$tk-lib-hyper: $orange;
+$tk-lib-tonic: $yellow;
+$tk-lib-tower: $green;
+$tk-lib-mio: $red;
+$tk-lib-tracing: $purple;
+$tk-lib-bytes: $blue;
+
+// Per lib styling: [ name, color, size, logo-adjust ]
+$libs: "tokio" black 3.8rem -60%, "runtime" $tk-lib-runtime 2.2rem -22%,
+  "hyper" $tk-lib-hyper 100% -50%, "tonic" $tk-lib-tonic 100% -25%,
+  "tower" $tk-lib-tower 100% -52%, "mio" $tk-lib-mio 100% -41%,
+  "tracing" $tk-lib-tracing 100% -31%, "bytes" $tk-lib-bytes 100% -30%;
+
+// Bulma color variables
+$primary: $cream;
+$primary-invert: black;
+$title-color: black;
+
+// Bulma text variables
+$body-font-size: 1.06em;
+$menu-font-size: 1rem;
+$tablet: 600px;
+$family-primary: "Roboto", sans-serif;
+
+// Bulma navbar variables
+$navbar-item-color: white;
+$navbar-item-hover-color: $magenta;
+$navbar-item-active-color: white;
+$navbar-background-color: black;
+$navbar-item-hover-background-color: black;
+$navbar-item-active-background-color: black;
+$navbar-height: 5rem;
+$navbar-item-img-max-height: 5rem;
+$navbar-padding-vertical: 0;
+$navbar-padding-horizontal: 1rem;
+$navbar-breakpoint: $tablet;
+
+// Bulma menu variables
+$menu-label-font-size: 0.9rem;
+$menu-item-color: $dark-gray;
+$menu-item-active-color: black;
+$menu-item-active-background-color: white;
+$menu-list-border-left: 0;
+$menu-item-hover-color: $magenta;
+$menu-item-hover-background-color: transparent;
+$menu-label-spacing: 0.5rem;
+$menu-nested-list-margin: 0 0.5rem 0rem 0rem;
+$menu-list-link-padding: 0.6rem 0.75rem;
+
+// Bulma card variables
+$card-shadow: 0;
+$card-content-padding: 1rem;
+$card-media-margin: 1rem;
+
+// Footer
+$footer-background-color: black;
+$footer-color: white;
+
+@import "../node_modules/bulma/bulma.sass";
+
+// Darken colors
+@function darken($color) {
+  @return color.scale($color, $lightness: -15%);
+}
+
+@function lighten($color) {
+  @return color.scale($color, $lightness: 93%);
+}
+
+a,
+a:hover,
+a:focus,
+a:active {
+  outline: none;
+}
+
+.navbar {
+  .navbar-brand {
+    background-color: black;
+  }
+  .container {
+    max-width: 1150px;
+  }
+  hr {
+    background-color: $gray;
+    height: 2rem;
+    width: 1px;
+    margin: 1rem 1.5rem;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+  .navbar-item {
+    &.navbar-text {
+      font-size: $body-font-size;
+      padding: 0 1.5rem;
+    }
+    &.navbar-icon {
+      padding: 0 1rem;
+    }
+    .icon {
+      height: 1.8rem;
+      width: 1.8rem;
+    }
+  }
+
+  @include mobile {
+    .navbar-menu {
+      display: block;
+      z-index: -1;
+
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+
+      transition: transform 0.2s ease-in-out;
+    }
+    .navbar-menu.is-active {
+      opacity: 1;
+      transform: translateY(100%);
+      transition: transform 0.2s ease-in-out;
+      pointer-events: auto;
+    }
+    .navbar-end {
+      .navbar-item {
+        margin-bottom: 1.7rem;
+
+        &:first-child {
+          margin-top: 0.5rem;
+        }
+      }
+
+      .tk-social,
+      .tk-social.navbar-icon {
+        align-items: center;
+        display: inline-block;
+        padding-left: 1.7rem;
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.tk-landing {
+  .container {
+    max-width: 1150px;
+  }
+}
+
+.hero {
+  @include mobile {
+    .hero-body {
+      padding: 1.5rem;
+    }
+
+    .button {
+      font-size: 1.1rem;
+    }
+  }
+
+  .title {
+    font-size: 1.7em;
+  }
+
+  &.tk-intro {
+    .title {
+      padding-bottom: 0.25em;
+
+      @include tablet {
+        font-size: 2.4em;
+        line-height: 1.2em;
+      }
+    }
+
+    .container {
+      max-width: 650px;
+    }
+    .subtitle {
+      font-weight: 300;
+      line-height: 1.5rem;
+      font-size: $body-font-size;
+    }
+    .button {
+      background-color: $tk-lib-runtime;
+      font-weight: 500;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+    .button:hover {
+      background-color: darken($magenta);
+    }
+  }
+
+  .tk-hero-bg {
+    position: relative;
+    min-width: 50%;
+
+    .tk-float {
+      user-select: none;
+      position: absolute;
+      will-change: transform;
+      z-index: 0;
+
+      img {
+        will-change: transform;
+      }
+    }
+
+    @media (min-width: $tablet) {
+      @mixin spin-right($radius, $dur) {
+        width: $radius;
+        height: $radius;
+        animation: spin-right $dur linear infinite;
+
+        img {
+          animation: spin-left $dur linear infinite;
+        }
+      }
+
+      @mixin spin-left($radius, $dur, $dur2: $dur) {
+        width: $radius;
+        height: $radius;
+        animation: spin-left $dur linear infinite;
+
+        img {
+          animation: spin-right $dur2 linear infinite;
+        }
+      }
+
+      @keyframes spin-right {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(-360deg);
+        }
+      }
+      @keyframes spin-left {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      #tk-float-hyper {
+        top: -30px;
+        left: calc(-20%);
+        @include spin-right(60px, 6s);
+      }
+      #tk-float-tonic {
+        top: 60px;
+        left: -200px;
+        @include spin-left(80px, 30s);
+      }
+      #tk-float-tower {
+        bottom: -10px;
+        @include spin-left(50px, 4s, 4.1s);
+      }
+      #tk-float-bytes {
+        top: 110px;
+        right: -120px;
+        @include spin-right(50px, 8s);
+      }
+      #tk-float-mio {
+        bottom: 0px;
+        right: 15px;
+        @include spin-right(60px, 10s);
+      }
+      #tk-float-runtime {
+        bottom: 35px;
+        right: -210px;
+        @include spin-left(50px, 9s);
+      }
+      #tk-float-runtime2 {
+        bottom: 10px;
+        left: -210px;
+        @include spin-left(50px, 9s);
+      }
+      #tk-float-tracing {
+        top: 0;
+        right: -190px;
+        @include spin-left(75px, 18s, 15s);
+      }
+    }
+  }
+
+  &.tk-users {
+    .title {
+      font-size: 1.8em;
+      margin-bottom: 1em;
+    }
+    .column {
+      padding: 20px 00px;
+    }
+    .image img {
+      width: 70%;
+      max-width: 8rem;
+      margin: 0 auto;
+    }
+    .aws img {
+      transform: scale(0.5);
+    }
+  }
+}
+
+.tk-features,
+.tk-stack {
+  > .container {
+    padding: 2em 1em;
+    max-width: 1050;
+  }
+
+  code {
+    color: $dark-gray;
+  }
+
+  .title {
+    font-size: 1.8rem;
+
+    @include mobile {
+      font-size: 1.6rem;
+    }
+  }
+
+  .subtitle {
+    font-weight: 300;
+    font-size: $body-font-size;
+    line-height: 1.4;
+  }
+}
+
+.tk-features {
+  background-color: $cream;
+
+  .hero {
+    margin: 2em;
+
+    .title {
+      padding-bottom: 0.55em;
+    }
+  }
+
+  .card {
+    margin: 0.75em;
+    border: 2px solid black;
+    border-radius: 4px;
+  }
+
+  .tk-lib {
+    .title {
+      img {
+        margin-right: 0.4rem;
+      }
+    }
+    .subtitle {
+      line-height: 1.5rem;
+    }
+    .learn-more {
+      font-weight: 600;
+    }
+  }
+
+  @each $name, $color, $size, $adjust in $libs {
+    .tk-lib-#{$name} {
+      .title,
+      .learn-more a {
+        color: $color;
+      }
+      .learn-more a:hover {
+        color: darken($color);
+      }
+      .card {
+        border-color: $color;
+      }
+    }
+  }
+}
+
+.tk-stack {
+  .menu {
+    font-size: 0.9rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    li {
+      line-height: 0.5;
+      font-weight: 400;
+    }
+
+    li.is-active {
+      font-weight: 500;
+    }
+
+    @each $name, $color, $size, $adjust in $libs {
+      .tk-lib-#{$name} {
+        a:hover {
+          color: $color;
+        }
+
+        &.is-active {
+          background-color: $color;
+
+          a {
+            color: white;
+          }
+        }
+      }
+    }
+  }
+
+  img.tk-stack-active {
+    opacity: 1 !important;
+  }
+
+  // Used to anchor the sticky elements
+  .anchor {
+    position: sticky;
+    height: 25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 13rem;
+
+    > img {
+      display: block;
+      position: absolute;
+      opacity: 0.15;
+      transition: opacity 0.5s ease-in-out;
+    }
+    #tk-stack-lines:not(.tk-stack-active) {
+      opacity: 0;
+    }
+  }
+
+  .card {
+    margin: 2rem 0;
+  }
+  .card:first-child {
+    margin-top: 0rem;
+  }
+  .card:last-child {
+    margin-bottom: 0rem;
+  }
+
+  @media (min-width: $tablet) {
+    .card {
+      margin: 7.5rem 0;
+    }
+    .card:first-child {
+      margin-top: 3rem;
+    }
+    .card:last-child {
+      margin-bottom: 7.5rem;
+    }
+  }
+
+  @media (min-width: $desktop) {
+    .card {
+      margin: 15rem 0;
+    }
+    .card:first-child {
+      margin-top: 5rem;
+    }
+    .card:last-child {
+      margin-bottom: 15rem;
+    }
+  }
+
+  .tk-libs {
+    .title img {
+      margin-right: 0.5rem;
+    }
+  }
+
+  // Per lib styling
+  @each $name, $color, $size, $adjust in $libs {
+    .tk-lib-#{$name} {
+      .title,
+      .learn-more a {
+        color: $color;
+      }
+      .title img {
+        vertical-align: $adjust;
+        height: $size;
+      }
+    }
+  }
+}
+
+.tk-docs {
+  .tk-docs-nav {
+    background-color: $light-gray;
+
+    @include mobile {
+      padding: 0;
+    }
+
+    @include tablet {
+      padding: 4rem 0 0 1rem;
+    }
+  }
+
+  .menu {
+    font-size: $menu-font-size;
+    position: relative;
+    z-index: 2;
+
+    @include tablet {
+      position: sticky;
+      top: 4rem;
+      max-width: 280px;
+      margin-left: auto;
+      padding-bottom: 4rem;
+    }
+
+    @include mobile {
+      .tk-toc {
+        position: relative;
+        padding: 0.75rem;
+        z-index: 3;
+        font-size: 1.1rem;
+        font-weight: 500;
+        background-color: $light-gray;
+
+        a {
+          display: block;
+          position: relative;
+          width: 100%;
+          color: black;
+
+          .icon {
+            position: absolute;
+            right: 15px;
+            transform: scale(0.8);
+          }
+        }
+
+        .tk-arrow {
+          width: 13px;
+          height: 13px;
+          display: inline-block;
+          position: relative;
+          bottom: -5px;
+          right: -10px;
+          transition: 0.4s ease;
+          margin-top: 2px;
+          text-align: left;
+          transform: rotate(45deg);
+          // float: right;
+
+          &:before,
+          &:after {
+            position: absolute;
+            content: "";
+            display: "inline-block";
+            width: 12px;
+            height: 3px;
+            background-color: black;
+            transition: 0.4s ease;
+          }
+
+          &:after {
+            position: absolute;
+            transform: rotate(90deg);
+            top: -5px;
+            left: 5px;
+          }
+        }
+
+        &.is-active {
+          .tk-arrow {
+            transform: rotate(45deg) translate(-5px, -5px);
+
+            &:before {
+              transform: translate(10px, 0);
+            }
+            &:after {
+              transform: rotate(90deg) translate(10px, 0);
+            }
+          }
+        }
+      }
+
+      .tk-menu-body {
+        background-color: $light-gray;
+        padding: 0.75rem;
+        position: absolute;
+        z-index: -1;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transition: transform 0.2s ease-in-out;
+
+        &.is-active {
+          transform: translateY(100%);
+          transition: transform 0.2s ease-in-out;
+        }
+      }
+    }
+
+    .menu-label a {
+      color: $dark-gray;
+    }
+
+    .tk-menu-back {
+      margin-top: 1rem;
+    }
+
+    li {
+      > a {
+        line-height: 1.2;
+
+        b {
+          display: block;
+          margin-bottom: 0.4rem;
+        }
+      }
+    }
+
+    li.is-active {
+      background-color: white;
+
+      > ul {
+        padding-bottom: 0.5rem;
+      }
+
+      > a {
+        font-weight: 400;
+        color: black;
+      }
+    }
+  }
+
+  .tk-content {
+    position: relative;
+    color: black;
+    font-weight: 300;
+
+    @include mobile {
+      padding: 0;
+      font-size: 1rem;
+    }
+
+    @include tablet {
+      font-size: $body-font-size;
+      min-height: 90vh;
+      padding-bottom: 10rem;
+      max-width: 1220px;
+    }
+
+    @media screen and (max-width: 1400px) {
+      .tk-content-summary {
+        display: none;
+      }
+
+      .tk-markdown {
+        flex: none;
+        width: 100%;
+      }
+    }
+
+    .tk-content-summary {
+      font-size: 0.9rem;
+
+      a {
+        color: $gray;
+        font-weight: 500;
+
+        &:hover {
+          color: darken($gray);
+        }
+      }
+
+      ul {
+        list-style-type: none;
+        margin-left: 1.5em;
+        li {
+          margin-bottom: 0.5em;
+        }
+      }
+
+      > ul {
+        border-left: solid 1px $light-gray;
+        padding-left: 2rem;
+        margin: 0;
+      }
+
+      .tk-content-summary-menu {
+        position: sticky;
+        top: 4rem;
+      }
+    }
+
+    h1.title {
+      font-weight: 400;
+
+      @mobile {
+        font-size: 2rem;
+      }
+
+      @tablet {
+        font-size: 2.5rem;
+      }
+    }
+
+    h1:not(.title) {
+      font-size: 1.8rem;
+      padding-bottom: 0.5rem;
+      border-bottom: solid 1px $light-gray;
+    }
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    h3 {
+      font-size: 1.1rem;
+    }
+    h4 {
+      font-size: 1rem;
+    }
+
+    a {
+      color: $magenta;
+      font-weight: 400;
+    }
+    a:hover {
+      color: darken($magenta);
+    }
+
+    // Smaller bullet size
+    .tk-markdown {
+      li {
+        list-style-type: none;
+        position: relative; /* It's needed for setting position to absolute in the next rule. */
+      }
+      li:not(:last-child) {
+        margin-bottom: 1rem;
+      }
+
+      li::before {
+        content: "·";
+        position: absolute;
+        left: -1.1rem;
+        top: -1.15rem;
+        font-size: 2.7rem;
+      }
+
+      .is-warning {
+        background: lighten($magenta);
+        color: $magenta;
+
+        strong,
+        code {
+          color: $magenta;
+        }
+      }
+
+      blockquote.is-warning {
+        border-left-color: $magenta;
+      }
+    }
+
+    code {
+      color: black;
+    }
+
+    a code {
+      color: $magenta;
+    }
+    a:hover code {
+      color: darken($magenta);
+    }
+  }
+}
+
+.footer {
+  .tk-help {
+    position: relative;
+    font-size: $body-font-size;
+
+    .tk-help-links {
+      position: absolute;
+      bottom: 0;
+      padding-bottom: 0.75rem;
+
+      p {
+        display: block;
+        margin-top: 1rem;
+      }
+
+      .icon {
+        margin-left: 0.5rem;
+
+        svg {
+          height: 2rem;
+          width: 2rem;
+        }
+      }
+    }
+  }
+
+  .tk-footer-libs {
+    font-size: 1rem;
+    font-weight: 400;
+
+    a:hover {
+      color: $magenta;
+    }
+  }
+
+  .tk-footer-libs,
+  .tk-footer-libs a {
+    color: white;
+  }
+
+  .tk-lib-name {
+    font-weight: 600;
+  }
+}
+
+.tk-help-links {
+  .icon {
+    svg {
+      transform: translateY(30%);
+    }
+  }
+}
+
+.tk-doc-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid $light-gray;
+
+  .tk-next,
+  .tk-prev {
+    font-size: 0.9rem;
+
+    a {
+      font-weight: 500;
+    }
+
+    .tk-arrow {
+      display: inline-block;
+      width: 1.4rem;
+      height: 1.4rem;
+      vertical-align: 0%;
+    }
+  }
+
+  .tk-help-links {
+    font-size: 0.9rem;
+
+    .icon {
+      margin-left: 0.3rem;
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+    .tk-svg-path {
+      fill: black !important;
+    }
+  }
+
+  .tk-edit-this-page {
+    font-size: 0.9rem;
+  }
+}
+
+/*
+ *
+ * Syntax highlighting
+ *
+ */
+
+/*
+Docco style used in http://jashkenas.github.com/docco/ converted by Simon Madine (@thingsinjars)
+*/
+
+// .hljs {
+//   display: block;
+//   overflow-x: auto;
+//   padding: 0.5em;
+//   color: #000;
+//   background: #f8f8ff;
+// }
+
+.hljs {
+  display: block;
+  overflow-x: scroll;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: $gray;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: $magenta;
+}
+
+// .hljs-literal {
+//   color: $dark-gray;
+//   font-weight: bold;
+// }
+
+.hljs-number {
+  color: darken($green);
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: darken($green);
+}
+
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-section,
+.hljs-type {
+  color: $blue;
+}
+
+.hljs-params {
+  color: $purple;
+}
+
+.hljs-title {
+  color: $purple;
+  font-weight: bold;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+  color: darken($blue);
+  font-weight: normal;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: darken($green);
+}
+
+.hljs-regexp,
+.hljs-link {
+  color: $green;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: $purple;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: darken($yellow);
+}
+
+.hljs-meta {
+  color: $dark-gray;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: $red;
+}
+
+.hljs-addition {
+  background: $green;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
