@@ -117,7 +117,7 @@ completes. Historically, this is a tedious and error-prone task.
 ## Compile-time green-threading
 
 Rust implements asynchronous programing using feature called [`async/await`].
-Functions that perform asynchonous operations are labeled with the `async`
+Functions that perform asynchronous operations are labeled with the `async`
 keyword. In our example, the `connect` function is defined like this:
 
 ```rust

@@ -8,7 +8,7 @@ with Tokio.
 
 # `tokio::select!`
 
-The `tokio::select!` macro allows waiting on muliple async computations and
+The `tokio::select!` macro allows waiting on multiple async computations and
 returns when a **single** computation completes.
 
 For example:
@@ -310,7 +310,7 @@ not needed, it is good practice to have the expression evaluate to `()`.
 
 # Errors
 
-Using the `?` operator propagages the error from the expression. How this works
+Using the `?` operator propagates the error from the expression. How this works
 depends on whether `?` is used from an async expression or from a handler.
 Using `?` in an async expression propagates the error out of the async
 expression. This makes the output of the async expression a `Result`. Using `?`
@@ -545,7 +545,7 @@ checked.
 
 Now we will show how to run an asynchronous operation across multiple calls to
 `select!`. In this example, we have an MPSC channel with item type `i32`, and an
-asynchonous function. We want to run the asynchronous function until it
+asynchronous function. We want to run the asynchronous function until it
 completes or an even integer is received on the channel.
 
 ```rust

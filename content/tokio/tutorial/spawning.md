@@ -99,7 +99,7 @@ We want our Redis server to process **many** concurrent requests. To do this, we
 need to add some concurrency.
 
 [[info]]
-| Concurrency does not require parallism. Because Tokio is asynchronous, many
+| Concurrency does not require parallelism. Because Tokio is asynchronous, many
 | requests can be processed concurrently on a single thread.
 
 To process connections concurrently, a new task is spawned for each inbound

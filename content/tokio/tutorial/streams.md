@@ -368,8 +368,8 @@ impl Stream for Interval {
 
 ## `async-stream`
 
-Manually implemening streams using the [`Stream`] trait can be tedious.
-Unfortunatly, the Rust programming language does not yet support `async/await`
+Manually implementing streams using the [`Stream`] trait can be tedious.
+Unfortunately, the Rust programming language does not yet support `async/await`
 syntax for defining streams. This is in the works, but not yet ready.
 
 The [`async-stream`] crate is available as a temporary solution. This crate
