@@ -63,7 +63,7 @@ const STACK_LAYERS: StackLayer[] = [
     id: "tracing",
     name: "Tracing",
     desc:
-      "Unified visibility into the application and libraries. Provides structured, event-based, data collection and logging.",
+      "Unified insight into the application and libraries. Provides structured, event-based, data collection and logging.",
     zIndex: 0,
     href: "https://github.com/tokio-rs/tracing",
   },
