@@ -25,7 +25,7 @@ const LIBS: Library[] = [
     name: "Easy",
     desc: (
       <>
-        <code>async</code>/<code>await</code> removes the complexity of writing
+        <code>async</code>/<code>await</code> reduces the complexity of writing
         asynchronous applications. Paired with Tokio's utilities and vibrant
         ecosystem, writing applications is a breeze.
       </>
