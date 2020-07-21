@@ -7,7 +7,8 @@ build = "build.rs"
 publish = false
 
 [dependencies]
-mini-redis = { path = "/home/carllerche/Code/tokio-mini-redis" }
+async-stream = "0.2"
+mini-redis = "0.2"
 tokio = { version = "0.2", features = ["full"] }
 bytes = "0.5"
 futures = "0.3"

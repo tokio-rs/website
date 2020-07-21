@@ -100,7 +100,7 @@ name = "channels"
 version = "0.1.0"
 dependencies = [
  "bytes",
- "mini-redis",
+ "mini-redis 0.2.0",
  "tokio",
 ]
 
@@ -332,7 +332,7 @@ dependencies = [
 name = "hello-tokio"
 version = "0.1.0"
 dependencies = [
- "mini-redis",
+ "mini-redis 0.2.0",
  "tokio",
 ]
 
@@ -349,7 +349,7 @@ dependencies = [
 name = "io"
 version = "0.1.0"
 dependencies = [
- "mini-redis",
+ "mini-redis 0.2.0",
  "tokio",
 ]
 
@@ -432,6 +432,22 @@ dependencies = [
 [[package]]
 name = "mini-redis"
 version = "0.2.0"
+dependencies = [
+ "async-stream",
+ "atoi",
+ "bytes",
+ "structopt",
+ "tokio",
+ "tracing",
+ "tracing-futures",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "mini-redis"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "051859d02ee3bcfded15d784691de8486657ff117c7a36261b260e86030fb3cf"
 dependencies = [
  "async-stream",
  "atoi",
@@ -726,7 +742,7 @@ name = "shared-state"
 version = "0.1.0"
 dependencies = [
  "bytes",
- "mini-redis",
+ "mini-redis 0.2.0",
  "tokio",
 ]
 
@@ -768,7 +784,15 @@ dependencies = [
 name = "spawning"
 version = "0.1.0"
 dependencies = [
- "mini-redis",
+ "mini-redis 0.2.0",
+ "tokio",
+]
+
+[[package]]
+name = "streams"
+version = "0.1.0"
+dependencies = [
+ "mini-redis 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "tokio",
 ]
 
