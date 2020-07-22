@@ -30,7 +30,7 @@ somewhere and are happy to help.
 
 # Prerequisites
 
-Readers should already be familiar with the [Rust]. The [Rust book][book] is an
+Readers should already be familiar with [Rust]. The [Rust book][book] is an
 excellent resource to get started with.
 
 While not required, some experience with writing networking code using the [Rust
