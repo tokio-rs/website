@@ -271,7 +271,7 @@ impl MiniTokio {
 ```
 
 This runs the async block. A `Delay` instance is created with the requested
-delay and is awaited on. However, our implementation so far as a major **flaw**.
+delay and is awaited on. However, our implementation so far has a major **flaw**.
 Our executor never goes to sleep. The executor continuously loops **all**
 spawned futures and polls them. Most of the time, the futures will not be ready
 to perform more work and will return `Poll::Pending` again. The process will
