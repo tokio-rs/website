@@ -48,7 +48,7 @@ task to manage the `client` resource. Any task that wishes to issue a request
 sends a message to the `client` task. The `client` task issues the request on
 behalf of the sender, and the response is sent back to the sender.
 
-Using this strategy, a single connection is established. The task managing
+Using this strategy, a single connection is established. The task managing the
 `client` is able to get mutable access in order to call `get` and `set`.
 Additionally, the channel works as a buffer. Operations may be sent to the
 `client` task while the `client` task is busy. Once the `client` task is
