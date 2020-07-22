@@ -20,7 +20,7 @@ similar to how you don't manually call the `poll` method from the `Future`
 trait. Instead, you will use them through the utility methods provided by
 [`AsyncReadExt`] and [`AsyncWriteExt`].
 
-Let's briefly look at a few of these methods. All of these functions as `async`
+Let's briefly look at a few of these methods. All of these functions are `async`
 and must be used with `.await`.
 
 ## `async fn read()`
