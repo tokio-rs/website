@@ -393,7 +393,7 @@ will eventually fill up all available memory and cause the system to fail in
 unpredictable ways.
 
 Tokio takes care to avoid implicit queuing. A big part of this is the fact that
-async operation are lazy. Consider the following:
+async operations are lazy. Consider the following:
 
 ```rust
 # fn async_op() {}
