@@ -110,7 +110,7 @@ async fn main() {
 }
 ```
 
-[async]: ../async
+[async]: async
 
 ## The `Future` implementation
 
