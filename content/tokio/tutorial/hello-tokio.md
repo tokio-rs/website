@@ -99,8 +99,8 @@ Most computer programs execute in the same order that it is written. The first
 line executes, then the next, and so on.  With synchronous programming, when a
 program encounters an operation that cannot be completed immediately, it will
 block until the operation completes. For example, establishing a TCP connection
-requires an exchange with a peer over the network takes some amount of time. 
-During this time, the thread is blocked.
+requires an exchange with a peer over the network, which can take a sizeable
+amount of time. During this time, the thread is blocked.
 
 With asynchronous programming, operations that cannot complete immediately are
 suspended to the background. The thread is not blocked, and can continue running
@@ -116,7 +116,7 @@ completes. Historically, this is a tedious and error-prone task.
 
 ## Compile-time green-threading
 
-Rust implements asynchronous programing using feature called [`async/await`].
+Rust implements asynchronous programing using a feature called [`async/await`].
 Functions that perform asynchronous operations are labeled with the `async`
 keyword. In our example, the `connect` function is defined like this:
 
@@ -151,9 +151,9 @@ more throughout the guide.
 
 Async functions are called like any other Rust function. However, calling these
 functions does not result in the function body executing. Instead, calling an
-`async fn` returns a value representing the operation, similar conceptually to
-a zero-argument closure. To actually run the operation, you should use the 
-`.await` operator on the return value.
+`async fn` returns a value representing the operation. This is conceptually
+analogous to a zero-argument closure. To actually run the operation, you should
+use the `.await` operator on the return value.
 
 For example, the given program
 
@@ -189,7 +189,8 @@ The return value of an `async fn` is an anonymous type that implements the
 
 ## Async `main` function
 
-The main function used to launch the application differs from the usual Rust crate.
+The main function used to launch the application differs from the usual one
+found in most of Rust's crates.
 
 1. It is an `async fn`
 2. It is annotated with `#[tokio::main]`

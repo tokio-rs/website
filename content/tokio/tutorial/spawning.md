@@ -16,8 +16,8 @@ Then create a new, empty `src/main.rs` and continue.
 
 # Accepting sockets
 
-The first thing our Redis server needs to do is accept inbound TCP sockets. This
-is done with [`tokio::net::TcpListener`][tcpl].
+The first thing our Redis server needs to do is to accept inbound TCP sockets.
+This is done with [`tokio::net::TcpListener`][tcpl].
 
 [[info]]
 | Many of Tokio's types are named the same as their synchronous equivalent in
@@ -227,7 +227,8 @@ Changing line 7 to `task::spawn(async move {` will instruct the compiler to
 it `'static`.
 
 If a single piece of data must be accessible from more than one task
-concurrently, then it must be shared by a tool such as `Arc`.
+concurrently, then it must be shared using synchronization primitives such as
+`Arc`.
 
 ## `Send` bound
 
@@ -240,7 +241,7 @@ Tasks are `Send` when **all** data that is held **across** `.await` calls is
 the scheduler. The next time the task is executed, it resumes from the point it
 last yielded. To make this work, all state that is used **after** `.await` must
 be saved by the task. If this state is `Send`, i.e. can be moved across threads,
-then the task itself can be moved across threads. Similarly, if the state is not
+then the task itself can be moved across threads. Conversely, if the state is not
 `Send`, then neither is the task.
 
 For example, this works:
