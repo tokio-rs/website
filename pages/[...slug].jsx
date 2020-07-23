@@ -7,6 +7,7 @@ const menu = {
     nested: {
       tutorial: {
         nested: [
+          "setup",
           "hello-tokio",
           "spawning",
           "shared-state",
