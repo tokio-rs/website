@@ -375,7 +375,7 @@ while let Some(cmd) = rx.recv().await {
 ```
 
 Calling `send` on `oneshot::Sender` completes immediately and does **not**
-require an `.async`. This is because `send` on an `oneshot` channel will always
+require an `.await`. This is because `send` on an `oneshot` channel will always
 fail or succeed immediately without any form of waiting.
 
 Sending a value on a oneshot channel returns `Err` when the receiver half has
