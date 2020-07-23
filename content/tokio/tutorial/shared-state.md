@@ -89,7 +89,7 @@ async fn main() {
 ## On using `std::sync::Mutex`
 
 Note, `std::sync::Mutex` and **not** `tokio::sync::Mutex` is used to guard the
-`HashMap` a common error is to unconditionally use `tokio::sync::Mutex` from
+`HashMap`. A common error is to unconditionally use `tokio::sync::Mutex` from
 within async code. An async mutex is a mutex that is locked across calls to
 `.await`.
 
@@ -176,10 +176,10 @@ If a contention on a synchronous mutex becomes a problem, the best fix is rarely
 to switch to the Tokio mutex. Instead, options to consider are:
 
 - Switching to a dedicated task to manage state and use message passing.
-- Shard the mutex
+- Shared the mutex
 - Restructure the code to avoid the mutex.
 
-In our case, as each *key* is independent, mutex sharding will work well. To do
+In our case, as each *key* is independent, mutex sharing will work well. To do
 this, instead of having a single `Mutex<HashMap<_, _>>` instance, we would
 introduce `N` distinct instances.
 
