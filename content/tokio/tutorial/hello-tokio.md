@@ -62,7 +62,7 @@ Now, run the `my-redis` application:
 
 ```bash
 $ cargo run
-got value from the server; success=Some(b"world")
+got value from the server; result=Some(b"world")
 ```
 
 Success!
