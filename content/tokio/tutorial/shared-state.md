@@ -176,10 +176,10 @@ If a contention on a synchronous mutex becomes a problem, the best fix is rarely
 to switch to the Tokio mutex. Instead, options to consider are:
 
 - Switching to a dedicated task to manage state and use message passing.
-- Shared the mutex
+- Shard the mutex
 - Restructure the code to avoid the mutex.
 
-In our case, as each *key* is independent, mutex sharing will work well. To do
+In our case, as each *key* is independent, mutex sharding will work well. To do
 this, instead of having a single `Mutex<HashMap<_, _>>` instance, we would
 introduce `N` distinct instances.
 
