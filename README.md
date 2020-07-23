@@ -20,6 +20,13 @@ and ran.
 Thinking about contributing? Great! This should help you get the website running
 locally.
 
+Here are some places you can look for things to solve:
+
+ - [Issues marked help wanted](https://github.com/tokio-rs/website/labels/help%20wanted)
+ - [Topic articles](https://github.com/tokio-rs/website/issues/448)
+ - [The ecosystem](https://github.com/tokio-rs/website/issues/453)
+ - [FAQ](https://github.com/tokio-rs/website/issues/452)
+
 ### Getting Started
 
 The website is built using [Next.js] paired with the [Bulma] CSS framework.
