@@ -40,7 +40,7 @@ No pre-existing knowledge of Redis is required.
 
 [rust]: https://rust-lang.org
 [book]: https://doc.rust-lang.org/book/
-[std]: doc.rust-lang.org/std/
+[std]: https://doc.rust-lang.org/std/
 
 ## Rust
 
