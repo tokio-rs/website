@@ -89,7 +89,7 @@ async fn main() {
 ## On using `std::sync::Mutex`
 
 Note, `std::sync::Mutex` and **not** `tokio::sync::Mutex` is used to guard the
-`HashMap` a common error is to unconditionally use `tokio::sync::Mutex` from
+`HashMap`. A common error is to unconditionally use `tokio::sync::Mutex` from
 within async code. An async mutex is a mutex that is locked across calls to
 `.await`.
 
