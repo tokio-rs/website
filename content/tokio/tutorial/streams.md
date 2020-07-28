@@ -323,7 +323,7 @@ and other streams. As an example, let's build off of the `Delay` future we
 implemented in [Async in depth][async]. We will convert it to a stream that
 yields `()` three times at 10 ms intervals
 
-```
+```rust
 use tokio::stream::Stream;
 # use std::future::Future;
 use std::pin::Pin;
