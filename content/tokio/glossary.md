@@ -190,7 +190,7 @@ purpose.
 - [oneshot]: single-producer, single consumer channel. A single value can be sent.
 - [broadcast]: multi-producer, multi-consumer. Many values can be send. Each
   receiver sees every value.
-- [watch]: multi-producer, multi-consumer. Many values can be sent, but no
+- [watch]: single-producer, multi-consumer. Many values can be sent, but no
   history is kept. Receivers only see the most recent value.
 
 If you need a multi-producer multi-consumer channel where only one consumer sees

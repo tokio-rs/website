@@ -64,8 +64,14 @@ Tokio provides a [number of channels][channels], each serving a different purpos
 - [oneshot]: single-producer, single consumer channel. A single value can be sent.
 - [broadcast]: multi-producer, multi-consumer. Many values can be send. Each
   receiver sees every value.
-- [watch]: multi-producer, multi-consumer. Many values can be sent, but no
+- [watch]: single-producer, multi-consumer. Many values can be sent, but no
   history is kept. Receivers only see the most recent value.
+
+If you need a multi-producer multi-consumer channel where only one consumer sees
+each message, you can use the [`async-channel`] crate. There are also channels
+for use outside of asynchronous Rust, such as [`std::sync::mpsc`] and
+[`crossbeam::channel`]. These channels wait for messages by blocking the
+thread, which is not allowed in asynchronous code.
 
 In this section, we will use [mpsc] and [oneshot]. The other types of message
 passing channels are explored in later sections. The full code from this section
@@ -76,6 +82,9 @@ is found [here][full].
 [oneshot]: https://docs.rs/tokio/0.2/tokio/sync/oneshot/index.html
 [broadcast]: https://docs.rs/tokio/0.2/tokio/sync/broadcast/index.html
 [watch]: https://docs.rs/tokio/0.2/tokio/sync/watch/index.html
+[`async-channel`]: https://docs.rs/async-channel/
+[`std::sync::mpsc`]: https://doc.rust-lang.org/stable/std/sync/mpsc/index.html
+[`crossbeam::channel`]: https://docs.rs/crossbeam/latest/crossbeam/channel/index.html
 
 # Define the message type
 
