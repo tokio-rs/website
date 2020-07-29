@@ -357,7 +357,7 @@ impl Stream for Interval {
         match Pin::new(&mut self.delay).poll(cx) {
             Poll::Ready(_) => {
                 let when = self.delay.when + Duration::from_millis(10);
-                self.delay = Delay {when };
+                self.delay = Delay { when };
                 self.rem -= 1;
                 Poll::Ready(Some(()))
             }
