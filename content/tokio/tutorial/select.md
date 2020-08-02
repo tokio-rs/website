@@ -63,7 +63,7 @@ example, a task is spawned to send a message back. Usually, the task will
 perform some computation to generate the value.
 
 Futures or other types can implement `Drop` to cleanup background resources.
-Tokio's `oneshot::Receier` implements `Drop` by sending a closed notification to
+Tokio's `oneshot::Receiver` implements `Drop` by sending a closed notification to
 the `Sender` half. The sender half can receive this notification and abort the
 in-progress operation by dropping it.
 
