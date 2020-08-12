@@ -359,7 +359,7 @@ interactively experimenting with this demo, you can check out the example
 [reload]:
   https://docs.rs/tracing-subscriber/latest/tracing_subscriber/reload/index.html
 [example]:
-  https://github.com/tokio-rs/tracing/blob/master/tracing-tower/examples/load.rs
+  https://github.com/tokio-rs/tracing/blob/master/examples/examples/tower-load.rs
 
 ## Getting Started with Tracing
 
