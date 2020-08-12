@@ -344,7 +344,7 @@ that the service records that "I don't like this letter" and returns an internal
 error. We've found the (admittedly, entirely fake) bug!
 
 This kind of dynamic filtering is only possible with context-aware, structured
-diagnostic instrumentation. Because nesting spans and events lets us construct a
+diagnostic instrumentation. Because nesting spans and events lets us construct
 a tree of related contexts, we can interpret the diagnostics in terms of events
 that are _logically_ or _causally_ linked (e.g., they occurred while handling
 the same request) rather than those that are _temporally_ linked (they occurred
