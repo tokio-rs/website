@@ -436,7 +436,7 @@ async fn race(
             Ok::<_, io::Error>(())
         } => {}
         Ok(_) = async {
-            let mut socket = TcpStream::connect(addr1).await?;
+            let mut socket = TcpStream::connect(addr2).await?;
             socket.write_all(data).await?;
             Ok::<_, io::Error>(())
         } => {}
