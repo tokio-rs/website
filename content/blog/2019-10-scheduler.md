@@ -94,7 +94,7 @@ while let Some(task) = self.queue.pop() {
 
 When a task becomes runnable, it is inserted into the run queue.
 
-![Scheduling loop](/img/diagrams/sched-diagrams/gen_sched.png)
+![Scheduling loop](/img/2019-10-scheduler/gen_sched.png)
 
 While it is possible to design a system where resources, tasks, and the
 processor all exist on a single thread, Tokio chooses to use multiple threads.
@@ -114,7 +114,7 @@ they are pushed onto the tail of the queue. There are multiple processors, each
 running on a separate thread. Each processor pops from the head of the queue,
 blocking the thread if no task is available.
 
-![Single queue scheduler](/img/diagrams/sched-diagrams/thread_pool.png)
+![Single queue scheduler](/img/2019-10-scheduler/thread_pool.png)
 
 The run queue must support both multiple producers and multiple consumers. The
 commonly used algorithm is an [intrusive] linked list. Intrusive implies that
@@ -128,10 +128,8 @@ operation][mpsc] but popping requires[^1] a mutex to coordinate consumers.
   However, in practice the overhead needed to correctly avoid locks is greater
   than just using a mutex.
 
-[intrusive]:
-  https://stackoverflow.com/questions/5004162/what-does-it-mean-for-a-data-structure-to-be-intrusive
-[mpsc]:
-  http://www.1024cores.net/home/lock-free-algorithms/queues/intrusive-mpsc-node-based-queue
+[intrusive]: https://stackoverflow.com/questions/5004162/what-does-it-mean-for-a-data-structure-to-be-intrusive
+[mpsc]: http://www.1024cores.net/home/lock-free-algorithms/queues/intrusive-mpsc-node-based-queue
 
 This approach is commonly used when implementing a general-purpose thread pool,
 as it has several advantages:
@@ -182,9 +180,8 @@ This is all to say the obvious: avoid cross thread synchronization as much as
 possible because it is slow.
 
 [mech-symp]: https://mechanical-sympathy.blogspot.com
-[scaled-latency]: https://www.prowesscorp.com/computer-latency-at-a-human-scale/
-[seq-cst]:
-  https://en.cppreference.com/w/cpp/atomic/memory_order#Sequentially-consistent_ordering
+[scaled-latency]: https://web.archive.org/web/20200225202909/https://www.prowesscorp.com/computer-latency-at-a-human-scale/
+[seq-cst]: https://en.cppreference.com/w/cpp/atomic/memory_order#Sequentially-consistent_ordering
 [mesi]: https://en.wikipedia.org/wiki/MESI_protocol
 
 ### Many processors, each with their own run queue
@@ -197,7 +194,7 @@ be a thread-safe way to inject tasks into the scheduler. Either each processor's
 run queue supports a thread-safe push operation (MPSC) or each processor has
 **two** run queues: an unsynchronized queue and a thread-safe queue.
 
-![Sharded scheduler](/img/diagrams/sched-diagrams/sharded.png)
+![Sharded scheduler](/img/2019-10-scheduler/sharded.png)
 
 This is the strategy used by [Seastar]. Because synchronization is almost
 entirely avoided, this strategy can be very fast. However, it's not a silver
@@ -223,7 +220,7 @@ becomes idle, it checks sibling processor run queues and attempts to steal from
 them. A processor will go to sleep only once it fails to find work from sibling
 run queues.
 
-![Work-stealing scheduler](/img/diagrams/sched-diagrams/work_stealing.png)
+![Work-stealing scheduler](/img/2019-10-scheduler/work_stealing.png)
 
 At the model level, this is a "best of both worlds" approach. Under load,
 processors operate independently, avoiding synchronization overhead. In cases
@@ -539,7 +536,7 @@ it, the old task is removed from the slot and pushed to the back of the run
 queue. In the message passing case, this will result in the receiver of the
 message to be scheduled to run next.
 
-![Message passing optimization](/img/diagrams/sched-diagrams/message_passing.png)
+![Message passing optimization](/img/2019-10-scheduler/message_passing.png)
 
 ### Throttle stealing
 

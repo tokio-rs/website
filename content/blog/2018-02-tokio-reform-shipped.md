@@ -101,8 +101,7 @@ of the [Conduit] project.
 
 <div style="text-align:right">&mdash;Carl Lerche</div>
 
-[reform rfc]:
-  https://github.com/tokio-rs/tokio-rfcs/blob/master/text/0001-tokio-reform.md
+[reform rfc]: https://github.com/tokio-rs/tokio-rfcs/blob/master/text/0001-tokio-reform.md
 [crates.io]: https://crates.io/crates/tokio
 [`current_thread`]: https://docs.rs/tokio-current-thread
 [`tokio-io`]: https://github.com/tokio-rs/tokio-io

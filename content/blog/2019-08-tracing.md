@@ -356,10 +356,8 @@ interactively experimenting with this demo, you can check out the example
 
 [`tower`]: https://crates.io/crates/tower
 [`env_logger`]: https://crates.io/crates/env_logger
-[reload]:
-  https://docs.rs/tracing-subscriber/latest/tracing_subscriber/reload/index.html
-[example]:
-  https://github.com/tokio-rs/tracing/blob/master/examples/examples/tower-load.rs
+[reload]: https://docs.rs/tracing-subscriber/latest/tracing_subscriber/reload/index.html
+[example]: https://github.com/tokio-rs/tracing/blob/master/examples/examples/tower-load.rs
 
 ## Getting Started with Tracing
 
@@ -428,12 +426,10 @@ console, and more implementations are soon to come.
 More [API documentation][docs] is available on docs.rs, and examples are
 provided in the [`tracing` github repository][github].
 
-[inst]:
-  https://docs.rs/tracing-attributes/latest/tracing_attributes/attr.instrument.html
+[inst]: https://docs.rs/tracing-attributes/latest/tracing_attributes/attr.instrument.html
 [macros]: https://docs.rs/tracing/0.1.5/tracing/#macros
 [subscriber]: https://docs.rs/tracing/0.1.5/tracing/trait.Subscriber.html
-[default-sub]:
-  https://docs.rs/tracing/0.1.5/tracing/dispatcher/index.html#setting-the-default-subscriber
+[default-sub]: https://docs.rs/tracing/0.1.5/tracing/dispatcher/index.html#setting-the-default-subscriber
 [fmt-crates]: https://crates.io/crates/tracing-fmt/
 
 ## Building an Ecosystem
