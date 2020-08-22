@@ -82,6 +82,5 @@ do not implement `Send`.
 [`file`]: https://docs.rs/tokio/0.1/tokio/fs/struct.File.html
 [in]: https://docs.rs/tokio/0.1/tokio/io/fn.stdin.html
 [out]: https://docs.rs/tokio/0.1/tokio/io/fn.stdout.html
-[`blocking`]:
-  https://docs.rs/tokio-threadpool/0.1/tokio_threadpool/fn.blocking.html
+[`blocking`]: https://docs.rs/tokio-threadpool/0.1/tokio_threadpool/fn.blocking.html
 [rt]: https://docs.rs/tokio/0.1/tokio/runtime/current_thread/index.html

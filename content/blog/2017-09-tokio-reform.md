@@ -49,6 +49,5 @@ tuned!
 
 <div style="text-align:right">&mdash;Aaron Turon</div>
 
-[async/await]:
-  https://internals.rust-lang.org/t/help-test-async-await-generators-coroutines/5835
+[async/await]: https://internals.rust-lang.org/t/help-test-async-await-generators-coroutines/5835
 [rfc]: https://github.com/carllerche/tokio-rfcs/pull/2
