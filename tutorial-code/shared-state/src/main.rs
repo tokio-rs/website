@@ -17,6 +17,7 @@ async fn main() {
 
     loop {
         let (socket, _) = listener.accept().await.unwrap();
+        // Clone the handle to the hash map.
         let db = db.clone();
 
         println!("Accepted");
