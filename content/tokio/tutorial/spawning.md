@@ -99,8 +99,15 @@ We want our Redis server to process **many** concurrent requests. To do this, we
 need to add some concurrency.
 
 [[info]]
-| Concurrency does not require parallelism. Because Tokio is asynchronous, many
-| requests can be processed concurrently on a single thread.
+| Concurrency and parallelism is not the same thing. If you alternate between
+| two tasks, then you are working on both tasks concurrently, but not in
+| parallel. For it to qualify as parallel, you would need two people, one
+| dedicated to each task.
+|
+| One of the advantages of using Tokio is that asynchronous code allows you to
+| work on many tasks concurrently, without having to work on them in parallel
+| using ordinary threads. In fact, Tokio can run many tasks concurrently on a
+| single thread!
 
 To process connections concurrently, a new task is spawned for each inbound
 connection. The connection is processed on this task.
@@ -172,6 +179,14 @@ thousands, if not millions of tasks.
 
 Tasks spawned by `tokio::spawn` **must** be `'static`. The expression being
 spawned must not borrow any data.
+
+[[info]]
+| It is a common misconception that "being static" means "lives forever",
+| however this is not the case. Just because a value is `'static` does not mean
+| that you have a memory leak. You can read more in [Common Rust Lifetime
+| Misconceptions][common-lifetime].
+
+[common-lifetime]: https://github.com/pretzelhammer/rust-blog/blob/master/posts/common-rust-lifetime-misconceptions.md#2-if-t-static-then-t-must-be-valid-for-the-entire-program
 
 For example, the following will not compile:
 
@@ -317,6 +332,11 @@ note: future is not `Send` as this value is used across an await
 12  |     });
     |     - `rc` is later dropped here
 ```
+
+We will discuss a special case of this error in more depth [in the next
+chapter][mutex-guard].
+
+[mutex-guard]: shared-state#holding-a-mutexguard-across-an-await
 
 # Store values
 

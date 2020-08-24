@@ -49,7 +49,7 @@ sends a message to the `client` task. The `client` task issues the request on
 behalf of the sender, and the response is sent back to the sender.
 
 Using this strategy, a single connection is established. The task managing the
-`client` is able to get mutable access in order to call `get` and `set`.
+`client` is able to get exclusive access in order to call `get` and `set`.
 Additionally, the channel works as a buffer. Operations may be sent to the
 `client` task while the `client` task is busy. Once the `client` task is
 available to process new requests, it pulls the next request from the channel.
@@ -132,8 +132,8 @@ handles are used separately. They may be moved to different tasks.
 
 The channel is created with a capacity of 32. If messages are sent faster than
 they are received, the channel will store them. Once the 32 messages are stored
-in the channel, calling `send(...).await` will block until a message has been
-removed by the receiver.
+in the channel, calling `send(...).await` will go to sleep until a message has
+been removed by the receiver.
 
 Sending from multiple tasks is done by **cloning** the `Sender`. For example:
 
@@ -303,8 +303,8 @@ enum Command {
     },
 }
 
-/// Provided by the requester and used by the manager task to send the command
-/// response back to the requester.
+/// Provided by the requester and used by the manager task to send
+/// the command response back to the requester.
 type Responder<T> = oneshot::Sender<mini_redis::Result<T>>;
 ```
 

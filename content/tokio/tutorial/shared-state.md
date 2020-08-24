@@ -12,11 +12,13 @@ There are a couple of different ways to share state in Tokio.
 1. Guard the shared state with a Mutex.
 2. Spawn a task to manage the state and use message passing to operate on it.
 
-Spawning a task to manage state is usually the preferred strategy when
-operations on the data require asynchronous work. This strategy will be used in
-a later section. Right now, the shared state is a `HashMap` and the operations
-are `insert` and `get`. Both of these operations are near-instant, so we
-will use a `Mutex`.
+Generally you want to use the first approach for simple data, and the second
+approach for things that require asynchronous work such as IO primitives.  In
+this chapter, the shared state is a `HashMap` and the operations are `insert`
+and `get`. Neither of these operations is asynchronous, so we will use a
+`Mutex`.
+
+The latter approach is covered in the next chapter.
 
 # Add `bytes` dependency
 
@@ -42,7 +44,7 @@ bytes = "0.5"
 The `HashMap` will be shared across many tasks and potentially many threads. To
 support this, it is wrapped in `Arc<Mutex<_>>`.
 
-First, for convenience, add the following after the `use` statements.
+First, for convenience, add the following type alias after the `use` statements.
 
 ```rust
 use bytes::Bytes;
@@ -74,7 +76,7 @@ async fn main() {
 
     loop {
         let (socket, _) = listener.accept().await.unwrap();
-        // Clone the handle
+        // Clone the handle to the hash map.
         let db = db.clone();
 
         println!("Accepted");
@@ -172,7 +174,7 @@ is used, then the mutex will never be contended.
 
 [basic-rt]: https://docs.rs/tokio/0.2/tokio/runtime/struct.Builder.html#method.basic_scheduler
 
-If a contention on a synchronous mutex becomes a problem, the best fix is rarely
+If contention on a synchronous mutex becomes a problem, the best fix is rarely
 to switch to the Tokio mutex. Instead, options to consider are:
 
 - Switching to a dedicated task to manage state and use message passing.
@@ -198,7 +200,10 @@ let shard = db[hash(key) % db.len()].lock().unwrap();
 shard.insert(key, value);
 ```
 
+The [dashmap] crate provides an implementation of a sharded hash map.
+
 [basic]: https://docs.rs/tokio/0.2/tokio/runtime/index.html#basic-scheduler
+[dashmap]: https://docs.rs/dashmap
 
 # Holding a `MutexGuard` across an `.await`
 
@@ -211,7 +216,7 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
     *lock += 1;
 
     do_something_async().await;
-}
+} // lock goes out of scope here
 ```
 When you try to spawn something that calls this function, you will encounter the
 following error message:
@@ -242,10 +247,20 @@ note: future is not `Send` as this value is used across an await
 This happens because the `std::sync::MutexGuard` type is **not** `Send`. This
 means that you can't send a mutex lock to another thread, and the error happens
 because the Tokio runtime can move a task between threads at every `.await`.
-To avoid this, you should restructure your code such that the mutex lock is not
-in scope when the `.await` is performed.
+To avoid this, you should restructure your code such that the mutex lock's
+destructor runs before the `.await`.
+```rust
+// This works!
+async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
+    {
+        let mut lock = mutex.lock().unwrap();
+        *lock += 1;
+    } // lock goes out of scope here
 
-Note that changing the code to the following does not work:
+    do_something_async().await;
+}
+```
+Note that this does not work:
 ```rust
 use std::sync::Mutex;
 
@@ -260,19 +275,11 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 ```
 This is because the compiler currently calculates whether a future is `Send`
 based on scope information only. The compiler will hopefully be updated to
-support this in the future, but for now, you can rewrite the code to explicitly
-drop the lock using a scope:
-```rust
-// This works!
-async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
-    {
-        let mut lock = mutex.lock().unwrap();
-        *lock += 1;
-    } // lock goes out of scope here
+support explicitly dropping it in the future, but for now, you must explicitly
+use a scope.
 
-    do_something_async().await;
-}
-```
+Note that the error discussed here is also discussed in the [Send bound section
+from the spawning chapter][send-bound].
 
 You should not try to circumvent this issue by spawning the task in a way that
 does not require it to be `Send`, because if Tokio suspends your task at an
@@ -282,6 +289,8 @@ which would result in a deadlock as the task waiting to lock the mutex would
 prevent the task holding the mutex from releasing the mutex.
 
 We will discuss some approaches to fix the error message below:
+
+[send-bound]: spawning#send-bound
 
 ## Restructure your code to not hold the lock across an `.await`
 
@@ -310,14 +319,11 @@ async fn increment_and_do_stuff(can_incr: &CanIncrement) {
 This pattern guarantees that you wont run into the `Send` error, because the
 mutex guard does not appear anywhere in an async function.
 
-## Spawn a task to manage the resource and use message passing to talk to it
+## Spawn a task to manage the state and use message passing to operate on it
 
-This technique is commonly used when the value stored inside the mutex is an IO
-resource, because it is not possible to restructure your code to avoid the
-`.await` if the `.await` comes from an async function called on the value inside
-the mutex.
-
-The [next chapter](channels) discusses this approach in depth.
+This is the second approach mentioned in the start of this chapter, and is often
+used when the shared resource is an IO resource. See the next chapter for more
+details.
 
 ## Use Tokio's asynchronous mutex
 
@@ -335,7 +341,7 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
     *lock += 1;
 
     do_something_async().await;
-}
+} // lock goes out of scope here
 ```
 
 [`tokio::sync::Mutex`]: https://docs.rs/tokio/0.2/tokio/sync/struct.Mutex.html
