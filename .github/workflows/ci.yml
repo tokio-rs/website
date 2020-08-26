@@ -19,6 +19,10 @@ jobs:
       - name: Install Rust
         run: rustup install nightly-2020-08-22
 
+      - name: Build dependencies
+        run: cargo +nightly-2020-08-22 build
+        working-directory: doc-test
+
       - name: Actually run the tests
         run: cargo +nightly-2020-08-22 test
         working-directory: doc-test
@@ -29,6 +33,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install Rust
         run: rustup update stable
+
+      - name: Build dependencies
+        run: cargo build --all
+        working-directory: tutorial-code
 
       - name: Actually run the tests
         run: cargo test --all
