@@ -319,7 +319,6 @@ async fn increment_and_do_stuff(can_incr: &CanIncrement) {
     can_incr.increment();
     do_something_async().await;
 }
-# async fn do_something_async() {}
 ```
 This pattern guarantees that you wont run into the `Send` error, because the
 mutex guard does not appear anywhere in an async function.
