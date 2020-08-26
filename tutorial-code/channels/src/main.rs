@@ -4,7 +4,7 @@ use tokio::sync::{mpsc, oneshot};
 
 /// Multiple different commands are multiplexed over a single channel.
 #[derive(Debug)]
-num Command {
+enum Command {
     Get {
         key: String,
         resp: Responder<Option<Bytes>>,
