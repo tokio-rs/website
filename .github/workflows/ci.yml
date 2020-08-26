@@ -1,0 +1,39 @@
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+name: CI
+
+env:
+  RUSTFLAGS: -Dwarnings
+  RUST_BACKTRACE: 1
+  nightly: nightly-2020-08-22
+
+jobs:
+  doc-test:
+    name: Test code blocks in markdown
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.nightly }}
+          override: true
+
+      - name: test doc-test
+        run: cargo +nightly test
+        working-directory: doc-test
+  tutorial-code:
+    name: Test tutorial-code directory
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Rust
+        run: rustup update stable
+
+      - name: test tutorial-code
+        run: cargo test --all
+        working-directory: tutorial-code
+
