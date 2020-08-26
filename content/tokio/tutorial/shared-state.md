@@ -217,6 +217,7 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 
     do_something_async().await;
 } // lock goes out of scope here
+# async fn do_something_async() {}
 ```
 When you try to spawn something that calls this function, you will encounter the
 following error message:
@@ -250,6 +251,7 @@ because the Tokio runtime can move a task between threads at every `.await`.
 To avoid this, you should restructure your code such that the mutex lock's
 destructor runs before the `.await`.
 ```rust
+# use std::sync::Mutex;
 // This works!
 async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
     {
@@ -259,6 +261,7 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 
     do_something_async().await;
 }
+# async fn do_something_async() {}
 ```
 Note that this does not work:
 ```rust
@@ -272,6 +275,7 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 
     do_something_async().await;
 }
+# async fn do_something_async() {}
 ```
 This is because the compiler currently calculates whether a future is `Send`
 based on scope information only. The compiler will hopefully be updated to
@@ -315,6 +319,7 @@ async fn increment_and_do_stuff(can_incr: &CanIncrement) {
     can_incr.increment();
     do_something_async().await;
 }
+# async fn do_something_async() {}
 ```
 This pattern guarantees that you wont run into the `Send` error, because the
 mutex guard does not appear anywhere in an async function.
@@ -342,6 +347,7 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 
     do_something_async().await;
 } // lock goes out of scope here
+# async fn do_something_async() {}
 ```
 
 [`tokio::sync::Mutex`]: https://docs.rs/tokio/0.2/tokio/sync/struct.Mutex.html
