@@ -192,7 +192,7 @@ free to comment on [this](https://github.com/tokio-rs/tokio/issues/2359) issue.
 [0.2.14]: https://github.com/tokio-rs/tokio/releases/tag/tokio-0.2.14
 [ry]: https://github.com/ry
 [deno]: https://github.com/denoland/deno
-[hyper]: github.com/hyperium/hyper/
+[hyper]: https://github.com/hyperium/hyper/
 [hpr]: https://github.com/hyperium/hyper/pull/1829
 [node]: https://nodejs.org
 [jonhoo]: https://github.com/jonhoo/
@@ -200,11 +200,8 @@ free to comment on [this](https://github.com/tokio-rs/tokio/issues/2359) issue.
 [spawn_blocking]: https://docs.rs/tokio/0.2/tokio/task/fn.spawn_blocking.html
 [block_in_place]: https://docs.rs/tokio/0.2/tokio/task/fn.block_in_place.html
 [hill]: https://en.wikipedia.org/wiki/Hill_climbing
-[hill2]:
-  https://mattwarren.org/2017/04/13/The-CLR-Thread-Pool-Thread-Injection-Algorithm/
+[hill2]: https://mattwarren.org/2017/04/13/The-CLR-Thread-Pool-Thread-Injection-Algorithm/
 [yield_now]: https://docs.rs/tokio/0.2/tokio/task/fn.yield_now.html
 [noria]: https://github.com/mit-pdos/noria
-[stutter]:
-  http://joeduffyblog.com/2006/07/08/clr-thread-pool-injection-stuttering-problems/
-[futunord]:
-  https://docs.rs/futures/0.3.4/futures/stream/struct.FuturesUnordered.html
+[stutter]: http://joeduffyblog.com/2006/07/08/clr-thread-pool-injection-stuttering-problems/
+[futunord]: https://docs.rs/futures/0.3.4/futures/stream/struct.FuturesUnordered.html

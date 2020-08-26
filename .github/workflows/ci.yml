@@ -1,0 +1,46 @@
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+name: CI
+
+env:
+  RUSTFLAGS: -Dwarnings
+  RUST_BACKTRACE: 1
+
+jobs:
+  doc-test:
+    name: Test code blocks in markdown
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Rust
+        run: rustup install nightly-2020-08-22
+
+      - name: Build dependencies
+        run: cargo +nightly-2020-08-22 build
+        working-directory: doc-test
+        continue-on-error: true
+
+      - name: Actually run the tests
+        run: cargo +nightly-2020-08-22 test
+        working-directory: doc-test
+  tutorial-code:
+    name: Test tutorial-code directory
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Rust
+        run: rustup update stable
+
+      - name: Build dependencies
+        run: cargo build --all
+        working-directory: tutorial-code
+        continue-on-error: true
+
+      - name: Actually run the tests
+        run: cargo test --all
+        working-directory: tutorial-code
+

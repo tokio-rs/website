@@ -173,10 +173,8 @@ HTTP/2.0 protocol.
 
 [serde]: https://serde.rs/
 [tokio-serde-json]: https://github.com/carllerche/tokio-serde-json
-[`length_delimited::framed`]:
-  https://docs.rs/tokio-io/0.1.6/tokio_io/codec/length_delimited/struct.Framed.html
-[`lengthfieldbasedframedecoder`]:
-  https://netty.io/4.0/api/io/netty/handler/codec/LengthFieldBasedFrameDecoder.html
+[`length_delimited::framed`]: https://docs.rs/tokio-io/0.1.6/tokio_io/codec/length_delimited/struct.Framed.html
+[`lengthfieldbasedframedecoder`]: https://netty.io/4.0/api/io/netty/handler/codec/LengthFieldBasedFrameDecoder.html
 
 ## What's next?
 
@@ -195,15 +193,12 @@ well. Finally we're looking to expand the middleware story in the near future
 with relation to both HTTP and generic [tokio-service] implementations. More on
 this coming soon!
 
-[`asyncwrite::shutdown`]:
-  https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncWrite.html#tymethod.shutdown
+[`asyncwrite::shutdown`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncWrite.html#tymethod.shutdown
 [`close`]: https://docs.rs/futures/0.1/futures/sink/trait.Sink.html#method.close
 [`bytes`]: http://carllerche.github.io/bytes/bytes/struct.Bytes.html
 [`bytesmut`]: http://carllerche.github.io/bytes/bytes/struct.BytesMut.html
-[`read_buf`]:
-  https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncRead.html#method.read_buf
-[`write_buf`]:
-  https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncWrite.html#method.write_buf
+[`read_buf`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncRead.html#method.read_buf
+[`write_buf`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncWrite.html#method.write_buf
 [`buf`]: http://carllerche.github.io/bytes/bytes/trait.Buf.html
 [`bufmut`]: http://carllerche.github.io/bytes/bytes/trait.BufMut.html
 [crates.io]: https://crates.io
@@ -221,15 +216,12 @@ this coming soon!
 [`std::io`]: https://doc.rust-lang.org/std/io/
 [`asyncwrite`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncWrite.html
 [`asyncread`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncRead.html
-[`split`]:
-  https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncRead.html#method.split
+[`split`]: https://docs.rs/tokio-io/0.1.6/tokio_io/trait.AsyncRead.html#method.split
 [`encoder`]: https://docs.rs/tokio-io/0.1.6/tokio_io/codec/trait.Encoder.html
 [`decoder`]: https://docs.rs/tokio-io/0.1.6/tokio_io/codec/trait.Decoder.html
 [`easybuf`]: https://docs.rs/tokio-core/0.1.9/tokio_core/io/struct.EasyBuf.html
-[`length_delimited`]:
-  https://docs.rs/tokio-io/0.1.6/tokio_io/codec/length_delimited/index.html
-[closing]:
-  https://github.com/tokio-rs/tokio-core/issues/61#issuecomment-277568977
+[`length_delimited`]: https://docs.rs/tokio-io/0.1.6/tokio_io/codec/length_delimited/index.html
+[closing]: https://github.com/tokio-rs/tokio-core/issues/61#issuecomment-277568977
 [tokio-serde-json]: https://github.com/carllerche/tokio-serde-json
 [sean]: https://github.com/seanmonstar
 [hyper]: https://github.com/hyperium/hyper

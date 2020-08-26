@@ -49,7 +49,7 @@ sends a message to the `client` task. The `client` task issues the request on
 behalf of the sender, and the response is sent back to the sender.
 
 Using this strategy, a single connection is established. The task managing the
-`client` is able to get mutable access in order to call `get` and `set`.
+`client` is able to get exclusive access in order to call `get` and `set`.
 Additionally, the channel works as a buffer. Operations may be sent to the
 `client` task while the `client` task is busy. Once the `client` task is
 available to process new requests, it pulls the next request from the channel.
@@ -64,8 +64,14 @@ Tokio provides a [number of channels][channels], each serving a different purpos
 - [oneshot]: single-producer, single consumer channel. A single value can be sent.
 - [broadcast]: multi-producer, multi-consumer. Many values can be send. Each
   receiver sees every value.
-- [watch]: multi-producer, multi-consumer. Many values can be sent, but no
+- [watch]: single-producer, multi-consumer. Many values can be sent, but no
   history is kept. Receivers only see the most recent value.
+
+If you need a multi-producer multi-consumer channel where only one consumer sees
+each message, you can use the [`async-channel`] crate. There are also channels
+for use outside of asynchronous Rust, such as [`std::sync::mpsc`] and
+[`crossbeam::channel`]. These channels wait for messages by blocking the
+thread, which is not allowed in asynchronous code.
 
 In this section, we will use [mpsc] and [oneshot]. The other types of message
 passing channels are explored in later sections. The full code from this section
@@ -76,6 +82,9 @@ is found [here][full].
 [oneshot]: https://docs.rs/tokio/0.2/tokio/sync/oneshot/index.html
 [broadcast]: https://docs.rs/tokio/0.2/tokio/sync/broadcast/index.html
 [watch]: https://docs.rs/tokio/0.2/tokio/sync/watch/index.html
+[`async-channel`]: https://docs.rs/async-channel/
+[`std::sync::mpsc`]: https://doc.rust-lang.org/stable/std/sync/mpsc/index.html
+[`crossbeam::channel`]: https://docs.rs/crossbeam/latest/crossbeam/channel/index.html
 
 # Define the message type
 
@@ -123,8 +132,8 @@ handles are used separately. They may be moved to different tasks.
 
 The channel is created with a capacity of 32. If messages are sent faster than
 they are received, the channel will store them. Once the 32 messages are stored
-in the channel, calling `send(...).await` will block until a message has been
-removed by the receiver.
+in the channel, calling `send(...).await` will go to sleep until a message has
+been removed by the receiver.
 
 Sending from multiple tasks is done by **cloning** the `Sender`. For example:
 
@@ -294,8 +303,8 @@ enum Command {
     },
 }
 
-/// Provided by the requester and used by the manager task to send the command
-/// response back to the requester.
+/// Provided by the requester and used by the manager task to send
+/// the command response back to the requester.
 type Responder<T> = oneshot::Sender<mini_redis::Result<T>>;
 ```
 
@@ -375,7 +384,7 @@ while let Some(cmd) = rx.recv().await {
 ```
 
 Calling `send` on `oneshot::Sender` completes immediately and does **not**
-require an `.async`. This is because `send` on an `oneshot` channel will always
+require an `.await`. This is because `send` on an `oneshot` channel will always
 fail or succeed immediately without any form of waiting.
 
 Sending a value on a oneshot channel returns `Err` when the receiver half has

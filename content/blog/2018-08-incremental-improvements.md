@@ -73,8 +73,7 @@ many entries, all of them must be scanned to check if they need to be dropped.
 
 With [`DelayQueue`], the implementation becomes more efficient:
 
-[`delayqueue`]:
-  https://docs.rs/tokio-timer/0.2.6/tokio_timer/struct.DelayQueue.html
+[`delayqueue`]: https://docs.rs/tokio-timer/0.2.6/tokio_timer/struct.DelayQueue.html
 [delay]: https://docs.rs/tokio-timer/0.2.6/tokio_timer/struct.Delay.html
 
 ```rust

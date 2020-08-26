@@ -2,6 +2,7 @@
 
 # cargo output
 tutorial-code/target
+tutorial-code/Cargo.lock
 
 # dependencies
 /node_modules

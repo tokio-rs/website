@@ -19,3 +19,9 @@
 [[redirects]]
   from = "/docs/overview"
   to = "/tokio/tutorial"
+
+# Redirect previous rss feed location
+[[redirects]]
+  from = "/blog/index.xml"
+  to = "/_next/static/feed.xml"
+

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && next export",
+    "build": "next build && npm run build:rss && next export",
+    "build:rss": "node ./.next/serverless/scripts/generate-rss-feed.js",
     "start": "next start",
     "fmt": "prettier --write --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'"
   },
@@ -20,6 +21,7 @@
     "react-markdown": "^4.3.1",
     "react-syntax-highlighter": "^12.2.1",
     "remark-custom-blocks": "^2.5.0",
+    "rss": "^1.2.2",
     "sass": "^1.26.5"
   },
   "devDependencies": {

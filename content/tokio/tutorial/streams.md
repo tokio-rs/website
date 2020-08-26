@@ -323,7 +323,7 @@ and other streams. As an example, let's build off of the `Delay` future we
 implemented in [Async in depth][async]. We will convert it to a stream that
 yields `()` three times at 10 ms intervals
 
-```
+```rust
 use tokio::stream::Stream;
 # use std::future::Future;
 use std::pin::Pin;
@@ -357,7 +357,8 @@ impl Stream for Interval {
         match Pin::new(&mut self.delay).poll(cx) {
             Poll::Ready(_) => {
                 let when = self.delay.when + Duration::from_millis(10);
-                self.delay = Delay {when };
+                self.delay = Delay { when };
+                self.rem -= 1;
                 Poll::Ready(Some(()))
             }
             Poll::Pending => Poll::Pending,

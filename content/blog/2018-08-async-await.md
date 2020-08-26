@@ -165,7 +165,5 @@ And with that, have a great week!
 <div style="text-align:right">&mdash;Carl Lerche</div>
 
 [`tokio-async-await`]: https://crates.io/crates/tokio-async-await
-[examples]:
-  https://github.com/tokio-rs/tokio/blob/master/tokio-async-await/examples
-[hyper]:
-  https://github.com/tokio-rs/tokio/blob/master/tokio-async-await/examples/src/hyper.rs
+[examples]: https://github.com/tokio-rs/tokio/blob/master/examples
+[hyper]: https://github.com/tokio-rs/tokio/blob/master/tokio-async-await/examples/src/hyper.rs
