@@ -9,7 +9,6 @@ name: CI
 env:
   RUSTFLAGS: -Dwarnings
   RUST_BACKTRACE: 1
-  nightly: nightly-2020-08-22
 
 jobs:
   doc-test:
@@ -17,13 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: ${{ env.nightly }}
-          override: true
+      - name: Install Rust
+        run: rustup install nightly-2020-08-22
 
       - name: test doc-test
-        run: cargo +nightly test
+        run: cargo +nightly-2020-08-22 test
         working-directory: doc-test
   tutorial-code:
     name: Test tutorial-code directory
