@@ -51,3 +51,14 @@ This project is licensed under the [MIT license](LICENSE).
 Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in Tokio by you, shall be licensed as MIT, without any additional
 terms or conditions.
+
+You can run our tests by running the commands:
+```
+# in doc-test
+cargo +nightly test
+
+# in tutorial-code
+cargo test --all
+```
+The doc tests verify that all code blocks are valid Rust, and the tutorial-code folder
+contains the full code examples from the tutorial.
