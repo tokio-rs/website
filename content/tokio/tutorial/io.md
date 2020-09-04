@@ -123,8 +123,8 @@ comprehensive list.
 # Helper functions
 
 Additionally, just like `std`, the [`tokio::io`] module contains a number of
-helpful utility functions as well as APIs for working with [standard in][stdin],
-[standard out][stdout] and [standard error][stderr]. For example,
+helpful utility functions as well as APIs for working with [standard input][stdin],
+[standard output][stdout] and [standard error][stderr]. For example,
 [`tokio::io::copy`][copy] asynchronously copies the entire contents of a reader
 into a writer.
 
@@ -284,7 +284,7 @@ Now lets look at how we would write the echo server by copying the data
 manually. To do this, we use [`AsyncReadExt::read`][read] and
 [`AsyncWriteExt::write_all`][write_all].
 
-The full echo server is as follows.
+The full echo server is as follows:
 
 ```rust
 use tokio::io::{self, AsyncReadExt, AsyncWriteExt};
@@ -409,7 +409,7 @@ Forgetting to break from the read loop usually results in a 100% CPU infinite
 loop situation. As the socket is closed, `socket.read()` returns immediately.
 The loop then repeats forever.
 
-Full code is found [here][full]
+Full code can be found [here][full].
 
 [full]: https://github.com/tokio-rs/website/blob/master/tutorial-code/io/src/echo-server.rs
 [send]: /tokio/tutorial/spawning#send-bound
@@ -424,6 +424,7 @@ Full code is found [here][full]
 [read]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncReadExt.html#method.read
 [read_to_end]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncReadExt.html#method.read_to_end
 [write]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html#method.write
+[write_all]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html#method.write_all
 [`tokio::io`]: https://docs.rs/tokio/0.2/tokio/io/index.html
 [stdin]: https://docs.rs/tokio/0.2/tokio/io/fn.stdin.html
 [stdout]: https://docs.rs/tokio/0.2/tokio/io/fn.stdout.html
