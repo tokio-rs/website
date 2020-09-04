@@ -12,9 +12,9 @@ Redis commands but will get a comprehensive tour of Tokio.
 
 The project that you will build in this tutorial is available as [Mini-Redis on
 GitHub][mini-redis]. Mini-Redis is designed with the primary goal of learning
-Tokio, and is therefore very well commented, however this means that Mini-Redis
+Tokio, and is therefore very well commented, but this also means that Mini-Redis
 is missing some features you would want in a real Redis library. You can find
-production ready Redis libraries on [crates.io](https://crates.io/).
+production-ready Redis libraries on [crates.io](https://crates.io/).
 
 We will use Mini-Redis directly in the tutorial. This allows us to use parts of
 Mini-Redis in the tutorial before we implement them later in the tutorial.
