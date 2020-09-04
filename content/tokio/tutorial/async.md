@@ -204,7 +204,7 @@ outer future, driving the asynchronous computation to completion.
 
 ## Mini Tokio
 
-To better understand how this all fits together, lets implement our own minimal
+To better understand how this all fits together, let's implement our own minimal
 version of Tokio! The full code can be found [here][mini-tokio].
 
 ```rust
@@ -290,7 +290,7 @@ the resource will send a notification once it transitions into a ready state.
 
 # Wakers
 
-Wakes are the missing piece. This is the system by which a resource is able to
+Wakers are the missing piece. This is the system by which a resource is able to
 notify the waiting task that the resource has become ready to continue some
 operation.
 
@@ -302,7 +302,7 @@ fn poll(self: Pin<&mut Self>, cx: &mut Context)
 ```
 
 The `Context` argument to `poll` has a `waker()` method. This method returns a
-[`Waker`] bound to the current task. The [`Waker`] has `wake()` method. Calling
+[`Waker`] bound to the current task. The [`Waker`] has a `wake()` method. Calling
 this method signals to the executor that the associated task should be scheduled
 for execution. Resources call `wake()` when they transition to a ready state to
 notify the executor that polling the task will be able to make progress.
@@ -403,7 +403,7 @@ re-scheduled, executed again, and probably not be ready to complete.
 Notice that you are allowed to signal the waker more often than necessary. In
 this particular case, we signal the waker even though we are not ready to
 continue the operation at all. There is nothing wrong with this besides some
-wasted CPU cycles, however, this particular implementation will result in a busy
+wasted CPU cycles. However, this particular implementation will result in a busy
 loop.
 
 ## Updating Mini Tokio
@@ -458,7 +458,7 @@ struct Task {
 
 Wakers are `Sync` and can be cloned. When `wake` is called, the task must be
 scheduled for execution. To implement this, we have a channel. When the `wake()`
-is called on the waker, the task is pushed into the send have of the channel.
+is called on the waker, the task is pushed into the send half of the channel.
 Our `Task` structure will implement the wake logic. To do this, it needs to
 contain both the spawned future and the channel send half.
 
@@ -660,7 +660,7 @@ impl Future for Delay {
 
             // Check if the stored waker matches the current task's waker.
             // This is necessary as the `Delay` future instance may move to
-            // a differnt task between calls to `poll`. If this happens, the
+            // a different task between calls to `poll`. If this happens, the
             // waker contained by the given `Context` will differ and we
             // must update our stored waker to reflect this change.
             if !waker.will_wake(cx.waker()) {
@@ -697,7 +697,7 @@ impl Future for Delay {
             // return `Poll::Pending`.
             //
             // The `Future` trait contract requires that when `Pending` is
-            // returned, the future ensures that the given waker is signaled
+            // returned, the future ensures that the given waker is signalled
             // once the future should be polled again. In our case, by
             // returning `Pending` here, we are promising that we will
             // invoke the given waker included in the `Context` argument
@@ -756,6 +756,7 @@ async fn delay(dur: Duration) {
 }
 ```
 
+[assoc]: https://doc.rust-lang.org/book/ch19-03-advanced-traits.html#specifying-placeholder-types-in-trait-definitions-with-associated-types
 [trait]: https://doc.rust-lang.org/std/future/trait.Future.html
 [pin]: https://doc.rust-lang.org/std/pin/index.html
 [`Waker`]: https://doc.rust-lang.org/std/task/struct.Waker.html

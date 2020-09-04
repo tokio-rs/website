@@ -89,8 +89,8 @@ is found [here][full].
 # Define the message type
 
 In most cases, when using message passing, the task receiving the messages
-responds to more than one command. In our case, the task will respond to GET and
-SET commands. To model this, we first define a `Command` enum and include a
+responds to more than one command. In our case, the task will respond to `GET` and
+`SET` commands. To model this, we first define a `Command` enum and include a
 variant for each command type.
 
 ```rust
@@ -167,7 +167,7 @@ no longer possible to send more messages into the channel. At this point, the
 `recv` call on the `Receiver` will return `None`, which means that all senders
 are gone and the channel is closed.
 
-In our case of with a task that manages the redis connection, it knows that it
+In our case of a task that manages the Redis connection, it knows that it
 can close the Redis connection once the channel is closed, as the connection
 will not be used again.
 
@@ -175,7 +175,7 @@ will not be used again.
 
 Next, spawn a task that processes messages from the channel. First, a client
 connection is established to Redis. Then, received commands are issued via the
-redis connection.
+Redis connection.
 
 ```rust
 use mini_redis::client;

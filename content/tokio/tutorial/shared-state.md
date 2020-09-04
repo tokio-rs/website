@@ -3,7 +3,7 @@ title: "Shared state"
 ---
 
 So far, we have a key-value server working. However, there is a major flaw:
-State is not shared across connections. We will fix that in this article.
+state is not shared across connections. We will fix that in this article.
 
 # Strategies
 
@@ -13,7 +13,7 @@ There are a couple of different ways to share state in Tokio.
 2. Spawn a task to manage the state and use message passing to operate on it.
 
 Generally you want to use the first approach for simple data, and the second
-approach for things that require asynchronous work such as IO primitives.  In
+approach for things that require asynchronous work such as I/O primitives.  In
 this chapter, the shared state is a `HashMap` and the operations are `insert`
 and `get`. Neither of these operations is asynchronous, so we will use a
 `Mutex`.
@@ -178,7 +178,7 @@ If contention on a synchronous mutex becomes a problem, the best fix is rarely
 to switch to the Tokio mutex. Instead, options to consider are:
 
 - Switching to a dedicated task to manage state and use message passing.
-- Shard the mutex
+- Shard the mutex.
 - Restructure the code to avoid the mutex.
 
 In our case, as each *key* is independent, mutex sharding will work well. To do
@@ -327,7 +327,7 @@ mutex guard does not appear anywhere in an async function.
 ## Spawn a task to manage the state and use message passing to operate on it
 
 This is the second approach mentioned in the start of this chapter, and is often
-used when the shared resource is an IO resource. See the next chapter for more
+used when the shared resource is an I/O resource. See the next chapter for more
 details.
 
 ## Use Tokio's asynchronous mutex

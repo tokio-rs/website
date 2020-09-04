@@ -5,7 +5,7 @@ title: "Streams"
 A stream is an asynchronous series of values. It is the asynchronous equivalent
 to Rust's [`std::iter::Iterator`][iter] and is represented by the [`Stream`]
 trait. Streams can be iterated in `async` functions. They can also be
-transformed using adapters. Tokio provides a number of common adaptors on the
+transformed using adapters. Tokio provides a number of common adapters on the
 [`StreamExt`] trait.
 
 Tokio provides stream support under the `stream` feature flag. When depending on
@@ -193,10 +193,10 @@ Let's see how we can work with streams to expand on this program.
 
 Functions that take a [`Stream`] and return another [`Stream`] are often called
 'stream adapters', as they're a form of the 'adapter pattern'. Common stream
-adaptors include [`map`], [`take`], and [`filter`].
+adapters include [`map`], [`take`], and [`filter`].
 
 Lets update the Mini-Redis so that it will exit. After receiving three messages,
-stop iterating messages. This is done using [`take`]. This adaptor limits the
+stop iterating messages. This is done using [`take`]. This adapter limits the
 stream to yield at **most** `n` messages.
 
 ```rust
@@ -223,7 +223,7 @@ got = Ok(Message { channel: "numbers", content: b"3" })
 This time the program ends.
 
 Now, let's limit the stream to single digit numbers. We will check this by
-checking for the message length. We use the [`filter`] adaptor to drop any
+checking for the message length. We use the [`filter`] adapter to drop any
 message that does not match the predicate.
 
 ```rust
@@ -251,7 +251,7 @@ got = Ok(Message { channel: "numbers", content: b"3" })
 got = Ok(Message { channel: "numbers", content: b"6" })
 ```
 
-Note that the order in which adaptors are applied matters. Calling `filter`
+Note that the order in which adapters are applied matters. Calling `filter`
 first then `take` is different than calling `take` then `filter`.
 
 Finally, we will tidy up the output by stripping the `Ok(Message { ... })` part
