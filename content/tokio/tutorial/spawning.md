@@ -4,7 +4,7 @@ title: "Spawning"
 
 We are going to shift gears and start working on the Redis server.
 
-First, move the client set / get code from the previous section to an example
+First, move the client `SET`/`GET` code from the previous section to an example
 file. This way, we can run it against our server.
 
 ```bash
@@ -39,7 +39,7 @@ async fn main() {
     let mut listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
 
     loop {
-        // The second item contains the ip and port of the new connection.
+        // The second item contains the IP and port of the new connection.
         let (socket, _) = listener.accept().await.unwrap();
         process(socket).await;
     }
@@ -67,7 +67,7 @@ Now, run this accept loop:
 $ cargo run
 ```
 
-In a separate terminal window, run the `hello-redis` example (the SET/GET
+In a separate terminal window, run the `hello-redis` example (the `SET`/`GET`
 command from the previous section):
 
 ```bash
