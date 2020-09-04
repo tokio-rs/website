@@ -263,7 +263,7 @@ pub async fn read_frame(&mut self)
 ```
 
 When working with byte arrays and `read`, we must also maintain a cursor
-tracking how much data has been buffered. We must ensure to pass the empty
+tracking how much data has been buffered. We must make sure to pass the empty
 portion of the buffer to `read()`. Otherwise, we would overwrite buffered data.
 If our buffer gets filled up, we must grow the buffer in order to keep reading.
 In `parse_frame()` (not included), we would need to parse data contained by
@@ -297,7 +297,7 @@ Now, let's look at the `parse_frame()` function. Parsing is done in two steps.
 The `mini-redis` crate provides us with a function for both of these steps:
 
 1. [`Frame::check`](https://docs.rs/mini-redis/0.2/mini_redis/frame/enum.Frame.html#method.check)
-2. [`Frame::parse`](https://docs.rs/mini-redis/0.2/mini_redis/frame/enum.Frame.html#method.check)
+2. [`Frame::parse`](https://docs.rs/mini-redis/0.2/mini_redis/frame/enum.Frame.html#method.parse)
 
 We will also reuse the `Buf` abstraction to help. A `Buf` is passed into
 `Frame::check`. As the `check` function iterates the passed in buffer, the
@@ -485,7 +485,7 @@ Another alternative would be to **not** call `flush()` in `write_frame()`.
 Instead, provide a `flush()` function on `Connection`. This would allow the
 caller to write queue multiple small frames in the write buffer then write them
 all to the socket with one `write` syscall. Doing this complicates the
-`Connection` API. Simplicity is one of mini-redis' goals, so we decided to
+`Connection` API. Simplicity is one of Mini-Redis' goals, so we decided to
 include the `flush().await` call in `fn write_frame()`.
 
 
