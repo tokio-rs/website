@@ -749,8 +749,15 @@ a:active {
 
     // Smaller bullet size
     .tk-markdown {
-      li {
+      ul li {
         list-style-type: none;
+      }
+
+      ul li::before {
+        content: "·";
+      }
+
+      li {
         position: relative; /* It's needed for setting position to absolute in the next rule. */
       }
       li:not(:last-child) {
@@ -758,7 +765,6 @@ a:active {
       }
 
       li::before {
-        content: "·";
         position: absolute;
         left: -1.1rem;
         top: -1.15rem;
