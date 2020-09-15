@@ -278,7 +278,7 @@ let (tx, rx) = oneshot::channel();
 Unlike `mpsc`, no capacity is specified as the capacity is always one.
 Additionally, neither handle can be cloned.
 
-To receive responses from the manager task, before sending a command, an `oneshot`
+To receive responses from the manager task, before sending a command, a `oneshot`
 channel is created. The `Sender` half of the channel is included in the command
 to the manager task. The receive half is used to receive the response.
 
