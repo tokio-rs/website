@@ -12,7 +12,7 @@ env:
 
 jobs:
   doc-test:
-    name: Test code blocks in markdown
+    name: Test code blocks in  any sort of markdown
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
