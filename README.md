@@ -1,4 +1,4 @@
-# Tokio Website
+# Tokio An Amazing Website
 
 The website for the Tokio project. Lives at https://tokio.rs.
 
