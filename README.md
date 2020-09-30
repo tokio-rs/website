@@ -1,6 +1,6 @@
 # Tokio Website
 
-The website for the Tokio project. Lives at https://tokio.rs.
+The website for the Tokio project. Live at https://tokio.rs.
 
 Besides containing the content for the website, it also includes crates
 containing the example code used in the tutorial. These crates can be compiled
