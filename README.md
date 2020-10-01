@@ -1,10 +1,10 @@
 # Tokio Website
 
-The website for the Tokio project. Lives at https://tokio.rs.
+The website for the Tokio Project. Lives at https://tokio.rs.
 
-Besides containing the content for the website, it also includes crates
-containing the example code used in the tutorial. These crates can be compiled
-and ran.
+Besides containing the content for the website, it also includes creates
+containing the example code used in the tutorial. These creates can be compiled
+and run.
 
 * [hello-tokio](tutorial-code/hello-tokio/src/main.rs)
 * [spawning](tutorial-code/spawning/src/main.rs)
