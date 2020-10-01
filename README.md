@@ -61,4 +61,4 @@ cargo +nightly test
 cargo test --all
 ```
 The doc tests verify that all code blocks are valid Rust, and the tutorial-code folder
-contains the full code examples from the tutorial.
+contains the full code examples from the tutorial.thanks
