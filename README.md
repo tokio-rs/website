@@ -62,3 +62,7 @@ cargo test --all
 ```
 The doc tests verify that all code blocks are valid Rust, and the tutorial-code folder
 contains the full code examples from the tutorial.
+
+### code
+
+A very optimal code, for the great project
