@@ -1,6 +1,6 @@
 # Tokio Website
 
-The website for the Tokio project. Lives at https://tokio.rs.
+The website is for the Tokio project. Lives at https://tokio.rs.
 
 Besides containing the content for the website, it also includes crates
 containing the example code used in the tutorial. These crates can be compiled
@@ -17,8 +17,8 @@ and ran.
 
 ## Contributing
 
-Thinking about contributing? Great! This should help you get the website running
-locally.
+Thinking about contributing? Great! This should help you in running the website
+locally. 
 
 ### Getting Started
 
@@ -45,7 +45,7 @@ To learn more about Next.js, take a look at the following resources:
 ## License
 
 This project is licensed under the [MIT license](LICENSE).
-
+ 
 ### Contribution
 
 Unless you explicitly state otherwise, any contribution intentionally submitted
