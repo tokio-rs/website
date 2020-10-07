@@ -465,8 +465,9 @@ contain both the spawned future and the channel send half.
 ```rust
 # use std::future::Future;
 # use std::pin::Pin;
-# use std::sync::{Arc, Mutex};
 # use crossbeam::channel;
+use std::sync::{Arc, Mutex};
+
 struct Task {
     // The `Mutex` is to make `Task` implement `Sync`. Only
     // one thread accesses `future` at any given time. The
