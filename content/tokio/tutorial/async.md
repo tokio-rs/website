@@ -465,8 +465,9 @@ contain both the spawned future and the channel send half.
 ```rust
 # use std::future::Future;
 # use std::pin::Pin;
-# use std::sync::{Arc, Mutex};
 # use crossbeam::channel;
+use std::sync::{Arc, Mutex};
+
 struct Task {
     // The `Mutex` is to make `Task` implement `Sync`. Only
     // one thread accesses `future` at any given time. The
@@ -529,9 +530,11 @@ channel. Next, we implement receiving and executing the tasks in the
 # use std::task::{Context};
 # struct MiniTokio {
 #   scheduled: channel::Receiver<Arc<Task>>,
+#   sender: channel::Sender<Arc<Task>>,
 # }
 # struct Task {
 #   future: Mutex<Pin<Box<dyn Future<Output = ()> + Send>>>,
+#   executor: channel::Sender<Arc<Task>>,
 # }
 # impl ArcWake for Task {
 #   fn wake_by_ref(arc_self: &Arc<Self>) {}
@@ -541,6 +544,24 @@ impl MiniTokio {
         while let Ok(task) = self.scheduled.recv() {
             task.poll();
         }
+    }
+
+    /// Initialize a new mini-tokio instance.
+    fn new() -> MiniTokio {
+        let (sender, scheduled) = channel::unbounded();
+
+        MiniTokio { scheduled, sender }
+    }
+
+    /// Spawn a future onto the mini-tokio instance.
+    ///
+    /// The given future is wrapped with the `Task` harness and pushed into the
+    /// `scheduled` queue. The future will be executed when `run` is called.
+    fn spawn<F>(&self, future: F)
+    where
+        F: Future<Output = ()> + Send + 'static,
+    {
+        Task::spawn(future, &self.sender);
     }
 }
 
@@ -557,13 +578,36 @@ impl Task {
         // Poll the future
         let _ = future.as_mut().poll(&mut cx);
     }
+
+    // Spawns a new taks with the given future.
+    //
+    // Initializes a new Task harness containing the given future and pushes it
+    // onto `sender`. The receiver half of the channel will get the task and
+    // execute it.
+    fn spawn<F>(future: F, sender: &channel::Sender<Arc<Task>>)
+    where
+        F: Future<Output = ()> + Send + 'static,
+    {
+        let task = Arc::new(Task {
+            future: Mutex::new(Box::pin(future)),
+            executor: sender.clone(),
+        });
+
+        let _ = sender.send(task);
+    }
+
 }
 ```
 
-Two things are happening here. First, `MiniTokio::run()` is implemented. The
-function runs in a loop receiving scheduled tasks from the channel. As tasks are
-pushed into the channel when they are woken, these tasks are able to make
-progress when executed.
+Multiple things are happening here. First, `MiniTokio::run()` is implemented.
+The function runs in a loop receiving scheduled tasks from the channel.
+As tasks are pushed into the channel when they are woken, these tasks are able
+to make progress when executed.
+
+Additionally, the `MiniTokio::new()` and `MiniTokio::spawn()` functions are
+adjusted to use a channel rather than a `VecDeque`. When new tasks are spawned,
+they are given a clone of the sender-part of the channel, which the task can
+use to schedule itself on the runtime.
 
 The `Task::poll()` function creates the waker using the [`ArcWake`] utility from
 the `futures` crate. The waker is used to create a `task::Context`. That
