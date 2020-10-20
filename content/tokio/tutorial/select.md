@@ -328,7 +328,7 @@ async fn main() -> io::Result<()> {
 # let (tx, rx) = oneshot::channel();
 # tx.send(()).unwrap();
 
-    let mut listener = TcpListener::bind("localhost:3465").await?;
+    let listener = TcpListener::bind("localhost:3465").await?;
 
     tokio::select! {
         res = async {

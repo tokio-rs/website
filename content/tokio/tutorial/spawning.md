@@ -36,7 +36,7 @@ use mini_redis::{Connection, Frame};
 #[tokio::main]
 async fn main() {
     // Bind the listener to the address
-    let mut listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
 
     loop {
         // The second item contains the IP and port of the new connection.
@@ -86,7 +86,7 @@ In the server terminal, the output is:
 GOT: Array([Bulk(b"set"), Bulk(b"hello"), Bulk(b"world")])
 ```
 
-[tcpl]: https://docs.rs/tokio/0.2/tokio/net/struct.TcpListener.html
+[tcpl]: https://docs.rs/tokio/0.3/tokio/net/struct.TcpListener.html
 
 # Concurrency
 
@@ -120,7 +120,7 @@ use tokio::net::TcpListener;
 # fn dox() {
 #[tokio::main]
 async fn main() {
-    let mut listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
 
     loop {
         let (socket, _) = listener.accept().await.unwrap();

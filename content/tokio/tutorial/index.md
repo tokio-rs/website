@@ -48,7 +48,7 @@ Before getting started, you should make sure that you have the
 [Rust][install-rust] toolchain installed and ready to go. If you don't have it,
 the easiest way to install it is using [rustup].
 
-This tutorial requires a minimum of Rust version `1.39.0`, but the most
+This tutorial requires a minimum of Rust version `1.45.0`, but the most
 recent stable version of Rust is recommended.
 
 To check that Rust is installed on your computer, run the following:
@@ -57,7 +57,7 @@ To check that Rust is installed on your computer, run the following:
 $ rustc --version
 ```
 
-You should see output like `rustc 1.43.1 (8d69840ab 2020-05-04)`.
+You should see output like `rustc 1.46.0 (04488afe3 2020-08-24)`.
 
 ## Mini-Redis server
 

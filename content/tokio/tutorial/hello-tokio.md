@@ -22,8 +22,8 @@ $ cd my-redis
 Next, open `Cargo.toml` and add the following right below `[dependencies]`:
 
 ```toml
-tokio = { version = "0.2", features = ["full"] }
-mini-redis = "0.2"
+tokio = { version = "0.3", features = ["full"] }
+mini-redis = "0.3"
 ```
 
 ## Write the code
@@ -226,14 +226,14 @@ fn main() {
 
 The details of the Tokio runtime will be covered later.
 
-[runtime]: https://docs.rs/tokio/0.2/tokio/runtime/index.html
+[runtime]: https://docs.rs/tokio/0.3/tokio/runtime/index.html
 
 ## Cargo features
 
 When depending on Tokio for this tutorial, the `full` feature flag is enabled:
 
 ```toml
-tokio = { version = "0.2", features = ["full"] }
+tokio = { version = "0.3", features = ["full"] }
 ```
 
 Tokio has a lot of functionality (TCP, UDP, Unix sockets, timers, sync
