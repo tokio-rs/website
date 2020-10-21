@@ -190,7 +190,7 @@ introduce `N` distinct instances.
 ```rust
 # use std::collections::HashMap;
 # use std::sync::{Arc, Mutex};
-type ShardedDb = Arc<Vec<Mutex<HashMap<String, Vec<u8>>>>>;
+type ShardedDb = Arc<Vec<Arc<Mutex<HashMap<String, Vec<u8>>>>>>;
 ```
 
 Then, finding the cell for any given key becomes a two step process. First, the
