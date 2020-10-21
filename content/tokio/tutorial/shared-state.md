@@ -169,7 +169,7 @@ there will be contention. On the other hand, if the
 never be contended.
 
 [[info]]
-| The [`new_current_thread` runtime flavor][basic-rt] is a lightweight,
+| The [`current_thread` runtime flavor][basic-rt] is a lightweight,
 | single-threaded runtime. It is a good choice when only spawning
 | a few tasks and opening a handful of sockets. For example, this
 | option works well when providing a synchronous API bridge on top
@@ -248,7 +248,7 @@ note: future is not `Send` as this value is used across an await
 8   | }
     | - `mut lock` is later dropped here
 ```
-This happens because the `std::sync::MuteGuard` type is **not** `Send`. This
+This happens because the `std::sync::MutexGuard` type is **not** `Send`. This
 means that you can't send a mutex lock to another thread, and the error happens
 because the Tokio runtime can move a task between threads at every `.await`.
 To avoid this, you should restructure your code such that the mutex lock's
