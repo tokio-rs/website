@@ -9,8 +9,3 @@ members = [
     "mini-tokio",
     "streams",
 ]
-
-[patch.crates-io]
-tokio = { git = "https://github.com/tokio-rs/tokio", branch = "bring-back-read-buf" }
-bytes = { git = "https://github.com/tokio-rs/bytes" }
-mini-redis = { git = "https://github.com/tokio-rs/mini-redis", branch = "track-v0.3" }
