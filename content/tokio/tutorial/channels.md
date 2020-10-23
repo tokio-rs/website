@@ -77,11 +77,11 @@ In this section, we will use [mpsc] and [oneshot]. The other types of message
 passing channels are explored in later sections. The full code from this section
 is found [here][full].
 
-[channels]: https://docs.rs/tokio/0.2/tokio/sync/index.html
-[mpsc]: https://docs.rs/tokio/0.2/tokio/sync/mpsc/index.html
-[oneshot]: https://docs.rs/tokio/0.2/tokio/sync/oneshot/index.html
-[broadcast]: https://docs.rs/tokio/0.2/tokio/sync/broadcast/index.html
-[watch]: https://docs.rs/tokio/0.2/tokio/sync/watch/index.html
+[channels]: https://docs.rs/tokio/0.3/tokio/sync/index.html
+[mpsc]: https://docs.rs/tokio/0.3/tokio/sync/mpsc/index.html
+[oneshot]: https://docs.rs/tokio/0.3/tokio/sync/oneshot/index.html
+[broadcast]: https://docs.rs/tokio/0.3/tokio/sync/broadcast/index.html
+[watch]: https://docs.rs/tokio/0.3/tokio/sync/watch/index.html
 [`async-channel`]: https://docs.rs/async-channel/
 [`std::sync::mpsc`]: https://doc.rust-lang.org/stable/std/sync/mpsc/index.html
 [`crossbeam::channel`]: https://docs.rs/crossbeam/latest/crossbeam/channel/index.html

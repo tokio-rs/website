@@ -37,7 +37,7 @@ To depend on `bytes`, add the following to your `Cargo.toml` in the
 bytes = "0.5"
 ```
 
-[`bytes`]: https://docs.rs/bytes/0.5/bytes/struct.Bytes.html
+[`bytes`]: https://docs.rs/bytes/0.6/bytes/struct.Bytes.html
 
 # Initialize the `HashMap`
 
@@ -68,7 +68,7 @@ use std::sync::{Arc, Mutex};
 # fn dox() {
 #[tokio::main]
 async fn main() {
-    let mut listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
 
     println!("Listening");
 
@@ -164,17 +164,18 @@ thread.
 By default, the Tokio runtime uses a multi-threaded scheduler. Tasks are
 scheduled on any number of threads managed by the runtime. If a large number of
 tasks are scheduled to execute and they all require access to the mutex, then
-there will be contention. On the other hand, if the [`basic_scheduler`][basic]
-is used, then the mutex will never be contended.
+there will be contention. On the other hand, if the
+[`current_thread`][current_thread] runtime flavor is used, then the mutex will
+never be contended.
 
 [[info]]
-| The [`basic_scheduler` runtime option][basic-rt] is a lightweight,
+| The [`current_thread` runtime flavor][basic-rt] is a lightweight,
 | single-threaded runtime. It is a good choice when only spawning
 | a few tasks and opening a handful of sockets. For example, this
 | option works well when providing a synchronous API bridge on top
 | of an asynchronous client library.
 
-[basic-rt]: https://docs.rs/tokio/0.2/tokio/runtime/struct.Builder.html#method.basic_scheduler
+[basic-rt]: https://docs.rs/tokio/0.3/tokio/runtime/struct.Builder.html#method.new_current_thread
 
 If contention on a synchronous mutex becomes a problem, the best fix is rarely
 to switch to the Tokio mutex. Instead, options to consider are:
@@ -204,7 +205,7 @@ shard.insert(key, value);
 
 The [dashmap] crate provides an implementation of a sharded hash map.
 
-[basic]: https://docs.rs/tokio/0.2/tokio/runtime/index.html#basic-scheduler
+[current_thread]: https://docs.rs/tokio/0.3/tokio/runtime/index.html#current-thread-scheduler
 [dashmap]: https://docs.rs/dashmap
 
 # Holding a `MutexGuard` across an `.await`
@@ -352,4 +353,4 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 # async fn do_something_async() {}
 ```
 
-[`tokio::sync::Mutex`]: https://docs.rs/tokio/0.2/tokio/sync/struct.Mutex.html
+[`tokio::sync::Mutex`]: https://docs.rs/tokio/0.3/tokio/sync/struct.Mutex.html

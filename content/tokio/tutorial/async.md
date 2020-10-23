@@ -792,7 +792,7 @@ async fn delay(dur: Duration) {
             thread::sleep(when - now);
         }
 
-        notify2.notify();
+        notify2.notify_one();
     });
 
 
@@ -808,4 +808,4 @@ async fn delay(dur: Duration) {
 [vtable]: https://doc.rust-lang.org/std/task/struct.RawWakerVTable.html
 [`ArcWake`]: https://docs.rs/futures/0.3/futures/task/trait.ArcWake.html
 [`futures`]: https://docs.rs/futures/
-[notify]: https://docs.rs/tokio/0.2/tokio/sync/struct.Notify.html
+[notify]: https://docs.rs/tokio/0.3/tokio/sync/struct.Notify.html

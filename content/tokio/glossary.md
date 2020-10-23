@@ -61,16 +61,16 @@ combined part is said to be "in the same task".
 Multiple tasks are required for parallelism, but it is possible to concurrently
 do multiple things on one task using tools such as `join!`.
 
-[`tokio::spawn`]: https://docs.rs/tokio/0.2/tokio/fn.spawn.html
-[`Runtime::block_on`]: https://docs.rs/tokio/0.2/tokio/runtime/struct.Runtime.html#method.block_on
-[`join!`]: https://docs.rs/tokio/0.2/tokio/macro.join.html
+[`tokio::spawn`]: https://docs.rs/tokio/0.3/tokio/fn.spawn.html
+[`Runtime::block_on`]: https://docs.rs/tokio/0.3/tokio/runtime/struct.Runtime.html#method.block_on
+[`join!`]: https://docs.rs/tokio/0.3/tokio/macro.join.html
 
 ## Spawning
 
 Spawning is when the `tokio::spawn` function is used to create a new task. It
 can also refer to creating new thread with [`std::thread::spawn`].
 
-[`tokio::spawn`]: https://docs.rs/tokio/0.2/tokio/fn.spawn.html
+[`tokio::spawn`]: https://docs.rs/tokio/0.3/tokio/fn.spawn.html
 [`std::thread::spawn`]: https://doc.rust-lang.org/stable/std/thread/fn.spawn.html
 
 ## Async block
@@ -154,7 +154,7 @@ Tokio's documentation will always use the second meaning of "blocking".
 To run blocking code within Tokio, please see the [CPU-bound tasks and blocking
 code][api-blocking] section from the Tokio API reference.
 
-[api-blocking]: https://docs.rs/tokio/0.2/tokio/#cpu-bound-tasks-and-blocking-code
+[api-blocking]: https://docs.rs/tokio/0.3/tokio/#cpu-bound-tasks-and-blocking-code
 
 ## Stream
 
@@ -175,10 +175,10 @@ while let Some(item) = stream.next().await {
 The word stream is confusingly sometimes used to refer to the [`AsyncRead`] and
 [`AsyncWrite`] traits.
 
-[`Stream`]: https://docs.rs/tokio/0.2/tokio/stream/trait.Stream.html
+[`Stream`]: https://docs.rs/tokio/0.3/tokio/stream/trait.Stream.html
 [`Iterator`]: https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html
-[`AsyncRead`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncRead.html
-[`AsyncWrite`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWrite.html
+[`AsyncRead`]: https://docs.rs/tokio/0.3/tokio/io/trait.AsyncRead.html
+[`AsyncWrite`]: https://docs.rs/tokio/0.3/tokio/io/trait.AsyncWrite.html
 
 ## Channel
 
@@ -200,11 +200,11 @@ There are also channels for use outside of asynchronous Rust, such as
 [`std::sync::mpsc`] and [`crossbeam::channel`]. These channels wait for messages
 by blocking the thread, which is not allowed in asynchronous code.
 
-[channels]: https://docs.rs/tokio/0.2/tokio/sync/index.html
-[mpsc]: https://docs.rs/tokio/0.2/tokio/sync/mpsc/index.html
-[oneshot]: https://docs.rs/tokio/0.2/tokio/sync/oneshot/index.html
-[broadcast]: https://docs.rs/tokio/0.2/tokio/sync/broadcast/index.html
-[watch]: https://docs.rs/tokio/0.2/tokio/sync/watch/index.html
+[channels]: https://docs.rs/tokio/0.3/tokio/sync/index.html
+[mpsc]: https://docs.rs/tokio/0.3/tokio/sync/mpsc/index.html
+[oneshot]: https://docs.rs/tokio/0.3/tokio/sync/oneshot/index.html
+[broadcast]: https://docs.rs/tokio/0.3/tokio/sync/broadcast/index.html
+[watch]: https://docs.rs/tokio/0.3/tokio/sync/watch/index.html
 [`async-channel`]: https://docs.rs/async-channel/
 [`std::sync::mpsc`]: https://doc.rust-lang.org/stable/std/sync/mpsc/index.html
 [`crossbeam::channel`]: https://docs.rs/crossbeam/latest/crossbeam/channel/index.html

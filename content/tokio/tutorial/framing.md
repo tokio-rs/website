@@ -183,8 +183,8 @@ will be received from the peer. If the read buffer still has data in it, this
 indicates a partial frame has been received and the connection is being
 terminated abruptly. This is an error condition and `Err` is returned.
 
-[`BytesMut`]: https://docs.rs/bytes/0.5/bytes/struct.BytesMut.html
-[`Bytes`]: https://docs.rs/bytes/0.5/bytes/struct.Bytes.html
+[`BytesMut`]: https://docs.rs/bytes/0.6/bytes/struct.BytesMut.html
+[`Bytes`]: https://docs.rs/bytes/0.6/bytes/struct.Bytes.html
 
 ## The `Buf` trait
 
@@ -284,7 +284,7 @@ initialization process is not free. When working with `BytesMut` and `BufMut`,
 capacity is **uninitialized**. The `BytesMut` abstraction prevents us from
 reading the uninitialized memory. This lets us avoid the initialization step.
 
-[`BufMut`]: https://docs.rs/bytes/0.5/bytes/trait.BufMut.html
+[`BufMut`]: https://docs.rs/bytes/0.6/bytes/trait.BufMut.html
 [`bytes`]: https://docs.rs/bytes/
 
 # Parsing
@@ -296,8 +296,8 @@ Now, let's look at the `parse_frame()` function. Parsing is done in two steps.
 
 The `mini-redis` crate provides us with a function for both of these steps:
 
-1. [`Frame::check`](https://docs.rs/mini-redis/0.2/mini_redis/frame/enum.Frame.html#method.check)
-2. [`Frame::parse`](https://docs.rs/mini-redis/0.2/mini_redis/frame/enum.Frame.html#method.parse)
+1. [`Frame::check`](https://docs.rs/mini-redis/0.3/mini_redis/frame/enum.Frame.html#method.check)
+2. [`Frame::parse`](https://docs.rs/mini-redis/0.3/mini_redis/frame/enum.Frame.html#method.parse)
 
 We will also reuse the `Buf` abstraction to help. A `Buf` is passed into
 `Frame::check`. As the `check` function iterates the passed in buffer, the
@@ -364,8 +364,8 @@ There are more useful methods on the [`Buf`] trait. Check the [API docs][`Buf`]
 for more details.
 
 [check]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/frame.rs#L63-L100
-[`Buf::get_u8`]: https://docs.rs/bytes/0.5/bytes/buf/trait.Buf.html#method.get_u8
-[`Buf`]: https://docs.rs/bytes/0.5/bytes/buf/trait.Buf.html
+[`Buf::get_u8`]: https://docs.rs/bytes/0.6/bytes/buf/trait.Buf.html#method.get_u8
+[`Buf`]: https://docs.rs/bytes/0.6/bytes/buf/trait.Buf.html
 [`Cursor`]: https://doc.rust-lang.org/stable/std/io/struct.Cursor.html
 
 # Buffered writes
@@ -489,8 +489,8 @@ all to the socket with one `write` syscall. Doing this complicates the
 include the `flush().await` call in `fn write_frame()`.
 
 
-[buf-writer]: https://docs.rs/tokio/0.2/tokio/io/struct.BufWriter.html
+[buf-writer]: https://docs.rs/tokio/0.3/tokio/io/struct.BufWriter.html
 [write-frame]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/connection.rs#L159-L184
-[`AsyncWriteExt`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html
-[`write_u8`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html#method.write_u8
+[`AsyncWriteExt`]: https://docs.rs/tokio/0.3/tokio/io/trait.AsyncWriteExt.html
+[`write_u8`]: https://docs.rs/tokio/0.3/tokio/io/trait.AsyncWriteExt.html#method.write_u8
 [`write_decimal`]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/connection.rs#L225-L238
