@@ -34,7 +34,7 @@ To depend on `bytes`, add the following to your `Cargo.toml` in the
 `[dependencies]` section:
 
 ```toml
-bytes = "0.5"
+bytes = "0.6"
 ```
 
 [`bytes`]: https://docs.rs/bytes/0.6/bytes/struct.Bytes.html
