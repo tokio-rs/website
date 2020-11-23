@@ -22,9 +22,9 @@ type Responder<T> = oneshot::Sender<mini_redis::Result<T>>;
 
 #[tokio::main]
 async fn main() {
-    let (tx, mut rx) = mpsc::channel(32);
+    let (mut tx, mut rx) = mpsc::channel(32);
     // Clone a `tx` handle for the second f
-    let tx2 = tx.clone();
+    let mut tx2 = tx.clone();
 
     let manager = tokio::spawn(async move {
         // Open a connection to the mini-redis address.
