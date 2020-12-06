@@ -349,7 +349,7 @@ let t2 = tokio::spawn(async move {
 
     // Await the response
     let res = resp_rx.await;
-    println!("GOT = {:?}", res)
+    println!("GOT = {:?}", res);
 });
 # }
 ```
