@@ -177,12 +177,13 @@ thousands, if not millions of tasks.
 
 ## `'static` bound
 
-Tasks spawned by `tokio::spawn` **must** be `'static`. The expression being
-spawned must not borrow any data.
+When you spawn a task on the Tokio runtime, its type must be `'static`. This
+means that the spawned task must not contain any references to data owned
+outside the task.
 
 [[info]]
-| It is a common misconception that "being static" means "lives forever",
-| however this is not the case. Just because a value is `'static` does not mean
+| It is a common misconception that `'static` always means "lives forever",
+| but this is not the case. Just because a value is `'static` does not mean
 | that you have a memory leak. You can read more in [Common Rust Lifetime
 | Misconceptions][common-lifetime].
 
@@ -244,6 +245,24 @@ it `'static`.
 If a single piece of data must be accessible from more than one task
 concurrently, then it must be shared using synchronization primitives such as
 `Arc`.
+
+Note that the error message talks about the argument type *outliving* the
+`'static` lifetime. This terminology can be rather confusing because the
+`'static` lifetime lasts until the end of the program, so if it outlives it,
+don't you have a memory leak? The explanation is that it is the *type*, not the
+*value* that must outlive the `'static` lifetime, and the value may be destroyed
+before its type is no longer valid.
+
+When we say that a value is `'static`, all that means is that it would not be
+incorrect to keep that value around forever. This is important because the
+compiler is unable to reason about how long a newly spawned task stays around,
+so the only way it can be sure that the task doesn't live too long is to make
+sure it may live forever.
+
+The link in the info-box above uses the terminology "bounded by `'static`"
+rather than "its type outlives `'static`" or "the value is `'static`" for `T:
+'static`. These all mean the same thing, and are different from "annotated with
+`'static`" as in `&'static T`.
 
 ## `Send` bound
 
