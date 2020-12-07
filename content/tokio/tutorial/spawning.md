@@ -383,12 +383,16 @@ async fn process(socket: TcpStream) {
     while let Some(frame) = connection.read_frame().await.unwrap() {
         let response = match Command::from_frame(frame).unwrap() {
             Set(cmd) => {
-                db.insert(cmd.key().to_string(), cmd.value().clone());
+                // The value is stored as `Vec<u8>`
+                db.insert(cmd.key().to_string(), cmd.value().to_vec());
                 Frame::Simple("OK".to_string())
             }
             Get(cmd) => {
                 if let Some(value) = db.get(cmd.key()) {
-                    Frame::Bulk(value.clone())
+                    // `Frame::Bulk` expects data to be of type `Bytes`. This
+                    // type will be covered later in the tutorial. For now,
+                    // `&Vec<u8>` is converted to `Bytes` using `into()`.
+                    Frame::Bulk(value.clone().into())
                 } else {
                     Frame::Null
                 }
