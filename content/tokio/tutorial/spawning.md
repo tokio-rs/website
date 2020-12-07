@@ -383,12 +383,12 @@ async fn process(socket: TcpStream) {
     while let Some(frame) = connection.read_frame().await.unwrap() {
         let response = match Command::from_frame(frame).unwrap() {
             Set(cmd) => {
-                db.insert(cmd.key().to_string(), cmd.value().clone());
+                db.insert(cmd.key().to_string(), cmd.value().to_vec());
                 Frame::Simple("OK".to_string())
             }
             Get(cmd) => {
                 if let Some(value) = db.get(cmd.key()) {
-                    Frame::Bulk(value.clone())
+                    Frame::Bulk(value.clone().into())
                 } else {
                     Frame::Null
                 }
