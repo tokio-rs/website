@@ -175,7 +175,7 @@ never be contended.
 | option works well when providing a synchronous API bridge on top
 | of an asynchronous client library.
 
-[basic-rt]: https://docs.rs/tokio/0.3/tokio/runtime/struct.Builder.html#method.new_current_thread
+[basic-rt]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.new_current_thread
 
 If contention on a synchronous mutex becomes a problem, the best fix is rarely
 to switch to the Tokio mutex. Instead, options to consider are:
@@ -205,7 +205,7 @@ shard.insert(key, value);
 
 The [dashmap] crate provides an implementation of a sharded hash map.
 
-[current_thread]: https://docs.rs/tokio/0.3/tokio/runtime/index.html#current-thread-scheduler
+[current_thread]: https://docs.rs/tokio/1/tokio/runtime/index.html#current-thread-scheduler
 [dashmap]: https://docs.rs/dashmap
 
 # Holding a `MutexGuard` across an `.await`
@@ -353,4 +353,4 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 # async fn do_something_async() {}
 ```
 
-[`tokio::sync::Mutex`]: https://docs.rs/tokio/0.3/tokio/sync/struct.Mutex.html
+[`tokio::sync::Mutex`]: https://docs.rs/tokio/1/tokio/sync/struct.Mutex.html

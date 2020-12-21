@@ -394,18 +394,18 @@ stream! {
 ```
 
 [iter]: https://doc.rust-lang.org/book/ch13-02-iterators.html
-[`Stream`]: https://docs.rs/tokio/0.3/tokio/stream/trait.Stream.html
+[`Stream`]: https://docs.rs/tokio-stream/0.1/tokio/trait.Stream.html
 [`Future`]: https://doc.rust-lang.org/std/future/trait.Future.html
-[`StreamExt`]: https://docs.rs/tokio/0.3/tokio/stream/trait.StreamExt.html
-[rx]: https://docs.rs/tokio/0.3/tokio/sync/mpsc/struct.Receiver.html
-[`AsyncBufReadExt::lines()`]: https://docs.rs/tokio/0.3/tokio/io/trait.AsyncBufReadExt.html#method.lines
-[next]: https://docs.rs/tokio/0.3/tokio/stream/trait.StreamExt.html#method.next
-[`map`]: https://docs.rs/tokio/0.3/tokio/stream/trait.StreamExt.html#method.map
-[`take`]: https://docs.rs/tokio/0.3/tokio/stream/trait.StreamExt.html#method.take
-[`filter`]: https://docs.rs/tokio/0.3/tokio/stream/trait.StreamExt.html#method.filter
-[`filter_map`]: https://docs.rs/tokio/0.3/tokio/stream/trait.StreamExt.html#method.filter_map
+[`StreamExt`]: https://docs.rs/tokio-stream/0.1/tokio/trait.StreamExt.html
+[rx]: https://docs.rs/tokio/1/tokio/sync/mpsc/struct.Receiver.html
+[`AsyncBufReadExt::lines()`]: https://docs.rs/tokio/1/tokio/io/trait.AsyncBufReadExt.html#method.lines
+[next]: https://docs.rs/tokio-stream/0.1/tokio/trait.StreamExt.html#method.next
+[`map`]: https://docs.rs/tokio-stream/0.1/tokio/trait.StreamExt.html#method.map
+[`take`]: https://docs.rs/tokio-stream/0.1/tokio/trait.StreamExt.html#method.take
+[`filter`]: https://docs.rs/tokio-stream/0.1/tokio/trait.StreamExt.html#method.filter
+[`filter_map`]: https://docs.rs/tokio-stream/0.1/tokio/trait.StreamExt.html#method.filter_map
 [pin]: https://doc.rust-lang.org/std/pin/index.html
 [async]: async
 [`async-stream`]: https://docs.rs/async-stream
-[`into_stream()`]: https://docs.rs/mini-redis/0.3/mini_redis/client/struct.Subscriber.html#method.into_stream
-[`tokio::pin!`]: https://docs.rs/tokio/0.3/tokio/macro.pin.html
+[`into_stream()`]: https://docs.rs/mini-redis/0.4/mini_redis/client/struct.Subscriber.html#method.into_stream
+[`tokio::pin!`]: https://docs.rs/tokio/1/tokio/macro.pin.html

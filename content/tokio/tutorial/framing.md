@@ -296,8 +296,8 @@ Now, let's look at the `parse_frame()` function. Parsing is done in two steps.
 
 The `mini-redis` crate provides us with a function for both of these steps:
 
-1. [`Frame::check`](https://docs.rs/mini-redis/0.3/mini_redis/frame/enum.Frame.html#method.check)
-2. [`Frame::parse`](https://docs.rs/mini-redis/0.3/mini_redis/frame/enum.Frame.html#method.parse)
+1. [`Frame::check`](https://docs.rs/mini-redis/0.4/mini_redis/frame/enum.Frame.html#method.check)
+2. [`Frame::parse`](https://docs.rs/mini-redis/0.4/mini_redis/frame/enum.Frame.html#method.parse)
 
 We will also reuse the `Buf` abstraction to help. A `Buf` is passed into
 `Frame::check`. As the `check` function iterates the passed in buffer, the
@@ -489,8 +489,8 @@ all to the socket with one `write` syscall. Doing this complicates the
 include the `flush().await` call in `fn write_frame()`.
 
 
-[buf-writer]: https://docs.rs/tokio/0.3/tokio/io/struct.BufWriter.html
+[buf-writer]: https://docs.rs/tokio/1/tokio/io/struct.BufWriter.html
 [write-frame]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/connection.rs#L159-L184
-[`AsyncWriteExt`]: https://docs.rs/tokio/0.3/tokio/io/trait.AsyncWriteExt.html
-[`write_u8`]: https://docs.rs/tokio/0.3/tokio/io/trait.AsyncWriteExt.html#method.write_u8
+[`AsyncWriteExt`]: https://docs.rs/tokio/1/tokio/io/trait.AsyncWriteExt.html
+[`write_u8`]: https://docs.rs/tokio/1/tokio/io/trait.AsyncWriteExt.html#method.write_u8
 [`write_decimal`]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/connection.rs#L225-L238
