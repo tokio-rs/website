@@ -183,8 +183,8 @@ will be received from the peer. If the read buffer still has data in it, this
 indicates a partial frame has been received and the connection is being
 terminated abruptly. This is an error condition and `Err` is returned.
 
-[`BytesMut`]: https://docs.rs/bytes/0.6/bytes/struct.BytesMut.html
-[`Bytes`]: https://docs.rs/bytes/0.6/bytes/struct.Bytes.html
+[`BytesMut`]: https://docs.rs/bytes/1/bytes/struct.BytesMut.html
+[`Bytes`]: https://docs.rs/bytes/1/bytes/struct.Bytes.html
 
 ## The `Buf` trait
 
@@ -284,7 +284,7 @@ initialization process is not free. When working with `BytesMut` and `BufMut`,
 capacity is **uninitialized**. The `BytesMut` abstraction prevents us from
 reading the uninitialized memory. This lets us avoid the initialization step.
 
-[`BufMut`]: https://docs.rs/bytes/0.6/bytes/trait.BufMut.html
+[`BufMut`]: https://docs.rs/bytes/1/bytes/trait.BufMut.html
 [`bytes`]: https://docs.rs/bytes/
 
 # Parsing
@@ -364,8 +364,8 @@ There are more useful methods on the [`Buf`] trait. Check the [API docs][`Buf`]
 for more details.
 
 [check]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/frame.rs#L63-L100
-[`Buf::get_u8`]: https://docs.rs/bytes/0.6/bytes/buf/trait.Buf.html#method.get_u8
-[`Buf`]: https://docs.rs/bytes/0.6/bytes/buf/trait.Buf.html
+[`Buf::get_u8`]: https://docs.rs/bytes/1/bytes/buf/trait.Buf.html#method.get_u8
+[`Buf`]: https://docs.rs/bytes/1/bytes/buf/trait.Buf.html
 [`Cursor`]: https://doc.rust-lang.org/stable/std/io/struct.Cursor.html
 
 # Buffered writes
