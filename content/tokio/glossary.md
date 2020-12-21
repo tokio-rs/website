@@ -162,10 +162,10 @@ A [`Stream`] is an asynchronous version of an [`Iterator`], and provides a
 stream of values. It is commonly used together with a `while let` loop like this:
 
 ```
-use tokio::stream::StreamExt; // for next()
+use tokio_stream::StreamExt; // for next()
 
 # async fn dox() {
-# let mut stream = tokio::stream::empty::<()>();
+# let mut stream = tokio_stream::empty::<()>();
 while let Some(item) = stream.next().await {
     // do something
 }

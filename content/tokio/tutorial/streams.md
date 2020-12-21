@@ -12,13 +12,21 @@ Tokio provides stream support under the `stream` feature flag. When depending on
 Tokio, include either `stream` or `full` to get access to this functionality.
 
 ```toml
-tokio = { version = "0.3", features = ["stream"] }
+tokio-stream = "0.1
 ```
 
+[[info]]
+| Currently, Tokio's Stream utilities exist in a separate crate: `tokio-stream`.
+| Once the `Stream` trait is stabilized in the Rust standard library, Tokio's
+| stream utilities will be moved into the `tokio` crate.
+
+<!--
+TODO: uncomment this once it is true again.
 A number of types we've already seen also implement [`Stream`]. For example, the
 receive half of a [`mpsc::Receiver`][rx] implements [`Stream`]. The
 [`AsyncBufReadExt::lines()`] method takes a buffered I/O reader and returns a
 [`Stream`] where each value represents a line of data.
+-->
 
 # Iteration
 
@@ -27,20 +35,13 @@ Instead, iterating streams is done using a `while let` loop paired with
 [`StreamExt::next()`][next].
 
 ```rust
-use tokio::stream::StreamExt;
-use tokio::sync::mpsc;
+use tokio_stream::StreamExt;
 
 #[tokio::main]
 async fn main() {
-    let (mut tx, mut rx) = mpsc::channel(10);
+    let mut stream = tokio_stream::iter(&[1, 2, 3]);
 
-    tokio::spawn(async move {
-        tx.send(1).await.unwrap();
-        tx.send(2).await.unwrap();
-        tx.send(3).await.unwrap();
-    });
-
-    while let Some(v) = rx.next().await {
+    while let Some(v) = stream.next().await {
         println!("GOT = {:?}", v);
     }
 }
@@ -59,7 +60,7 @@ Full code can be found [here][full].
 [full]: https://github.com/tokio-rs/website/blob/master/tutorial-code/streams/src/main.rs
 
 ```rust
-use tokio::stream::StreamExt;
+use tokio_stream::StreamExt;
 use mini_redis::client;
 
 async fn publish() -> mini_redis::Result<()> {
@@ -154,7 +155,7 @@ error[E0277]: `std::future::from_generator::GenFuture<[static generator@mini_red
     = note: required because it appears within the type `impl std::future::Future`
     = note: required because it appears within the type `async_stream::async_stream::AsyncStream<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 'static)>>, impl std::future::Future>`
     = note: required because it appears within the type `impl futures_core::stream::Stream`
-    = note: required because of the requirements on the impl of `std::future::Future` for `tokio::stream::next::Next<'_, impl futures_core::stream::Stream>`
+    = note: required because of the requirements on the impl of `std::future::Future` for `tokio:_stream::next::Next<'_, impl futures_core::stream::Stream>`
 
 error: aborting due to 2 previous errors
 
@@ -201,7 +202,7 @@ stream to yield at **most** `n` messages.
 
 ```rust
 # use mini_redis::client;
-# use tokio::stream::StreamExt;
+# use tokio_stream::StreamExt;
 # async fn subscribe() -> mini_redis::Result<()> {
 #    let client = client::connect("127.0.0.1:6379").await?;
 #    let subscriber = client.subscribe(vec!["numbers".to_string()]).await?;
@@ -228,7 +229,7 @@ message that does not match the predicate.
 
 ```rust
 # use mini_redis::client;
-# use tokio::stream::StreamExt;
+# use tokio_stream::StreamExt;
 # async fn subscribe() -> mini_redis::Result<()> {
 #    let client = client::connect("127.0.0.1:6379").await?;
 #    let subscriber = client.subscribe(vec!["numbers".to_string()]).await?;
@@ -260,7 +261,7 @@ of the output. This is done with [`map`]. Because this is applied **after**
 
 ```rust
 # use mini_redis::client;
-# use tokio::stream::StreamExt;
+# use tokio_stream::StreamExt;
 # async fn subscribe() -> mini_redis::Result<()> {
 #    let client = client::connect("127.0.0.1:6379").await?;
 #    let subscriber = client.subscribe(vec!["numbers".to_string()]).await?;
@@ -324,7 +325,7 @@ implemented in [Async in depth][async]. We will convert it to a stream that
 yields `()` three times at 10 ms intervals
 
 ```rust
-use tokio::stream::Stream;
+use tokio_stream::Stream;
 # use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -382,7 +383,7 @@ use async_stream::stream;
 # use std::future::Future;
 # use std::pin::Pin;
 # use std::task::{Context, Poll};
-# use tokio::stream::StreamExt;
+# use tokio_stream::StreamExt;
 use std::time::{Duration, Instant};
 
 # struct Delay { when: Instant }

@@ -8,5 +8,6 @@ publish = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = { version = "0.3", features = ["full"] }
-mini-redis = "0.3"
+tokio = { git = "https://github.com/tokio-rs/tokio", features = ["full"] }
+tokio-stream = { git = "https://github.com/tokio-rs/tokio" }
+mini-redis = { git = "https://github.com/tokio-rs/mini-redis", branch = "track-1.0" }
