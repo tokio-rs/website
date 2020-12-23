@@ -13,4 +13,3 @@ members = [
 [patch.crates-io]
 mini-redis = { git = "https://github.com/tokio-rs/mini-redis", branch = "track-1.0" }
 tokio = { git = "https://github.com/tokio-rs/tokio" }
-bytes = { git = "https://github.com/tokio-rs/bytes" }

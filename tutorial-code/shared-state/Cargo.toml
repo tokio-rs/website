@@ -9,5 +9,5 @@ publish = false
 
 [dependencies]
 tokio = { git = "https://github.com/tokio-rs/tokio", features = ["full"] }
-bytes = { git = "https://github.com/tokio-rs/bytes" }
+bytes = "1"
 mini-redis = { git = "https://github.com/tokio-rs/mini-redis", branch = "track-1.0" }
