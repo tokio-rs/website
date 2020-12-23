@@ -15,5 +15,5 @@ path = "src/echo-server-copy.rs"
 
 
 [dependencies]
-tokio = { version = "0.3", features = ["full"] }
-mini-redis = "0.3"
+tokio = { version = "1", features = ["full"] }
+mini-redis = "0.4"

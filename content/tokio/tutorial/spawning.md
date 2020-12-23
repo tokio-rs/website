@@ -86,7 +86,7 @@ In the server terminal, the output is:
 GOT: Array([Bulk(b"set"), Bulk(b"hello"), Bulk(b"world")])
 ```
 
-[tcpl]: https://docs.rs/tokio/0.3/tokio/net/struct.TcpListener.html
+[tcpl]: https://docs.rs/tokio/1/tokio/net/struct.TcpListener.html
 
 # Concurrency
 
