@@ -8,9 +8,9 @@ publish = false
 
 [dependencies]
 async-stream = "0.2"
-mini-redis = { git = "https://github.com/tokio-rs/mini-redis", branch = "track-1.0" }
-tokio = { git = "https://github.com/tokio-rs/tokio", features = ["full"] }
-tokio-stream = { git = "https://github.com/tokio-rs/tokio" }
+mini-redis = "0.4"
+tokio = { version = "1", features = ["full"] }
+tokio-stream = "0.1"
 bytes = "1"
 futures = "0.3"
 doc-comment = "0.3.3"
@@ -18,6 +18,3 @@ crossbeam = "0.7"
 
 [build-dependencies]
 glob = "0.3"
-
-[patch.crates-io]
-tokio = { git = "https://github.com/tokio-rs/tokio" }

@@ -15,5 +15,5 @@ path = "src/echo-server-copy.rs"
 
 
 [dependencies]
-tokio = { git = "https://github.com/tokio-rs/tokio", features = ["full"] }
-mini-redis = { git = "https://github.com/tokio-rs/mini-redis", branch = "track-1.0" }
+tokio = { version = "1", features = ["full"] }
+mini-redis = "0.4"
