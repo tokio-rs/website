@@ -427,7 +427,7 @@ use mini_redis::Frame;
 #   buffer: bytes::BytesMut,
 # }
 # impl Connection {
-async fn write_value(&mut self, frame: &Frame)
+async fn write_frame(&mut self, frame: &Frame)
     -> io::Result<()>
 {
     match frame {
