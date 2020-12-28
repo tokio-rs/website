@@ -444,6 +444,7 @@ async fn write_frame(&mut self, frame: &Frame)
         Frame::Integer(val) => {
             self.stream.write_u8(b':').await?;
             self.write_decimal(*val).await?;
+            self.stream.write_all(b"\r\n").await?;
         }
         Frame::Null => {
             self.stream.write_all(b"$-1\r\n").await?;
