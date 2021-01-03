@@ -114,7 +114,7 @@ async fn main() {
 
 ## The `Future` implementation
 
-To help better understand how `select!` works, lets look at a hypothetical
+To help better understand how `select!` works, let's look at what a hypothetical
 `Future` implementation would look like. This is a simplified version. In
 practice, `select!` includes additional functionality like randomly selecting
 the branch to poll first.
@@ -207,7 +207,7 @@ remaining async expressions continue to execute concurrently until the next one
 completes. At this time, the same logic is applied to that result.
 
 Because `select!` takes any async expression, it is possible to define more
-complicated computation to select on.
+complicated computations to select on.
 
 Here, we select on the output of a `oneshot` channel and a TCP connection.
 
