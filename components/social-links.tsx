@@ -23,6 +23,7 @@ const SocialLinks: FC = () => (
   <>
     {DATA.map((link) => (
       <a
+        target="_blank"
         className="navbar-item navbar-icon tk-social"
         href={link.url}
         key={link.name}
