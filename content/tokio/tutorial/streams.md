@@ -394,16 +394,16 @@ stream! {
 ```
 
 [iter]: https://doc.rust-lang.org/book/ch13-02-iterators.html
-[`Stream`]: https://docs.rs/tokio-stream/0.1/tokio/trait.Stream.html
+[`Stream`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.Stream.html
 [`Future`]: https://doc.rust-lang.org/std/future/trait.Future.html
-[`StreamExt`]: https://docs.rs/tokio-stream/0.1/tokio/trait.StreamExt.html
+[`StreamExt`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html
 [rx]: https://docs.rs/tokio/1/tokio/sync/mpsc/struct.Receiver.html
 [`AsyncBufReadExt::lines()`]: https://docs.rs/tokio/1/tokio/io/trait.AsyncBufReadExt.html#method.lines
-[next]: https://docs.rs/tokio-stream/0.1/tokio/trait.StreamExt.html#method.next
-[`map`]: https://docs.rs/tokio-stream/0.1/tokio/trait.StreamExt.html#method.map
-[`take`]: https://docs.rs/tokio-stream/0.1/tokio/trait.StreamExt.html#method.take
-[`filter`]: https://docs.rs/tokio-stream/0.1/tokio/trait.StreamExt.html#method.filter
-[`filter_map`]: https://docs.rs/tokio-stream/0.1/tokio/trait.StreamExt.html#method.filter_map
+[next]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html#method.next
+[`map`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html#method.map
+[`take`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html#method.take
+[`filter`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html#method.filter
+[`filter_map`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html#method.filter_map
 [pin]: https://doc.rust-lang.org/std/pin/index.html
 [async]: async
 [`async-stream`]: https://docs.rs/async-stream
