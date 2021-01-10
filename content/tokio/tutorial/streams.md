@@ -394,7 +394,7 @@ stream! {
 ```
 
 [iter]: https://doc.rust-lang.org/book/ch13-02-iterators.html
-[`Stream`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.Stream.html
+[`Stream`]: https://docs.rs/futures-core/0.3/futures_core/stream/trait.Stream.html
 [`Future`]: https://doc.rust-lang.org/std/future/trait.Future.html
 [`StreamExt`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html
 [rx]: https://docs.rs/tokio/1/tokio/sync/mpsc/struct.Receiver.html
