@@ -17,7 +17,7 @@ Tokio, include either `stream` or `full` to get access to this functionality.
 Tokio provides stream support in a separate crate: `tokio-stream`.
 
 ```toml
-tokio-stream = "0.1
+tokio-stream = "0.1"
 ```
 
 [[info]]
