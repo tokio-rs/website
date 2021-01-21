@@ -504,7 +504,7 @@ futures = "0.3"
 Then implement [`futures::task::ArcWake`][`ArcWake`].
 
 ```rust
-use futures::task::ArcWake;
+use futures::task::{self, ArcWake};
 use std::sync::Arc;
 # struct Task {}
 # impl Task {
