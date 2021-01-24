@@ -68,7 +68,7 @@ function Footer({ next, prev, mdPath }) {
         <div className="level-left">
           <div className="level-item tk-prev">
             {prev && (
-              <a href={prev.href}>
+              <a href={prev.href} rel="prev">
                 <span className="tk-arrow" style={{ marginRight: "0.5rem" }}>
                   <img src="/img/arrow-left.svg" />
                 </span>
@@ -80,7 +80,7 @@ function Footer({ next, prev, mdPath }) {
         <div className="level-right">
           <div className="level-item tk-next">
             {next && (
-              <a href={next.href}>
+              <a href={next.href} rel="next">
                 {next.title}
                 <span className="tk-arrow" style={{ marginLeft: "0.5rem" }}>
                   <img src="/img/arrow-right.svg" />
