@@ -8,8 +8,8 @@ First, move the client `SET`/`GET` code from the previous section to an example
 file. This way, we can run it against our server.
 
 ```bash
-mkdir -p examples
-mv src/main.rs examples/hello-redis.rs
+$ mkdir -p examples
+$ mv src/main.rs examples/hello-redis.rs
 ```
 
 Then create a new, empty `src/main.rs` and continue.
