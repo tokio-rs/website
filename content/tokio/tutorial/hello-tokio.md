@@ -91,7 +91,7 @@ the operation is performed asynchronously, the code we write **looks**
 synchronous. The only indication that the operation is asynchronous is the
 `.await` operator.
 
-[`client::connect`]: https://docs.rs/mini-redis/0.1/mini_redis/client/fn.connect.html
+[`client::connect`]: https://docs.rs/mini-redis/0.4/mini_redis/client/fn.connect.html
 
 ## What is asynchronous programming?
 
