@@ -324,7 +324,7 @@ async fn increment_and_do_stuff(can_incr: &CanIncrement) {
 }
 # async fn do_something_async() {}
 ```
-This pattern guarantees that you wont run into the `Send` error, because the
+This pattern guarantees that you won't run into the `Send` error, because the
 mutex guard does not appear anywhere in an async function.
 
 ## Spawn a task to manage the state and use message passing to operate on it
