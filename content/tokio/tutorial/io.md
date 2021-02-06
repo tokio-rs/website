@@ -274,9 +274,7 @@ tokio::spawn(async move {
 # }
 ```
 
-You can find the entire code [here][full].
-
-[full]: https://github.com/tokio-rs/website/blob/master/tutorial-code/io/src/echo-server-copy.rs
+You can find the entire code [here][full_copy].
 
 ## Manual copying
 
@@ -409,9 +407,11 @@ Forgetting to break from the read loop usually results in a 100% CPU infinite
 loop situation. As the socket is closed, `socket.read()` returns immediately.
 The loop then repeats forever.
 
-Full code can be found [here][full].
+Full code can be found [here][full_manual].
 
-[full]: https://github.com/tokio-rs/website/blob/master/tutorial-code/io/src/echo-server.rs
+[full_manual]: https://github.com/tokio-rs/website/blob/master/tutorial-code/io/src/echo-server.rs
+[full_copy]: https://github.com/tokio-rs/website/blob/master/tutorial-code/io/src/echo-server-copy.rs
+
 [send]: /tokio/tutorial/spawning#send-bound
 
 [`AsyncRead`]: https://docs.rs/tokio/1/tokio/io/trait.AsyncRead.html
