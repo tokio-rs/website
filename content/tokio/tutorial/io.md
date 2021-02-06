@@ -280,7 +280,7 @@ You can find the entire code [here][full].
 
 ## Manual copying
 
-Now lets look at how we would write the echo server by copying the data
+Now let's look at how we would write the echo server by copying the data
 manually. To do this, we use [`AsyncReadExt::read`][read] and
 [`AsyncWriteExt::write_all`][write_all].
 
