@@ -74,7 +74,7 @@ Make sure that it was successfully installed by starting the server:
 $ mini-redis-server
 ```
 
-Then try to get the key `foo` using `mini-redis-cli`
+Then, in a separate terminal window, try to get the key `foo` using `mini-redis-cli`
 
 ```bash
 $ mini-redis-cli get foo
