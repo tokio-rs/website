@@ -421,7 +421,7 @@ $ cargo run --example hello-redis
 Now, the output will be:
 
 ```text
-got value from the server; success=Some(b"world")
+got value from the server; result=Some(b"world")
 ```
 
 We can now get and set values, but there is a problem: The values are not
