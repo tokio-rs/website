@@ -102,8 +102,8 @@ To implement this, `Connection` needs a read buffer field. Data is read from the
 socket into the read buffer. When a frame is parsed, the corresponding data is
 removed from the buffer.
 
-We will use [`BytesMut`] as the buffer type. This is a mutable version of
-[`Bytes`].
+We will use [`BytesMut`][BytesMutStruct] as the buffer type. This is a mutable version of
+[`Bytes`][BytesStruct].
 
 ```rust
 use bytes::BytesMut;
@@ -183,8 +183,8 @@ will be received from the peer. If the read buffer still has data in it, this
 indicates a partial frame has been received and the connection is being
 terminated abruptly. This is an error condition and `Err` is returned.
 
-[`BytesMut`]: https://docs.rs/bytes/1/bytes/struct.BytesMut.html
-[`Bytes`]: https://docs.rs/bytes/1/bytes/struct.Bytes.html
+[BytesMutStruct]: https://docs.rs/bytes/1/bytes/struct.BytesMut.html
+[BytesStruct]: https://docs.rs/bytes/1/bytes/struct.Bytes.html
 
 ## The `Buf` trait
 
