@@ -1,5 +1,5 @@
 ---
-title: "Hello Tokio"
+title: 'Hello Tokio'
 ---
 
 We will get started by writing a very basic Tokio application. It will connect
@@ -40,7 +40,7 @@ pub async fn main() -> Result<()> {
     let mut client = client::connect("127.0.0.1:6379").await?;
 
     // Set the key "hello" with value "world"
-    client.set("hello", Bytes::from("world")).await?;
+    client.set("hello", bytes::Bytes::from("world")).await?;
 
     // Get key "hello"
     let result = client.get("hello").await?;
@@ -102,7 +102,7 @@ synchronous. The only indication that the operation is asynchronous is the
 ## What is asynchronous programming?
 
 Most computer programs execute in the same order that it is written. The first
-line executes, then the next, and so on.  With synchronous programming, when a
+line executes, then the next, and so on. With synchronous programming, when a
 program encounters an operation that cannot be completed immediately, it will
 block until the operation completes. For example, establishing a TCP connection
 requires an exchange with a peer over the network, which can take a sizeable
@@ -191,7 +191,7 @@ world
 The return value of an `async fn` is an anonymous type that implements the
 [`Future`] trait.
 
-[`Future`]: https://doc.rust-lang.org/std/future/trait.Future.html
+[`future`]: https://doc.rust-lang.org/std/future/trait.Future.html
 
 ## Async `main` function
 
