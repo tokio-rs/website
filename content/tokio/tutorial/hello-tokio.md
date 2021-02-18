@@ -61,7 +61,7 @@ $ mini-redis-server
 If you have not already installed mini-redis, you can do so with
 
 ```bash
-$ cargo install mini-redis-server
+$ cargo install mini-redis
 ```
 
 Now, run the `my-redis` application:
