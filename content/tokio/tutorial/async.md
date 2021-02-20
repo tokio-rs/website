@@ -437,7 +437,7 @@ library channel is not `Sync`.
 Add the following dependency to your `Cargo.toml` to pull in channels.
 
 ```toml
-crossbeam = "0.7"
+crossbeam = "0.8"
 ```
 
 Then, update the `MiniTokio` struct.
