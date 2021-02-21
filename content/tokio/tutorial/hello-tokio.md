@@ -40,7 +40,7 @@ pub async fn main() -> Result<()> {
     let mut client = client::connect("127.0.0.1:6379").await?;
 
     // Set the key "hello" with value "world"
-    client.set("hello", bytes::Bytes::from("world")).await?;
+    client.set("hello", "world".into()).await?;
 
     // Get key "hello"
     let result = client.get("hello").await?;
@@ -139,8 +139,8 @@ pub async fn connect<T: ToSocketAddrs>(addr: T) -> Result<Client> {
 
 The `async fn` definition looks like a regular synchronous function, but
 operates asynchronously. Rust transforms the `async fn` at **compile** time into
-a routine that operates asynchronously. Any calls to `.await` within the
-`async fn` yield control back to the thread. The thread may do other work while the
+a routine that operates asynchronously. Any calls to `.await` within the `async
+fn` yield control back to the thread. The thread may do other work while the
 operation processes in the background.
 
 [[warning]]
