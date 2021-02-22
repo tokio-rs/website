@@ -704,7 +704,7 @@ returned. The first loop iteration, `operation` completes immediately with
 `None`.
 
 This example uses some new syntax. The first branch includes `, if !done`. This
-is a branch precondition. Before explaining how it works, lets look at what
+is a branch precondition. Before explaining how it works, let's look at what
 happens if the precondition is omitted. Leaving out `, if !done` and running the
 example results in the following output:
 
