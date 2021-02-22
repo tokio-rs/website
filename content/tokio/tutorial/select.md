@@ -619,11 +619,9 @@ error[E0599]: no method named `poll` found for struct
            `&mut impl std::future::Future: std::future::Future`
 ```
 
-This error isn't very clear and we haven't talked much about `Future` yet
-either. For now, think of `Future` as the trait that must be implemented by a
-value in order to call `.await` on it. If you hit an error about `Future` not
-being implemented when attempting to call `.await` on a **reference**, then the
-future probably needs to be pinned.
+Although we covered `Future` in [the previous chapter][async], this error still isn't
+very clear. If you hit such an error about `Future` not being implemented when attempting
+to call `.await` on a **reference**, then the future probably needs to be pinned.
 
 Read more about [`Pin`][pin] on the [standard library][pin].
 
