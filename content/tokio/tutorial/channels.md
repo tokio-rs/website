@@ -260,7 +260,7 @@ The final step is to receive the response back from the manager task. The `GET`
 command needs to get the value and the `SET` command needs to know if the
 operation completed successfully.
 
-To pass the response, an `oneshot` channel is used. The `oneshot` channel is a
+To pass the response, a `oneshot` channel is used. The `oneshot` channel is a
 single-producer, single-consumer channel optimized for sending a single value.
 In our case, the single value is the response.
 
