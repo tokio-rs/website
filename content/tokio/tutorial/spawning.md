@@ -167,7 +167,7 @@ shutting down.
 
 Tasks are the unit of execution managed by the scheduler. Spawning the task
 submits it to the Tokio scheduler, which then ensures that the task executes
-when it has work to do. The spawned task may be executed on the same thread
+when it has no work to do. The spawned task may be executed on the same thread
 as where it was spawned, or it may execute on a different runtime thread. The
 task can also be moved between threads after being spawned.
 
