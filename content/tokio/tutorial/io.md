@@ -228,6 +228,8 @@ async fn main() -> io::Result<()> {
         Ok::<_, io::Error>(())
     });
 
+    write_task.await.unwrap().unwrap();
+
     let mut buf = vec![0; 128];
 
     loop {
