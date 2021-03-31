@@ -83,7 +83,7 @@ scheduler. At that point, the budget is reset, and future `.await`s on Tokio
 resources will again function normally.
 
 Let's go back to the echo server example from above. When the task is scheduled,
-it is assigned a budget of 128 operations pr "tick". The number 128 was picked
+it is assigned a budget of 128 operations per "tick". The number 128 was picked
 mostly because it felt good and seemed to work well with the cases we were
 testing against ([Noria] and HTTP). When `socket.read(..)` and
 `socket.write(..)` are called, the budget is decremented. If the budget is zero,
