@@ -5,7 +5,7 @@ title: "Framing"
 We will now apply what we just learned about I/O and implement the Mini-Redis
 framing layer. Framing is the process of taking a byte stream and converting it
 to a stream of frames. A frame is a unit of data transmitted between two peers.
-The Redis protocol frame is as follows:
+The Redis protocol frame is defined as follows:
 
 ```rust
 use bytes::Bytes;
