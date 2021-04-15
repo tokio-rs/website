@@ -397,7 +397,7 @@ You can find the entire code [here][full].
 # Backpressure and bounded channels
 
 Whenever concurrency or queuing is introduced, it is important to ensure that the
-queueing is bounded and the system will gracefully handle load. Unbounded queues
+queueing is bounded and the system will gracefully handle the load. Unbounded queues
 will eventually fill up all available memory and cause the system to fail in
 unpredictable ways.
 
@@ -442,7 +442,7 @@ Concurrency and queuing must be explicitly introduced. Ways to do this include:
 * `join!`
 * `mpsc::channel`
 
-When doing so, take care to ensure total amount of concurrency is bounded. For
+When doing so, take care to ensure the total amount of concurrency is bounded. For
 example, when writing a TCP accept loop, ensure that the total number of open
 sockets is bounded. When using `mpsc::channel`, pick a manageable channel
 capacity. Specific bound values will be application specific.
