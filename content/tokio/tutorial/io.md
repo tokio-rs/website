@@ -2,7 +2,7 @@
 title: "I/O"
 ---
 
-I/O in Tokio operates in much the same way as `std`, but asynchronously. There
+I/O in Tokio operates in much the same way as in `std`, but asynchronously. There
 is a trait for reading ([`AsyncRead`]) and a trait for writing ([`AsyncWrite`]).
 Specific types implement these traits as appropriate ([`TcpStream`], [`File`],
 [`Stdout`]). [`AsyncRead`] and [`AsyncWrite`] are also implemented by a number
