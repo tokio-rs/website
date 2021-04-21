@@ -161,6 +161,19 @@ We will implement the echo server twice, using slightly different strategies.
 
 To start, we will implement the echo logic using the [`io::copy`][copy] utility.
 
+You can write up this code in a new binary file:
+
+    touch src/bin/echo-server-copy.rs
+
+That you can launch (or just check the compilation) with:
+
+    cargo run --bin echo-server-copy
+
+(We won't really try out the server, but feel free to build your own little client using
+[tokio::net::TcpStream example](https://docs.rs/tokio/1.4.0/tokio/net/struct.TcpStream.html#examples)
+with the proper socket address.)
+
+
 This is a TCP server and needs an accept loop. A new task is spawned to process
 each accepted socket.
 
@@ -324,6 +337,9 @@ async fn main() -> io::Result<()> {
 }
 # }
 ```
+
+(You can put this code into `src/bin/echo-server.rs` and launch it with
+`cargo run --bin echo-server`).
 
 Let's break it down. First, since the `AsyncRead` and `AsyncWrite` utilities are
 used, the extension traits must be brought into scope.
