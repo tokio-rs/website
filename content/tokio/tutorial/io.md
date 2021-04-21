@@ -163,16 +163,18 @@ To start, we will implement the echo logic using the [`io::copy`][copy] utility.
 
 You can write up this code in a new binary file:
 
-    touch src/bin/echo-server-copy.rs
+```
+touch src/bin/echo-server-copy.rs
+```
 
 That you can launch (or just check the compilation) with:
 
-    cargo run --bin echo-server-copy
+```
+cargo run --bin echo-server-copy
+```
 
-(We won't really try out the server, but feel free to build your own little client using
-[tokio::net::TcpStream example](https://docs.rs/tokio/1.4.0/tokio/net/struct.TcpStream.html#examples)
-with the proper socket address.)
-
+You will be able to try the server using a standard command-line tool such as `telnet`, or by writing
+a simple client like the one found in the documentation for [`tokio::net::TcpStream`][tcp_example].
 
 This is a TCP server and needs an accept loop. A new task is spawned to process
 each accepted socket.
@@ -449,3 +451,4 @@ Full code can be found [here][full_manual].
 [split]: https://docs.rs/tokio/1/tokio/io/fn.split.html
 [`TcpStream::split`]: https://docs.rs/tokio/1/tokio/net/struct.TcpStream.html#method.split
 [`into_split`]: https://docs.rs/tokio/1/tokio/net/struct.TcpStream.html#method.into_split
+[tcp_example]: https://docs.rs/tokio/1/tokio/net/struct.TcpStream.html#examples
