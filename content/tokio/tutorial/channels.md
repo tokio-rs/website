@@ -289,7 +289,7 @@ The final step is to receive the response back from the manager task. The `GET`
 command needs to get the value and the `SET` command needs to know if the
 operation completed successfully.
 
-To pass the response, an `oneshot` channel is used. The `oneshot` channel is a
+To pass the response, a `oneshot` channel is used. The `oneshot` channel is a
 single-producer, single-consumer channel optimized for sending a single value.
 In our case, the single value is the response.
 
@@ -413,7 +413,7 @@ while let Some(cmd) = rx.recv().await {
 ```
 
 Calling `send` on `oneshot::Sender` completes immediately and does **not**
-require an `.await`. This is because `send` on an `oneshot` channel will always
+require an `.await`. This is because `send` on a `oneshot` channel will always
 fail or succeed immediately without any form of waiting.
 
 Sending a value on a oneshot channel returns `Err` when the receiver half has
