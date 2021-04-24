@@ -120,7 +120,7 @@ consumes the `Subscriber`, returning a stream that yields messages as they
 arrive. Before we start iterating the messages, note that the stream is
 [pinned][pin] to the stack using [`tokio::pin!`]. Calling `next()` on a stream
 requires the stream to be [pinned][pin]. The `into_stream()` function returns a
-stream that is *not* pin, we must explicitly pin it in order to iterate it.
+stream that is *not* pinned, we must explicitly pin it in order to iterate it.
 
 [[info]]
 | A Rust value is "pinned" when it can no longer be moved in memory. A key
