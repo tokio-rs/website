@@ -5,20 +5,33 @@ title: "Streams"
 A stream is an asynchronous series of values. It is the asynchronous equivalent
 to Rust's [`std::iter::Iterator`][iter] and is represented by the [`Stream`]
 trait. Streams can be iterated in `async` functions. They can also be
-transformed using adapters. Tokio provides a number of common adaptors on the
+transformed using adapters. Tokio provides a number of common adapters on the
 [`StreamExt`] trait.
 
+<!--
+TODO: bring back once true again?
 Tokio provides stream support under the `stream` feature flag. When depending on
 Tokio, include either `stream` or `full` to get access to this functionality.
+-->
+
+Tokio provides stream support in a separate crate: `tokio-stream`.
 
 ```toml
-tokio = { version = "0.2", features = ["stream"] }
+tokio-stream = "0.1"
 ```
 
+[[info]]
+| Currently, Tokio's Stream utilities exist in the `tokio-stream` crate.
+| Once the `Stream` trait is stabilized in the Rust standard library, Tokio's
+| stream utilities will be moved into the `tokio` crate.
+
+<!--
+TODO: uncomment this once it is true again.
 A number of types we've already seen also implement [`Stream`]. For example, the
 receive half of a [`mpsc::Receiver`][rx] implements [`Stream`]. The
 [`AsyncBufReadExt::lines()`] method takes a buffered I/O reader and returns a
 [`Stream`] where each value represents a line of data.
+-->
 
 # Iteration
 
@@ -27,20 +40,13 @@ Instead, iterating streams is done using a `while let` loop paired with
 [`StreamExt::next()`][next].
 
 ```rust
-use tokio::stream::StreamExt;
-use tokio::sync::mpsc;
+use tokio_stream::StreamExt;
 
 #[tokio::main]
 async fn main() {
-    let (mut tx, mut rx) = mpsc::channel(10);
+    let mut stream = tokio_stream::iter(&[1, 2, 3]);
 
-    tokio::spawn(async move {
-        tx.send(1).await.unwrap();
-        tx.send(2).await.unwrap();
-        tx.send(3).await.unwrap();
-    });
-
-    while let Some(v) = rx.next().await {
+    while let Some(v) = stream.next().await {
         println!("GOT = {:?}", v);
     }
 }
@@ -59,7 +65,7 @@ Full code can be found [here][full].
 [full]: https://github.com/tokio-rs/website/blob/master/tutorial-code/streams/src/main.rs
 
 ```rust
-use tokio::stream::StreamExt;
+use tokio_stream::StreamExt;
 use mini_redis::client;
 
 async fn publish() -> mini_redis::Result<()> {
@@ -114,7 +120,7 @@ consumes the `Subscriber`, returning a stream that yields messages as they
 arrive. Before we start iterating the messages, note that the stream is
 [pinned][pin] to the stack using [`tokio::pin!`]. Calling `next()` on a stream
 requires the stream to be [pinned][pin]. The `into_stream()` function returns a
-stream that is *not* pin, we must explicitly pin it in order to iterate it.
+stream that is *not* pinned, we must explicitly pin it in order to iterate it.
 
 [[info]]
 | A Rust value is "pinned" when it can no longer be moved in memory. A key
@@ -125,43 +131,21 @@ stream that is *not* pin, we must explicitly pin it in order to iterate it.
 If we forget to pin the stream, we get an error like this:
 
 ```text
-error[E0277]: `std::future::from_generator::GenFuture<[static generator@mini_redis::client::Subscriber::into_stream::{{closure}}#0 0:mini_redis::client::Subscriber, 1:async_stream::yielder::Sender<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 'static)>>> for<'r, 's, 't0, 't1, 't2, 't3, 't4, 't5, 't6> {std::future::ResumeTy, &'r mut mini_redis::client::Subscriber, mini_redis::client::Subscriber, impl std::future::Future, (), std::result::Result<std::option::Option<mini_redis::client::Message>, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't0)>>, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't1)>, &'t2 mut async_stream::yielder::Sender<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't3)>>>, async_stream::yielder::Sender<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't4)>>>, std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't5)>>, impl std::future::Future, std::option::Option<mini_redis::client::Message>, mini_redis::client::Message}]>` cannot be unpinned
-   --> streams/src/main.rs:22:36
-    |
-22  |     while let Some(msg) = messages.next().await {
-    |                                    ^^^^ within `impl futures_core::stream::Stream`, the trait `std::marker::Unpin` is not implemented for `std::future::from_generator::GenFuture<[static generator@mini_redis::client::Subscriber::into_stream::{{closure}}#0 0:mini_redis::client::Subscriber, 1:async_stream::yielder::Sender<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 'static)>>> for<'r, 's, 't0, 't1, 't2, 't3, 't4, 't5, 't6> {std::future::ResumeTy, &'r mut mini_redis::client::Subscriber, mini_redis::client::Subscriber, impl std::future::Future, (), std::result::Result<std::option::Option<mini_redis::client::Message>, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't0)>>, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't1)>, &'t2 mut async_stream::yielder::Sender<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't3)>>>, async_stream::yielder::Sender<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't4)>>>, std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't5)>>, impl std::future::Future, std::option::Option<mini_redis::client::Message>, mini_redis::client::Message}]>`
-    | 
-   ::: /home/carllerche/.cargo/registry/src/github.com-1ecc6299db9ec823/mini-redis-0.2.0/src/client.rs:398:37
-    |
-398 |     pub fn into_stream(mut self) -> impl Stream<Item = crate::Result<Message>> {
-    |                                     ------------------------------------------ within this `impl futures_core::stream::Stream`
-    |
-    = note: required because it appears within the type `impl std::future::Future`
-    = note: required because it appears within the type `async_stream::async_stream::AsyncStream<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 'static)>>, impl std::future::Future>`
-    = note: required because it appears within the type `impl futures_core::stream::Stream`
-
-error[E0277]: `std::future::from_generator::GenFuture<[static generator@mini_redis::client::Subscriber::into_stream::{{closure}}#0 0:mini_redis::client::Subscriber, 1:async_stream::yielder::Sender<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 'static)>>> for<'r, 's, 't0, 't1, 't2, 't3, 't4, 't5, 't6> {std::future::ResumeTy, &'r mut mini_redis::client::Subscriber, mini_redis::client::Subscriber, impl std::future::Future, (), std::result::Result<std::option::Option<mini_redis::client::Message>, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't0)>>, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't1)>, &'t2 mut async_stream::yielder::Sender<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't3)>>>, async_stream::yielder::Sender<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't4)>>>, std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't5)>>, impl std::future::Future, std::option::Option<mini_redis::client::Message>, mini_redis::client::Message}]>` cannot be unpinned
-   --> streams/src/main.rs:22:27
-    |
-22  |     while let Some(msg) = messages.next().await {
-    |                           ^^^^^^^^^^^^^^^^^^^^^ within `impl futures_core::stream::Stream`, the trait `std::marker::Unpin` is not implemented for `std::future::from_generator::GenFuture<[static generator@mini_redis::client::Subscriber::into_stream::{{closure}}#0 0:mini_redis::client::Subscriber, 1:async_stream::yielder::Sender<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 'static)>>> for<'r, 's, 't0, 't1, 't2, 't3, 't4, 't5, 't6> {std::future::ResumeTy, &'r mut mini_redis::client::Subscriber, mini_redis::client::Subscriber, impl std::future::Future, (), std::result::Result<std::option::Option<mini_redis::client::Message>, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't0)>>, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't1)>, &'t2 mut async_stream::yielder::Sender<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't3)>>>, async_stream::yielder::Sender<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't4)>>>, std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 't5)>>, impl std::future::Future, std::option::Option<mini_redis::client::Message>, mini_redis::client::Message}]>`
-    | 
-   ::: /home/carllerche/.cargo/registry/src/github.com-1ecc6299db9ec823/mini-redis-0.2.0/src/client.rs:398:37
-    |
-398 |     pub fn into_stream(mut self) -> impl Stream<Item = crate::Result<Message>> {
-    |                                     ------------------------------------------ within this `impl futures_core::stream::Stream`
-    |
-    = note: required because it appears within the type `impl std::future::Future`
-    = note: required because it appears within the type `async_stream::async_stream::AsyncStream<std::result::Result<mini_redis::client::Message, std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 'static)>>, impl std::future::Future>`
-    = note: required because it appears within the type `impl futures_core::stream::Stream`
-    = note: required because of the requirements on the impl of `std::future::Future` for `tokio::stream::next::Next<'_, impl futures_core::stream::Stream>`
-
-error: aborting due to 2 previous errors
-
-For more information about this error, try `rustc --explain E0277`.
-error: could not compile `streams`.
-
-To learn more, run the command again with --verbose.
+error[E0277]: `from_generator::GenFuture<[static generator@Subscriber::into_stream::{closure#0} for<'r, 's, 't0, 't1, 't2, 't3, 't4, 't5, 't6> {ResumeTy, &'r mut Subscriber, Subscriber, impl Future, (), std::result::Result<Option<Message>, Box<(dyn std::error::Error + Send + Sync + 't0)>>, Box<(dyn std::error::Error + Send + Sync + 't1)>, &'t2 mut async_stream::yielder::Sender<std::result::Result<Message, Box<(dyn std::error::Error + Send + Sync + 't3)>>>, async_stream::yielder::Sender<std::result::Result<Message, Box<(dyn std::error::Error + Send + Sync + 't4)>>>, std::result::Result<Message, Box<(dyn std::error::Error + Send + Sync + 't5)>>, impl Future, Option<Message>, Message}]>` cannot be unpinned
+  --> streams/src/main.rs:29:36
+   |
+29 |     while let Some(msg) = messages.next().await {
+   |                                    ^^^^ within `tokio_stream::filter::_::__Origin<'_, impl Stream, [closure@streams/src/main.rs:22:17: 25:10]>`, the trait `Unpin` is not implemented for `from_generator::GenFuture<[static generator@Subscriber::into_stream::{closure#0} for<'r, 's, 't0, 't1, 't2, 't3, 't4, 't5, 't6> {ResumeTy, &'r mut Subscriber, Subscriber, impl Future, (), std::result::Result<Option<Message>, Box<(dyn std::error::Error + Send + Sync + 't0)>>, Box<(dyn std::error::Error + Send + Sync + 't1)>, &'t2 mut async_stream::yielder::Sender<std::result::Result<Message, Box<(dyn std::error::Error + Send + Sync + 't3)>>>, async_stream::yielder::Sender<std::result::Result<Message, Box<(dyn std::error::Error + Send + Sync + 't4)>>>, std::result::Result<Message, Box<(dyn std::error::Error + Send + Sync + 't5)>>, impl Future, Option<Message>, Message}]>`
+   |
+   = note: required because it appears within the type `impl Future`
+   = note: required because it appears within the type `async_stream::async_stream::AsyncStream<std::result::Result<Message, Box<(dyn std::error::Error + Send + Sync + 'static)>>, impl Future>`
+   = note: required because it appears within the type `impl Stream`
+   = note: required because it appears within the type `tokio_stream::filter::_::__Origin<'_, impl Stream, [closure@streams/src/main.rs:22:17: 25:10]>`
+   = note: required because of the requirements on the impl of `Unpin` for `tokio_stream::filter::Filter<impl Stream, [closure@streams/src/main.rs:22:17: 25:10]>`
+   = note: required because it appears within the type `tokio_stream::map::_::__Origin<'_, tokio_stream::filter::Filter<impl Stream, [closure@streams/src/main.rs:22:17: 25:10]>, [closure@streams/src/main.rs:26:14: 26:40]>`
+   = note: required because of the requirements on the impl of `Unpin` for `tokio_stream::map::Map<tokio_stream::filter::Filter<impl Stream, [closure@streams/src/main.rs:22:17: 25:10]>, [closure@streams/src/main.rs:26:14: 26:40]>`
+   = note: required because it appears within the type `tokio_stream::take::_::__Origin<'_, tokio_stream::map::Map<tokio_stream::filter::Filter<impl Stream, [closure@streams/src/main.rs:22:17: 25:10]>, [closure@streams/src/main.rs:26:14: 26:40]>>`
+   = note: required because of the requirements on the impl of `Unpin` for `tokio_stream::take::Take<tokio_stream::map::Map<tokio_stream::filter::Filter<impl Stream, [closure@streams/src/main.rs:22:17: 25:10]>, [closure@streams/src/main.rs:26:14: 26:40]>>`
 ```
 
 If you hit an error message like this, try pinning the value!
@@ -193,15 +177,15 @@ Let's see how we can work with streams to expand on this program.
 
 Functions that take a [`Stream`] and return another [`Stream`] are often called
 'stream adapters', as they're a form of the 'adapter pattern'. Common stream
-adaptors include [`map`], [`take`], and [`filter`].
+adapters include [`map`], [`take`], and [`filter`].
 
 Lets update the Mini-Redis so that it will exit. After receiving three messages,
-stop iterating messages. This is done using [`take`]. This adaptor limits the
+stop iterating messages. This is done using [`take`]. This adapter limits the
 stream to yield at **most** `n` messages.
 
 ```rust
 # use mini_redis::client;
-# use tokio::stream::StreamExt;
+# use tokio_stream::StreamExt;
 # async fn subscribe() -> mini_redis::Result<()> {
 #    let client = client::connect("127.0.0.1:6379").await?;
 #    let subscriber = client.subscribe(vec!["numbers".to_string()]).await?;
@@ -223,12 +207,12 @@ got = Ok(Message { channel: "numbers", content: b"3" })
 This time the program ends.
 
 Now, let's limit the stream to single digit numbers. We will check this by
-checking for the message length. We use the [`filter`] adaptor to drop any
+checking for the message length. We use the [`filter`] adapter to drop any
 message that does not match the predicate.
 
 ```rust
 # use mini_redis::client;
-# use tokio::stream::StreamExt;
+# use tokio_stream::StreamExt;
 # async fn subscribe() -> mini_redis::Result<()> {
 #    let client = client::connect("127.0.0.1:6379").await?;
 #    let subscriber = client.subscribe(vec!["numbers".to_string()]).await?;
@@ -251,7 +235,7 @@ got = Ok(Message { channel: "numbers", content: b"3" })
 got = Ok(Message { channel: "numbers", content: b"6" })
 ```
 
-Note that the order in which adaptors are applied matters. Calling `filter`
+Note that the order in which adapters are applied matters. Calling `filter`
 first then `take` is different than calling `take` then `filter`.
 
 Finally, we will tidy up the output by stripping the `Ok(Message { ... })` part
@@ -260,7 +244,7 @@ of the output. This is done with [`map`]. Because this is applied **after**
 
 ```rust
 # use mini_redis::client;
-# use tokio::stream::StreamExt;
+# use tokio_stream::StreamExt;
 # async fn subscribe() -> mini_redis::Result<()> {
 #    let client = client::connect("127.0.0.1:6379").await?;
 #    let subscriber = client.subscribe(vec!["numbers".to_string()]).await?;
@@ -324,7 +308,7 @@ implemented in [Async in depth][async]. We will convert it to a stream that
 yields `()` three times at 10 ms intervals
 
 ```rust
-use tokio::stream::Stream;
+use tokio_stream::Stream;
 # use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -382,7 +366,7 @@ use async_stream::stream;
 # use std::future::Future;
 # use std::pin::Pin;
 # use std::task::{Context, Poll};
-# use tokio::stream::StreamExt;
+# use tokio_stream::StreamExt;
 use std::time::{Duration, Instant};
 
 # struct Delay { when: Instant }
@@ -410,18 +394,18 @@ stream! {
 ```
 
 [iter]: https://doc.rust-lang.org/book/ch13-02-iterators.html
-[`Stream`]: https://docs.rs/tokio/0.2/tokio/stream/trait.Stream.html
+[`Stream`]: https://docs.rs/futures-core/0.3/futures_core/stream/trait.Stream.html
 [`Future`]: https://doc.rust-lang.org/std/future/trait.Future.html
-[`StreamExt`]: https://docs.rs/tokio/0.2/tokio/stream/trait.StreamExt.html
-[rx]: https://docs.rs/tokio/0.2/tokio/sync/mpsc/struct.Receiver.html
-[`AsyncBufReadExt::lines()`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncBufReadExt.html#method.lines
-[next]: https://docs.rs/tokio/0.2/tokio/stream/trait.StreamExt.html#method.next
-[`map`]: https://docs.rs/tokio/0.2/tokio/stream/trait.StreamExt.html#method.map
-[`take`]: https://docs.rs/tokio/0.2/tokio/stream/trait.StreamExt.html#method.take
-[`filter`]: https://docs.rs/tokio/0.2/tokio/stream/trait.StreamExt.html#method.filter
-[`filter_map`]: https://docs.rs/tokio/0.2/tokio/stream/trait.StreamExt.html#method.filter_map
+[`StreamExt`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html
+[rx]: https://docs.rs/tokio/1/tokio/sync/mpsc/struct.Receiver.html
+[`AsyncBufReadExt::lines()`]: https://docs.rs/tokio/1/tokio/io/trait.AsyncBufReadExt.html#method.lines
+[next]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html#method.next
+[`map`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html#method.map
+[`take`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html#method.take
+[`filter`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html#method.filter
+[`filter_map`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html#method.filter_map
 [pin]: https://doc.rust-lang.org/std/pin/index.html
 [async]: async
 [`async-stream`]: https://docs.rs/async-stream
-[`into_stream()`]: https://docs.rs/mini-redis/0.2/mini_redis/client/struct.Subscriber.html#method.into_stream
-[`tokio::pin!`]: https://docs.rs/tokio/0.2/tokio/macro.pin.html
+[`into_stream()`]: https://docs.rs/mini-redis/0.4/mini_redis/client/struct.Subscriber.html#method.into_stream
+[`tokio::pin!`]: https://docs.rs/tokio/1/tokio/macro.pin.html

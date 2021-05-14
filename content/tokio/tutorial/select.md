@@ -114,7 +114,7 @@ async fn main() {
 
 ## The `Future` implementation
 
-To help better understand how `select!` works, lets look at a hypothetical
+To help better understand how `select!` works, let's look at what a hypothetical
 `Future` implementation would look like. This is a simplified version. In
 practice, `select!` includes additional functionality like randomly selecting
 the branch to poll first.
@@ -207,7 +207,7 @@ remaining async expressions continue to execute concurrently until the next one
 completes. At this time, the same logic is applied to that result.
 
 Because `select!` takes any async expression, it is possible to define more
-complicated computation to select on.
+complicated computations to select on.
 
 Here, we select on the output of a `oneshot` channel and a TCP connection.
 
@@ -328,7 +328,7 @@ async fn main() -> io::Result<()> {
 # let (tx, rx) = oneshot::channel();
 # tx.send(()).unwrap();
 
-    let mut listener = TcpListener::bind("localhost:3465").await?;
+    let listener = TcpListener::bind("localhost:3465").await?;
 
     tokio::select! {
         res = async {
@@ -619,11 +619,9 @@ error[E0599]: no method named `poll` found for struct
            `&mut impl std::future::Future: std::future::Future`
 ```
 
-This error isn't very clear and we haven't talked much about `Future` yet
-either. For now, think of `Future` as the trait that must be implemented by a
-value in order to call `.await` on it. If you hit an error about `Future` not
-being implemented when attempting to call `.await` on a **reference**, then the
-future probably needs to be pinned.
+Although we covered `Future` in [the previous chapter][async], this error still isn't
+very clear. If you hit such an error about `Future` not being implemented when attempting
+to call `.await` on a **reference**, then the future probably needs to be pinned.
 
 Read more about [`Pin`][pin] on the [standard library][pin].
 
@@ -704,7 +702,7 @@ returned. The first loop iteration, `operation` completes immediately with
 `None`.
 
 This example uses some new syntax. The first branch includes `, if !done`. This
-is a branch precondition. Before explaining how it works, lets look at what
+is a branch precondition. Before explaining how it works, let's look at what
 happens if the precondition is omitted. Leaving out `, if !done` and running the
 example results in the following output:
 

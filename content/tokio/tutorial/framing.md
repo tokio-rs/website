@@ -5,7 +5,7 @@ title: "Framing"
 We will now apply what we just learned about I/O and implement the Mini-Redis
 framing layer. Framing is the process of taking a byte stream and converting it
 to a stream of frames. A frame is a unit of data transmitted between two peers.
-The Redis protocol frame is as follows:
+The Redis protocol frame is defined as follows:
 
 ```rust
 use bytes::Bytes;
@@ -102,8 +102,8 @@ To implement this, `Connection` needs a read buffer field. Data is read from the
 socket into the read buffer. When a frame is parsed, the corresponding data is
 removed from the buffer.
 
-We will use [`BytesMut`] as the buffer type. This is a mutable version of
-[`Bytes`].
+We will use [`BytesMut`][BytesMutStruct] as the buffer type. This is a mutable version of
+[`Bytes`][BytesStruct].
 
 ```rust
 use bytes::BytesMut;
@@ -183,8 +183,8 @@ will be received from the peer. If the read buffer still has data in it, this
 indicates a partial frame has been received and the connection is being
 terminated abruptly. This is an error condition and `Err` is returned.
 
-[`BytesMut`]: https://docs.rs/bytes/0.5/bytes/struct.BytesMut.html
-[`Bytes`]: https://docs.rs/bytes/0.5/bytes/struct.Bytes.html
+[BytesMutStruct]: https://docs.rs/bytes/1/bytes/struct.BytesMut.html
+[BytesStruct]: https://docs.rs/bytes/1/bytes/struct.Bytes.html
 
 ## The `Buf` trait
 
@@ -263,7 +263,7 @@ pub async fn read_frame(&mut self)
 ```
 
 When working with byte arrays and `read`, we must also maintain a cursor
-tracking how much data has been buffered. We must ensure to pass the empty
+tracking how much data has been buffered. We must make sure to pass the empty
 portion of the buffer to `read()`. Otherwise, we would overwrite buffered data.
 If our buffer gets filled up, we must grow the buffer in order to keep reading.
 In `parse_frame()` (not included), we would need to parse data contained by
@@ -284,7 +284,7 @@ initialization process is not free. When working with `BytesMut` and `BufMut`,
 capacity is **uninitialized**. The `BytesMut` abstraction prevents us from
 reading the uninitialized memory. This lets us avoid the initialization step.
 
-[`BufMut`]: https://docs.rs/bytes/0.5/bytes/trait.BufMut.html
+[`BufMut`]: https://docs.rs/bytes/1/bytes/trait.BufMut.html
 [`bytes`]: https://docs.rs/bytes/
 
 # Parsing
@@ -296,8 +296,8 @@ Now, let's look at the `parse_frame()` function. Parsing is done in two steps.
 
 The `mini-redis` crate provides us with a function for both of these steps:
 
-1. [`Frame::check`](https://docs.rs/mini-redis/0.2/mini_redis/frame/enum.Frame.html#method.check)
-2. [`Frame::parse`](https://docs.rs/mini-redis/0.2/mini_redis/frame/enum.Frame.html#method.check)
+1. [`Frame::check`](https://docs.rs/mini-redis/0.4/mini_redis/frame/enum.Frame.html#method.check)
+2. [`Frame::parse`](https://docs.rs/mini-redis/0.4/mini_redis/frame/enum.Frame.html#method.parse)
 
 We will also reuse the `Buf` abstraction to help. A `Buf` is passed into
 `Frame::check`. As the `check` function iterates the passed in buffer, the
@@ -364,8 +364,8 @@ There are more useful methods on the [`Buf`] trait. Check the [API docs][`Buf`]
 for more details.
 
 [check]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/frame.rs#L63-L100
-[`Buf::get_u8`]: https://docs.rs/bytes/0.5/bytes/buf/trait.Buf.html#method.get_u8
-[`Buf`]: https://docs.rs/bytes/0.5/bytes/buf/trait.Buf.html
+[`Buf::get_u8`]: https://docs.rs/bytes/1/bytes/buf/trait.Buf.html#method.get_u8
+[`Buf`]: https://docs.rs/bytes/1/bytes/buf/trait.Buf.html
 [`Cursor`]: https://doc.rust-lang.org/stable/std/io/struct.Cursor.html
 
 # Buffered writes
@@ -427,7 +427,7 @@ use mini_redis::Frame;
 #   buffer: bytes::BytesMut,
 # }
 # impl Connection {
-async fn write_value(&mut self, frame: &Frame)
+async fn write_frame(&mut self, frame: &Frame)
     -> io::Result<()>
 {
     match frame {
@@ -485,12 +485,12 @@ Another alternative would be to **not** call `flush()` in `write_frame()`.
 Instead, provide a `flush()` function on `Connection`. This would allow the
 caller to write queue multiple small frames in the write buffer then write them
 all to the socket with one `write` syscall. Doing this complicates the
-`Connection` API. Simplicity is one of mini-redis' goals, so we decided to
+`Connection` API. Simplicity is one of Mini-Redis' goals, so we decided to
 include the `flush().await` call in `fn write_frame()`.
 
 
-[buf-writer]: https://docs.rs/tokio/0.2/tokio/io/struct.BufWriter.html
+[buf-writer]: https://docs.rs/tokio/1/tokio/io/struct.BufWriter.html
 [write-frame]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/connection.rs#L159-L184
-[`AsyncWriteExt`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html
-[`write_u8`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html#method.write_u8
+[`AsyncWriteExt`]: https://docs.rs/tokio/1/tokio/io/trait.AsyncWriteExt.html
+[`write_u8`]: https://docs.rs/tokio/1/tokio/io/trait.AsyncWriteExt.html#method.write_u8
 [`write_decimal`]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/connection.rs#L225-L238

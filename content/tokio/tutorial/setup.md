@@ -4,16 +4,16 @@ title: "Setup"
 
 This tutorial will take you step by step through the process of building a
 [Redis] client and server. We will start with the basics of asynchronous
-programing with Rust and build up from there. We will implement a subset of
+programming with Rust and build up from there. We will implement a subset of
 Redis commands but will get a comprehensive tour of Tokio.
 
 # Mini-Redis
 
 The project that you will build in this tutorial is available as [Mini-Redis on
 GitHub][mini-redis]. Mini-Redis is designed with the primary goal of learning
-Tokio, and is therefore very well commented, however this means that Mini-Redis
+Tokio, and is therefore very well commented, but this also means that Mini-Redis
 is missing some features you would want in a real Redis library. You can find
-production ready Redis libraries on [crates.io](https://crates.io/).
+production-ready Redis libraries on [crates.io](https://crates.io/).
 
 We will use Mini-Redis directly in the tutorial. This allows us to use parts of
 Mini-Redis in the tutorial before we implement them later in the tutorial.
@@ -47,7 +47,7 @@ Before getting started, you should make sure that you have the
 [Rust][install-rust] toolchain installed and ready to go. If you don't have it,
 the easiest way to install it is using [rustup].
 
-This tutorial requires a minimum of Rust version `1.39.0`, but the most
+This tutorial requires a minimum of Rust version `1.45.0`, but the most
 recent stable version of Rust is recommended.
 
 To check that Rust is installed on your computer, run the following:
@@ -56,7 +56,7 @@ To check that Rust is installed on your computer, run the following:
 $ rustc --version
 ```
 
-You should see output like `rustc 1.43.1 (8d69840ab 2020-05-04)`.
+You should see output like `rustc 1.46.0 (04488afe3 2020-08-24)`.
 
 ## Mini-Redis server
 
@@ -73,7 +73,7 @@ Make sure that it was successfully installed by starting the server:
 $ mini-redis-server
 ```
 
-Then try to get the key `foo` using `mini-redis-cli`
+Then, in a separate terminal window, try to get the key `foo` using `mini-redis-cli`
 
 ```bash
 $ mini-redis-cli get foo

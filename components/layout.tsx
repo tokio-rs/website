@@ -4,14 +4,20 @@ import Head from "next/head";
 import Navigation from "./nav";
 
 type Props = {
+  title?: string;
   blog: any; // TODO: Don't know what this is yet...
   children: ReactNode;
 };
 
-const Layout: FC<Props> = ({ blog, children }) => (
+function pageTitle(title: string | undefined): string {
+  const name = "Tokio";
+  return title ? `${title} | ${name}` : name;
+}
+
+const Layout: FC<Props> = ({ title, blog, children }) => (
   <>
     <Head>
-      <title>Tokio</title>
+      <title>{pageTitle(title)}</title>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link rel="alternate icon" type="image/png" href="/favicon-32x32.png" />
       <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

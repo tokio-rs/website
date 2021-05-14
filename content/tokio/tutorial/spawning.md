@@ -4,12 +4,12 @@ title: "Spawning"
 
 We are going to shift gears and start working on the Redis server.
 
-First, move the client set / get code from the previous section to an example
+First, move the client `SET`/`GET` code from the previous section to an example
 file. This way, we can run it against our server.
 
 ```bash
-mkdir -p examples
-mv src/main.rs examples/hello-redis.rs
+$ mkdir -p examples
+$ mv src/main.rs examples/hello-redis.rs
 ```
 
 Then create a new, empty `src/main.rs` and continue.
@@ -36,10 +36,10 @@ use mini_redis::{Connection, Frame};
 #[tokio::main]
 async fn main() {
     // Bind the listener to the address
-    let mut listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
 
     loop {
-        // The second item contains the ip and port of the new connection.
+        // The second item contains the IP and port of the new connection.
         let (socket, _) = listener.accept().await.unwrap();
         process(socket).await;
     }
@@ -67,7 +67,7 @@ Now, run this accept loop:
 $ cargo run
 ```
 
-In a separate terminal window, run the `hello-redis` example (the SET/GET
+In a separate terminal window, run the `hello-redis` example (the `SET`/`GET`
 command from the previous section):
 
 ```bash
@@ -86,7 +86,7 @@ In the server terminal, the output is:
 GOT: Array([Bulk(b"set"), Bulk(b"hello"), Bulk(b"world")])
 ```
 
-[tcpl]: https://docs.rs/tokio/0.2/tokio/net/struct.TcpListener.html
+[tcpl]: https://docs.rs/tokio/1/tokio/net/struct.TcpListener.html
 
 # Concurrency
 
@@ -120,7 +120,7 @@ use tokio::net::TcpListener;
 # fn dox() {
 #[tokio::main]
 async fn main() {
-    let mut listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
 
     loop {
         let (socket, _) = listener.accept().await.unwrap();
@@ -177,12 +177,13 @@ thousands, if not millions of tasks.
 
 ## `'static` bound
 
-Tasks spawned by `tokio::spawn` **must** be `'static`. The expression being
-spawned must not borrow any data.
+When you spawn a task on the Tokio runtime, its type must be `'static`. This
+means that the spawned task must not contain any references to data owned
+outside the task.
 
 [[info]]
-| It is a common misconception that "being static" means "lives forever",
-| however this is not the case. Just because a value is `'static` does not mean
+| It is a common misconception that `'static` always means "lives forever",
+| but this is not the case. Just because a value is `'static` does not mean
 | that you have a memory leak. You can read more in [Common Rust Lifetime
 | Misconceptions][common-lifetime].
 
@@ -244,6 +245,24 @@ it `'static`.
 If a single piece of data must be accessible from more than one task
 concurrently, then it must be shared using synchronization primitives such as
 `Arc`.
+
+Note that the error message talks about the argument type *outliving* the
+`'static` lifetime. This terminology can be rather confusing because the
+`'static` lifetime lasts until the end of the program, so if it outlives it,
+don't you have a memory leak? The explanation is that it is the *type*, not the
+*value* that must outlive the `'static` lifetime, and the value may be destroyed
+before its type is no longer valid.
+
+When we say that a value is `'static`, all that means is that it would not be
+incorrect to keep that value around forever. This is important because the
+compiler is unable to reason about how long a newly spawned task stays around,
+so the only way it can be sure that the task doesn't live too long is to make
+sure it may live forever.
+
+The link in the info-box above uses the terminology "bounded by `'static`"
+rather than "its type outlives `'static`" or "the value is `'static`" for `T:
+'static`. These all mean the same thing, and are different from "annotated with
+`'static`" as in `&'static T`.
 
 ## `Send` bound
 
@@ -364,12 +383,16 @@ async fn process(socket: TcpStream) {
     while let Some(frame) = connection.read_frame().await.unwrap() {
         let response = match Command::from_frame(frame).unwrap() {
             Set(cmd) => {
-                db.insert(cmd.key().to_string(), cmd.value().clone());
+                // The value is stored as `Vec<u8>`
+                db.insert(cmd.key().to_string(), cmd.value().to_vec());
                 Frame::Simple("OK".to_string())
             }
             Get(cmd) => {
                 if let Some(value) = db.get(cmd.key()) {
-                    Frame::Bulk(value.clone())
+                    // `Frame::Bulk` expects data to be of type `Bytes`. This
+                    // type will be covered later in the tutorial. For now,
+                    // `&Vec<u8>` is converted to `Bytes` using `into()`.
+                    Frame::Bulk(value.clone().into())
                 } else {
                     Frame::Null
                 }
@@ -398,7 +421,7 @@ $ cargo run --example hello-redis
 Now, the output will be:
 
 ```text
-got value from the server; success=Some(b"world")
+got value from the server; result=Some(b"world")
 ```
 
 We can now get and set values, but there is a problem: The values are not

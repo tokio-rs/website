@@ -1,4 +1,4 @@
-use tokio::stream::StreamExt;
+use tokio_stream::StreamExt;
 use mini_redis::client;
 
 async fn publish() -> mini_redis::Result<()> {

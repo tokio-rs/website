@@ -2,8 +2,37 @@
 title: "Channels"
 ---
 
-Now that we have learned some about concurrency with Tokio, let's apply this on
-the client side. Say we want to run two concurrent Redis commands. We can spawn
+Now that we have learned a bit about concurrency with Tokio, let's apply this on
+the client side. Put the server code we wrote before into an explicit binary 
+file:
+
+```text
+mkdir src/bin
+mv src/main.rs src/bin/server.rs
+```
+
+and create a new binary file that will contain the client code:
+
+```text
+touch src/bin/client.rs
+```
+
+In this file you will write this page's code. Whenever you want to run it,
+you will have to launch the server first in a separate terminal window:
+
+```text
+cargo run --bin server
+```
+
+And then the client, __separately__:
+
+```text
+cargo run --bin client
+```
+
+That being said, let's code!
+
+Say we want to run two concurrent Redis commands. We can spawn
 one task per command. Then the two commands would happen concurrently.
 
 At first, we might try something like:
@@ -62,7 +91,7 @@ Tokio provides a [number of channels][channels], each serving a different purpos
 
 - [mpsc]: multi-producer, single-consumer channel. Many values can be sent.
 - [oneshot]: single-producer, single consumer channel. A single value can be sent.
-- [broadcast]: multi-producer, multi-consumer. Many values can be send. Each
+- [broadcast]: multi-producer, multi-consumer. Many values can be sent. Each
   receiver sees every value.
 - [watch]: single-producer, multi-consumer. Many values can be sent, but no
   history is kept. Receivers only see the most recent value.
@@ -77,11 +106,11 @@ In this section, we will use [mpsc] and [oneshot]. The other types of message
 passing channels are explored in later sections. The full code from this section
 is found [here][full].
 
-[channels]: https://docs.rs/tokio/0.2/tokio/sync/index.html
-[mpsc]: https://docs.rs/tokio/0.2/tokio/sync/mpsc/index.html
-[oneshot]: https://docs.rs/tokio/0.2/tokio/sync/oneshot/index.html
-[broadcast]: https://docs.rs/tokio/0.2/tokio/sync/broadcast/index.html
-[watch]: https://docs.rs/tokio/0.2/tokio/sync/watch/index.html
+[channels]: https://docs.rs/tokio/1/tokio/sync/index.html
+[mpsc]: https://docs.rs/tokio/1/tokio/sync/mpsc/index.html
+[oneshot]: https://docs.rs/tokio/1/tokio/sync/oneshot/index.html
+[broadcast]: https://docs.rs/tokio/1/tokio/sync/broadcast/index.html
+[watch]: https://docs.rs/tokio/1/tokio/sync/watch/index.html
 [`async-channel`]: https://docs.rs/async-channel/
 [`std::sync::mpsc`]: https://doc.rust-lang.org/stable/std/sync/mpsc/index.html
 [`crossbeam::channel`]: https://docs.rs/crossbeam/latest/crossbeam/channel/index.html
@@ -89,8 +118,8 @@ is found [here][full].
 # Define the message type
 
 In most cases, when using message passing, the task receiving the messages
-responds to more than one command. In our case, the task will respond to GET and
-SET commands. To model this, we first define a `Command` enum and include a
+responds to more than one command. In our case, the task will respond to `GET` and
+`SET` commands. To model this, we first define a `Command` enum and include a
 variant for each command type.
 
 ```rust
@@ -118,7 +147,7 @@ use tokio::sync::mpsc;
 #[tokio::main]
 async fn main() {
     // Create a new channel with a capacity of at most 32.
-    let (mut tx, mut rx) = mpsc::channel(32);
+    let (tx, mut rx) = mpsc::channel(32);
 # tx.send(()).await.unwrap();
 
     // ... Rest comes here
@@ -142,8 +171,8 @@ use tokio::sync::mpsc;
 
 #[tokio::main]
 async fn main() {
-    let (mut tx, mut rx) = mpsc::channel(32);
-    let mut tx2 = tx.clone();
+    let (tx, mut rx) = mpsc::channel(32);
+    let tx2 = tx.clone();
 
     tokio::spawn(async move {
         tx.send("sending from first handle").await;
@@ -167,7 +196,7 @@ no longer possible to send more messages into the channel. At this point, the
 `recv` call on the `Receiver` will return `None`, which means that all senders
 are gone and the channel is closed.
 
-In our case of with a task that manages the redis connection, it knows that it
+In our case of a task that manages the Redis connection, it knows that it
 can close the Redis connection once the channel is closed, as the connection
 will not be used again.
 
@@ -175,7 +204,7 @@ will not be used again.
 
 Next, spawn a task that processes messages from the channel. First, a client
 connection is established to Redis. Then, received commands are issued via the
-redis connection.
+Redis connection.
 
 ```rust
 use mini_redis::client;
@@ -220,7 +249,7 @@ them directly on the Redis connection.
 # let (mut tx, _) = tokio::sync::mpsc::channel(10);
 // The `Sender` handles are moved into the tasks. As there are two
 // tasks, we need a second `Sender`.
-let mut tx2 = tx.clone();
+let tx2 = tx.clone();
 
 // Spawn two tasks, one gets a key, the other sets a key
 let t1 = tokio::spawn(async move {
@@ -260,7 +289,7 @@ The final step is to receive the response back from the manager task. The `GET`
 command needs to get the value and the `SET` command needs to know if the
 operation completed successfully.
 
-To pass the response, an `oneshot` channel is used. The `oneshot` channel is a
+To pass the response, a `oneshot` channel is used. The `oneshot` channel is a
 single-producer, single-consumer channel optimized for sending a single value.
 In our case, the single value is the response.
 
@@ -278,7 +307,7 @@ let (tx, rx) = oneshot::channel();
 Unlike `mpsc`, no capacity is specified as the capacity is always one.
 Additionally, neither handle can be cloned.
 
-To receive responses from the manager task, before sending a command, an `oneshot`
+To receive responses from the manager task, before sending a command, a `oneshot`
 channel is created. The `Sender` half of the channel is included in the command
 to the manager task. The receive half is used to receive the response.
 
@@ -349,7 +378,7 @@ let t2 = tokio::spawn(async move {
 
     // Await the response
     let res = resp_rx.await;
-    println!("GOT = {:?}", res)
+    println!("GOT = {:?}", res);
 });
 # }
 ```
@@ -384,7 +413,7 @@ while let Some(cmd) = rx.recv().await {
 ```
 
 Calling `send` on `oneshot::Sender` completes immediately and does **not**
-require an `.await`. This is because `send` on an `oneshot` channel will always
+require an `.await`. This is because `send` on a `oneshot` channel will always
 fail or succeed immediately without any form of waiting.
 
 Sending a value on a oneshot channel returns `Err` when the receiver half has
@@ -397,7 +426,7 @@ You can find the entire code [here][full].
 # Backpressure and bounded channels
 
 Whenever concurrency or queuing is introduced, it is important to ensure that the
-queueing is bounded and the system will gracefully handle load. Unbounded queues
+queueing is bounded and the system will gracefully handle the load. Unbounded queues
 will eventually fill up all available memory and cause the system to fail in
 unpredictable ways.
 
@@ -442,7 +471,7 @@ Concurrency and queuing must be explicitly introduced. Ways to do this include:
 * `join!`
 * `mpsc::channel`
 
-When doing so, take care to ensure total amount of concurrency is bounded. For
+When doing so, take care to ensure the total amount of concurrency is bounded. For
 example, when writing a TCP accept loop, ensure that the total number of open
 sockets is bounded. When using `mpsc::channel`, pick a manageable channel
 capacity. Specific bound values will be application specific.

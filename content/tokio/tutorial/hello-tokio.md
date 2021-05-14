@@ -22,8 +22,8 @@ $ cd my-redis
 Next, open `Cargo.toml` and add the following right below `[dependencies]`:
 
 ```toml
-tokio = { version = "0.2", features = ["full"] }
-mini-redis = "0.2"
+tokio = { version = "1", features = ["full"] }
+mini-redis = "0.4"
 ```
 
 ## Write the code
@@ -56,6 +56,12 @@ Make sure the Mini-Redis server is running. In a separate terminal window, run:
 
 ```bash
 $ mini-redis-server
+```
+
+If you have not already installed mini-redis, you can do so with
+
+```bash
+$ cargo install mini-redis
 ```
 
 Now, run the `my-redis` application:
@@ -91,7 +97,7 @@ the operation is performed asynchronously, the code we write **looks**
 synchronous. The only indication that the operation is asynchronous is the
 `.await` operator.
 
-[`client::connect`]: https://docs.rs/mini-redis/0.1/mini_redis/client/fn.connect.html
+[`client::connect`]: https://docs.rs/mini-redis/0.4/mini_redis/client/fn.connect.html
 
 ## What is asynchronous programming?
 
@@ -226,18 +232,18 @@ fn main() {
 
 The details of the Tokio runtime will be covered later.
 
-[runtime]: https://docs.rs/tokio/0.2/tokio/runtime/index.html
+[runtime]: https://docs.rs/tokio/1/tokio/runtime/index.html
 
 ## Cargo features
 
 When depending on Tokio for this tutorial, the `full` feature flag is enabled:
 
 ```toml
-tokio = { version = "0.2", features = ["full"] }
+tokio = { version = "1", features = ["full"] }
 ```
 
-Tokio has a lot of functionality (tcp, udp, unix sockets, timers, sync
-utilities, multiple scheduler types, ...). Not all applications need all
+Tokio has a lot of functionality (TCP, UDP, Unix sockets, timers, sync
+utilities, multiple scheduler types, etc). Not all applications need all
 functionality. When attempting to optimize compile time or the end application
 footprint, the application can decide to opt into **only** the features it uses.
 

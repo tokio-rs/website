@@ -2,7 +2,7 @@
 title: "I/O"
 ---
 
-I/O in Tokio operates in much the same way as `std`, but asynchronously. There
+I/O in Tokio operates in much the same way as in `std`, but asynchronously. There
 is a trait for reading ([`AsyncRead`]) and a trait for writing ([`AsyncWrite`]).
 Specific types implement these traits as appropriate ([`TcpStream`], [`File`],
 [`Stdout`]). [`AsyncRead`] and [`AsyncWrite`] are also implemented by a number
@@ -123,8 +123,8 @@ comprehensive list.
 # Helper functions
 
 Additionally, just like `std`, the [`tokio::io`] module contains a number of
-helpful utility functions as well as APIs for working with [standard in][stdin],
-[standard out][stdout] and [standard error][stderr]. For example,
+helpful utility functions as well as APIs for working with [standard input][stdin],
+[standard output][stdout] and [standard error][stderr]. For example,
 [`tokio::io::copy`][copy] asynchronously copies the entire contents of a reader
 into a writer.
 
@@ -161,6 +161,21 @@ We will implement the echo server twice, using slightly different strategies.
 
 To start, we will implement the echo logic using the [`io::copy`][copy] utility.
 
+You can write up this code in a new binary file:
+
+```text
+touch src/bin/echo-server-copy.rs
+```
+
+That you can launch (or just check the compilation) with:
+
+```text
+cargo run --bin echo-server-copy
+```
+
+You will be able to try the server using a standard command-line tool such as `telnet`, or by writing
+a simple client like the one found in the documentation for [`tokio::net::TcpStream`][tcp_example].
+
 This is a TCP server and needs an accept loop. A new task is spawned to process
 each accepted socket.
 
@@ -171,7 +186,7 @@ use tokio::net::TcpListener;
 # fn dox() {
 #[tokio::main]
 async fn main() -> io::Result<()> {
-    let mut listener = TcpListener::bind("127.0.0.1:6142").await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:6142").await.unwrap();
 
     loop {
         let (mut socket, _) = listener.accept().await?;
@@ -274,17 +289,15 @@ tokio::spawn(async move {
 # }
 ```
 
-You can find the entire code [here][full].
-
-[full]: https://github.com/tokio-rs/website/blob/master/tutorial-code/io/src/echo-server-copy.rs
+You can find the entire code [here][full_copy].
 
 ## Manual copying
 
-Now lets look at how we would write the echo server by copying the data
+Now let's look at how we would write the echo server by copying the data
 manually. To do this, we use [`AsyncReadExt::read`][read] and
 [`AsyncWriteExt::write_all`][write_all].
 
-The full echo server is as follows.
+The full echo server is as follows:
 
 ```rust
 use tokio::io::{self, AsyncReadExt, AsyncWriteExt};
@@ -293,7 +306,7 @@ use tokio::net::TcpListener;
 # fn dox() {
 #[tokio::main]
 async fn main() -> io::Result<()> {
-    let mut listener = TcpListener::bind("127.0.0.1:6142").await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:6142").await.unwrap();
 
     loop {
         let (mut socket, _) = listener.accept().await?;
@@ -326,6 +339,9 @@ async fn main() -> io::Result<()> {
 }
 # }
 ```
+
+(You can put this code into `src/bin/echo-server.rs` and launch it with
+`cargo run --bin echo-server`).
 
 Let's break it down. First, since the `AsyncRead` and `AsyncWrite` utilities are
 used, the extension traits must be brought into scope.
@@ -409,26 +425,30 @@ Forgetting to break from the read loop usually results in a 100% CPU infinite
 loop situation. As the socket is closed, `socket.read()` returns immediately.
 The loop then repeats forever.
 
-Full code is found [here][full]
+Full code can be found [here][full_manual].
 
-[full]: https://github.com/tokio-rs/website/blob/master/tutorial-code/io/src/echo-server.rs
+[full_manual]: https://github.com/tokio-rs/website/blob/master/tutorial-code/io/src/echo-server.rs
+[full_copy]: https://github.com/tokio-rs/website/blob/master/tutorial-code/io/src/echo-server-copy.rs
+
 [send]: /tokio/tutorial/spawning#send-bound
 
-[`AsyncRead`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncRead.html
-[`AsyncWrite`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWrite.html
-[`AsyncReadExt`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncReadExt.html
-[`AsyncWriteExt`]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html
-[`TcpStream`]: https://docs.rs/tokio/0.2/tokio/net/struct.TcpStream.html
-[`File`]: https://docs.rs/tokio/0.2/tokio/fs/struct.File.html
-[`Stdout`]: https://docs.rs/tokio/0.2/tokio/io/struct.Stdout.html
-[read]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncReadExt.html#method.read
-[read_to_end]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncReadExt.html#method.read_to_end
-[write]: https://docs.rs/tokio/0.2/tokio/io/trait.AsyncWriteExt.html#method.write
-[`tokio::io`]: https://docs.rs/tokio/0.2/tokio/io/index.html
-[stdin]: https://docs.rs/tokio/0.2/tokio/io/fn.stdin.html
-[stdout]: https://docs.rs/tokio/0.2/tokio/io/fn.stdout.html
-[stderr]: https://docs.rs/tokio/0.2/tokio/io/fn.stderr.html
-[copy]: https://docs.rs/tokio/0.2/tokio/io/fn.copy.html
-[split]: https://docs.rs/tokio/0.2/tokio/io/fn.split.html
-[`TcpStream::split`]: https://docs.rs/tokio/0.2/tokio/net/struct.TcpStream.html#method.split
-[`into_split`]: https://docs.rs/tokio/0.2/tokio/net/struct.TcpStream.html#method.into_split
+[`AsyncRead`]: https://docs.rs/tokio/1/tokio/io/trait.AsyncRead.html
+[`AsyncWrite`]: https://docs.rs/tokio/1/tokio/io/trait.AsyncWrite.html
+[`AsyncReadExt`]: https://docs.rs/tokio/1/tokio/io/trait.AsyncReadExt.html
+[`AsyncWriteExt`]: https://docs.rs/tokio/1/tokio/io/trait.AsyncWriteExt.html
+[`TcpStream`]: https://docs.rs/tokio/1/tokio/net/struct.TcpStream.html
+[`File`]: https://docs.rs/tokio/1/tokio/fs/struct.File.html
+[`Stdout`]: https://docs.rs/tokio/1/tokio/io/struct.Stdout.html
+[read]: https://docs.rs/tokio/1/tokio/io/trait.AsyncReadExt.html#method.read
+[read_to_end]: https://docs.rs/tokio/1/tokio/io/trait.AsyncReadExt.html#method.read_to_end
+[write]: https://docs.rs/tokio/1/tokio/io/trait.AsyncWriteExt.html#method.write
+[write_all]: https://docs.rs/tokio/1/tokio/io/trait.AsyncWriteExt.html#method.write_all
+[`tokio::io`]: https://docs.rs/tokio/1/tokio/io/index.html
+[stdin]: https://docs.rs/tokio/1/tokio/io/fn.stdin.html
+[stdout]: https://docs.rs/tokio/1/tokio/io/fn.stdout.html
+[stderr]: https://docs.rs/tokio/1/tokio/io/fn.stderr.html
+[copy]: https://docs.rs/tokio/1/tokio/io/fn.copy.html
+[split]: https://docs.rs/tokio/1/tokio/io/fn.split.html
+[`TcpStream::split`]: https://docs.rs/tokio/1/tokio/net/struct.TcpStream.html#method.split
+[`into_split`]: https://docs.rs/tokio/1/tokio/net/struct.TcpStream.html#method.into_split
+[tcp_example]: https://docs.rs/tokio/1/tokio/net/struct.TcpStream.html#examples

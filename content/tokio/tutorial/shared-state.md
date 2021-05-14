@@ -3,7 +3,7 @@ title: "Shared state"
 ---
 
 So far, we have a key-value server working. However, there is a major flaw:
-State is not shared across connections. We will fix that in this article.
+state is not shared across connections. We will fix that in this article.
 
 # Strategies
 
@@ -13,7 +13,7 @@ There are a couple of different ways to share state in Tokio.
 2. Spawn a task to manage the state and use message passing to operate on it.
 
 Generally you want to use the first approach for simple data, and the second
-approach for things that require asynchronous work such as IO primitives.  In
+approach for things that require asynchronous work such as I/O primitives.  In
 this chapter, the shared state is a `HashMap` and the operations are `insert`
 and `get`. Neither of these operations is asynchronous, so we will use a
 `Mutex`.
@@ -34,10 +34,10 @@ To depend on `bytes`, add the following to your `Cargo.toml` in the
 `[dependencies]` section:
 
 ```toml
-bytes = "0.5"
+bytes = "1"
 ```
 
-[`bytes`]: https://docs.rs/bytes/0.5/bytes/struct.Bytes.html
+[`bytes`]: https://docs.rs/bytes/1/bytes/struct.Bytes.html
 
 # Initialize the `HashMap`
 
@@ -68,7 +68,7 @@ use std::sync::{Arc, Mutex};
 # fn dox() {
 #[tokio::main]
 async fn main() {
-    let mut listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
 
     println!("Listening");
 
@@ -80,7 +80,9 @@ async fn main() {
         let db = db.clone();
 
         println!("Accepted");
-        process(socket, db).await;
+        tokio::spawn(async move {
+            process(socket, db).await;
+        });
     }
 }
 # }
@@ -162,23 +164,24 @@ thread.
 By default, the Tokio runtime uses a multi-threaded scheduler. Tasks are
 scheduled on any number of threads managed by the runtime. If a large number of
 tasks are scheduled to execute and they all require access to the mutex, then
-there will be contention. On the other hand, if the [`basic_scheduler`][basic]
-is used, then the mutex will never be contended.
+there will be contention. On the other hand, if the
+[`current_thread`][current_thread] runtime flavor is used, then the mutex will
+never be contended.
 
 [[info]]
-| The [`basic_scheduler` runtime option][basic-rt] is a lightweight,
+| The [`current_thread` runtime flavor][basic-rt] is a lightweight,
 | single-threaded runtime. It is a good choice when only spawning
 | a few tasks and opening a handful of sockets. For example, this
 | option works well when providing a synchronous API bridge on top
 | of an asynchronous client library.
 
-[basic-rt]: https://docs.rs/tokio/0.2/tokio/runtime/struct.Builder.html#method.basic_scheduler
+[basic-rt]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.new_current_thread
 
 If contention on a synchronous mutex becomes a problem, the best fix is rarely
 to switch to the Tokio mutex. Instead, options to consider are:
 
 - Switching to a dedicated task to manage state and use message passing.
-- Shard the mutex
+- Shard the mutex.
 - Restructure the code to avoid the mutex.
 
 In our case, as each *key* is independent, mutex sharding will work well. To do
@@ -202,7 +205,7 @@ shard.insert(key, value);
 
 The [dashmap] crate provides an implementation of a sharded hash map.
 
-[basic]: https://docs.rs/tokio/0.2/tokio/runtime/index.html#basic-scheduler
+[current_thread]: https://docs.rs/tokio/1/tokio/runtime/index.html#current-thread-scheduler
 [dashmap]: https://docs.rs/dashmap
 
 # Holding a `MutexGuard` across an `.await`
@@ -321,13 +324,13 @@ async fn increment_and_do_stuff(can_incr: &CanIncrement) {
 }
 # async fn do_something_async() {}
 ```
-This pattern guarantees that you wont run into the `Send` error, because the
+This pattern guarantees that you won't run into the `Send` error, because the
 mutex guard does not appear anywhere in an async function.
 
 ## Spawn a task to manage the state and use message passing to operate on it
 
 This is the second approach mentioned in the start of this chapter, and is often
-used when the shared resource is an IO resource. See the next chapter for more
+used when the shared resource is an I/O resource. See the next chapter for more
 details.
 
 ## Use Tokio's asynchronous mutex
@@ -350,4 +353,4 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 # async fn do_something_async() {}
 ```
 
-[`tokio::sync::Mutex`]: https://docs.rs/tokio/0.2/tokio/sync/struct.Mutex.html
+[`tokio::sync::Mutex`]: https://docs.rs/tokio/1/tokio/sync/struct.Mutex.html
