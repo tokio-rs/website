@@ -55,7 +55,7 @@ impl Server {
             // Call the handler provided by the user
             let response = handler(request);
 
-            write_http_response(connection).await?;
+            write_http_response(connection, response).await?;
         }
     }
 }
@@ -108,7 +108,7 @@ impl Server {
             // Await the future returned by `handler`
             let response = handler(request).await;
 
-            write_http_response(connection).await?;
+            write_http_response(connection, response).await?;
         }
     }
 }
@@ -155,7 +155,7 @@ impl Server {
 
             // Pattern match on the result of the response future
             match handler(request).await {
-                Ok(response) => write_http_response(connection).await?,
+                Ok(response) => write_http_response(connection, response).await?,
                 Err(error) => handle_error_somehow(error, connection),
             }
         }
@@ -249,11 +249,16 @@ While still being able to run our handler like before:
 server.run(final_handler).await?;
 ```
 
-You could implement `with_content_type` and `with_timeout` as functions that
-took an argument of type `F: Fn(HttpRequest) -> Future<Output =
+You could try and implement `with_content_type` and `with_timeout` as functions
+that took an argument of type `F: Fn(HttpRequest) -> Future<Output =
 Result<HttpResponse, Error>>` and returned a closure like `impl Fn(HttpRequest)
--> Future<Output = Result<HttpResponse, Error>>`. This works, but all these
-closure types can quickly become hard to deal with.
+-> impl Future<Output = Result<HttpResponse, Error>>` but that actually isn't
+possible due to limitations in where Rust allows `impl Trait` today.
+Specifically `impl Fn() -> impl Future` is not allowed. Using `Box` would be
+possible but that has a performance cost we would like to avoid.
+
+You also wouldn't be able to add other behavior to your handlers besides calling
+them but why thats necessary is something we'll get back to.
 
 # The `Handler` trait
 
@@ -524,7 +529,7 @@ impl Server {
 
             // have to call `Handler::call` here
             match handler.call(request).await {
-                Ok(response) => write_http_response(connection).await?,
+                Ok(response) => write_http_response(connection, response).await?,
                 Err(error) => handle_error_somehow(error, connection),
             }
         }
