@@ -65,11 +65,11 @@ struct ContentType {
 }
 ```
 
-We want to pass this data to the event collector, but how? We cannot give a
-reference to the `Headers` struct. We could use a data type like
-[`serde_json::Value`][json] to pass arbitrary structured data, but this would
-require copying the data from our application's struct to hand it to the
-collector.
+We want to pass this data to the event collector, but how? The event collector
+doesn't know about the `Headers` struct, so we can't just define a method that
+takes a `&Headers`. We could use a type like serde_json::Value to pass arbitrary
+structured data but this would require allocating and copying the data from our
+application's struct to hand it to the collector.
 
 The Valuable crate aims to solve this problem. In the HTTP header case, first,
 we would implement `Valuable` for our `Headers` type. Then, we can pass a `&dyn
