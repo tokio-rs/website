@@ -67,7 +67,7 @@ struct ContentType {
 
 We want to pass this data to the event collector, but how? The event collector
 doesn't know about the `Headers` struct, so we can't just define a method that
-takes a `&Headers`. We could use a type like serde_json::Value to pass arbitrary
+takes a `&Headers`. We could use a type like `serde_json::Value` to pass arbitrary
 structured data but this would require allocating and copying the data from our
 application's struct to hand it to the collector.
 
