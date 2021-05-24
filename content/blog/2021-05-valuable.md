@@ -78,15 +78,15 @@ visitor API to inspect the value and extract data relevant to its use case.
 
 ```rust=
 // Visit the root of the Headers struct. This visitor will find the
-// `accept_encoding` field on `Headers` and extract the contents. All other fields
-// are ignored.
+// `accept_encoding` field on `Headers` and extract the contents. All other
+// fields are ignored.
 struct VisitHeaders {
     /// The extracted `accept-encoding` header values.
     accept_encoding: Vec<String>,
 }
 
-// Visit the `accept-encoding` `Vec`. This visitor iterates the items in the
-// list and pushes it into its `accept_encoding` vector.
+// Visit the `accept-encoding` `Vec`. This visitor iterates the items in
+// the list and pushes it into its `accept_encoding` vector.
 struct VisitAcceptEncoding<'a> {
     accept_encoding: &'a mut Vec<String>,
 }
@@ -106,8 +106,8 @@ impl Visit for VisitHeaders {
         // We only care about `accept_encoding`
         match named_values.get_by_name("accept_encoding") {
             Some(Value::Listable(accept_encoding)) => {
-                // Create the `VisitAcceptEncoding` instance to visit the items
-                // in `Listable`.
+                // Create the `VisitAcceptEncoding` instance to visit
+                // the items in `Listable`.
                 let mut visit = VisitAcceptEncoding {
                     accept_encoding: &mut self.accept_encoding,
                 };
