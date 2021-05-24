@@ -185,7 +185,7 @@ requiring the caller to copy data into a `serde_json::Value` instance. Instead,
 if Handlebars used Valuable, the copying step is skipped.
 
 Now we need you to give [Valuable][crate] a try and let us know if it satisfies
-your use cases. Because Tracing 1.0 will depend on Valuable, We hope to
+your use cases. Because Tracing 1.0 will depend on Valuable, we hope to
 stabilize a 1.0 release of Valuable by early 2022. That does not give us a lot
 of time, so we need to find API holes sooner than later. Try to write libraries
 using Valuable, especially templating engines or other use cases hinted at by
@@ -193,7 +193,7 @@ this post. We could also use help with "bridge" crates (e.g.
 [`valuable-http`][http]), that provide Valuable implementations for common
 ecosystem data types. There is also a lot of work left to expand the derive
 macro with configuration options and other capabilities, so come say hi in the
-``#valuable` channel on the [Tokio discord server][discord].
+`#valuable` channel on the [Tokio discord server][discord].
 
 [crate]: https://github.com/tokio-rs/valuable
 [trait]: https://github.com/tokio-rs/valuable/blob/588e345c27c0b1b3a3faab93ef8487e1c5db9a9e/valuable/src/valuable.rs
