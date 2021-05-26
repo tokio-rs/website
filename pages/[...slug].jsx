@@ -16,6 +16,7 @@ const menu = {
           "async",
           "select",
           "streams",
+          "non-async",
         ],
       },
       glossary: {},
