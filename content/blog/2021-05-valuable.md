@@ -130,7 +130,7 @@ care about the `accept_encoding` value, so that is the only field we visit. We
 do not visit the `content_type` field.
 
 The Valuable crate represents each value as an instance of the [`Value`
-enum][enum]. Primitive rust types are enumerated, and other types are categories
+enum][enum]. Primitive rust types are enumerated, and other types are categorised
 into Structable, Enumerable, Listable, or Mappable represented by traits of the
 same name. Implementing a struct or enum traits is usually done using a
 procedural macro; however, it might look like this.
