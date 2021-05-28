@@ -122,10 +122,10 @@ Contributions are very welcome and if you have questions you can find us in the
 [timeout middleware]: https://docs.rs/tower/latest/tower/timeout/struct.Timeout.html
 [http]: https://crates.io/crates/http
 [http-body]: https://crates.io/crates/http-body
-[`Trace`]: TODO-fill-in-once-on-crates.io
-[`Compression`]: TODO-fill-in-once-on-crates.io
-[`Decompression`]: TODO-fill-in-once-on-crates.io
-[`ServeDir`]: TODO-fill-in-once-on-crates.io
+[`Trace`]: https://docs.rs/tower-http/latest/tower_http/trace/struct.Trace.html
+[`Compression`]: https://docs.rs/tower-http/latest/tower_http/compression/struct.Compression.html
+[`Decompression`]: https://docs.rs/tower-http/latest/tower_http/decompression/struct.Decompression.html
+[`ServeDir`]: https://docs.rs/tower-http/latest/tower_http/services/struct.ServeDir.html
 [warp-example]: https://github.com/tower-rs/tower-http/tree/master/examples/warp-key-value-store
 [tonic-example]: https://github.com/tower-rs/tower-http/tree/master/examples/tonic-key-value-store
 [Tokio Discord]: https://discord.gg/tokio
