@@ -50,7 +50,7 @@ async fn main() {
     let t1 = tokio::spawn(async move {
         let (resp_tx, resp_rx) = oneshot::channel();
         let cmd = Command::Get {
-            key: "hello".to_string(),
+            key: "foo".to_string(),
             resp: resp_tx,
         };
 
