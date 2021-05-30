@@ -46,7 +46,8 @@ async fn main() {
         }
     });
 
-    // Spawn two tasks, each setting a value
+    // Spawn two tasks, one setting a value and other querying for key that was
+    // set.
     let t1 = tokio::spawn(async move {
         let (resp_tx, resp_rx) = oneshot::channel();
         let cmd = Command::Get {
@@ -62,7 +63,7 @@ async fn main() {
 
         // Await the response
         let res = resp_rx.await;
-        println!("GOT = {:?}", res);
+        println!("GOT (Get) = {:?}", res);
     });
 
     let t2 = tokio::spawn(async move {
@@ -81,7 +82,7 @@ async fn main() {
 
         // Await the response
         let res = resp_rx.await;
-        println!("GOT = {:?}", res)
+        println!("GOT (Set) = {:?}", res)
     });
 
     t1.await.unwrap();
