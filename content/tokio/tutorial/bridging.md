@@ -68,8 +68,8 @@ pub struct Client {
     /// The asynchronous `Client`.
     inner: crate::client::Client,
 
-    /// A `current_thread` runtime for executing operations on the asynchronous
-    /// client in a blocking manner.
+    /// A `current_thread` runtime for executing operations on the
+    /// asynchronous client in a blocking manner.
     rt: Runtime,
 }
 
@@ -91,11 +91,10 @@ asynchronous method and returns its result.
 
 One important detail is the use of the [`current_thread`] runtime. Normally when
 using Tokio, you would be using the default [`multi_thread`] runtime, but this
-runtime will spawn a bunch of background threads so it is able to fully
-utilise all of the CPU cores when running many things at the same time. We
-aren't going to be running many things at once on this runtime, so for our
-use-case we only need a light-weight runtime, and the [`current_thread`]
-runtime is perfect for this as it doesn't spawn any threads.
+runtime will spawn a bunch of background threads so it can efficiently run many
+things at the same time. For our use-case, we are only going to be doing one
+thing at the time, so we only need a light-weight runtime, and the
+[`current_thread`] runtime is perfect for this as it doesn't spawn any threads.
 
 [[warning]]
 | Since the `current_thread` runtime doesn't spawn any threads, it is not
@@ -107,7 +106,7 @@ runtime is perfect for this as it doesn't spawn any threads.
 | spawned tasks on that runtime will freeze until you call `block_on` on the
 | runtime again.
 
-Once we have this struct, most of the methods are really easy to implement:
+Once we have this struct, most of the methods are easy to implement:
 ```rs
 use bytes::Bytes;
 use std::time::Duration;
@@ -190,63 +189,20 @@ Note that the asynchronous `Subscriber` struct has a non-async method called
 `get_subscribed`. To handle this, we simply call it directly without involving
 the runtime.
 
-# Ways to approach it
+# Other approaches
 
-There are a few ways you can approach the problem of using async/await in only
-part of your project. These are:
+The above section explains the simplest way to implement a synchronous wrapper,
+but it is not the only way. The approaches are:
 
  * Create a [`Runtime`] and call [`block_on`] on the async code.
  * Create a [`Runtime`] and [`spawn`] things on it.
  * Run the [`Runtime`] in a separate thread and send messages to it.
 
-The main differences between the above approaches are whether the runtime is
-able to run stuff in the background, and how you shut the runtime down.
+We already saw the first approach. The two other approaches are outlined below.
 
-## Using `block_on`
+## Spawning things on a runtime
 
-The simplest way to transition from synchronous to asynchronous code is to call
-the [`block_on`] method. To do this, you first create a [`Runtime`], then call
-[`block_on`]. For example:
-```rust
-use tokio::runtime::Builder;
-
-fn main() {
-    println!("In non-async code!");
-
-    let runtime = Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
-
-    runtime.block_on(my_async_fn());
-
-    println!("Back in non-async code!");
-}
-
-async fn my_async_fn() {
-    println!("Now in async code!");
-}
-```
-If you compare this to the previous example from the `#[tokio::main]` macro you
-will see that it is very similar, however there is one difference: This example
-uses the [`current_thread`] runtime rather than the [`multi_thread`] runtime.
-Either choice would work, but the `current_thread` runtime is cheaper to use
-because it does not spawn any threads.
-
-Be aware that using the `current_thread` runtime has the consequence that, since
-the runtime has no threads of its own, it is unable to execute tasks in the
-background. However if you are only going to be using its `block_on` method,
-that doesn't matter to you.
-
-[[info]]
-| The [`multi_thread`] runtime does not have to be multi-threaded. If you set
-| the number of [`worker_threads`] to one, it will spawn only a single thread.
-| This is still different from a `current_thread` runtime because a
-| `current_thread` runtime will spawn _zero_ threads rather than one.
-
-## Using `spawn`
-
-The [`Runtime`] also has a method called [`spawn`]. When you call this method,
+The [`Runtime`] object has a method called [`spawn`]. When you call this method,
 you create a new background task to run on the runtime. For example:
 ```rust
 use tokio::runtime::Builder;
@@ -287,6 +243,29 @@ async fn my_bg_task(i: u64) {
     println!("Task {} stopping.", i);
 }
 ```
+```text
+Task 0 sleeping for 1000 ms.
+Task 1 sleeping for 950 ms.
+Task 2 sleeping for 900 ms.
+Task 3 sleeping for 850 ms.
+Task 4 sleeping for 800 ms.
+Task 5 sleeping for 750 ms.
+Task 6 sleeping for 700 ms.
+Task 7 sleeping for 650 ms.
+Task 8 sleeping for 600 ms.
+Task 9 sleeping for 550 ms.
+Task 9 stopping.
+Task 8 stopping.
+Task 7 stopping.
+Task 6 stopping.
+Finished time-consuming task.
+Task 5 stopping.
+Task 4 stopping.
+Task 3 stopping.
+Task 2 stopping.
+Task 1 stopping.
+Task 0 stopping.
+```
 In the above example, we spawn 10 background tasks on the runtime, then wait
 for all of them. As an example, this could be a good way of implementing
 background network requests in a graphical application because network requests
@@ -307,10 +286,13 @@ The example waits for the spawned tasks to finish by calling `block_on` on the
 do it. Here are some alternatives:
 
  * Use a message passing channel such as [`tokio::sync::mpsc`].
- * Modify a shared value protected by e.g. a `Mutex`.
+ * Modify a shared value protected by e.g. a `Mutex`. This can be a good
+   approach for a progress bar in a GUI, where the GUI reads the shared value
+   every frame.
 
-Note that the `spawn` method is also available on the [`Handle`] type, which is
-an easy way to share a runtime with many parts of the program.
+The `spawn` method is also available on the [`Handle`] type. The `Handle` type
+can be cloned to get many handles to a runtime, and each `Handle` can be used to
+spawn new tasks on the runtime.
 
 ## Sending messages
 
@@ -338,7 +320,14 @@ pub struct TaskSpawner {
 
 impl TaskSpawner {
     pub fn new() -> TaskSpawner {
+        // Set up a channel for communicating.
         let (send, mut recv) = mpsc::channel(16);
+
+        // Build the runtime for the new thread.
+        //
+        // The runtime is created before spawning the thread
+        // to more cleanly forward errors if the `unwrap()`
+        // panics.
         let rt = Builder::new_current_thread()
             .enable_all()
             .build()
@@ -365,15 +354,15 @@ impl TaskSpawner {
     pub fn spawn_task(&self, task: Task) {
         match self.spawn.blocking_send(task) {
             Ok(()) => {},
-            Err(_) => panic!("Our runtime has shut down."),
+            Err(_) => panic!("The shared runtime has shut down."),
         }
     }
 }
 ```
 This example could be configured in many ways. For instance, you could use a
 [`Semaphore`] to limit the number of active tasks, or you could use a channel in
-the opposite direction to send a response to the spawner.
-
+the opposite direction to send a response to the spawner. When you spawn a
+runtime in this way, it is a type of [actor].
 
 
 [`Runtime`]: https://docs.rs/tokio/1/tokio/runtime/struct.Runtime.html
@@ -392,3 +381,4 @@ the opposite direction to send a response to the spawner.
 [`Client::set_expires`]: https://docs.rs/mini-redis/0.4/mini_redis/client/struct.Client.html#method.set_expires
 [`Client::publish`]: https://docs.rs/mini-redis/0.4/mini_redis/client/struct.Client.html#method.publish
 [`Client::subscribe`]: https://docs.rs/mini-redis/0.4/mini_redis/client/struct.Client.html#method.subscribe
+[actor]: https://ryhl.io/blog/actors-with-tokio/
