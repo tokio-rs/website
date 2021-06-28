@@ -1,8 +1,6 @@
 import * as content from "../../lib/api";
 import Page from "../../lib/page";
 
-const menuSize = 8;
-
 export default Page;
 
 export async function getStaticPaths() {
@@ -28,10 +26,6 @@ export async function getStaticProps({ params: { slug } }) {
 
   let i = 0;
   for (const p of paths) {
-    if (i == menuSize) {
-      break;
-    }
-
     i += 1;
 
     delete p.body;
