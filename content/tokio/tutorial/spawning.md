@@ -259,10 +259,10 @@ compiler is unable to reason about how long a newly spawned task stays around,
 so the only way it can be sure that the task doesn't live too long is to make
 sure it may live forever.
 
-The link in the info-box above uses the terminology "bounded by `'static`"
-rather than "its type outlives `'static`" or "the value is `'static`" for `T:
-'static`. These all mean the same thing, and are different from "annotated with
-`'static`" as in `&'static T`.
+The article that the info-box earlier links to uses the terminology "bounded by
+`'static`" rather than "its type outlives `'static`" or "the value is `'static`"
+to refer to `T: 'static`. These all mean the same thing, but are different from
+"annotated with `'static`" as in `&'static T`.
 
 ## `Send` bound
 
