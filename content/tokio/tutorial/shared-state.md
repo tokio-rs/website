@@ -212,10 +212,10 @@ The [dashmap] crate provides an implementation of a sharded hash map.
 
 You might write code that looks like this:
 ```rust
-use std::sync::Mutex;
+use std::sync::{Mutex, MutexGuard};
 
 async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
-    let mut lock = mutex.lock().unwrap();
+    let mut lock: MutexGuard<i32> = mutex.lock().unwrap();
     *lock += 1;
 
     do_something_async().await;
@@ -240,7 +240,7 @@ error: future cannot be sent between threads safely
 note: future is not `Send` as this value is used across an await
    --> src/lib.rs:7:5
     |
-4   |     let mut lock = mutex.lock().unwrap();
+4   |     let mut lock: MutexGuard<i32> = mutex.lock().unwrap();
     |         -------- has type `std::sync::MutexGuard<'_, i32>` which is not `Send`
 ...
 7   |     do_something_async().await;
@@ -254,11 +254,11 @@ because the Tokio runtime can move a task between threads at every `.await`.
 To avoid this, you should restructure your code such that the mutex lock's
 destructor runs before the `.await`.
 ```rust
-# use std::sync::Mutex;
+# use std::sync::{Mutex, MutexGuard};
 // This works!
 async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
     {
-        let mut lock = mutex.lock().unwrap();
+        let mut lock: MutexGuard<i32> = mutex.lock().unwrap();
         *lock += 1;
     } // lock goes out of scope here
 
@@ -268,11 +268,11 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 ```
 Note that this does not work:
 ```rust
-use std::sync::Mutex;
+use std::sync::{Mutex, MutexGuard};
 
 // This fails too.
 async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
-    let mut lock = mutex.lock().unwrap();
+    let mut lock: MutexGuard<i32> = mutex.lock().unwrap();
     *lock += 1;
     drop(lock);
 
