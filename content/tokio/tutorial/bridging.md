@@ -64,7 +64,7 @@ use tokio::runtime::Runtime;
 pub use crate::client::Message;
 
 /// Established connection with a Redis server.
-pub struct Client {
+pub struct BlockingClient {
     /// The asynchronous `Client`.
     inner: crate::client::Client,
 
@@ -73,7 +73,7 @@ pub struct Client {
     rt: Runtime,
 }
 
-pub fn connect<T: ToSocketAddrs>(addr: T) -> crate::Result<Client> {
+pub fn connect<T: ToSocketAddrs>(addr: T) -> crate::Result<BlockingClient> {
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()?;
@@ -81,7 +81,7 @@ pub fn connect<T: ToSocketAddrs>(addr: T) -> crate::Result<Client> {
     // Call the asynchronous connect method using the runtime.
     let inner = rt.block_on(crate::client::connect(addr))?;
 
-    Ok(Client { inner, rt })
+    Ok(BlockingClient { inner, rt })
 }
 ```
 Here, we have included the constructor function as our first example of how to
@@ -89,29 +89,28 @@ execute asynchronous methods in a non-async context. We do this using the
 [`block_on`] method on the Tokio [`Runtime`] type, which executes an
 asynchronous method and returns its result.
 
-One important detail is the use of the [`current_thread`] runtime. Normally when
-using Tokio, you would be using the default [`multi_thread`] runtime, but this
-runtime will spawn a bunch of background threads so it can efficiently run many
-things at the same time. For our use-case, we are only going to be doing one
-thing at the time, so we only need a light-weight runtime, and the
-[`current_thread`] runtime is perfect for this as it doesn't spawn any threads.
+One important detail is the use of the [`current_thread`] runtime. Usually when
+using Tokio, you would be using the default [`multi_thread`] runtime, which will
+spawn a bunch of background threads so it can efficiently run many things at the
+same time. For our use-case, we are only going to be doing one thing at the
+time, so we won't gain anything by running multiple threads. This makes the
+[`current_thread`] runtime a perfect fit as it doesn't spawn any threads.
+
+The [`enable_all`] call enables the IO and timer drivers on the Tokio runtime.
+If they are not enabled, the runtime is unable to perform IO or timers.
 
 [[warning]]
-| Since the `current_thread` runtime doesn't spawn any threads, it is not
-| possible to execute background tasks on a `current_thread` runtime. This does
-| not mean that you can't spawn tasks on a `current_thread` runtime, but any
-| tasks that you do spawn will only be able to run during calls to `block_on`.
-|
-| This means that when a call to `block_on` on the `Runtime` returns, all
-| spawned tasks on that runtime will freeze until you call `block_on` on the
-| runtime again.
+| Because the `current_thread` runtime does not spawn threads, it only operates
+| when `block_on` is called. Once `block_on` returns, all spawned tasks on that
+| runtime will freeze until you call `block_on` again. Use the `multi_threaded`
+| runtime if spawned tasks must keep running when not calling `block_on`.
 
 Once we have this struct, most of the methods are easy to implement:
 ```rs
 use bytes::Bytes;
 use std::time::Duration;
 
-impl Client {
+impl BlockingClient {
     pub fn get(&mut self, key: &str) -> crate::Result<Option<Bytes>> {
         self.rt.block_on(self.inner.get(key))
     }
@@ -140,29 +139,30 @@ manner:
 ```rs
 /// A client that has entered pub/sub mode.
 ///
-/// Once clients subscribe to a channel, they may only perform pub/sub related
-/// commands. The `Client` type is transitioned to a `Subscriber` type in order
-/// to prevent non-pub/sub methods from being called.
-pub struct Subscriber {
+/// Once clients subscribe to a channel, they may only perform
+/// pub/sub related commands. The `BlockingClient` type is
+/// transitioned to a `BlockingSubscriber` type in order to
+/// prevent non-pub/sub methods from being called.
+pub struct BlockingSubscriber {
     /// The asynchronous `Subscriber`.
     inner: crate::client::Subscriber,
 
-    /// A `current_thread` runtime for executing operations on the asynchronous
-    /// `Subscriber` in a blocking manner.
+    /// A `current_thread` runtime for executing operations on the
+    /// asynchronous client in a blocking manner.
     rt: Runtime,
 }
 
-impl Client {
-    pub fn subscribe(self, channels: Vec<String>) -> crate::Result<Subscriber> {
+impl BlockingClient {
+    pub fn subscribe(self, channels: Vec<String>) -> crate::Result<BlockingSubscriber> {
         let subscriber = self.rt.block_on(self.inner.subscribe(channels))?;
-        Ok(Subscriber {
+        Ok(BlockingSubscriber {
             inner: subscriber,
             rt: self.rt,
         })
     }
 }
 
-impl Subscriber {
+impl BlockingSubscriber {
     pub fn get_subscribed(&self) -> &[String] {
         self.inner.get_subscribed()
     }
@@ -371,6 +371,7 @@ runtime in this way, it is a type of [actor].
 [`multi_thread`]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.new_multi_thread
 [`current_thread`]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.new_current_thread
 [`worker_threads`]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.worker_threads
+[`enable_all`]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.enable_all
 [`JoinHandle`]: https://docs.rs/tokio/1/tokio/task/struct.JoinHandle.html
 [`tokio::sync::mpsc`]: https://docs.rs/tokio/1/tokio/sync/mpsc/index.html
 [`Handle`]: https://docs.rs/tokio/1/tokio/runtime/struct.Handle.html
