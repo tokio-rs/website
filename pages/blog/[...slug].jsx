@@ -1,7 +1,10 @@
 import * as content from "../../lib/api";
+import * as blog from "../../lib/blog";
 import Page from "../../lib/page";
 
 export default Page;
+
+const SIDEBAR_POST_COUNT = 6;
 
 export async function getStaticPaths() {
   const paths = content.getDateOrderedPaths("blog").map((page) => {
@@ -16,52 +19,34 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps({ params: { slug } }) {
-  let paths = content.getDateOrderedPaths("blog");
-
-  let years = {};
+export async function getStaticProps({ params: { slug: slugParam } }) {
+  let slug = slugParam[0];
+  let postsByYear = blog.getBlogPostsByYear({
+    limit: SIDEBAR_POST_COUNT
+  });
 
   const page = content.loadPage(`blog/${slug}`);
-  let didSee = false;
 
-  let i = 0;
-  for (const p of paths) {
-    i += 1;
+  let next = blog.getNextPost(slug);
+  let previous = blog.getPreviousPost(slug);
 
-    delete p.body;
+  if (next) {
+    page.next = {
+      title: next.menuTitle || next.title,
+      href: next.href
+    };
+  }
 
-    if (p.href == page.href) {
-      didSee = true;
-    } else if (!didSee) {
-      page.next = {
-        title: p.menuTitle || p.title,
-        href: p.href,
-      };
-    } else if (!page.prev) {
-      page.prev = {
-        title: p.menuTitle || p.title,
-        href: p.href,
-      };
-    }
-
-    const date = new Date(p.date);
-
-    const year = date.getFullYear().toString();
-
-    if (!years[year]) {
-      years[year] = {
-        key: year,
-        title: year,
-        nested: [],
-      };
-    }
-
-    years[year].nested.push({ page: p });
+  if (previous) {
+    page.prev = {
+      title: previous.menuTitle || previous.title,
+      href: previous.href,
+    };
   }
 
   let menu = [];
 
-  for (const [, entry] of Object.entries(years)) {
+  for (const [, entry] of Object.entries(postsByYear)) {
     menu.push(entry);
   }
 
