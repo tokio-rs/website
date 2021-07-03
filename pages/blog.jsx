@@ -8,7 +8,7 @@ export default function Blog({ app, postsByYear }) {
     <Layout title={"Blog Posts"} blog={app.blog}>
       <div className="is-marginless tk-docs">
         <div className="columns is-mobile is-centered">
-          <div className="column is-half tk-content">
+          <div className="column is-half-desktop tk-content">
             <section className="section content">
               <h1 className="title">Blog Posts</h1>
               {Object.entries(postsByYear)

@@ -65,7 +65,8 @@ export default function Menu({ href, menu, children }) {
           <a>All Libraries</a>
         </p> */}
       </div>
-      {children}
+      {expanded && children}
+      <div className="is-hidden-mobile">{children}</div>
     </aside>
   );
 }
