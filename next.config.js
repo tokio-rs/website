@@ -9,6 +9,13 @@ module.exports = {
         return entries;
       };
     }
+
+    if (!isServer) {
+      config.node = {
+        fs: 'empty'
+      }
+    }
+
     return config;
   },
 };
