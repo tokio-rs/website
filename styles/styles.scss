@@ -1014,6 +1014,10 @@ Docco style used in http://jashkenas.github.com/docco/ converted by Simon Madine
     font-weight: 500;
     color: #c83895;
   }
+
+  @include mobile {
+    margin: 0 0.75rem;
+  }
 }
 
 .blog-year-posts ul {
