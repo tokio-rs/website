@@ -1005,3 +1005,21 @@ Docco style used in http://jashkenas.github.com/docco/ converted by Simon Madine
 .hljs-strong {
   font-weight: bold;
 }
+
+.all-posts-link {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+
+  a {
+    font-weight: 500;
+    color: #c83895;
+  }
+
+  @include mobile {
+    margin: 0 0.75rem;
+  }
+}
+
+.blog-year-posts ul {
+  margin-bottom: 2rem;
+}

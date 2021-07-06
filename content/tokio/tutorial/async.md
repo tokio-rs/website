@@ -669,13 +669,21 @@ async fn main() {
 The `poll_fn` function creates a `Future` instance using a closure. The snippet
 above creates a `Delay` instance, polls it once, then sends the `Delay` instance
 to a new task where it is awaited. In this example, `Delay::poll` is called more
-than once with **different** `Waker` instances. Our earlier implementation did
-not handle this case and the spawned task would sleep forever, as the wrong
-task is notified.
+than once with **different** `Waker` instances. When this happens, you must make
+sure to call `wake` on the `Waker` passed to _the most recent_ call to `poll`.
 
 When implementing a future, it is critical to assume that each call to `poll`
 **could** supply a different `Waker` instance. The poll function must update any
 previously recorded waker with the new one.
+
+Our earlier implementation of `Delay` spawned a new thread every time it was
+polled. This is fine, but can be very inefficient if it is polled too often
+(e.g. if you `select!` over that future and some other future, both are polled
+whenever either has an event). One approach to this is to remember whether you
+have already spawned a thread, and only spawn a new thread if you haven't
+already spawned one.  However if you do this, you must ensure that the thread's
+`Waker` is updated on later calls to poll, as you are otherwise not waking the
+most recent `Waker`.
 
 To fix our earlier implementation, we could do something like this:
 
@@ -689,6 +697,7 @@ use std::time::{Duration, Instant};
 
 struct Delay {
     when: Instant,
+    // This Some when we have spawned a thread, and None otherwise.
     waker: Option<Arc<Mutex<Waker>>>,
 }
 

@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import classnames from "classnames";
+import Link from "next/link";
 
 const monthNames = [
   "January",
@@ -16,7 +17,7 @@ const monthNames = [
   "December",
 ];
 
-export default function Menu({ href, menu }) {
+export default function Menu({ href, menu, children }) {
   const groups = menu.map(({ key, title, nested }) => {
     return (
       <React.Fragment key={key}>
@@ -64,6 +65,8 @@ export default function Menu({ href, menu }) {
           <a>All Libraries</a>
         </p> */}
       </div>
+      {expanded && children}
+      <div className="is-hidden-mobile">{children}</div>
     </aside>
   );
 }
