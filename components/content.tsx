@@ -168,14 +168,19 @@ export default function Content({ menu, href, title, next, prev, body, mdPath })
     return Heading(slugger, headings, props);
   };
 
+  let isBlogRoute = href.startsWith("/blog");
+
   return (
     <>
       <div className="columns is-marginless tk-docs">
         <div className="column is-one-quarter tk-docs-nav">
           <Menu href={href} menu={menu}>
-            <div className="all-posts-link">
-              <Link href="/blog"><a>More Blog Posts</a></Link>
-            </div>
+            { isBlogRoute && (
+                <div className="all-posts-link">
+                  <Link href="/blog"><a>More Blog Posts</a></Link>
+                </div>
+              )
+            }
           </Menu>
         </div>
         <div className="column is-three-quarters tk-content">
