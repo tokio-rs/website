@@ -20,6 +20,11 @@ const menu = {
           "bridging",
         ],
       },
+      topics: {
+        nested: [
+          "shutdown"
+        ],
+      },
       glossary: {},
       api: {
         title: "API documentation",
