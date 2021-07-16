@@ -25,3 +25,8 @@
   from = "/blog/index.xml"
   to = "/_next/static/feed.xml"
 
+# The bridging article was moved from tutorial to topics
+[[redirects]]
+  from = "/tokio/tutorial/bridging"
+  to = "/tokio/topics/bridging"
+

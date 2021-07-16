@@ -2,11 +2,10 @@
 title: "Bridging with sync code"
 ---
 
-In the examples we have seen so far, we marked the main function with
-`#[tokio::main]` and made the entire project asynchronous. However, this is not
-desirable for all projects. For instance, a GUI application might want to run
-the GUI code on the main thread and run a Tokio runtime next to it on another
-thread.
+In most examples of using Tokio, we mark the main function with `#[tokio::main]`
+and make the entire project asynchronous. However, this is not desirable for all
+projects. For instance, a GUI application might want to run the GUI code on the
+main thread and run a Tokio runtime next to it on another thread.
 
 This page explains how you can isolate async/await to a small part of your
 project.
