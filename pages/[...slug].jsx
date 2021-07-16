@@ -17,12 +17,12 @@ const menu = {
           "async",
           "select",
           "streams",
-          "bridging",
         ],
       },
       topics: {
         nested: [
-          "shutdown"
+          "bridging",
+          "shutdown",
         ],
       },
       glossary: {},
