@@ -111,7 +111,7 @@ the [design document](https://github.com/tokio-rs/tokio-uring/pull/1) to get an
 idea of where we are going.
 
 So, give the crate a try and feel free to [ask questions
-](https://github.com/tokio-rs/tokio-uring/discussions)or [report
+](https://github.com/tokio-rs/tokio-uring/discussions) or [report
 issues](https://github.com/tokio-rs/tokio-uring/issues).
 
 Also, we want to thank all who helped along the way, especially [Glauber
