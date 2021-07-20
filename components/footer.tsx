@@ -59,6 +59,11 @@ export default function Footer() {
             </div>
           </div>
         </div>
+        <div className="container has-text-centered tk-sponsored">
+          <p>
+            Hosted by <a href="https://netlify.com" rel="sponsored nofollow">Netlify</a>
+          </p>
+        </div>
       </div>
     </footer>
   );
