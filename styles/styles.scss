@@ -835,12 +835,18 @@ a:active {
   }
 
   .tk-footer-libs,
-  .tk-footer-libs a {
+  .tk-footer-libs a,
+  .tk-sponsored,
+  .tk-sponsored a {
     color: white;
   }
 
   .tk-lib-name {
     font-weight: 600;
+  }
+
+  .tk-sponsored {
+    margin-top: 2rem;
   }
 }
 
