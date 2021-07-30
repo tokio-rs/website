@@ -107,7 +107,7 @@ simultaneously, there are also some use-cases where Tokio is not a good fit.
 
 [rayon]: https://docs.rs/rayon/
 [reqwest]: https://docs.rs/reqwest/
-[bridging]: /tokio/tutorial/bridging
+[bridging]: /tokio/topics/bridging
 
 # Getting Help
 
