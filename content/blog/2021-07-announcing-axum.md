@@ -1,7 +1,7 @@
 ---
-date: "2021-07-31"
+date: "2021-07-30"
 title: "Announcing Axum"
-description: "July 31, 2021"
+description: "July 30, 2021"
 ---
 
 Today we are happy to announce [`axum`]: An easy to use, yet powerful, web framework
