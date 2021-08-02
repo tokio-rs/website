@@ -81,7 +81,7 @@ to their needs.
 
 [work-stealing]: https://en.wikipedia.org/wiki/Work_stealing
 
-# When to not use Tokio
+# When not to use Tokio
 
 Although Tokio is useful for many projects that need to do a lot of things
 simultaneously, there are also some use-cases where Tokio is not a good fit.
