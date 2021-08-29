@@ -579,7 +579,7 @@ impl Task {
         let _ = future.as_mut().poll(&mut cx);
     }
 
-    // Spawns a new taks with the given future.
+    // Spawns a new task with the given future.
     //
     // Initializes a new Task harness containing the given future and pushes it
     // onto `sender`. The receiver half of the channel will get the task and
