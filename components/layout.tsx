@@ -10,7 +10,7 @@ type Props = {
 };
 
 function pageTitle(title: string | undefined): string {
-  const name = "Tokio";
+  const name = "Tokio - An asynchronous Rust runtime";
   return title ? `${title} | ${name}` : name;
 }
 
@@ -19,6 +19,7 @@ const Layout: FC<Props> = ({ title, blog, children }) => (
     <Head>
       <title>{pageTitle(title)}</title>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="description" content="Tokio is a runtime for writing reliable asynchronous applications with Rust. It provides async I/O, networking, scheduling, timers, and more."></meta>
       <link rel="alternate icon" type="image/png" href="/favicon-32x32.png" />
       <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       <link rel="alternate" type="application/rss+xml" href="/_next/static/feed.xml" />
