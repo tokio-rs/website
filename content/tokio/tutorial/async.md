@@ -619,7 +619,7 @@ We have now seen an end-to-end example of how asynchronous Rust works. Rust's
 `async/await` feature is backed by traits. This allows third-party crates, like
 Tokio, to provide the execution details.
 
-* Asynchronous Rust operation are lazy and require a caller to poll them.
+* Asynchronous Rust operations are lazy and require a caller to poll them.
 * Wakers are passed to futures to link a future to the task calling it.
 * When a resource is **not** ready to complete an operation, `Poll::Pending` is
   returned and the task's waker is recorded.
