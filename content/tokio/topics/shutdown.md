@@ -94,6 +94,9 @@ connection, you might want to send a shutdown message on the connection.
 It is usually a good idea to wrap the broadcast channel in a struct. An example
 of this can be found [here][shutdown.rs].
 
+It's worth mentioning that you can do the same thing using a [watch
+channel][watch]. There is no significant difference between the two choices.
+
 ## Waiting for things to finish shutting down
 
 Once you have told other tasks to shut down, you will need to wait for them to
@@ -141,6 +144,7 @@ before waiting for the channel to be closed.
 [an mpsc channel]: https://docs.rs/tokio/1/tokio/sync/mpsc/index.html
 [select]: https://docs.rs/tokio/1/tokio/macro.select.html
 [broadcast]: https://docs.rs/tokio/1/tokio/sync/broadcast/index.html
+[watch]: https://docs.rs/tokio/1/tokio/sync/watch/index.html
 [shutdown.rs]: https://github.com/tokio-rs/mini-redis/blob/master/src/shutdown.rs
 [server.rs]: https://github.com/tokio-rs/mini-redis/blob/master/src/server.rs
 [mini-redis]: https://github.com/tokio-rs/mini-redis/
