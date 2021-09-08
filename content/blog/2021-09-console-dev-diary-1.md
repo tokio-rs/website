@@ -21,7 +21,7 @@ and spans, and thus is aimed at being runtime-agnostic.
 
 **Easy `init` and `Builder`:** We made it way easier to add instrumentation to your app. For most,
 simply adding `console_subscriber::init()` to the top of your `main` function is enough! It will use
-sensible defaults, checking some environment variables for customization. and build an isolated
+sensible defaults, checking some environment variables for customization and build an isolated
 subscriber. There's also a convenient `console_subscriber::Builder` API if you need more control
 integrating with existing `tracing` or runtimes.
 
@@ -41,7 +41,7 @@ your tasks take to do work before yielding. There's also information about how m
 been woken, which you can compare with the number of times polled, as well as time since the last
 wake call.
 
-**Temporality:** After some user inteviews, we prioritized some "time control" features for the
+**Temporality:** After talking with users, we prioritized some "time control" features for the
 console. We've so far implemented the ability to pause the console (and still explore the existing
 tasks), and then resume back to "live". There's now an option to record all relevant events to a
 file on disk, with the goal of being able to replay that file in the `console`.
