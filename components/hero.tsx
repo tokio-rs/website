@@ -37,7 +37,7 @@ const Hero: FC = () => (
                   network applications. It leverages Rust's ownership and
                   concurrency model to ensure thread safety. */}
           </h2>
-          <div className="has-text-centered">
+          <div className="has-text-centered-mobile">
             <a href={gettingStarted} className="button is-link is-medium">
               Get Started
             </a>
