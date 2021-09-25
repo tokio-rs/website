@@ -358,7 +358,7 @@ Unfortunately, the Rust programming language does not yet support `async/await`
 syntax for defining streams. This is in the works, but not yet ready.
 
 The [`async-stream`] crate is available as a temporary solution. This crate
-provides an `async_stream!` macro that transforms the input into a stream. Using
+provides a `stream!` macro that transforms the input into a stream. Using
 this crate, the above interval can be implemented like this:
 
 ```rust
