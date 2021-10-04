@@ -11,7 +11,7 @@ enum Command {
     },
     Set {
         key: String,
-        val: Vec<u8>,
+        val: Bytes,
         resp: Responder<()>,
     },
 }
@@ -38,7 +38,7 @@ async fn main() {
                     let _ = resp.send(res);
                 }
                 Command::Set { key, val, resp } => {
-                    let res = client.set(&key, val.into()).await;
+                    let res = client.set(&key, val).await;
                     // Ignore errors
                     let _ = resp.send(res);
                 }
@@ -70,7 +70,7 @@ async fn main() {
         let (resp_tx, resp_rx) = oneshot::channel();
         let cmd = Command::Set {
             key: "foo".to_string(),
-            val: b"bar".to_vec(),
+            val: "bar".into(),
             resp: resp_tx,
         };
 
