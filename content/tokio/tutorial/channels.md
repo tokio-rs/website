@@ -327,7 +327,7 @@ enum Command {
     },
     Set {
         key: String,
-        val: Vec<u8>,
+        val: Bytes,
         resp: Responder<()>,
     },
 }
@@ -344,7 +344,7 @@ Now, update the tasks issuing the commands to include the `oneshot::Sender`.
 # #[derive(Debug)]
 # enum Command {
 #     Get { key: String, resp: Responder<Option<bytes::Bytes>> },
-#     Set { key: String, val: Vec<u8>, resp: Responder<()> },
+#     Set { key: String, val: Bytes, resp: Responder<()> },
 # }
 # type Responder<T> = oneshot::Sender<mini_redis::Result<T>>;
 # fn dox() {
@@ -369,7 +369,7 @@ let t2 = tokio::spawn(async move {
     let (resp_tx, resp_rx) = oneshot::channel();
     let cmd = Command::Set {
         key: "foo".to_string(),
-        val: b"bar".to_vec(),
+        val: "bar".into(),
         resp: resp_tx,
     };
 
@@ -390,7 +390,7 @@ Finally, update the manager task to send the response over the `oneshot` channel
 # #[derive(Debug)]
 # enum Command {
 #     Get { key: String, resp: Responder<Option<bytes::Bytes>> },
-#     Set { key: String, val: Vec<u8>, resp: Responder<()> },
+#     Set { key: String, val: Bytes, resp: Responder<()> },
 # }
 # type Responder<T> = oneshot::Sender<mini_redis::Result<T>>;
 # async fn dox(mut client: mini_redis::client::Client) {
@@ -403,7 +403,7 @@ while let Some(cmd) = rx.recv().await {
             let _ = resp.send(res);
         }
         Command::Set { key, val, resp } => {
-            let res = client.set(&key, val.into()).await;
+            let res = client.set(&key, val).await;
             // Ignore errors
             let _ = resp.send(res);
         }
