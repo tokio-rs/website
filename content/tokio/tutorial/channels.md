@@ -341,6 +341,7 @@ Now, update the tasks issuing the commands to include the `oneshot::Sender`.
 
 ```rust
 # use tokio::sync::{oneshot, mpsc};
+# use bytes::Bytes;
 # #[derive(Debug)]
 # enum Command {
 #     Get { key: String, resp: Responder<Option<bytes::Bytes>> },
@@ -387,6 +388,7 @@ Finally, update the manager task to send the response over the `oneshot` channel
 
 ```rust
 # use tokio::sync::{oneshot, mpsc};
+# use bytes::Bytes;
 # #[derive(Debug)]
 # enum Command {
 #     Get { key: String, resp: Responder<Option<bytes::Bytes>> },
