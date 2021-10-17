@@ -225,10 +225,10 @@ let manager = tokio::spawn(async move {
 
         match cmd {
             Get { key } => {
-                client.get(&key).await;
+                client.get(&key).await.unwrap();
             }
             Set { key, val } => {
-                client.set(&key, val).await;
+                client.set(&key, val).await.unwrap();
             }
         }
     }
