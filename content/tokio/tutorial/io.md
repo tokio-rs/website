@@ -186,7 +186,7 @@ use tokio::net::TcpListener;
 # fn dox() {
 #[tokio::main]
 async fn main() -> io::Result<()> {
-    let listener = TcpListener::bind("127.0.0.1:6142").await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:6142").await?;
 
     loop {
         let (mut socket, _) = listener.accept().await?;
@@ -234,7 +234,7 @@ async fn main() -> io::Result<()> {
     let (mut rd, mut wr) = io::split(socket);
 
     // Write data in the background
-    let write_task = tokio::spawn(async move {
+    tokio::spawn(async move {
         wr.write_all(b"hello\r\n").await?;
         wr.write_all(b"world\r\n").await?;
 
@@ -306,7 +306,7 @@ use tokio::net::TcpListener;
 # fn dox() {
 #[tokio::main]
 async fn main() -> io::Result<()> {
-    let listener = TcpListener::bind("127.0.0.1:6142").await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:6142").await?;
 
     loop {
         let (mut socket, _) = listener.accept().await?;
