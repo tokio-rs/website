@@ -5,30 +5,22 @@ description: "May 17, 2021"
 ---
 
 [Tower] is a library of modular and reusable components for building robust
-networking clients and servers. At its core is the [`Service`] trait. A
-`Service` is an asynchronous function that takes a request and produces a
-response. However, some aspects of its design may not be immediately obvious.
-Rather than explaining the `Service` trait as it exists in Tower today, let's
-look at the motivation behind `Service` by imagining how you might invent it if
-you started from scratch.
+networking clients and servers.
 
-Imagine you are building a little HTTP framework in Rust. The framework would
-allow users to implement an HTTP server by supplying code that receives requests
-and replies with some response.
+At its core is the [`Service`] trait; its main role is to specify an
+asynchronous function that accepts a request and returns a response. However,
+some aspects of its design may not be immediately obvious. Rather than
+explaining the `Service` trait as it exists in Tower today, let's look at the
+motivation behind `Service` by imagining how you might invent it if you started
+from scratch.
 
-You might have an API like this:
+Imagine you are building a little HTTP framework in Rust. Your framework brings
+a few constructs such as `HttpRequest` and `HttpResponse` and allow users to
+easily implement an HTTP server by only supplying the code that receives a
+request and replies with some response.
 
-```rust
-// Create a server that listens on port 3000
-let server = Server::new("127.0.0.1:3000").await?;
-
-// Somehow run the user's application
-server.run(the_users_application).await?;
-```
-
-The question is, what should `the_users_application` be?
-
-The simplest thing that just might work is:
+You expect your users to define such code as processing functions with the
+following signature (yes, it is not async, but we will fix that later):
 
 ```rust
 fn handle_request(request: HttpRequest) -> HttpResponse {
@@ -36,9 +28,29 @@ fn handle_request(request: HttpRequest) -> HttpResponse {
 }
 ```
 
-Where `HttpRequest` and `HttpResponse` are some structs provided by our framework.
+Using your framework, a user would for instance implement
 
-With this, we can implement `Server::run` like so:
+```rust
+fn handle_request(request: HttpRequest) -> HttpResponse {
+    if request.path() == "/" {
+        HttpResponse::ok("Hello, World!")
+    } else {
+        HttpResponse::not_found()
+    }
+}
+```
+
+and then provide it to your framework's `Server::run` method simply as follows:
+
+```rust
+// Create a server that listens on port 3000
+let server = Server::new("127.0.0.1:3000").await?;
+
+// Somehow run the user's application
+server.run(handle_request).await?;
+```
+
+Your framework provides this `Server::run` method:
 
 ```rust
 impl Server {
@@ -61,34 +73,25 @@ impl Server {
 }
 ```
 
-Here, we have an asynchronous function `run` which takes a closure that accepts an
-`HttpRequest` and returns an `HttpResponse`.
+where you have chosen to delegate each request to the user's handler function
+and write back the produced response somehow.
 
-That means users can use our `Server` like so:
+Expecting the user to provide a synchronous function is not too bad of a
+design; at least it makes it easy for users to run HTTP servers without
+worrying about any of the low-level details.
 
-```rust
-fn handle_request(request: HttpRequest) -> HttpResponse {
-    if request.path() == "/" {
-        HttpResponse::ok("Hello, World!")
-    } else {
-        HttpResponse::not_found()
-    }
-}
+However, the server won't handle requests asynchronously. This is a major issue
+if your user's function performs operations that are asynchronous in nature,
+such as querying a database or sending a request to some other server. In such
+cases, the entire server's loop is blocked (see [blocking]) while waiting for
+the user's handler to produce a response.
 
-// Run the server and handle requests using our `handle_request` function
-server.run(handle_request).await?;
-```
+Of course you want to provide your users with a server that can handle a large
+number of concurrent connections, so the server needs the ability to serve
+other requests while it waits for that request to complete asynchronously.
 
-This is not bad. It makes it easy for users to run HTTP servers without worrying
-about any of the low level details.
-
-However, our current design has one issue: we cannot handle requests
-asynchronously. Imagine our user needs to query a database or send a request to
-some other server while handling the request. Currently, that would require
-[blocking] while we wait for the handler to produce a response. If we want our
-server to be able to handle a large number of concurrent connections, we need
-to be able to serve other requests while we wait for that request to complete
-asynchronously. Let's fix this by having the handler function return a [future]:
+Let's improve your framework's design by having the handler be an asynchronous
+function, meaning it returns a [future]:
 
 ```rust
 impl Server {
@@ -114,7 +117,8 @@ impl Server {
 }
 ```
 
-Using this API is very similar to before:
+Users can now provide asynchronous handler functions which may perform some
+asynchronous operations. For instance, your user would now write
 
 ```rust
 // Now an async function
@@ -129,15 +133,28 @@ async fn handle_request(request: HttpRequest) -> HttpResponse {
         HttpResponse::not_found()
     }
 }
+```
 
-// Running the server is the same
+leaving unchanged the rest of your framework's API!
+
+```rust
+// Running the server remains the same
 server.run(handle_request).await?;
 ```
 
-This is much nicer, since our request handling can now call other async
-functions. However, there is still something missing. What if our handler
-encounters an error and cannot produce a response? Let's make it return a
-`Result`:
+This design is better but it still needs some refinement as your framework
+currently forces your users to provide handler functions which never fail.
+
+Let's then update the handler's signature to return a `Result<HttpResponse,
+Error>` instead of a simple `HttpResponse`:
+
+```rust
+// User defines the body
+async fn handle_request(request: HttpRequest) -> Result<HttpResponse, Error> { ... }
+```
+
+Your framework's `Server::run` method only needs a minor adjustment to handle
+the potential errors returned:
 
 ```rust
 impl Server {
@@ -163,27 +180,39 @@ impl Server {
 }
 ```
 
+Job done.
+
 # Adding more behavior
 
-Now, suppose we want to ensure that all requests complete in a timely manner
-or fail, rather than keeping the client waiting indefinitely for a response that
-may never arrive. We can do this by adding a _timeout_ to each request. A
-timeout sets a limit on the maximum duration the `handler` is allowed to take.
-If it doesn't produce a response within that amount of time, an error is returned.
-This allows the client to retry that request or report an error to the user, rather
-than waiting forever.
+## Timeouts
 
-Your first idea might be to modify `Server` so that it can be configured with a timeout.
-It would then apply that timeout every time it calls `handler`. However, it turns out
-you can actually add a timeout without modifying `Server`. Using
-[`tokio::time::timeout`], we can make a new handler function that calls our
-previous `handle_request`, but with a timeout of 30 seconds:
+As a framework author, you want to allow users to perform arbitrary
+asynchronous operations. You cannot control though if some of their operations
+make asynchronous calls and end up waiting indefinitely for some resource. So
+your framework should offer the option of ensuring that requests do complete in
+a timely manner or fail. Users willing to opt in that behavior would leverage
+your framework even more.
+
+You can do this by adding a _timeout_ to each request. A timeout sets a limit
+on the maximum duration your user's handler should be waited for. If it doesn't
+produce a response within some amount of time, the framework takes back control
+and returns a specific error. This allows users of the framework to identify
+this timeout case, and either retry the request or report an error to their own
+user, rather than waiting indefinitely.
+
+Your first idea might be to modify `Server` so that it can be configured with a
+timeout. It would then apply that timeout every time it calls `handle_request`.
+However, modifying `Server` is not the most flexible solution. A better way is
+to add a new handler function to your framework, allowing users to opt in.
+
+The following implementation uses [`tokio::time::timeout`] to call your user's
+`handle_request` function, but with a timeout of 30 seconds:
 
 ```rust
 async fn handler_with_timeout(request: HttpRequest) -> Result<HttpResponse, Error> {
     let result = tokio::time::timeout(
         Duration::from_secs(30),
-        handle_request(request)
+        handle_request(request)  // <- user's function here
     ).await;
 
     match result {
@@ -194,77 +223,112 @@ async fn handler_with_timeout(request: HttpRequest) -> Result<HttpResponse, Erro
 }
 ```
 
-This provides a quite nice separation of concerns. We were able to add a timeout
-without changing any of our existing code.
+This design provides a nice separation of concerns. We were able to add a
+timeout without modifying any existing framework code.
 
-Let's add one more feature in this way. Imagine we're building a JSON API and
-would therefore like a `Content-Type: application/json` header on all responses.
-We can wrap `handler_with_timeout` in a similar way, and modify the response like
-so:
+## JsonContentType
+
+Let's add one more feature to your framework using the same design. Imagine
+your user is building a JSON API and therefore wants a `Content-Type:
+application/json` header on all responses. Let's add to your framework a new
+`handler_with_timeout_and_content_type` function which wraps the
+`handler_with_timeout` function and modifies its response like so:
 
 ```rust
 async fn handler_with_timeout_and_content_type(
     request: HttpRequest,
 ) -> Result<HttpResponse, Error> {
     let mut response = handler_with_timeout(request).await?;
+    // actual timeouts have been returned at this point
     response.set_header("Content-Type", "application/json");
     Ok(response)
 }
 ```
 
-We now have a handler that will process an HTTP request, take no longer than 30
-seconds, and always have the right `Content-Type` header, all without modifying
-our original `handle_request` function or `Server` struct.
+As a framework author, you have a choice here:
 
-Designing libraries that can be extended in this way is very powerful, since it
-allows users to extend the library's functionality by layering in new behavior,
-without having to wait for the library maintainers to add support for it.
+- You can design the `Server::run` method to call the above handler; this
+  makes the framework now always present the following behavior to your users:
+  they provide a handler that will process an HTTP request, but take no longer
+  than 30 seconds, and always have the right `Content-Type` header.
+- You can alternatively let users wrap their custom handler function with the
+  new `handler_with_timeout_and_content_type`, and pass that your existing
+  `Server::run` method.
+
+Instead of making that choice now, let's take a step back, because these
+hard-coded handlers would lead us into a rabbit hole.
+
+We just added 2 composable behaviors to your framework:
+
+- Without changing requirements on the user's `handle_request` function (it
+  is still async, takes a `HttpRequest` and still returns a
+  `Result<HttpResponse, Error>`.
+- Without adding any code or complexity to the `Server`.
+
+Designing frameworks in such a way is very powerful, since it allows users to
+extend the library's functionality by layering in new behavior, without having
+to wait for the library maintainers to add support for it.
 
 It also makes testing easier, since you can break your code into small isolated
 units and write fine-grained tests for them, without worrying about all the
 other pieces.
 
-However, there is one problem. Our current design lets us compose new
-behavior by wrapping a handler function in a new handler function that
-implements the behavior and then calls the inner function. This works, but
-it doesn't scale very well if we want to add *lots* of additional functionality.
-Imagine we have many `handle_with_*` functions that each add a little bit
-new of behavior. Having to hard-code the chain of which intermediate handler
-calls which will become challenging. Our current chain is
+# More flexible composition of behaviors
 
-1. `handler_with_timeout_and_content_type` which calls
-2. `handler_with_timeout` which calls
-3. `handle_request` which actually processes the request
+The current design composes behaviors via nesting (which is not a problem by
+itself), but that nesting is currently hard-coded, so it lacks flexibility
+(like composing two behaviors the other way around) and most importantly it
+exposes you, the framework author, to the combinatorial explosion of those
+composed behaviors when many new ones are added to your framework.
 
-It would be nice if we could somehow [compose] these three functions without
-having to hard-code the exact order. Something like:
+Let's start fresh with your current call chain:
+
+1. `handler_with_timeout_and_content_type` accepts an `HttpRequest` and calls
+2. `handler_with_timeout` accepts an `HttpRequest` and calls
+3. `handle_request` is your user's handler function, it accepts an
+   `HttpRequest` and actually processes it, maybe asynchronously
+
+It would be nice if your user could somehow [compose] freely these three
+functions. Something like:
 
 ```rust
 let final_handler = with_content_type(with_timeout(handle_request));
+// or possibly in a different order
 ```
 
-While still being able to run our handler like before:
+while still being able to use the final handler in `Server::run` as simply as
+before:
 
 ```rust
 server.run(final_handler).await?;
 ```
 
-You could try and implement `with_content_type` and `with_timeout` as functions
-that took an argument of type `F: Fn(HttpRequest) -> Future<Output =
-Result<HttpResponse, Error>>` and returned a closure like `impl Fn(HttpRequest)
--> impl Future<Output = Result<HttpResponse, Error>>` but that actually isn't
-possible due to limitations in where Rust allows `impl Trait` today.
-Specifically `impl Fn() -> impl Future` is not allowed. Using `Box` would be
-possible but that has a performance cost we would like to avoid.
+A seemingly attractive implementation is to abstract away the functions' return
+types behind an `impl Fn(HttpRequest) -> impl Future<Output =
+Result<HttpResponse, Error>>`. For instance, you could try to implement
+`with_content_type` and `with_timeout` as functions that
+
+- took an argument of type `F: Fn(HttpRequest) -> Future<Output =
+  Result<HttpResponse, Error>>`
+- and returned a closure like `impl Fn(HttpRequest) -> impl Future<Output =
+  Result<HttpResponse, Error>>`.
+
+but that actually isn't possible due to limitations in where Rust allows `impl
+Trait` today. Specifically `impl Fn() -> impl Future` is not allowed.
+
+A known workaround this compiler limitation is to use `Box` for the return
+type, but boxing allocates on each request, and with many behaviors allocating
+on each request, this becomes a performance cost you would like to avoid.
 
 You also wouldn't be able to add other behavior to your handlers besides calling
-them but why thats necessary is something we'll get back to.
+them but why that's necessary is something we'll get back to.
 
 # The `Handler` trait
 
-Let's try another approach. Rather than `Server::run` accepting a closure
-(`Fn(HttpRequest) -> ...`), let's make a new trait that encapsulates the same `async
-fn(HttpRequest) -> Result<HttpResponse, Error>`:
+Let's approach this flexible composition in a different way. Rather than
+`Server::run` accepting a closure (`Fn(HttpRequest) -> ...`), let's enrich your
+framework with a new trait that encapsulates the same `async fn(HttpRequest) ->
+Result<HttpResponse, Error>`:
 
 ```rust
 trait Handler {
@@ -272,14 +336,15 @@ trait Handler {
 }
 ```
 
-Having a trait like this allows us to write concrete types that implement it, so
-we don't have to deal with `Fn`s all the time.
+An immediate convenience to your users is they can write concrete types that
+implement that trait, so they don't have to deal with `Fn`s all the time.
 
-However, Rust currently doesn't support async trait methods, so we have two options:
+However, Rust currently doesn't support async trait methods, so we have two
+options:
 
-1. Make `call` return a boxed future like `Pin<Box<dyn Future<Output =
+1. Make the `call` method return a boxed future like `Pin<Box<dyn Future<Output =
    Result<HttpResponse, Error>>>`. This is what the [async-trait] crate does.
-2. Add an associated `type Future` to `Handler` so users get to pick their own
+2. Add an associated `type Future` to the trait so users get to pick their own
    type.
 
 Let's go with option two, as it's the most flexible. Users who have a concrete future
@@ -294,14 +359,15 @@ trait Handler {
 }
 ```
 
-We still have to require that `Handler::Future` implements `Future` with the
-output type `Result<HttpResponse, Error>`, as that is what `Server::run` requires.
+As written above, the trait still satisfies the requirements of the
+`Server::run` method because it requires that `Handler::Future` implements
+`Future` with the output type `Result<HttpResponse, Error>`.
 
-Having `call` take `&mut self` is useful because it allows handlers to update
-their internal state if necessary<sup>[1](#pin)</sup>.
+In addition, having `call` take `&mut self` is useful because it allows
+handlers to update their internal state if necessary<sup>[1](#pin)</sup>.
 
-Let's convert our original `handle_request` function into an implementation of
-this trait:
+With this new trait in the framework, let's imagine how a user would rewrite
+their original `handle_request` function to implement the `Handler` trait:
 
 ```rust
 struct RequestHandler;
@@ -327,11 +393,18 @@ impl Handler for RequestHandler {
 }
 ```
 
-How about supporting timeouts? Remember, the solution we're aiming for is one
-that allows us to combine different pieces of functionality together without
-having to modify each individual piece.
+# Implementing `Timeout` and `JsonContentType` handlers
 
-What if we defined a generic `Timeout` struct like this:
+We're now left with figuring out the implementation of `Handler` for our two
+existing framework behaviors: Timeout and JsonContentType.
+
+Remember, the solution we're aiming for is one that allows us to compose
+different pieces of functionality (behaviors) which each implement the
+`Handler` trait and delegate to an object which implements that same trait.
+
+## Implementing `timeout`
+
+Let's proceed step by step and define a generic `Timeout` struct like this:
 
 ```rust
 struct Timeout<T> {
@@ -341,8 +414,8 @@ struct Timeout<T> {
 }
 ```
 
-We could then implement `Handler` for `Timeout<T>` and delegate to `T`'s
-`Handler` implementation:
+and then implement `Handler` for `Timeout<T>` (note that it delegates to `T`'s
+`Handler` implementation via `self.inner_handler.call(request)`):
 
 ```rust
 impl<T> Handler for Timeout<T>
@@ -355,7 +428,7 @@ where
         Box::pin(async move {
             let result = tokio::time::timeout(
                 self.duration,
-                self.inner_handler.call(request),
+                self.inner_handler.call(request), // <- delegation here
             ).await;
 
             match result {
@@ -368,11 +441,26 @@ where
 }
 ```
 
-The important line here is `self.inner_handler.call(request)`. This is where we
-delegate to the inner handler and let it do its thing. We don't know what it is,
-we just know that it produces a `Result<HttpResponse, Error>` when its done.
+Let's explicitly mention a few things:
 
-This code doesn't quite compile though. We get an error like this:
+- The delegation line `self.inner_handler.call(request)` calls `inner_handler`
+  which is bound to be a `Handler`, so we know its `call` method produces a
+  future which if ever ready resolves into a `Result<HttpResponse, Error>`.
+  That's all there is to it.
+- By design `tokio::time::timeout` already awaits that future, so there is no
+  need to await it directly in the `call` method of `Timeout<T>`.
+- Because the future type is a `Pin<Box<dyn Future...>>` the call to
+  `tokio::time::timeout` needs to be made in an async move block. More on
+  this right after.
+- By design `tokio::time::timeout` needs to express if the future was
+  resolved before the timeout occurred, and it does so by returning its own
+  Result which is an error if the timeout occurred before the future was ready.
+  In order to hide that implementation detail and return the expected type for
+  a `Handler::call` method, a match unpacks this specific result and has two
+  error cases: if the call failed, or if it timed out.
+
+The `Timeout<T>` implementation is not entirely correct yet because the `async
+move` we mentioned above causes the following compiler error:
 
 ```
 error[E0759]: `self` has an anonymous lifetime `'_` but it needs to satisfy a `'static` lifetime requirement
@@ -391,17 +479,24 @@ error[E0759]: `self` has an anonymous lifetime `'_` but it needs to satisfy a `'
     | |_________^ ...is captured here, requiring it to live as long as `'static`
 ```
 
-The issue is that we're capturing a `&mut self` and moving it into an async
-block. That means the lifetime of our future is tied to the lifetime of `&mut
-self`. This doesn't work for us, since we might want to run our response futures
-on multiple threads to get better performance, or produce multiple response
-futures and run them all in parallel. That isn't possible if a reference to the
-handler lives inside the futures<sup>[2](#gats)</sup>.
+The issue is that `&mut self` is captured and moved into the async block. That
+means the lifetime of our future is tied to the lifetime of `&mut self`. This
+doesn't work for us, since you might want your framework to run the response
+futures on multiple threads to get better performance, or produce multiple
+response futures and run them all in parallel. That isn't possible if a
+reference to the handler lives inside the futures<sup>[2](#gats)</sup>.
 
-Instead we need to convert the `&mut self` into an owned `self`. That is exactly
-what `Clone` does:
+Instead the `&mut self` needs to be converted into an owned `self`: exactly
+what `Clone` does!
+
+The following code provides an overview of your user's `RequestHandler` custom
+code, and your framework's `Timeout` which wraps it. Simply note the new
+requirement of your `Handler` trait: your users `Handler` implementations (and
+your framework's) now have to implement `Clone`.
 
 ```rust
+// User's code
+
 // this must be `Clone` for `Timeout<T>` to be `Clone`
 #[derive(Clone)]
 struct RequestHandler;
@@ -409,6 +504,8 @@ struct RequestHandler;
 impl Handler for RequestHandler {
     // ...
 }
+
+// Framework's code
 
 #[derive(Clone)]
 struct Timeout<T> {
@@ -442,8 +539,9 @@ where
 }
 ```
 
-Note that cloning is very cheap in this case, since `RequestHandler` doesn't have
-any data and `Timeout<T>` only adds a `Duration` (which is `Copy`).
+Don't worry about cloning: in this case it is very cheap since `RequestHandler`
+doesn't have any data and `Timeout<T>` only adds a `Duration` (which is
+`Copy`).
 
 One step closer. We now get a different error:
 
@@ -464,12 +562,12 @@ error[E0310]: the parameter type `T` may not live long enough
     | |__________^ ...so that the type `impl Future` will meet its required lifetime bounds
 ```
 
-The problem now is that `T` can be any type whatsoever. It can even be a type
-that contains references, like `Vec<&'a str>`. However that won't work for the
-same reason as before. We need the response future to have a `'static` lifetime
-so we can more easily pass it around.
+The problem is that, even though `T` has bounds for `Handler + Clone`, it could
+still be a type that contains references, like `Vec<&'a str>`. This can't work
+for the same reason as the previous error.
 
-The compiler actually tells us what the fix is. Add `T: 'static`:
+The response future simply needs to have a `'static` lifetime so it can easily
+passed around: the compiler actually told us what the fix is. Add `T: 'static`:
 
 ```rust
 impl<T> Handler for Timeout<T>
@@ -481,11 +579,60 @@ where
 ```
 
 The response future now satisfies the `'static` lifetime requirement, since it
-doesn't contain references (and any references `T` contains are `'static`). Now,
-our code compiles!
+doesn't contain references (or any references `T` might contain are `'static`).
+Now, this part of your framework compiles!
 
-Let's create a similar handler struct for adding a `Content-Type` header on the
-response:
+For reference, the corrected code is
+
+```rust
+// User's code
+
+// this must be `Clone` for `Timeout<T>` to be `Clone`
+#[derive(Clone)]
+struct RequestHandler;
+
+impl Handler for RequestHandler {
+    // ...
+}
+
+// Framework's code
+
+#[derive(Clone)]
+struct Timeout<T> {
+    inner_handler: T,
+    duration: Duration,
+}
+
+impl<T> Handler for Timeout<T>
+where
+    T: Handler + Clone + 'static,
+{
+    type Future = Pin<Box<dyn Future<Output = Result<HttpResponse, Error>>>>;
+
+    fn call(&mut self, request: HttpRequest) -> Self::Future {
+        // Get an owned clone of `&mut self`
+        let mut this = self.clone();
+
+        Box::pin(async move {
+            let result = tokio::time::timeout(
+                this.duration,
+                this.inner_handler.call(request),
+            ).await;
+
+            match result {
+                Ok(Ok(response)) => Ok(response),
+                Ok(Err(error)) => Err(error),
+                Err(_timeout) => Err(Error::timeout()),
+            }
+        })
+    }
+}
+```
+
+## Implementing `JsonContentType`
+
+Let's proceed similarly to create your framework's handler struct which adds a
+`Content-Type` header on the response:
 
 ```rust
 #[derive(Clone)]
@@ -511,9 +658,12 @@ where
 }
 ```
 
-Notice this follows a very similar pattern to `Timeout`.
+Notice how similar  to `Timeout` this pattern is.
 
-Next up we modify `Server::run` to accept our new `Handler` trait:
+## Modifying `Server::run` for the updated `Handler` trait
+
+The last piece of code to update is the `Server::run` in order to accept the new
+`Handler` trait, and now your framework compiles.
 
 ```rust
 impl Server {
@@ -537,7 +687,8 @@ impl Server {
 }
 ```
 
-We can now compose our three handlers together:
+Your users can now compose their handler with the two handlers your framework
+provides:
 
 ```rust
 JsonContentType {
@@ -548,11 +699,11 @@ JsonContentType {
 }
 ```
 
-And if we add some `new` methods to our types, they become a little easier to
-compose:
+As the above feels a little bit raw, maybe your framework should also provide
+`new` methods to its `Timeout<T>` and `JsonContentType` handlers:
 
 ```rust
-let handler = RequestHandler;
+let handler = RequestHandler; // your user's handler
 let handler = Timeout::new(handler, Duration::from_secs(30));
 let handler = JsonContentType::new(handler);
 
@@ -561,29 +712,41 @@ let handler = JsonContentType::new(handler);
 server.run(handler).await
 ```
 
-This works quite well! We're now able to layer on additional functionality to
-`RequestHandler` without having to modify its implementation. In theory, we could
-put our `JsonContentType` and `Timeout` handlers into a crate and release it as
-library on crates.io for other people to use!
+This works quite well! Users of your framework are now able to layer on
+additional functionality to their `RequestHandler` without having to modify its
+implementation. In theory, if your framework became large, you could decide to
+split out some related handlers into their own crate and release it on
+crates.io!
 
 # Making `Handler` more flexible
 
-Our little `Handler` trait is working quite nicely, but currently it only
-supports our `HttpRequest` and `HttpResponse` types. It would be nice if those
-where generic, so users could use whatever type they want.
+Your `Handler` trait is now working quite nicely for your users, but it
+currently only supports your `HttpRequest` and `HttpResponse` types. It would
+be even nicer the trait was generic over those types, so users could provide
+whatever types they want: Request and Response types for other protocols than
+HTTP.
 
-We make the request a generic type parameter of the trait so that a given
-service can accept many different types of requests. That allows defining
-handlers that can be used for different protocols instead of only HTTP. We make
-response an associated type because for any _given_ request type, there can only
-be one (associated) response type: the one the corresponding call returns!
+In the updated trait below, `Request` is a type parameter because it is freely
+chosen by your user, however the `Response` is an associated type because for
+any _given_ request type, there can only be one (associated) response type: the
+one the corresponding call returns!
+
+When facing such design decisions, think of how many degrees of freedom you
+have: in this case, for a given protocol, there is only one request type, and
+one response type, one has to be the parameter, and the dependent type has to
+be associated. As an alternative, the trait could have been generic over
+another type, the Protocol (if such type existed in your framework) and the
+trait would have had both the `Request` and `Response` as associated types,
+however we thought this choice introduces an additional type (Protocol) which
+we think does not bring much additional value. So here you are with just one
+type parameter, the request, and one associated response type.
 
 ```rust
 trait Handler<Request> {
     type Response;
 
     // Error should also be an associated type. No reason for that to be a
-    // hardcoded type
+    // hard-coded type
     type Error;
 
     // Our future type from before, but now it's output must use
@@ -597,7 +760,8 @@ trait Handler<Request> {
 }
 ```
 
-Our implementation for `RequestHandler` now becomes
+With this trait in your framework, this is how one of your user would implement
+their `RequestHandler` for the HTTP protocol:
 
 ```rust
 impl Handler<HttpRequest> for RequestHandler {
@@ -611,13 +775,32 @@ impl Handler<HttpRequest> for RequestHandler {
 }
 ```
 
-`Timeout<T>` is a bit different. Since it wraps some other `Handler` and adds an
-async timeout, it actually doesn't care about what the request or response types
-are, as long as the `Handler` it is wrapping uses the same types.
+We hope you agree this is not much added complexity to your users.
 
-The `Error` type is a bit different. Since `tokio::time::timeout` returns
-`Result<T, tokio::time::error::Elapsed>`, we must be able to convert a
-`tokio::time::error::Elapsed` into the inner `Handler`'s error type.
+The rest of your framework has to be adjusted slightly. Starting with
+`Timeout<T>`.
+
+Since `Timeout<T>` wraps some other type `T` which implements `Handler`, it
+actually doesn't care about what the request or response types are, as long as
+the `Handler` it wraps uses the same types. So `Timeout` will remain generic
+over one type: its wrapped `Handler` called `T`. However, the implementation of
+`Handler<R>` for `Timeout<T>` has to drive the correct types through. Consider
+the following while looking at the code below:
+
+- As in the previous implementation, the `Error` type still has to be handled
+  specifically since `tokio::time::timeout` returns `Result<T,
+  tokio::time::error::Elapsed>`. The implementation must then be able to
+  convert a `tokio::time::error::Elapsed` into the inner `Handler`'s error
+  type. For this reason, the where bound specifies `T::Error:
+  From<tokio::time::error::Elapsed>`.
+- For the same reason, the error type returned by `Timeout` must be the same
+  type as the one of its wrapped handler: so the associated error type must be:
+  `T::Error` and the match code performs that conversion.
+- The exact same goes for the associated response type; it must be
+  `T::Response` and `Timeout<T>::call` has to return a future to a result of
+  a `T::Response`.
+- As before, the request of type `R` will be moved inside the async block and
+  thus should not contain any references: it must then be `'static`.
 
 If we put all those things together we get
 
@@ -626,12 +809,14 @@ If we put all those things together we get
 // accepts the same type of request
 impl<R, T> Handler<R> for Timeout<T>
 where
-    // The actual type of request must not contain
-    // references. The compiler would tell us to add
-    // this if we didn't
+    // As with the previous implementation, the actual
+    // type of request must not contain references.
+    // The compiler would tell us to add this anyway.
     R: 'static,
+
     // `T` must accept requests of type `R`
     T: Handler<R> + Clone + 'static,
+
     // We must be able to convert an `Elapsed` into
     // `T`'s error type
     T::Error: From<tokio::time::error::Elapsed>,
@@ -668,11 +853,30 @@ where
 }
 ```
 
-`JsonContentType` is a bit different. It doesn't care about the request or error
-types but it does care about the response type. It must be `Response` such that
-we can call `set_header`.
+Now the implementation of `Timeout<T>` is correct, let's switch to
+`JsonContentType`.
 
-The implementation therefore is:
+Consider the following while reading the code below:
+
+- This handler cannot fail, but as it implements your `Handler` trait, it must
+  still return a future to a result of a `Response`. This is implemented by
+  returning inconditionally an `Ok(response)`.
+- This response is modified via a call to `set_header` (did you notice the
+  `let mut response`?); a method that only exists on `HttpResponse`. Indeed,
+  that handler has no requirements on the request or error types but it needs
+  the response type to be `HttpResponse`. This is why the response associated
+  type is bound to be `HttpResponse`.
+- If you look closer at the associated `Future` type, you will see that this
+  time (as opposed to `Timeout<T>`) the result type is the parameter
+  `Response`. We could have written equivalently `T::Response` or
+  `HttpResponse` because they're all the same here.
+- The implementation is generic over the request type, but let's be honest,
+  which other kind of request than `HttpRequest` could ever return a
+  `HttpResponse`? ;) In the present case we use the parameter `R` to bind
+  `'static`, but it's very likely that using `HttpRequest` (which you designed
+  in your framework as not containing any references) would work just as well.
+
+The implementation is:
 
 ```rust
 // Again a generic request type
@@ -702,8 +906,10 @@ where
 }
 ```
 
-Finally, the `Handler` passed to `Server::run` must use `HttpRequest` and
-`HttpResponse`:
+The last piece of your framework that needs a slight update is the
+`Server::run` method. In the present case, we decide that the `Server` is
+purely a HTTP server so the `Handler` that your users pass to it must use
+`HttpRequest` and `HttpResponse`:
 
 ```rust
 impl Server {
@@ -716,7 +922,8 @@ impl Server {
 }
 ```
 
-Creating the server has not changed:
+For users of your framework, after they have implemented their own
+`RequestHandler` as shown previously, there is no change on the call site:
 
 ```rust
 let handler = RequestHandler;
@@ -729,19 +936,24 @@ server.run(handler).await
 So, we now have a `Handler` trait that makes it possible to break our
 application up into small independent parts and re-use them. Not bad!
 
-# "What if I told you..."
+# Why renaming the `Handler` trait to `Service` makes sense
 
-Until now, we've only talked about the server side of things. But, our `Handler`
-trait actually fits HTTP clients as well. One can imagine a client `Handler`
-that accepts some request and asynchronously sends it to someone on the
-internet. Our `Timeout` wrapper is actually useful here as well.
-`JsonContentType` probably isn't, since it's not the clients job to set response
-headers.
+Until now, we've only talked about the server side of things. But, your
+`Handler` trait actually fits HTTP clients as well where a client implementing
+`Handler` accepts some request and asynchronously sends it over the network.
+Your `Timeout` handler can definitely be used here as well. `JsonContentType`
+probably isn't, since it's not the clients job to set response headers.
 
-Since our `Handler` trait is useful for defining both servers and clients,
-`Handler` probably isn't an appropriate name. A client doesn't handle a request,
-it sends it to a server and the server handles it. Let's instead call our trait
-`Service`:
+Since the `Handler` trait is useful for defining both servers and clients, but
+clients do not "handle" requests, `Handler` probably isn't an appropriate name.
+
+The canonical term for software which processes requests or responses between
+the reception point and the processing point is "Middleware", and in
+particular, `Timeout` and `JsonContentType` are composable bits of middleware.
+There are many others in Tower, each providing some kind of "service", for
+instance logging, reconnection, load balancing. The term "Service" sticked.
+
+Let's then rename your `Handler` trait to `Service`:
 
 ```rust
 trait Service<Request> {
@@ -754,11 +966,11 @@ trait Service<Request> {
 ```
 
 This is actually _almost_ the `Service` trait defined in Tower. If you've been
-able to follow along until this point you now understand most of Tower. Besides
-the `Service` trait, Tower also provides several utilities that implement
-`Service` by wrapping some other type that also implements `Service`, exactly
-like we did with `Timeout` and `JsonContentType`. These services can be
-composed in ways similar to what we've done thus far.
+following along you now understand most of Tower. Besides the `Service` trait,
+Tower also provides several utilities that implement `Service` by wrapping some
+other type that also implements `Service`, exactly like we did with `Timeout`
+and `JsonContentType`. These services can be composed in ways similar to what
+we've done thus far.
 
 Some example services provided by Tower:
 
@@ -767,23 +979,32 @@ Some example services provided by Tower:
 - [`RateLimit`] - To limit the number of requests a service will receive over a
   period of time.
 
-Types like `Timeout` and `JsonContentType` are typically called _middleware_,
-since they wrap another `Service` and transform the request or response in some
-way. Types like `RequestHandler` are typically called _leaf services_, since they
-sit at the leaves of a tree of nested services. The actual responses are normally
-produced in leaf services and modified by middleware.
+Various Software Patterns are used in Tower services:
+
+- Decorators wrap an object and enrich its behavior while keeping the same
+  interface: for instance, `Timeout` decorates its wrapped service.
+- Adapters are used in various places: for instance, inside `Timeout` the
+  result type from `tokio::time::timeout` is adapted to the result type the
+  `Service::call` method.
+- And several others.
+
+User-provided types like `RequestHandler` are typically called _leaf services_,
+since they sit at the leaves of a tree of nested services. The actual responses
+are normally produced in leaf services and modified by middleware.
 
 The only thing left to talk about is _backpressure_ and [`poll_ready`].
 
 # Backpressure
+
+## The problem
 
 Imagine you wanted to write a rate limit middleware that wraps a `Service` and
 puts a limit on the maximum number of concurrent requests the underlying service
 will receive. This would be useful if you had some service that had a hard upper
 limit on the amount of load it could handle.
 
-With our current `Service` trait, we don't really have a good way to implement
-something like that. We could try:
+With your current `Service` trait, you don't really have a good way to implement
+such rate limiting. You could try:
 
 ```rust
 impl<R, T> Service<R> for ConcurrencyLimit<T> {
@@ -798,16 +1019,17 @@ impl<R, T> Service<R> for ConcurrencyLimit<T> {
 }
 ```
 
-If there is no capacity left, we have to wait and somehow get notified when
-capacity becomes available. Additionally, we have to keep the request in memory
-while we're waiting (also called _buffering_). This means that the more requests
-that are waiting for capacity, the more memory our program would use --- if more
-requests are produced than our service can handle, we might run out of memory!
-It would be more robust to only allocate space for the request when we are sure
-the service has capacity to handle it. Otherwise, we risk using a lot of memory
-buffering requests while we wait for our service to become ready.
+In this scenario, if there was no capacity left, the code would have to wait
+and somehow get notified when capacity becomes available. Additionally, it
+would have to keep the request in memory while waiting (also called _buffering_
+the request). This means that the more requests are waiting for capacity, the
+more memory your user's program would use --- if more requests are produced
+than our service can handle, they might even run out of memory! It would be
+more robust to only allocate space for the request when it is certain that the
+service has capacity to handle it.
 
-It would be nice if `Service` had a method like this:
+Let's sketch and discuss a solution to this. It would be nice if `Service` had
+a method similar to this (the final method is presented after):
 
 ```rust
 trait Service<R> {
@@ -815,29 +1037,56 @@ trait Service<R> {
 }
 ```
 
-`ready` would be an async function that completes when the service has capacity
-enough to receive one new request. We would then require users to first call
-`service.ready().await` before doing `service.call(request).await`.
+In this scenario, `ready` would be an async function that completes when the
+service has capacity enough to receive one new request. Of course, the
+semantics are correct only if `service.ready().await` is called before
+`service.call(request).await`, but this can be enforced:
+
+- on your types by your framework
+- on user types by qualifying a misuse as API contract violation and allowing
+  your framework types to `panic` if `call`ed when not ready.
+
+Imagine a new service which implements that design: `ConcurrencyLimit`. It
+tracks capacity inside the `ready` function and prevents users from calling
+`call` until there is sufficient capacity.
 
 Separating "calling the service" from "reserving capacity" also unlocks new use
-cases, such as being able to maintain a set of "ready services" that we keep up
-to date in the background, so that when a request arrives we already have a
-ready service to send it to and don't have to first wait for it to become ready.
+cases, such as being able to maintain a set of "ready services" that your
+framework keeps up to date in the background, such that any new request already
+has a service ready to process it without entering the `call` method and wait
+for readiness first.
 
-With this design, `ConcurrencyLimit` could track capacity inside `ready` and not
-allow users to call `call` until there is sufficient capacity.
-
-`Service`s that don't care about capacity can just return immediately from
-`ready`, or if they wrap some inner `Service`, they could delegate to its
+Other services that don't care about capacity could just return immediately from
+the call to `ready`, or if they wrap some inner `Service`, they could delegate to its
 `ready` method.
 
-However, we still cannot define async functions inside traits. We could add
-another associated type to `Service` called `ReadyFuture`, but having to return a
-`Future` will give us the same lifetime issues we've run into before. It would
-be nice if there was some way around that.
+That would be ideal, but... Rust does not yet allow defining async functions
+inside traits.
 
-Instead, we can take some inspiration from the `Future` trait and define a method
-called `poll_ready`:
+Earlier, we already faced that same situation with the `Service::call`
+method; it also could not be directly declared as an async function within the
+`Service` trait. The solution was to make the `Service::call` a sync function
+which returns its own Future type and make that type an associated type to the
+`Service` trait.
+
+If an async function is really needed, this is the best solution right now and
+still offers a choice: either pay the cost of a `Box::Pin` allocation for each
+request, or force the service's author (you or your user) to declare a custom
+future type --- we did not illustrate that solution in this tutorial for
+brevity, but rest assured that Tower does exactly that for its services.
+
+The question is: does the `ready` function actually needs to be async?
+
+If it does need to be async, you can apply that same "custom future type"
+solution. As before however this leaks into the trait declaration, and is a bit
+cumbersome because of the extra development effort for _every_ service.
+
+You will see next why `ready` needs not being async and why Tower adopted it.
+
+## Tower's solution
+
+Taking some inspiration from the `Future` trait, your framework (and Tower)
+define a _synchronous_ method called `poll_ready`:
 
 ```rust
 use std::task::{Context, Poll};
@@ -847,40 +1096,44 @@ trait Service<R> {
 }
 ```
 
-This means if the service is out of capacity, `poll_ready` will return
-`Poll::Pending` and notify the caller using the waker from the `Context` when
-capacity becomes available. At that point, `poll_ready` can be called again, and
-if it returns `Poll::Ready(())` then capacity is  reserved and `call` can be
+If the service is out of capacity, `poll_ready` returns `Poll::Pending` and
+will notify the caller using the waker from the `Context` when capacity becomes
+available. At that point, `poll_ready` can be called again and returns
+`Poll::Ready(())` indicating the capacity is reserved and `call` can be
 called.
 
-Note that there is technically nothing that prevents users from calling `call`
-without first making sure the service is ready. However, doing so is considered a
-violation of the `Service` API contract, and implementations are allowed to `panic`
-if `call` is called on a service that isn't ready!
+There is still the caveat that nothing technically prevents users from calling
+`call` without first making sure the service is ready. However, we gave our
+line of thinking in the previous section: enforce correct use in your framework
+types, and `panic` if `call` is called on a service that isn't ready.
 
-`poll_ready` not returning a `Future` also means we're able to quickly check if
-a service is ready without being forced to wait for it to become ready. If we
-call `poll_ready` and get back `Poll::Pending`, we can simply decide to do
-something else instead of waiting. Among other things, this allows you to build
-load balancers that estimate the load of services by how often they return
-`Poll::Pending`, and send requests to the service with the least load.
+The `poll_ready` method not returning a `Future` also means you're able to
+quickly check if a service is ready without being forced to wait for it to
+become ready. If you call `poll_ready` and get back a `Poll::Pending`, you
+can simply decide to do something else instead of waiting. Among other things,
+this allows you to build load balancers that estimate the load of services by
+how often they return `Poll::Pending`, and send requests to the service with
+the least load.
 
-It would still be possible get a `Future` that resolves when capacity is
-available using something like [`futures::future::poll_fn`] (or
-[`tower::ServiceExt::ready`]).
+Note that it is still possible get a `Future` that resolves when capacity is
+available using something like [`futures::future::poll_fn`] or the
+[`tower::ServiceExt::ready`] method.
 
 This concept of services communicating with their callers about their capacity
-is called "backpressure propagation". You can think of it as services pushing back on
-their callers, and telling them to slow down if they're producing requests too fast. The
-fundamental idea is that you shouldn't send a request to a service that doesn't
-have the capacity to handle it. Instead you should wait (buffering), drop the
-request (load shedding), or handle the lack of capacity in some other way. You
-can learn more about the general concept of backpressure [here][backpressure]
-and [here][backpressure2].
+is called "backpressure propagation". You can think of it as services pushing
+back on their callers, and telling them to slow down if they're producing
+requests too fast. The fundamental idea is that you shouldn't send a request to
+a service that doesn't have the capacity to handle it. Instead you should
+either wait (buffering), drop the request (load shedding), or handle the lack
+of capacity in some other way. You can learn more about the general concept of
+backpressure [here][backpressure] and [here][backpressure2].
 
-Finally, it might also be possible for some error to happen while reserving
-capacity, so `poll_ready` probably should return `Poll<Result<(), Self::Error>>`.
-With this change we've now arrived at the complete `tower::Service` trait:
+Finally, because it might also be possible for some error to happen while
+reserving capacity, `poll_ready` probably should return `Poll<Result<(),
+Self::Error>>`.
+
+With this last change we've finally reached the complete definition of the
+`tower::Service` trait:
 
 ```rust
 pub trait Service<Request> {
@@ -897,20 +1150,22 @@ pub trait Service<Request> {
 }
 ```
 
-Many middleware don't add their own backpressure, and simply delegate to the
-wrapped service's `poll_ready` implementation. However, backpressure in
-middleware does enable some interesting use cases, such as various kinds of rate
-limiting, load balancing, and auto scaling.
+Backpressure in middleware does enable some interesting use cases, such as
+various kinds of rate limiting, load balancing, and auto scaling.
 
-Since you never know exactly which middleware a `Service` might consist of, it
-is important to not forget about `poll_ready`.
+In Tower, many middleware services actually don't need their own backpressure
+mechanism, but they do delegate to the wrapped service's `poll_ready` method
+implementation. **If you omitted calling a service's `poll_ready` method, none
+of the wrapped service would be guaranteed to be ready, effectively disabling
+the entire backpressure mechanism**. We then strongly advise you to call
+`poll_ready` systematically.
 
 With all this in place, the most common way to call a service is:
 
 ```rust
 use tower::{
     Service,
-    // for the `ready` method
+    // for the `ready` method to return a future
     ServiceExt,
 };
 
