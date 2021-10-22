@@ -250,7 +250,7 @@ struct Task {
 }
 
 impl Task {
-    // Spawns a new taks with the given future.
+    // Spawns a new task with the given future.
     //
     // Initializes a new Task harness containing the given future and pushes it
     // onto `sender`. The receiver half of the channel will get the task and
@@ -269,7 +269,7 @@ impl Task {
 
     // Execute a scheduled task. This creates the necessary `task::Context`
     // containing a waker for the task. This waker pushes the task onto the
-    // mini-redis scheduled channel. The future is then polled with the waker.
+    // mini-tokio scheduled channel. The future is then polled with the waker.
     fn poll(self: Arc<Self>) {
         // Get a waker referencing the task.
         let waker = task::waker(self.clone());
