@@ -3,8 +3,14 @@ title: "Bridging with sync code"
 ---
 
 In most examples of using Tokio, we mark the main function with `#[tokio::main]`
-and make the entire project asynchronous. However, this is not desirable for all
-projects. For instance, a GUI application might want to run the GUI code on the
+and make the entire project asynchronous.
+
+In some cases, you may need to run a small portion of synchronous code.  For more
+information on that, see [`spawn_blocking`].
+
+In other cases, it may be easier to structure the application as largely
+synchronous, with smaller or logically distinct asynchronous portions.
+For instance, a GUI application might want to run the GUI code on the
 main thread and run a Tokio runtime next to it on another thread.
 
 This page explains how you can isolate async/await to a small part of your
@@ -367,6 +373,7 @@ runtime in this way, it is a type of [actor].
 [`Runtime`]: https://docs.rs/tokio/1/tokio/runtime/struct.Runtime.html
 [`block_on`]: https://docs.rs/tokio/1/tokio/runtime/struct.Runtime.html#method.block_on
 [`spawn`]: https://docs.rs/tokio/1/tokio/runtime/struct.Runtime.html#method.spawn
+[`spawn_blocking`]: https://docs.rs/tokio/1/tokio/task/fn.spawn_blocking.html
 [`multi_thread`]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.new_multi_thread
 [`current_thread`]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.new_current_thread
 [`worker_threads`]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.worker_threads
