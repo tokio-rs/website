@@ -109,9 +109,9 @@ use tokio::fs::File;
 # fn dox() {
 #[tokio::main]
 async fn main() -> io::Result<()> {
-    let mut buffer = File::create("foo.txt").await?;
+    let mut file = File::create("foo.txt").await?;
 
-    buffer.write_all(b"some bytes").await?;
+    file.write_all(b"some bytes").await?;
     Ok(())
 }
 # }
