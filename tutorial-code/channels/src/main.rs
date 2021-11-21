@@ -82,7 +82,7 @@ async fn main() {
 
         // Await the response
         let res = resp_rx.await;
-        println!("GOT (Set) = {:?}", res)
+        println!("GOT (Set) = {:?}", res);
     });
 
     t1.await.unwrap();
