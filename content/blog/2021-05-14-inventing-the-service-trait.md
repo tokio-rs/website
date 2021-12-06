@@ -570,7 +570,7 @@ library on crates.io for other people to use!
 
 Our little `Handler` trait is working quite nicely, but currently it only
 supports our `HttpRequest` and `HttpResponse` types. It would be nice if those
-where generic, so users could use whatever type they want.
+were generic, so users could use whatever type they want.
 
 We make the request a generic type parameter of the trait so that a given
 service can accept many different types of requests. That allows defining
