@@ -4,7 +4,6 @@ title: "Announcing Tokio Console 0.1"
 description: "December 17, 2021"
 ---
 
-# Announcing Tokio Console 0.1
 
 Today, we, the Tokio team, are announcing the initial release of Tokio Console
 ([Github](github.com/tokio-rs/console)), enabling Rust developers to gain deeper
@@ -81,6 +80,8 @@ says:
 > progress as expected, `tokio-console` was able to immediately surface that a
 > lack of wake-ups was the cause, providing insight that ultimately lead to
 > discovering unexpected scheduling behavior with Tokio.
+
+# Getting Started
 
 To get started with the console, run `cargo install tokio-console`, then follow
 the instructions to [add `console-subscriber`][subscriber doc] to your async
