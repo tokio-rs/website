@@ -149,7 +149,7 @@ on [issues](github.com/tokio-rs/console) and send pull requests our way!
 [#129]: https://github.com/tokio-rs/console/issues/129
 
 
-## Thanks to
+# Thanks to
 
 * Sean McArthur
 * Zahari Dichev
