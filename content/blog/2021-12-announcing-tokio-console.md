@@ -7,7 +7,7 @@ description: "December 17, 2021"
 # Announcing Tokio Console 0.1
 
 Today, we, the Tokio team, are announcing the initial release of Tokio Console
-([Github](github.com/tokio-rs/console)), enabling Rust developers to gain deeper
+([Github](https://github.com/tokio-rs/console)), enabling Rust developers to gain deeper
 insight into the runtime behavior of their applications.
 
 > And just like that, we get to peek under the hood.
