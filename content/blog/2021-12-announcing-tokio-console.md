@@ -73,7 +73,7 @@ waiting to obtain access.
 
 The devs at [Datadog](https://www.datadoghq.com/), working on
 [Vector](https://vector.dev/), have already successfully been using pre-release
-versions of Tokio Console to help debug issues. [Toby Lawrence](github.com/tobz)
+versions of Tokio Console to help debug issues. [Toby Lawrence](https://github.com/tobz)
 says:
 
 > While debugging a particularly mysterious issue related to a task not making
@@ -138,7 +138,7 @@ the problems people are using the console to debug, and what tools we can
 provide to help. We would also love to get you involved in helping us build the
 future of runtime diagnostics for Rust, so be sure to say hi in the `#console`
 channel on [Discord](https://discord.gg/tokio) and always feel free to jump in
-on [issues](github.com/tokio-rs/console) and send pull requests our way!
+on [issues](https://github.com/tokio-rs/console) and send pull requests our way!
 
 [#96]: https://github.com/tokio-rs/console/issues/96
 [#130]: https://github.com/tokio-rs/console/issues/130
