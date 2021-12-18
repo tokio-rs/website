@@ -177,7 +177,7 @@ thousands, if not millions of tasks.
 
 ## `'static` bound
 
-When you spawn a task on the Tokio runtime, its type must be `'static`. This
+When you spawn a task on the Tokio runtime, its lifetime must be `'static`. This
 means that the spawned task must not contain any references to data owned
 outside the task.
 
