@@ -99,7 +99,7 @@ We want our Redis server to process **many** concurrent requests. To do this, we
 need to add some concurrency.
 
 [[info]]
-| Concurrency and parallelism is not the same thing. If you alternate between
+| Concurrency and parallelism are not the same thing. If you alternate between
 | two tasks, then you are working on both tasks concurrently, but not in
 | parallel. For it to qualify as parallel, you would need two people, one
 | dedicated to each task.
