@@ -192,6 +192,14 @@ introduce `N` distinct instances.
 # use std::collections::HashMap;
 # use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Vec<Mutex<HashMap<String, Vec<u8>>>>>;
+
+fn new_sharded_db(num_shards: usize) -> ShardedDb {
+    let mut db = Vec::with_capacity(num_shards);
+    for _ in 0..num_shards {
+        db.push(Mutex::new(HashMap::new()));
+    }
+    Arc::new(db)
+}
 ```
 
 Then, finding the cell for any given key becomes a two step process. First, the
@@ -203,7 +211,10 @@ let shard = db[hash(key) % db.len()].lock().unwrap();
 shard.insert(key, value);
 ```
 
-The [dashmap] crate provides an implementation of a sharded hash map.
+The simple implementation outlined above requires using a fixed number of
+shards, and the number of shards cannot be changed once the sharded map is
+created. The [dashmap] crate provides an implementation of a more sophisticated
+sharded hash map.
 
 [current_thread]: https://docs.rs/tokio/1/tokio/runtime/index.html#current-thread-scheduler
 [dashmap]: https://docs.rs/dashmap
