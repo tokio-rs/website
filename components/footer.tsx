@@ -71,7 +71,7 @@ export default function Footer() {
             href="https://github.com/tokio-rs/tokio/graphs/contributors">our contributors</a>.
           </p>
         </div>
-        <div className="container has-text-centered tk-sponsored">
+        <div className="container has-text-centered">
           <p>
             Hosted by <a href="https://netlify.com" rel="sponsored nofollow">Netlify</a>
           </p>
