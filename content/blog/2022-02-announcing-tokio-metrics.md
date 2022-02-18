@@ -28,7 +28,7 @@ instrument applications in production.
 Tokio Metrics fills this gap. This crate provides insight into the Tokio
 scheduler's behavior to help developer's identify where performance issues lay.
 You can take these metrics and report them to your preferred tool (e.g.,
-Graphana, Prometheus, CloudWatch, etc.) along with your application-level
+Grafana, Prometheus, CloudWatch, etc.) along with your application-level
 metrics. Once you start collecting metrics, you will be able to [answer
 questions] like:
 
