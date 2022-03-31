@@ -129,7 +129,7 @@ async fn handler(jar: CookieJar) -> impl IntoResponse {
 }
 ```
 
-It also comes in a [`SignedCookieJar`] variant that will sign cookies with a key so
+It also comes in a [`SignedCookieJar`] variant that will sign cookies with a key, so
 you're sure someone hasn't tampered with them.
 
 `IntoResponseParts` makes this possible without requiring any middleware.
@@ -140,9 +140,9 @@ See [`axum_extra::extract::cookie`] for more details.
 
 You've always been able to use [`HeaderMap`] as an extractor to access headers
 from the request. But what you might not realise is that this would implicitly
-consume the headers such that other extractors wouldn't be able to access them.
+consume the headers, such that other extractors wouldn't be able to access them.
 
-For example this is subtly broken:
+For example, this is subtly broken:
 
 ```rust
 use axum::{http::HeaderMap, extract::Form};
@@ -156,15 +156,15 @@ async fn handler(
 ```
 
 Since we run the `HeaderMap` first, `Form` would be unable to access them and
-fail with a `500 Internal Server Error`. This was quite surprising and caused
+fail with a `500 Internal Server Error`. This was quite surprising, and caused
 headaches for some users.
 
-However in axum 0.5 this problem goes away and it just works!
+However, in `axum` 0.5 this problem goes away and it just works!
 
 ## More flexible `Router::merge`
 
-[`Router::merge`] can be used to merge two routers into one. In axum 0.5 its
-gotten slightly more flexible since it now accepts any `impl Into<Router>`. This
+[`Router::merge`] can be used to merge two routers into one. In axum 0.5, it has
+gotten slightly more flexible, and now accepts any `impl Into<Router>`. This
 allows you to have custom ways of constructing `Router`s and have them work
 seamlessly with axum.
 
