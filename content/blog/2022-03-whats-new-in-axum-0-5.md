@@ -4,14 +4,14 @@ title: "What's new in axum 0.5"
 description: "March 31, 2022"
 ---
 
-Today, we're happy to announce [axum] version 0.5. axum is an ergonomic and
-modular web framework built with tokio, tower, and hyper.
+Today, we're happy to announce [`axum`] version 0.5. `axum` is an ergonomic and
+modular web framework built with `tokio`, `tower`, and `hyper`.
 
 0.5 contains lots of new features and I'd like highlight a few of them here.
 
 ## The new [`IntoResponseParts`] trait
 
-axum has always supported building responses by composing individual parts:
+`axum` has always supported building responses by composing individual parts:
 
 ```rust
 use axum::{
@@ -36,7 +36,7 @@ async fn json_with_status_and_header() -> impl IntoResponse {
 }
 ```
 
-However you couldn't easily provide your own custom response parts. axum had to
+However, you couldn't easily provide your own custom response parts. `axum` had to
 specifically allow `HeaderMap` to be included in responses and you couldn't
 extend this system with your own types.
 
