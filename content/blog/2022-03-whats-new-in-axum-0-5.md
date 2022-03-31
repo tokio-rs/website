@@ -165,8 +165,8 @@ However, in `axum` 0.5 this problem goes away and it just works!
 
 [`Router::merge`] can be used to merge two routers into one. In axum 0.5, it has
 gotten slightly more flexible, and now accepts any `impl Into<Router>`. This
-allows you to have custom ways of constructing `Router`s and have them work
-seamlessly with axum.
+allows you to have custom ways of constructing `Router`s, and have them work
+seamlessly with `axum`.
 
 One could imagine a way to compose REST and gRPC like so:
 
@@ -183,12 +183,12 @@ let app = Router::new()
 
 ## Honorable mentions
 
-The following features weren't new in 0.5 but shipped recently and are worthy of
+The following features weren't new in 0.5, but shipped recently and are worthy of
 a shout out.
 
 ### `middleware::from_fn`
 
-axum uses the [`tower::Service`] trait for middleware however it can be little
+`axum` uses the [`tower::Service`] trait for middleware. However, it can be little
 daunting to implement, mainly due to the lack of async traits in Rust.
 
 But with [`axum::middleware::from_fn`] you can hide all that complexity and use a
