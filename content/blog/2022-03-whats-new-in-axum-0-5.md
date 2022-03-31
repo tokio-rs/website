@@ -230,16 +230,16 @@ The [documentation for middleware] has also been reworked, and goes into more
 details about the different ways to write middleware, when to pick which
 approach, how ordering works, and more.
 
-### Type safe routing
+### Type-safe routing
 
-In `axum-extra`, we're experimenting with "type safe routing". The idea is is to
-establish a type safe connection between a path and the corresponding handler.
+In `axum-extra`, we're experimenting with "type-safe routing". The idea is is to
+establish a type-safe connection between a path and the corresponding handler.
 
 Previously, it was possible to add a path like `/users` and apply a `Path<u32>`
 extractor, which would always fail at runtime, since the path doesn't contain any
 parameters.
 
-We can use `axum-extra`'s type safe routing to prevent that problem at compile-time:
+We can use `axum-extra`'s type-safe routing to prevent that problem at compile-time:
 
 ```rust
 use serde::Deserialize;
@@ -249,7 +249,7 @@ use axum_extra::routing::{
     RouterExt, // for `Router::typed_get`
 };
 
-// A type safe path
+// A type-safe path
 #[derive(TypedPath, Deserialize)]
 #[typed_path("/users/:id")]
 struct UsersMember {
