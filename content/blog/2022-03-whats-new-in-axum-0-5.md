@@ -290,18 +290,18 @@ server][discord].
 
 [documentation for middleware]: https://docs.rs/axum/latest/axum/middleware/index.html
 [discord]: https://discord.gg/tokio
-[`IntoResponseParts`]: TODO
+[`IntoResponseParts`]: https://docs.rs/axum/latest/axum/response/trait.IntoResponseParts.html
 [`axum`]: https://crates.io/crates/axum
-[`Extension`]: TODO
-[`axum::response`]: TODO
+[`Extension`]: https://docs.rs/axum/latest/axum/struct.Extension.html
+[`axum::response`]: https://docs.rs/axum/latest/axum/response/index.html
 [`axum-extra`]: https://crates.io/crates/axum-extra
 [`axum-core`]: https://crates.io/crates/axum-core
 [`axum-macros`]: https://crates.io/crates/axum-macros
-[`axum_extra::extract::cookie`]: TODO
+[`axum_extra::extract::cookie`]: https://docs.rs/axum-extra/latest/axum_extra/extract/cookie/index.html
 [`HeaderMap`]: https://docs.rs/http/latest/http/header/struct.HeaderMap.html
 [`Router::merge`]: https://docs.rs/axum/latest/axum/routing/struct.Router.html#method.merge
 [`axum::middleware::from_fn`]: https://docs.rs/axum/latest/axum/middleware/fn.from_fn.html
 [`axum_extra::routing::TypedPath`]: https://docs.rs/axum-extra/latest/axum_extra/routing/trait.TypedPath.html
-[`CookieJar`]: TODO
-[`SignedCookieJar`]: TODO
+[`CookieJar`]: https://docs.rs/axum-extra/latest/axum_extra/extract/cookie/struct.CookieJar.html
+[`SignedCookieJar`]: https://docs.rs/axum-extra/latest/axum_extra/extract/cookie/struct.SignedCookieJar.html
 [`tower::Service`]: https://docs.rs/tower/latest/tower/trait.Service.html
