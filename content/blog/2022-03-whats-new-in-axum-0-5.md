@@ -235,7 +235,7 @@ Previously, it was possible to add a path like `/users` and apply a `Path<u32>`
 extractor, which would always fail at runtime, since the path doesn't contain any
 parameters.
 
-We can use axum-extra's type safe routing to make that problem go away:
+We can use axum-extra's type safe routing to prevent that problem at compile-time:
 
 ```rust
 use serde::Deserialize;
