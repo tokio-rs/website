@@ -9,6 +9,9 @@ modular web framework built with `tokio`, `tower`, and `hyper`.
 
 0.5 contains lots of new features and I'd like highlight a few of them here.
 
+This also includes new major versions for axum-core, axum-extra, and
+axum-macros.
+
 ## The new [`IntoResponseParts`] trait
 
 `axum` has always supported building responses by composing individual parts:
