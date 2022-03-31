@@ -37,12 +37,12 @@ async fn json_with_status_and_header() -> impl IntoResponse {
 ```
 
 However, you couldn't easily provide your own custom response parts. `axum` had to
-specifically allow `HeaderMap` to be included in responses and you couldn't
+specifically allow `HeaderMap` to be included in responses, and you couldn't
 extend this system with your own types.
 
 The new `IntoResponseParts` trait fixes that!
 
-For example, we can add our own `SetHeader` type for setting a single header and
+For example, we can add our own `SetHeader` type for setting a single header, and
 implement `IntoResponseParts` for it.
 
 ```rust
@@ -89,8 +89,8 @@ async fn json_with_status_and_header() -> impl IntoResponse {
 }
 ```
 
-`IntoResponseParts` is also implemented for [`Extension`] making it easy to set
-response extensions, for example to share state with middleware:
+`IntoResponseParts` is also implemented for [`Extension`], making it easy to set
+response extensions. For example, this can be used to share state with middleware:
 
 ```rust
 use axum::{Extension, Json, response::IntoResponse};
@@ -109,7 +109,7 @@ See [`axum::response`] for more details.
 
 ## Cookies
 
-Building on top of `IntoResponseParts` [axum-extra] has a new [`CookieJar`]
+Building on top of `IntoResponseParts` [`axum-extra`], has a new [`CookieJar`]
 extractor:
 
 ```rust
