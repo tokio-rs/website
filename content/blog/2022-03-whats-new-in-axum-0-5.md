@@ -267,14 +267,14 @@ let app = Router::new()
     .typed_get(users_show);
 ```
 
-The key here is that our `users_show` function doesn't have any macros so IDE
+The key here is that our `users_show` function doesn't have any macros, so IDE
 integration continues to work great.
 
 See [`axum_extra::routing::TypedPath`] for more details.
 
 ## Updating
 
-axum 0.5 also contains a few breaking changes but I'd say they're all fairly
+`axum` 0.5 also contains a few breaking changes, but I'd say they're all fairly
 minor. Don't hesitate to reach out if you're having trouble upgrading or have
 questions in general! You can find us in the `#axum` channel in the [Tokio Discord
 server][discord].
@@ -284,10 +284,10 @@ server][discord].
 [documentation for middleware]: https://docs.rs/axum/latest/axum/middleware/index.html
 [discord]: https://discord.gg/tokio
 [`IntoResponseParts`]: TODO
-[axum]: https://crates.io/crates/axum
+[`axum`]: https://crates.io/crates/axum
 [`Extension`]: TODO
 [`axum::response`]: TODO
-[axum-extra]: https://crates.io/crates/axum-extra
+[`axum-extra`]: https://crates.io/crates/axum-extra
 [`axum_extra::extract::cookie`]: TODO
 [`HeaderMap`]: https://docs.rs/http/latest/http/header/struct.HeaderMap.html
 [`Router::merge`]: https://docs.rs/axum/latest/axum/routing/struct.Router.html#method.merge
