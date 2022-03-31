@@ -222,17 +222,17 @@ let app = Router::new()
     .layer(middleware::from_fn(my_middleware));
 ```
 
-The [documentation for middleware] has also been reworked and goes into more
+The [documentation for middleware] has also been reworked, and goes into more
 details about the different ways to write middleware, when to pick which
 approach, how ordering works, and more.
 
 ### Type safe routing
 
-In axum-extra we're experimenting with "type safe routing". The idea is is to
+In `axum-extra`, we're experimenting with "type safe routing". The idea is is to
 establish a type safe connection between a path and the corresponding handler.
 
-Previously it was possible to add a path like `/users` and apply a `Path<u32>`
-extractor, which would always fail at runtime since the path doesn't contain any
+Previously, it was possible to add a path like `/users` and apply a `Path<u32>`
+extractor, which would always fail at runtime, since the path doesn't contain any
 parameters.
 
 We can use axum-extra's type safe routing to make that problem go away:
