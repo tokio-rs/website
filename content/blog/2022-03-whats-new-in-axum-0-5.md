@@ -9,8 +9,8 @@ modular web framework built with `tokio`, `tower`, and `hyper`.
 
 0.5 contains lots of new features and I'd like highlight a few of them here.
 
-This also includes new major versions for axum-core, axum-extra, and
-axum-macros.
+This also includes new major versions for [`axum-core`], [`axum-extra`], and
+[`axum-macros`].
 
 ## The new [`IntoResponseParts`] trait
 
@@ -295,6 +295,8 @@ server][discord].
 [`Extension`]: TODO
 [`axum::response`]: TODO
 [`axum-extra`]: https://crates.io/crates/axum-extra
+[`axum-core`]: https://crates.io/crates/axum-core
+[`axum-macros`]: https://crates.io/crates/axum-macros
 [`axum_extra::extract::cookie`]: TODO
 [`HeaderMap`]: https://docs.rs/http/latest/http/header/struct.HeaderMap.html
 [`Router::merge`]: https://docs.rs/axum/latest/axum/routing/struct.Router.html#method.merge
