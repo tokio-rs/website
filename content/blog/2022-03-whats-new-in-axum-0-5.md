@@ -105,6 +105,10 @@ async fn json_extensions() -> impl IntoResponse {
 }
 ```
 
+If including a status code it must be the first element of the tuple and any
+response body must be the last. This ensures you only set those parts once and
+don't accidentally override them.
+
 See [`axum::response`] for more details.
 
 ## Cookies
@@ -235,7 +239,7 @@ Previously, it was possible to add a path like `/users` and apply a `Path<u32>`
 extractor, which would always fail at runtime, since the path doesn't contain any
 parameters.
 
-We can use axum-extra's type safe routing to prevent that problem at compile-time:
+We can use `axum-extra`'s type safe routing to prevent that problem at compile-time:
 
 ```rust
 use serde::Deserialize;
