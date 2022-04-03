@@ -40,7 +40,9 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          path: 'content/tokio',
           sidebarPath: require.resolve('./sidebars.js'),
+          routeBasePath: 'tokio',
           // Please change this to your repo.
           editUrl: 'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
@@ -75,7 +77,7 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'intro',
+            docId: 'tutorial/index',
             position: 'right',
             label: 'Learn',
           },
