@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import styles from './index.module.css';
-import HomepageFeatures from '../components/HomepageFeatures';
 import Hero from '../components/Hero';
 import Logos from '../components/Logos';
 import Libs from '../components/Libs';
@@ -28,7 +27,6 @@ export default function Home(): JSX.Element {
         <Logos />
         <Libs />
         <Stack />
-        <HomepageFeatures />
       </main>
     </Layout>
   );
