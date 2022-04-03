@@ -63,7 +63,7 @@ unpredictable latency spikes.
 
 ## Easy
 
-With the Rust's async/await feature, the complexity of writing asynchronous
+With Rust's async/await feature, the complexity of writing asynchronous
 applications has been lowered substantially. Paired with Tokio's utilities and
 vibrant ecosystem, writing applications is a breeze.
 
