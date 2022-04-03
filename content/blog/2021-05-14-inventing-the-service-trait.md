@@ -298,7 +298,7 @@ We still have to require that `Handler::Future` implements `Future` with the
 output type `Result<HttpResponse, Error>`, as that is what `Server::run` requires.
 
 Having `call` take `&mut self` is useful because it allows handlers to update
-their internal state if necessary<sup>[1](#pin)</sup>.
+their internal state if necessary<sup>[^1]</sup>.
 
 Let's convert our original `handle_request` function into an implementation of
 this trait:
@@ -396,7 +396,7 @@ block. That means the lifetime of our future is tied to the lifetime of `&mut
 self`. This doesn't work for us, since we might want to run our response futures
 on multiple threads to get better performance, or produce multiple response
 futures and run them all in parallel. That isn't possible if a reference to the
-handler lives inside the futures<sup>[2](#gats)</sup>.
+handler lives inside the futures<sup>[^2]</sup>.
 
 Instead we need to convert the `&mut self` into an owned `self`. That is exactly
 what `Clone` does:
@@ -921,18 +921,18 @@ let response = service
     .call(request).await?;
 ```
 
-<div style="text-align:right">&mdash; David Pedersen (<a href="https://github.com/davidpdrsn">@davidpdrsn</a>)</div>
+<div style={{ textAlign: "right" }}>&mdash; David Pedersen (<a href="https://github.com/davidpdrsn">@davidpdrsn</a>)</div>
 
 ---
 
 # Footnotes
 
-<a name="pin">1</a>: There has been some discussion around whether `call` should
+[^1]: There has been some discussion around whether `call` should
 take `Pin<&mut Self>` or not, but so far we've decided to go with a plain `&mut
 self` which means handlers (ahem, _services_) must be `Unpin`. In practice that is
 rarely an issue. More details [here](https://github.com/tower-rs/tower/issues/319).
 
-<a name="gats">2</a>: To be a bit more precise, the reason this requires the
+[^2]: To be a bit more precise, the reason this requires the
 response future to be `'static` is that writing `Box<dyn Future>` actually
 becomes `Box<dyn Future + 'static>`, which the anonymous lifetime in `fn
 call(&'_ mut self, ...)` doesn't satisfy. In the future, the Rust compiler team

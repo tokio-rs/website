@@ -99,7 +99,7 @@ During this time, we'll be integrating this work to build out higher-level
 primitives in [Tower], which is being driven by the production operational needs
 of the [Conduit] project.
 
-<div style="text-align:right">&mdash;Carl Lerche</div>
+<div style={{ textAlign: "right" }}>&mdash;Carl Lerche</div>
 
 [reform rfc]: https://github.com/tokio-rs/tokio-rfcs/blob/master/text/0001-tokio-reform.md
 [crates.io]: https://crates.io/crates/tokio

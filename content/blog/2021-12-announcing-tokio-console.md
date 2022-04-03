@@ -191,4 +191,4 @@ If you want to help us make `tokio-console` even better, take a look at our
 [github repository](https://github.com/tokio-rs/console), or come talk to us at
 the `#console` channel on Tokio's [Discord](https://discord.gg/4A5K8WD4)!
 
-<div style="text-align:right">&mdash; Eliza Weisman (<a href="https://github.com/hawkw">@hawkw</a>)</div>
+<div style={{ textAlign: "right" }}>&mdash; Eliza Weisman (<a href="https://github.com/hawkw">@hawkw</a>)</div>

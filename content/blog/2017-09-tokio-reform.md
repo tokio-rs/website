@@ -47,7 +47,7 @@ group_, focused primarily on docs and examples. And from there, we will be
 working with the Hyper team to figure out the next chapter of that story. Stay
 tuned!
 
-<div style="text-align:right">&mdash;Aaron Turon</div>
+<div style={{ textAlign: "right" }}>&mdash;Aaron Turon</div>
 
 [async/await]: https://internals.rust-lang.org/t/help-test-async-await-generators-coroutines/5835
 [rfc]: https://github.com/carllerche/tokio-rfcs/pull/2

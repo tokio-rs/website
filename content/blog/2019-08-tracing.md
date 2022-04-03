@@ -467,7 +467,7 @@ forward to seeing what the community will build on top of the platform that
 If you're interested, check out `tracing` [on GitHub][github] or join the
 [Gitter] chat channel!
 
-<div style="text-align:right">&mdash;Eliza Weisman</div>
+<div style={{ textAlign: "right" }}>&mdash;Eliza Weisman</div>
 
 [linkerd]: https://github.com/linkerd/linkerd2-proxy
 [vector]: https://github.com/timberio/vector

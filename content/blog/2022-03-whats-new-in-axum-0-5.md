@@ -286,7 +286,7 @@ minor. Don't hesitate to reach out if you're having trouble upgrading or have
 questions in general! You can find us in the `#axum` channel in the [Tokio Discord
 server][discord].
 
-<div style="text-align:right">&mdash; David Pedersen (<a href="https://twitter.com/davidpdrsn">@davidpdrsn</a>)</div>
+<div style={{ textAlign: "right" }}>&mdash; David Pedersen (<a href="https://twitter.com/davidpdrsn">@davidpdrsn</a>)</div>
 
 [documentation for middleware]: https://docs.rs/axum/latest/axum/middleware/index.html
 [discord]: https://discord.gg/tokio

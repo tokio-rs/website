@@ -158,7 +158,7 @@ Discord][discord].
 [issue-tracker]: https://github.com/tokio-rs/tokio-metrics/issues
 [discord]: https://discord.gg/tokio
 
-<div style="text-align:right">
+<div style={{ textAlign: "right" }}>
    &mdash; Carl Lerche (<a href="https://github.com/carllerche">@carllerche</a>)
    &amp; Jack Wrenn (<a href="https://github.com/jswrenn">@jswrenn</a>)
 </div>

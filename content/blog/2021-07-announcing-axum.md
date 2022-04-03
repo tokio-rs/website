@@ -209,7 +209,7 @@ some slightly larger applications written with `axum`.
 
 As always, if you have questions you can find us in the [Tokio Discord] server.
 
-<div style="text-align:right">&mdash; David Pedersen (<a href="https://github.com/davidpdrsn">@davidpdrsn</a>)</div>
+<div style={{ textAlign: "right" }}>&mdash; David Pedersen (<a href="https://github.com/davidpdrsn">@davidpdrsn</a>)</div>
 
 [`axum`]: https://crates.io/crates/axum
 [`tower`]: https://crates.io/crates/tower

@@ -187,7 +187,7 @@ We hope you find your tail latencies improve after this release. Either way, we
 will be interested to hear how this change impacted real-world deployments. Feel
 free to comment on [this](https://github.com/tokio-rs/tokio/issues/2359) issue.
 
-<div style="text-align:right">&mdash;Carl Lerche</div>
+<div style={{ textAlign: "right" }}>&mdash;Carl Lerche</div>
 
 [0.2.14]: https://github.com/tokio-rs/tokio/releases/tag/tokio-0.2.14
 [ry]: https://github.com/ry

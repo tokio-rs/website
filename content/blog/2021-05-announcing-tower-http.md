@@ -114,7 +114,7 @@ show you how to put everything together.
 Contributions are very welcome and if you have questions you can find us in the
 [Tokio Discord] server.
 
-<div style="text-align:right">&mdash; David Pedersen (<a href="https://github.com/davidpdrsn">@davidpdrsn</a>)</div>
+<div style={{ textAlign: "right" }}>&mdash; David Pedersen (<a href="https://github.com/davidpdrsn">@davidpdrsn</a>)</div>
 
 [tower-http]: https://github.com/tower-rs/tower-http
 [`Service`]: https://docs.rs/tower/latest/tower/trait.Service.html

@@ -100,7 +100,7 @@ without volunteering for the doc push. In short:
 
 3. Get involved!
 
-<div style="text-align:right">&mdash; <a href="https://github.com/carllerche">@carllerche</a></div>
+<div style={{ textAlign: "right" }}>&mdash; <a href="https://github.com/carllerche">@carllerche</a></div>
 
 [issues]: https://github.com/tokio-rs/doc-push/issues/new
 [cookbook]: https://github.com/tokio-rs/doc-push/issues/23
