@@ -8,6 +8,7 @@ import HomepageFeatures from '../components/HomepageFeatures';
 import Hero from '../components/Hero';
 import Logos from '../components/Logos';
 import Libs from '../components/Libs';
+import Stack from '../components/Stack';
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
@@ -28,6 +29,7 @@ export default function Home(): JSX.Element {
       <main>
         <Logos />
         <Libs />
+        <Stack />
         <HomepageFeatures />
       </main>
     </Layout>

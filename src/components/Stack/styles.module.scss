@@ -1,0 +1,191 @@
+@use "sass:color";
+@import "../../../node_modules/bulma/sass/utilities/_all.sass";
+
+$magenta: #c83895;
+$orange: #f5a623;
+$yellow: #e2b619;
+$green: #95ca51;
+$red: #e7544c;
+$purple: #a674e5;
+$blue: #5396d1;
+
+$tk-lib-runtime: $magenta;
+$tk-lib-hyper: $orange;
+$tk-lib-tonic: $yellow;
+$tk-lib-tower: $green;
+$tk-lib-mio: $red;
+$tk-lib-tracing: $purple;
+$tk-lib-bytes: $blue;
+
+// Per lib styling: [ name, color, size, logo-adjust ]
+$libs: "tokio" black 3.8rem -60%, "runtime" $tk-lib-runtime 2.2rem -22%,
+  "hyper" $tk-lib-hyper 100% -50%, "tonic" $tk-lib-tonic 100% -25%,
+  "tower" $tk-lib-tower 100% -52%, "mio" $tk-lib-mio 100% -41%,
+  "tracing" $tk-lib-tracing 100% -31%, "bytes" $tk-lib-bytes 100% -30%;
+
+.link {
+  display: block;
+}
+
+
+.tkLibtokio.isActive {
+  background-color: black;
+  a {
+    color: white;
+  }
+}
+
+[data-theme='dark'] .tkLibtokio.isActive {
+  background-color: white;
+  a {
+    color: black;
+  }
+}
+
+.tkStack {
+  .menu {
+    font-size: 0.9rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    li {
+      line-height: 0.5;
+      font-weight: 400;
+
+      a:hover {
+        text-decoration: none;
+      }
+    }
+
+    li.isActive {
+      font-weight: 500;
+    }
+
+    li.isActive :hover {
+      background-color: inherit;
+    }
+
+    @each $name, $color, $size, $adjust in $libs {
+
+      @if $name != "tokio" {
+      .tkLib#{$name} {
+        a:hover {
+          color: $color;
+        }
+
+        &.isActive {
+          background-color: $color;
+
+          a {
+            color: white;
+          }
+        }
+      }
+      }
+    }
+  }
+
+  img.tkStackActive {
+    opacity: 1 !important;
+  }
+
+  // Used to anchor the sticky elements
+  .anchor {
+    position: sticky;
+    height: 25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 13rem;
+
+    > img {
+      display: block;
+      position: absolute;
+      opacity: 0.15;
+      transition: opacity 0.5s ease-in-out;
+    }
+    #tkStackLines:not(.tkStackActive) {
+      opacity: 0;
+    }
+  }
+
+  .card {
+    margin: 2rem 0;
+  }
+
+  .card:first-child {
+    margin-top: 0rem;
+  }
+  .card:last-child {
+    margin-bottom: 0rem;
+  }
+
+  @media (min-width: $tablet) {
+    .card {
+      margin: 7.5rem 0;
+    }
+    .card:first-child {
+      margin-top: 3rem;
+    }
+    .card:last-child {
+      margin-bottom: 7.5rem;
+    }
+  }
+
+  @media (min-width: $desktop) {
+    .card {
+      margin: 15rem 0 0 2.5rem;
+    }
+    .card:first-child {
+      margin-top: 5rem;
+    }
+    .card:last-child {
+      margin-bottom: 15rem;
+    }
+  }
+
+  .tkLibs {
+    .title img {
+      margin-right: 0.5rem;
+    }
+    .subtitle  {
+      font-weight: 400;
+    }
+
+  }
+
+  .learnMore {
+    text-align: right;
+  }
+
+  // Per lib styling
+  @each $name, $color, $size, $adjust in $libs {
+    @if $name != "tokio" {
+      .tkLib#{$name} {
+        .title,
+        .learnMore a {
+          color: $color;
+        }
+        .title img {
+          vertical-align: $adjust;
+          height: $size;
+        }
+      }
+    } @else {
+      .tkLib#{$name} {
+        .title svg {
+          vertical-align: $adjust;
+          height: $size;
+        }
+      }
+
+    }
+  }
+}
+
+@media screen and (max-width: 966px) {
+  .mobileHide {
+    display: none;
+  }
+}
+
