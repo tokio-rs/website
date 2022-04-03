@@ -165,9 +165,9 @@ async fn delay(dur: Duration) {
             if let Some(waker) = &self.waker {
                 let mut waker = waker.lock().unwrap();
 
-                // Check if the stored waker matches the current task's waker.
+                // Check if the stored waker matches the current tasks waker.
                 // This is necessary as the `Delay` future instance may move to
-                // a differnt task between calls to `poll`. If this happens, the
+                // a different task between calls to `poll`. If this happens, the
                 // waker contained by the given `Context` will differ and we
                 // must update our stored waker to reflect this change.
                 if !waker.will_wake(cx.waker()) {
