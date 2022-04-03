@@ -6,6 +6,10 @@
   @return color.scale($color, $lightness: 93%);
 }
 
+.text-center {
+  text-align: center;
+}
+
 // Per lib styling: [ name, color, size, logo-adjust ]
 $libs: "tokio" black 3.8rem -60%, "runtime" $tk-lib-runtime 2.2rem -22%,
   "hyper" $tk-lib-hyper 100% -50%, "tonic" $tk-lib-tonic 100% -25%,

@@ -1,0 +1,26 @@
+.logo {
+  fill: black;
+  display: block;
+  margin: auto;
+  width: 80%;
+}
+
+[data-theme='dark'] .logo {
+  fill: white;
+}
+
+.stroke {
+  stroke: black;
+  fill: none;
+}
+
+[data-theme='dark'] .stroke {
+  stroke: white;
+  fill: none;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
