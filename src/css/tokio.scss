@@ -1,0 +1,61 @@
+@function darken($color) {
+  @return color.scale($color, $lightness: -15%);
+}
+
+@function lighten($color) {
+  @return color.scale($color, $lightness: 93%);
+}
+
+// Per lib styling: [ name, color, size, logo-adjust ]
+$libs: "tokio" black 3.8rem -60%, "runtime" $tk-lib-runtime 2.2rem -22%,
+  "hyper" $tk-lib-hyper 100% -50%, "tonic" $tk-lib-tonic 100% -25%,
+  "tower" $tk-lib-tower 100% -52%, "mio" $tk-lib-mio 100% -41%,
+  "tracing" $tk-lib-tracing 100% -31%, "bytes" $tk-lib-bytes 100% -30%;
+
+.tk-features {
+  background-color: $cream;
+
+  .hero {
+    margin: 2em;
+
+    .title {
+      padding-bottom: 0.55em;
+    }
+  }
+
+  .card {
+    margin: 0.75em;
+    border: 2px solid black;
+    border-radius: 4px;
+  }
+
+  .tk-lib {
+    .title {
+      img {
+        margin-right: 0.4rem;
+      }
+    }
+    .subtitle {
+      line-height: 1.5rem;
+    }
+    .learn-more {
+      font-weight: 600;
+    }
+  }
+
+  @each $name, $color, $size, $adjust in $libs {
+    .tk-lib-#{$name} {
+      .title,
+      .learn-more a {
+        color: $color;
+      }
+      .learn-more a:hover {
+        color: darken($color);
+      }
+      .card {
+        border-color: $color;
+      }
+    }
+  }
+}
+

@@ -1,0 +1,185 @@
+@use 'sass:color';
+@import "../../../node_modules/bulma/sass/utilities/_all.sass";
+
+$body-font-size: 1.06em;
+$magenta: #c83895;
+$tk-lib-runtime: $magenta;
+
+@function darken($color) {
+  @return color.scale($color, $lightness: -15%);
+}
+
+@function lighten($color) {
+  @return color.scale($color, $lightness: 93%);
+}
+
+
+.hero {
+  color: black;
+  @include mobile {
+    .heroBody {
+      padding: 1.5rem;
+    }
+
+    .button {
+      font-size: 1.1rem;
+    }
+  }
+
+  .title {
+    font-size: 1.7em;
+  }
+
+  &.tkIntro {
+    .title {
+      padding-bottom: 0.25em;
+
+      @include tablet {
+        font-size: 2.4em;
+        line-height: 1.2em;
+      }
+    }
+
+    .container {
+      max-width: 650px;
+    }
+    .subtitle {
+      font-weight: 300;
+      line-height: 1.5rem;
+      font-size: $body-font-size;
+    }
+    .button {
+      background-color: $tk-lib-runtime;
+      border: none;
+      font-weight: 500;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      a {
+        color: white;
+      }
+      a:hover {
+        text-decoration: none;
+      }
+    }
+    .button:hover {
+      background-color: darken($magenta);
+    }
+  }
+
+  .tkHeroBg {
+    position: relative;
+    min-width: 50%;
+
+    .tkFloat {
+      user-select: none;
+      position: absolute;
+      will-change: transform;
+      z-index: 0;
+
+      @media (max-width: $tablet) {
+        display: none;
+      }
+      img {
+        will-change: transform;
+      }
+    }
+
+    @media (min-width: $tablet) {
+      @mixin spin-right($radius, $dur) {
+        width: $radius;
+        height: $radius;
+        animation: spin-right $dur linear infinite;
+
+        img {
+          animation: spin-left $dur linear infinite;
+        }
+      }
+
+      @mixin spin-left($radius, $dur, $dur2: $dur) {
+        width: $radius;
+        height: $radius;
+        animation: spin-left $dur linear infinite;
+
+        img {
+          animation: spin-right $dur2 linear infinite;
+        }
+      }
+
+      @keyframes spin-right {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(-360deg);
+        }
+      }
+      @keyframes spin-left {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      
+      .tkFloatHyper {
+        top: -30px;
+        left: calc(-20%);
+        @include spin-right(60px, 6s);
+      }
+      .tkFloatTonic {
+        top: 60px;
+        left: -200px;
+        @include spin-left(80px, 30s);
+      }
+      .tkFloatTower {
+        bottom: -10px;
+        @include spin-left(50px, 4s, 4.1s);
+      }
+      .tkFloatBytes {
+        top: 110px;
+        right: -120px;
+        @include spin-right(50px, 8s);
+      }
+      .tkFloatMio {
+        bottom: 0px;
+        right: 15px;
+        @include spin-right(60px, 10s);
+      }
+      .tkFloatRuntime {
+        bottom: 35px;
+        right: -210px;
+        @include spin-left(50px, 9s);
+      }
+      .tkFloatRuntime2 {
+        bottom: 10px;
+        left: -210px;
+        @include spin-left(50px, 9s);
+      }
+      .tkFloatTracing {
+        top: 0;
+        right: -190px;
+        @include spin-left(75px, 18s, 15s);
+      }
+    }
+  }
+
+  // &.tk-users {
+  //   .title {
+  //     font-size: 1.8em;
+  //     margin-bottom: 1em;
+  //   }
+  //   .column {
+  //     padding: 20px 00px;
+  //   }
+  //   .image img {
+  //     width: 70%;
+  //     max-width: 8rem;
+  //     margin: 0 auto;
+  //   }
+  //   .aws img {
+  //     transform: scale(0.5);
+  //   }
+  // }
+}

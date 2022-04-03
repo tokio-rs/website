@@ -1,0 +1,74 @@
+@charset "utf-8";
+@use 'sass:color';
+
+$cream: #faf8f4;
+$magenta: #c83895;
+$red: #e7544c;
+$orange: #f5a623;
+$yellow: #e2b619;
+$green: #95ca51;
+$blue: #5396d1;
+$purple: #a674e5;
+$dark-gray: #606060;
+$light-gray: #f0f0f0;
+$gray: #a0a0a0;
+$code-bg: #383838;
+$navbar-bg: #212121;
+$sidebar-bg: #3b3b3b;
+$sidebar-active: #282828;
+
+
+:root {
+  --ifm-color-primary: #56064f;
+  --ifm-color-primary-dark: #4d0547;
+  --ifm-color-primary-darker: #490543;
+  --ifm-color-primary-darkest: #3c0437;
+  --ifm-color-primary-light: #5f0757;
+  --ifm-color-primary-lighter: #63075b;
+  --ifm-color-primary-lightest: #700867;
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #faf8f4;
+  --ifm-color-primary-dark: #ebe2d2;
+  --ifm-color-primary-darker: #e3d8c1;
+  --ifm-color-primary-darkest: #ccb78e;
+  --ifm-color-primary-light: #ffffff;
+  --ifm-color-primary-lighter: #ffffff;
+  --ifm-color-primary-lightest: #ffffff;
+  --ifm-background-color: #000000;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.1);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+[data-theme='dark'] .docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+// Each color is associated with a library
+$tk-lib-runtime: $magenta;
+$tk-lib-hyper: $orange;
+$tk-lib-tonic: $yellow;
+$tk-lib-tower: $green;
+$tk-lib-mio: $red;
+$tk-lib-tracing: $purple;
+$tk-lib-bytes: $blue;
+
+@import "../../node_modules/bulma/sass/utilities/_all.sass";
+// @import "../../node_modules/bulma/sass/base/_all.sass";
+// @import "../../node_modules/bulma/sass/elements/button.sass";
+// @import "../../node_modules/bulma/sass/elements/container.sass";
+// @import "../../node_modules/bulma/sass/elements/title.sass";
+// @import "../../node_modules/bulma/sass/form/_all.sass";
+// @import "../../node_modules/bulma/sass/components/navbar.sass";
+// @import "../../node_modules/bulma/sass/layout/hero.sass";
+@import "../../node_modules/bulma/sass/layout/section.sass";
+@import "./custom.scss";
+
+@import "./tokio.scss"
