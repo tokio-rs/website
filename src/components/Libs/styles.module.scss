@@ -1,0 +1,72 @@
+@use 'sass:color';
+
+@function darken($color) {
+  @return color.scale($color, $lightness: -15%);
+}
+
+@function lighten($color) {
+  @return color.scale($color, $lightness: 93%);
+}
+
+$magenta: #c83895;
+$orange: #f5a623;
+$yellow: #e2b619;
+$green: #95ca51;
+$red: #e7544c;
+$purple: #a674e5;
+$blue: #5396d1;
+
+
+$tk-lib-runtime: $magenta;
+$tk-lib-hyper: $orange;
+$tk-lib-tonic: $yellow;
+$tk-lib-tower: $green;
+$tk-lib-mio: $red;
+$tk-lib-tracing: $purple;
+$tk-lib-bytes: $blue;
+
+
+// Per lib styling: [ name, color, size, logo-adjust ]
+$libs: "Tokio" black 3.8rem -60%, "Runtime" $tk-lib-runtime 2.2rem -22%,
+  "Hyper" $tk-lib-hyper 100% -50%, "Tonic" $tk-lib-tonic 100% -25%,
+  "Tower" $tk-lib-tower 100% -52%, "Mio" $tk-lib-mio 100% -41%,
+  "Tracing" $tk-lib-tracing 100% -31%, "Bytes" $tk-lib-bytes 100% -30%;
+
+.tkFeatures {
+  .card {
+    border: 2px solid black;
+    border-radius: 4px;
+    height: 100%;
+  }
+
+  .tkLib {
+    padding: 20px;
+    height: 100%;
+    .title {
+      img {
+        margin-right: 0.4rem;
+      }
+    }
+    .subtitle {
+      line-height: 1.5rem;
+    }
+    .learnMore {
+      font-weight: 600;
+    }
+  }
+
+  @each $name, $color, $size, $adjust in $libs {
+    .tkLib#{$name} {
+      .title,
+      .learnMore a {
+        color: $color;
+      }
+      .learnMore a:hover {
+        color: darken($color);
+      }
+      .card {
+        border-color: $color;
+      }
+    }
+  }
+}

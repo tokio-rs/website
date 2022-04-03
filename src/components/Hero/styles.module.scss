@@ -13,9 +13,7 @@ $tk-lib-runtime: $magenta;
   @return color.scale($color, $lightness: 93%);
 }
 
-
 .hero {
-  color: black;
   @include mobile {
     .heroBody {
       padding: 1.5rem;
@@ -30,7 +28,9 @@ $tk-lib-runtime: $magenta;
     font-size: 1.7em;
   }
 
+
   &.tkIntro {
+    color: black;
     .title {
       padding-bottom: 0.25em;
 
