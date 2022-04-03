@@ -4,17 +4,35 @@
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
+const libs = [
+  ["Tokio", "/tokio/tutorial", "https://github.com/tokio-rs/tokio"],
+  ["Hyper", "https://docs.rs/hyper", "https://github.com/hyperium/hyper"],
+  ["Tonic", "https://docs.rs/tonic", "https://github.com/hyperium/tonic"],
+  ["Tower", "https://docs.rs/tower", "https://github.com/tower-rs/tower"],
+  ["Mio", "https://docs.rs/mio", "https://github.com/tokio-rs/mio"],
+  [
+    "Tracing",
+    "https://docs.rs/tracing",
+    "https://github.com/tokio-rs/tracing",
+  ],
+].map(([name, docs, github]) => {
+  return {
+    title: name,
+    items: [{ label: "Docs", href: docs }, { label: "GitHub", href: github }],
+  }
+})
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
-  url: 'https://your-docusaurus-test-site.com',
+  title: 'Tokio',
+  tagline: 'An asynchronous Rust runtime',
+  url: 'https://tokio.rs',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'tokio-rs', // Usually your GitHub org/user name.
+  projectName: 'tokio', // Usually your repo name.
 
   presets: [
     [
@@ -43,19 +61,30 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'My Site',
+        title: '',
         logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          alt: 'Tokio Logo',
+          src: 'img/tokio-horizontal-dark.svg',
+          srcDark: 'img/tokio-horizontal.svg',
+          href: 'https://tokio.rs',
+          target: '_self',
+          width: 200,
+          height: 200,
         },
+        hideOnScroll: true,
         items: [
           {
             type: 'doc',
             docId: 'intro',
-            position: 'left',
-            label: 'Tutorial',
+            position: 'right',
+            label: 'Learn',
           },
-          { to: '/blog', label: 'Blog', position: 'left' },
+          {
+            href: 'https://docs.rs/tokio',
+            label: 'API Docs',
+            position: 'right',
+          },
+          { to: '/blog', label: 'Blog', position: 'right' },
           {
             href: 'https://github.com/facebook/docusaurus',
             label: 'GitHub',
@@ -65,6 +94,13 @@ const config = {
       },
       footer: {
         style: 'dark',
+        logo: {
+          alt: 'Tokio Runtime Logo',
+          src: 'img/tokio-horizontal.svg',
+          href: 'https://tokio.rs',
+          width: 160,
+          height: 51,
+        },
         links: [
           {
             title: 'Docs',
@@ -76,19 +112,19 @@ const config = {
             ],
           },
           {
-            title: 'Community',
+            title: 'Get Help',
             items: [
               {
                 label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                href: 'https://stackoverflow.com/questions/tagged/rust-tokio',
               },
               {
                 label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
+                href: 'https://discord.gg/tokio',
               },
               {
                 label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                href: 'https://twitter.com/tokio_rs',
               },
             ],
           },
@@ -101,17 +137,22 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                href: 'https://github.com/tokio-rs',
               },
             ],
           },
+          ...libs
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Built with all the love in the world by @carllerch`,
       },
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
       },
+      colorMode: {
+        respectPrefersColorScheme: true,
+      },
+
     }),
 };
 
