@@ -68,3 +68,20 @@
     display: none;
   }
 }
+
+.sidebar::-webkit-scrollbar {
+  width: 7px;
+}
+ 
+.sidebar::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+ 
+.sidebar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+html[data-theme='dark'] .sidebar::-webkit-scrollbar-thumb {
+  background: var(--ifm-color-emphasis-200);
+}
