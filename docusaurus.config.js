@@ -50,7 +50,7 @@ const config = {
           sidebarPath: require.resolve('./sidebars.js'),
           routeBasePath: 'tokio',
           // Please change this to your repo.
-          editUrl: 'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl: 'https://github.com/tokio-rs/website/tree/master',
         },
         blog: {
           path: 'content/blog',
@@ -58,7 +58,7 @@ const config = {
           blogSidebarCount: 'ALL',
           // Please change this to your repo.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/tokio-rs/website/tree/master',
         },
         theme: {
           customCss: [require.resolve('./src/css/style.scss')],
