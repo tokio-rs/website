@@ -79,6 +79,7 @@ export default function CodeBlock({
     .join("\n");
   var parsedLang = parseLanguage(blockClassName) || "";
   parsedLang = parsedLang.split(',')[0];
+  parsedLang = parsedLang === "rs" ? "rust" : parsedLang;
   const language =
     languageProp ?? parsedLang ?? prism.defaultLanguage;
 
