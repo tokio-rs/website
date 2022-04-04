@@ -45,11 +45,11 @@ driven platform for building fast, reliable, and lightweight
 network applications. It leverages Rust's ownership and
 concurrency model to ensure thread safety. */}
             </p>
-            <button className={clsx("button", "button--lg", styles.button)}>
-              <Link to={gettingStarted}>
+            <Link to={gettingStarted}>
+              <button className={clsx("button", "button--lg", styles.button)}>
                 Get Started
-              </Link>
-            </button>
+              </button>
+            </Link>
           </div>
         </div>
       </div></div>
