@@ -12,6 +12,7 @@ module.exports = {
             id: 'tutorial/index',
           },
           items: [
+            'tutorial/setup',
             'tutorial/hello-tokio',
             'tutorial/spawning',
             'tutorial/shared-state',
