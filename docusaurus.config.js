@@ -2,7 +2,20 @@
 // Note: type annotations allow type checking and IDEs autocompletion
 
 const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+var darkCodeTheme = require('prism-react-renderer/themes/dracula');
+
+
+darkCodeTheme.styles = darkCodeTheme.styles.filter(({ types, style }) => style.fontStyle !== "italic");
+
+darkCodeTheme.styles.push(
+  {
+    types: ["keyword", "variable"],
+    style: {
+      color: "rgb(189, 147, 249)",
+    }
+  }
+)
+
 
 const handles = {
   github: "https://github.com/tokio-rs/tokio",
