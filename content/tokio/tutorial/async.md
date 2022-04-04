@@ -360,13 +360,16 @@ mini-tokio to listen for wake notifications.
 There are still a few remaining issues with our `Delay` implementation. We will
 fix them later.
 
-[[warning]]
-| When a future returns `Poll::Pending`, it **must** ensure that the waker is
-| signalled at some point. Forgetting to do this results in the task hanging
-| indefinitely.
-|
-| Forgetting to wake a task after returning `Poll::Pending` is a common
-| source of bugs.
+:::caution
+
+When a future returns `Poll::Pending`, it **must** ensure that the waker is
+signalled at some point. Forgetting to do this results in the task hanging
+indefinitely.
+
+Forgetting to wake a task after returning `Poll::Pending` is a common
+source of bugs.
+
+:::
 
 Recall the first iteration of `Delay`. Here was the future implementation:
 
@@ -419,7 +422,8 @@ allow tasks to be queued for execution from any thread. Wakers must be `Send`
 and `Sync`, so we use the channel from the crossbeam crate, as the standard
 library channel is not `Sync`.
 
-[[info]]
+:::info
+
 | The `Send` and `Sync` traits are marker traits related to concurrency
 | provided by Rust. Types that can be **sent** to a different thread are
 | `Send`. Most types are `Send`, but something like [`Rc`] is not. Types
@@ -429,6 +433,8 @@ library channel is not `Sync`.
 | is thus not safe to access concurrently.
 |
 | For more details, see the related [chapter in the Rust book][ch].
+
+:::
 
 [`Rc`]: https://doc.rust-lang.org/std/rc/struct.Rc.html
 [`Cell`]: https://doc.rust-lang.org/std/cell/struct.Cell.html
