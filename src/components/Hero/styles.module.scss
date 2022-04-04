@@ -54,12 +54,7 @@ $tk-lib-runtime: $magenta;
       font-weight: 500;
       padding-left: 2rem;
       padding-right: 2rem;
-      a {
-        color: white;
-      }
-      a:hover {
-        text-decoration: none;
-      }
+      color: white;
     }
     .button:hover {
       background-color: darken($magenta);
