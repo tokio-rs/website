@@ -20,7 +20,7 @@ volunteers and companies, like [Mozilla](https://www.mozilla.org/),
 [Dropbox](https://dropbox.com/), [Buoyant](https://buoyant.io/), and
 [AWS](https://aws.amazon.com/), who have funded engineering time to build Tokio.
 Yet, we are only at the beginning of the journey that is Rust and asynchronous
-I/O. We want to add support for [io-uring](E), improve windows support, and add
+I/O. We want to add support for [io-uring](/blog/2021-07-tokio-uring), improve windows support, and add
 functionality to improve debugging, profiling, and testing Tokio applications.
 
 To achieve our goals and ensure Tokio’s longevity, we must build and support a

@@ -37,7 +37,6 @@ function Column({ column }) {
 }
 
 export default function FooterLinksMultiColumn({ columns }) {
-  console.log(columns);
   return (
     <div className="row footer__links">
       <div className="column is-hidden-mobile">{

@@ -6,10 +6,7 @@
  */
 import React from 'react';
 import clsx from 'clsx';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 export default function FooterLayout({ style, links, logo, copyright }) {
-  let ctx = useDocusaurusContext();
-  console.log(ctx);
   return (
     <footer
       className={clsx('footer', {

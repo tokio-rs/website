@@ -56,6 +56,7 @@ const config = {
           path: 'content/blog',
           showReadingTime: true,
           blogSidebarCount: 'ALL',
+          postsPerPage: 1,
           // Please change this to your repo.
           editUrl:
             'https://github.com/tokio-rs/website/tree/master',
@@ -124,15 +125,6 @@ const config = {
           height: 51,
         },
         links: [
-          {
-            title: 'Docs',
-            items: [
-              {
-                label: 'Tutorial',
-                to: '/docs/intro',
-              },
-            ],
-          },
           {
             title: 'Get Help',
             items: [

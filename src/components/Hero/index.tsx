@@ -1,3 +1,4 @@
+import Link from "@docusaurus/Link";
 import clsx from "clsx";
 import React, { FC } from "react";
 // import styles from "./styles.module.scss"
@@ -9,7 +10,6 @@ const toTitleCase = (string: String) => string.split(' ')
   .map(w => w[0].toUpperCase() + w.substring(1).toLowerCase())
   .join(' ');
 
-console.log(toTitleCase("hello"))
 const icons = [
   "bytes",
   "hyper",
@@ -46,9 +46,9 @@ network applications. It leverages Rust's ownership and
 concurrency model to ensure thread safety. */}
             </p>
             <button className={clsx("button", "button--lg", styles.button)}>
-              <a href={gettingStarted}>
+              <Link to={gettingStarted}>
                 Get Started
-              </a>
+              </Link>
             </button>
           </div>
         </div>

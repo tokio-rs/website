@@ -22,7 +22,6 @@ export default function BlogSidebar({ sidebar }) {
       <h3 className={styles.sidebarItemTitle}>{sidebar.title}</h3>
       <ul className={styles.sidebarItemList}>
         {sidebar.items.map(item => {
-          console.log(item);
           const postYear = item.permalink.split('/')[2].split("-")[0];
           const yearHeader =
             cachedYear !== postYear ? (

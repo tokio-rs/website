@@ -23,7 +23,7 @@ response from that announcement was amazing and we are already seeing it help
 developers. However, Tokio Console is a local debugging tool and cannot (yet)
 instrument applications in production.
 
-[console-announcement]: ./2021-12-announcing-tokio-console
+[console-announcement]: /blog/2021-12-announcing-tokio-console
 
 Tokio Metrics fills this gap. This crate provides insight into the Tokio
 scheduler's behavior to help developer's identify where performance issues lay.
