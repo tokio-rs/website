@@ -164,6 +164,7 @@ const config = {
         darkTheme: darkCodeTheme,
         additionalLanguages: [
           'rust',
+          'toml',
         ]
       },
       colorMode: {
