@@ -72,7 +72,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: '',
+        title: 'Tokio',
         logo: {
           alt: 'Tokio Logo',
           src: 'img/tokio-horizontal-dark.svg',
