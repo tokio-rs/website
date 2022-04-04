@@ -76,7 +76,6 @@ const config = {
           alt: 'Tokio Logo',
           src: 'img/tokio-horizontal-dark.svg',
           srcDark: 'img/tokio-horizontal.svg',
-          href: 'https://tokio.rs',
           target: '_self',
           width: 200,
           height: 200,
@@ -120,7 +119,7 @@ const config = {
         logo: {
           alt: 'Tokio Runtime Logo',
           src: 'img/tokio-horizontal.svg',
-          href: 'https://tokio.rs',
+          href: '/',
           width: 160,
           height: 51,
         },
