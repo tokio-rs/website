@@ -275,7 +275,7 @@ delay and is awaited on. However, our implementation so far has a major **flaw**
 Our executor never goes to sleep. The executor continuously loops **all**
 spawned futures and polls them. Most of the time, the futures will not be ready
 to perform more work and will return `Poll::Pending` again. The process will
-burn CPU and generally not be very efficient.
+burn CPU cycles and generally not be very efficient.
 
 Ideally, we want mini-tokio to only poll futures when the future is able to make
 progress. This happens when a resource that the task is blocked on becomes ready
