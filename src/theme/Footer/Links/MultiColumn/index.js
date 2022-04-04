@@ -40,26 +40,26 @@ export default function FooterLinksMultiColumn({ columns }) {
   return (
     <div className="row footer__links">
       <div className="column is-hidden-mobile">{
-        columns.slice(0, 3).map((column, i) => (
+        columns.slice(0, 2).map((column, i) => (
           <Column key={i} column={column} />
         ))
       }
       </div>
       <div className="column">
         <div className="row">{
-          columns.slice(3, 6).map((column, i) => (
+          columns.slice(2, 5).map((column, i) => (
             <Column key={i} column={column} />
           ))
         }
         </div>
         <div className="row">{
-          columns.slice(6, 9).map((column, i) => (
+          columns.slice(5, 8).map((column, i) => (
             <Column key={i} column={column} />
           ))
         }</div>
       </div>
       {
-        columns.slice(9, columns.length).map((column, i) => (
+        columns.slice(8, columns.length).map((column, i) => (
           <Column key={i} column={column} />
         ))
       }
