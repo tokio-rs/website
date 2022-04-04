@@ -166,7 +166,7 @@ const config = {
           },
           ...libs
         ],
-        copyright: `Built with all the love in the world by @carllerch`,
+        copyright: `Copyright &#169; ${new Date().getFullYear()} Tokio-rs`,
       },
       prism: {
         theme: lightCodeTheme,
