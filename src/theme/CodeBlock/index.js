@@ -77,8 +77,12 @@ export default function CodeBlock({
     .split("\n")
     .filter((line) => !line.startsWith("# "))
     .join("\n");
+  var parsedLang = parseLanguage(blockClassName) || "";
+  parsedLang = parsedLang.split(',')[0];
   const language =
-    languageProp ?? parseLanguage(blockClassName) ?? prism.defaultLanguage;
+    languageProp ?? parsedLang ?? prism.defaultLanguage;
+
+  // language = (language.split(',')[0])
   const { highlightLines, code } = parseLines(content, metastring, language);
   return (
     <Highlight
