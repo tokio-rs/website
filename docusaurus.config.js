@@ -179,6 +179,9 @@ const config = {
       },
 
     }),
+  customFields: {
+    handles
+  }
 };
 
 module.exports = config;
