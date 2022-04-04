@@ -424,15 +424,15 @@ library channel is not `Sync`.
 
 :::info
 
-| The `Send` and `Sync` traits are marker traits related to concurrency
-| provided by Rust. Types that can be **sent** to a different thread are
-| `Send`. Most types are `Send`, but something like [`Rc`] is not. Types
-| that can be **concurrently** accessed through immutable references are
-| `Sync`. A type can be `Send` but not `Sync` — a good example is
-| [`Cell`], which can be modified through an immutable reference, and
-| is thus not safe to access concurrently.
-|
-| For more details, see the related [chapter in the Rust book][ch].
+The `Send` and `Sync` traits are marker traits related to concurrency
+provided by Rust. Types that can be **sent** to a different thread are
+`Send`. Most types are `Send`, but something like [`Rc`] is not. Types
+that can be **concurrently** accessed through immutable references are
+`Sync`. A type can be `Send` but not `Sync` — a good example is
+[`Cell`], which can be modified through an immutable reference, and
+is thus not safe to access concurrently.
+
+For more details, see the related [chapter in the Rust book][ch].
 
 :::
 
