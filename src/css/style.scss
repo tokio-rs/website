@@ -26,6 +26,7 @@ $sidebar-active: #282828;
   --ifm-color-primary-light: #5f0757;
   --ifm-color-primary-lighter: #63075b;
   --ifm-color-primary-lightest: #700867;
+  --ifm-navbar-height: 70px;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -52,6 +53,7 @@ $sidebar-active: #282828;
 }
 
 
+@import "./navbar.scss";
 @import "../../node_modules/bulma/sass/utilities/_all.sass";
 @import "../../node_modules/bulma/sass/components/card.sass";
 @import "../../node_modules/bulma/sass/grid/_all.sass";
@@ -63,4 +65,4 @@ $sidebar-active: #282828;
 // @import "../../node_modules/bulma/sass/components/navbar.sass";
 @import "../../node_modules/bulma/sass/components/menu.sass";
 @import "../../node_modules/bulma/sass/layout/section.sass";
-@import "./tokio.scss"
+@import "./tokio.scss";

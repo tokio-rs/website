@@ -4,6 +4,12 @@
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
+const handles = {
+  github: "https://github.com/tokio-rs/tokio",
+  twitter: "https://twitter.com/tokio_rs",
+  discord: "https://discord.gg/tokio",
+}
+
 const libs = [
   ["Tokio", "/tokio/tutorial", "https://github.com/tokio-rs/tokio"],
   ["Hyper", "https://docs.rs/hyper", "https://github.com/hyperium/hyper"],
@@ -90,10 +96,23 @@ const config = {
           },
           { to: '/blog', label: 'Blog', position: 'right' },
           {
-            href: 'https://github.com/facebook/docusaurus',
-            label: 'GitHub',
+            href: handles.twitter,
+            'aria-label': 'Twitter Handle',
+            className: 'navbar-icon navbar-twitter-link',
             position: 'right',
           },
+          {
+            href: handles.github,
+            'aria-label': 'Github repository',
+            className: 'navbar-icon navbar-github-link',
+            position: 'right',
+          },
+          {
+            href: handles.discord,
+            'aria-label': 'Discord Support',
+            className: 'navbar-icon navbar-discord-link',
+            position: 'right',
+          }
         ],
       },
       footer: {
