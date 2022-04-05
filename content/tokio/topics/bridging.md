@@ -28,7 +28,7 @@ async fn main() {
 }
 ```
 is turned into this:
-```
+```rs
 fn main() {
     tokio::runtime::Builder::new_multi_thread()
         .enable_all()
