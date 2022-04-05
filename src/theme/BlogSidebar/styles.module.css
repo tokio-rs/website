@@ -9,11 +9,8 @@
   display: inherit;
   overflow-y: auto;
   position: sticky;
-  padding: 24px 12px 0;
-  margin-left: -32px;
   top: var(--ifm-navbar-height);
   max-height: calc(100vh - var(--ifm-navbar-height));
-  min-height: calc(100vh - var(--ifm-navbar-height));
   border-right: 1px solid var(--ifm-toc-border-color);
 }
 
