@@ -162,7 +162,12 @@ const config = {
           },
           ...libs
         ],
-        copyright: `Copyright &#169; ${new Date().getFullYear()} Tokio-rs`,
+        copyright: `<div>
+                    Built with all the love in the world by <a href="https://twitter.com/carllerche" target="_blank" rel="noopener">@carllerche</a>
+                    <br />
+                    with the help of our <a href="https://github.com/tokio-rs/tokio/graphs/contributors" target="_blank" rel="noopener">our contributors</a>
+                    </div>
+                    Copyright &#169; ${new Date().getFullYear()} Tokio-rs`,
       },
       prism: {
         theme: lightCodeTheme,
