@@ -86,14 +86,6 @@ const config = {
     ({
       navbar: {
         title: '',
-        logo: {
-          alt: 'Tokio Logo',
-          src: 'img/tokio-horizontal-dark.svg',
-          srcDark: 'img/tokio-horizontal.svg',
-          target: '_self',
-          width: 200,
-          height: 200,
-        },
         hideOnScroll: true,
         items: [
           {
