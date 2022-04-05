@@ -1,3 +1,27 @@
+.navbar__title {
+  &:after {
+    transition: opacity 0.2s;
+    content: "";
+    display: flex;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 12rem;
+    height: 3.5rem;
+    background-image: url("/img/tokio-horizontal-dark.svg");
+  }
+
+  &:hover:after {
+    opacity: 0.5;
+  }
+}
+
+html[data-theme='dark'] .navbar__title {
+  &:after {
+    filter: invert(100%);
+    -webkit-filter: invert(100%);
+  }
+}
+
 .navbar-icon {
   &:after {
     transition: opacity 0.2s;
