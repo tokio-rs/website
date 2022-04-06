@@ -13,7 +13,11 @@
     border-top: 2px solid var(--ifm-table-border-color);
 }
 
-.footer--dark {
+html[data-theme="dark"] .footer {
+   --ifm-footer-background-color: #383838;
+}
+
+.footer {
    --ifm-footer-background-color: black;
 }
 
