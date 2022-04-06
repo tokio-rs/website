@@ -57,7 +57,7 @@ $libs: "tokio" black 3.8rem -60%, "runtime" $tk-lib-runtime 2.2rem -22%,
 		transform: translateY(-50%);
 
 		li {
-			line-height: 0.5;
+			line-height: .8rem;
 			font-weight: 400;
 
 			a:hover {
