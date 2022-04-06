@@ -156,12 +156,16 @@ $libs: "tokio" black 3.8rem -60%, "runtime" $tk-lib-runtime 2.2rem -22%,
 			margin-right: 0.5rem;
 		}
 		.subtitle {
-			font-weight: 400;
+			font-weight: 300;
+      line-height: 1.4;
 		}
 	}
 
 	.learnMore {
 		text-align: right;
+    a {
+      text-decoration: none;
+    }
 	}
 
 	// Per lib styling

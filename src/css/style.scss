@@ -1,6 +1,5 @@
 @charset "utf-8";
 @use 'sass:color';
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 $cream: #faf8f4;
 $magenta: #c83895;
@@ -28,6 +27,7 @@ $sidebar-active: #282828;
   --ifm-color-primary-lighter: #63075b;
   --ifm-color-primary-lightest: #700867;
   --ifm-navbar-height: 70px;
+  --ifm-h2-font-size: 1.06rem;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
