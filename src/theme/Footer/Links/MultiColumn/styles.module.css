@@ -1,0 +1,24 @@
+.twitterCard {
+  width: 30px; 
+  height: 30px;
+  fill: white;
+  margin: auto;
+}
+
+.iconContainer {
+  vertical-align: sub;
+}
+
+.footerContainer {
+  font-size: large;
+  margin: auto;
+  align-items: center;
+}
+
+.getHelpContainer > div {
+  margin-bottom: 1rem;
+}
+
+.libsContainer {
+  font-size: 0.95rem;
+}

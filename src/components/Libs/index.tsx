@@ -2,28 +2,13 @@ import React, { FC, ReactNode } from "react";
 import styles from "./styles.module.scss"
 import clsx from "clsx";
 import heroStyles from '../Hero/styles.module.scss';
+import { chunkify } from '../../utils'
 
 type Library = {
   id: string;
   name: string;
   desc: ReactNode;
 };
-
-const chunkify = (inputArray: Library[], chunkSize: number) => {
-  var result = inputArray.reduce((resultArray, item, index) => {
-    const chunkIndex = Math.floor(index / chunkSize)
-
-    if (!resultArray[chunkIndex]) {
-      resultArray[chunkIndex] = [] // start a new chunk
-    }
-    resultArray[chunkIndex].push(item)
-    return resultArray
-  }, [])
-
-  return result
-}
-
-
 
 const LIBS: Library[] = [
   {

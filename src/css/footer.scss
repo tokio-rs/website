@@ -12,3 +12,25 @@
 .theme-doc-footer {
     border-top: 2px solid var(--ifm-table-border-color);
 }
+
+.footer--dark {
+   --ifm-footer-background-color: black;
+}
+
+.footer__links {
+  a:hover {
+    color: $magenta;
+    text-decoration: none;
+  }
+}
+
+.footer__title  {
+  margin-bottom: .5rem;
+}
+
+.footer__copyright {
+  a:hover {
+    color: $magenta;
+    text-decoration: none;
+  }
+}

@@ -119,6 +119,7 @@ const config = {
             position: 'right',
           }
         ],
+        style: 'dark'
       },
       footer: {
         style: 'dark',
@@ -130,36 +131,36 @@ const config = {
           height: 51,
         },
         links: [
-          {
-            title: 'Get Help',
-            items: [
-              {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/rust-tokio',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discord.gg/tokio',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/tokio_rs',
-              },
-            ],
-          },
-          {
-            title: 'More',
-            items: [
-              {
-                label: 'Blog',
-                to: '/blog',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/tokio-rs',
-              },
-            ],
-          },
+          // {
+          //   title: 'Get Help',
+          //   items: [
+          //     {
+          //       label: 'Stack Overflow',
+          //       href: 'https://stackoverflow.com/questions/tagged/rust-tokio',
+          //     },
+          //     {
+          //       label: 'Discord',
+          //       href: 'https://discord.gg/tokio',
+          //     },
+          //     {
+          //       label: 'Twitter',
+          //       href: 'https://twitter.com/tokio_rs',
+          //     },
+          //   ],
+          // },
+          // {
+          //   title: 'More',
+          //   items: [
+          //     {
+          //       label: 'Blog',
+          //       to: '/blog',
+          //     },
+          //     {
+          //       label: 'GitHub',
+          //       href: 'https://github.com/tokio-rs',
+          //     },
+          //   ],
+          // },
           ...libs
         ],
         copyright: `<div>
