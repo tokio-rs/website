@@ -1,13 +1,14 @@
 @charset "utf-8";
 @use 'sass:color';
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 $cream: #faf8f4;
 $magenta: #c83895;
 $red: #e7544c;
 $orange: #f5a623;
 $yellow: #e2b619;
-$green: #95ca51;
 $blue: #5396d1;
+$green: #95ca51;
 $purple: #a674e5;
 $dark-gray: #606060;
 $light-gray: #f0f0f0;
@@ -23,7 +24,7 @@ $sidebar-active: #282828;
   --ifm-color-primary-dark: #4d0547;
   --ifm-color-primary-darker: #490543;
   --ifm-color-primary-darkest: #3c0437;
-  --ifm-color-primary-light: #5f0757;
+  --ifm-color-primary-light: #606060;
   --ifm-color-primary-lighter: #63075b;
   --ifm-color-primary-lightest: #700867;
   --ifm-navbar-height: 70px;
@@ -50,6 +51,10 @@ $sidebar-active: #282828;
 
 [data-theme='dark'] .docusaurus-highlight-code-line {
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
 }
 
 
