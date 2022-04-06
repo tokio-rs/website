@@ -513,7 +513,7 @@ async fn main() {
             else => { break }
         };
 
-        println!("Got {}", msg);
+        println!("Got {:?}", msg);
     }
 
     println!("All channels have been closed.");
