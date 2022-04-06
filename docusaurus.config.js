@@ -1,6 +1,7 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
+const behead = require('remark-behead');
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 var darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
@@ -62,6 +63,7 @@ const config = {
           path: 'content/tokio',
           sidebarPath: require.resolve('./sidebars.js'),
           routeBasePath: 'tokio',
+          beforeDefaultRemarkPlugins: [[behead, { depth: 1 }]],
           // Please change this to your repo.
           editUrl: 'https://github.com/tokio-rs/website/tree/master',
         },
