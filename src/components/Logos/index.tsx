@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import logos from './svg'
 import styles from './styles.module.scss'
+import heroStyles from '../../pages/index.module.css'
 import clsx from "clsx";
 
 type Organization = {
@@ -20,29 +21,25 @@ const ORGANIZATIONS: Organization[] = [
 ];
 
 const Logo: FC<{ org: Organization }> = (props) => (
-  <a href={props.org.url} rel="nofollow">
-    <figure className={`image ${props.org.name}`}>
-      {logos[props.org.name.replace("-", "")]({ className: styles.logo, ...props })}
-    </figure>
-  </a>
+  <div className="column is-3">
+    <a href={props.org.url} target="_blank" rel="noopener noreferrer" aria-label={props.org.name}>
+      <figure className={clsx(styles[props.org.name.toLowerCase()], styles.image)}>
+        {logos[props.org.name.replace("-", "")]({ className: styles.logo, ...props })}
+      </figure>
+    </a>
+  </div>
 );
 
-const Row = ({ from, to }) => {
-  return (
-    <div className="row">
-      {ORGANIZATIONS.slice(from, to).map(org => {
-        return <div key={org.name} className={clsx("col col--3", styles.logoContainer)}> <Logo org={org} /></div>
-      })}
-    </div>
-  )
-}
 
 const Logos: FC = () => {
-  return <section className="text-center hero">
+  return <section className={clsx("text-center", heroStyles.heroBanner)}>
     <div className="container">
-      <h1 className="title">Built by the community, for the community.</h1>
-      <Row from={0} to={4} />
-      <Row from={4} to={8} />
+      <h1 className={styles.title}>Built by the community, for the community.</h1>
+      <nav className="container columns is-multiline is-mobile is-centered is-vcentered">
+        {ORGANIZATIONS.map((org) => (
+          <Logo key={org.name} org={org} />
+        ))}
+      </nav>
     </div>
   </section>
 };

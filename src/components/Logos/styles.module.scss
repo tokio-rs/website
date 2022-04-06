@@ -2,7 +2,7 @@
   fill: black;
   display: block;
   margin: auto;
-  width: 80%;
+  padding: .9rem 0 .9rem 0;
 }
 
 [data-theme='dark'] .logo {
@@ -23,4 +23,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.image {
+  width: 75%;
+  max-width: 8rem;
+  margin: 0 auto;
+}
+
+.aws {
+  transform: scale(0.5);
+}
+
+.title {
+  padding-bottom: 2rem;
 }
