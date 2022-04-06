@@ -2,7 +2,6 @@ import React, { FC, ReactNode } from "react";
 import styles from "./styles.module.scss"
 import clsx from "clsx";
 import heroStyles from '../Hero/styles.module.scss';
-import { chunkify } from '../../utils'
 
 type Library = {
   id: string;
@@ -45,6 +44,7 @@ const LIBS: Library[] = [
 const Lib: FC<{ lib: Library }> = ({ lib }) => (
   <div
     className={clsx(
+      "column is-half",
       heroStyles.hero,
       styles.tkLib,
       styles[`tkLib${lib.id}`]
@@ -72,15 +72,9 @@ const Libs: FC = () => (
   <section className={styles.tkFeatures}>
     <div className="container">
       <div className="columns is-multiline">
-        {chunkify(LIBS, 2).map((libs, i) => (
-          <div key={i} className="row">
-            {
-              libs.map((lib: Library) => {
-                return <div key={lib.id} className="col col--6"> <Lib lib={lib} key={lib.id} /></div>
-              })
-            }
-          </div>
-        ))}
+        {LIBS.map((lib) => {
+          return <Lib lib={lib} key={lib.id} />
+        })}
       </div>
     </div>
   </section>

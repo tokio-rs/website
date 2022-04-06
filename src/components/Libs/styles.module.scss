@@ -32,8 +32,18 @@ $libs: "Tokio" black 3.8rem -60%, "Runtime" $tk-lib-runtime 2.2rem -22%,
   "Tower" $tk-lib-tower 100% -52%, "Mio" $tk-lib-mio 100% -41%,
   "Tracing" $tk-lib-tracing 100% -31%, "Bytes" $tk-lib-bytes 100% -30%;
 
-.tkFeatures {
+html[data-theme='dark'] .tkFeatures {
+  background-color: #383838;
   .card {
+    background-color: black;
+  }
+}
+
+.tkFeatures {
+  padding: 2rem 0 2rem 0;
+  background-color: #faf8f4;;
+  .card {
+    background-color: white;;
     border: 2px solid black;
     border-radius: 4px;
     height: 100%;
@@ -41,7 +51,6 @@ $libs: "Tokio" black 3.8rem -60%, "Runtime" $tk-lib-runtime 2.2rem -22%,
 
   .tkLib {
     padding: 20px;
-    height: 100%;
     .title {
       img {
         margin-right: 0.4rem;
