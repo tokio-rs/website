@@ -72,6 +72,7 @@
 .navbar__logo {
     height: 3rem;
     transition: transform 0.5s;
+    display: none;
 }
 
 @media screen and (min-width:1200px) {
