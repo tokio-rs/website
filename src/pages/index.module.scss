@@ -1,7 +1,10 @@
+@use 'sass:color';
 /**
  * CSS files with the .module.css suffix will be treated as CSS modules
  * and scoped locally.
  */
+
+$cream: #faf8f4;
 
 .heroBanner {
   padding: 3rem 0 3rem 0;
@@ -12,6 +15,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background-color: $cream;
 }
 
 .buttons {

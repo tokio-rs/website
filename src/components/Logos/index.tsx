@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import logos from './svg'
 import styles from './styles.module.scss'
-import heroStyles from '../../pages/index.module.css'
+import heroStyles from '../../pages/index.module.scss'
 import clsx from "clsx";
 
 type Organization = {
