@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import logos from './svg'
 import styles from './styles.module.scss'
-import heroStyles from '../../pages/index.module.scss'
 import clsx from "clsx";
 
 type Organization = {
@@ -32,7 +31,7 @@ const Logo: FC<{ org: Organization }> = (props) => (
 
 
 const Logos: FC = () => {
-  return <section className={clsx("text-center", heroStyles.heroBanner)}>
+  return <section className={clsx("text-center", styles.logoContainer)}>
     <div className="container">
       <h1 className={styles.title}>Built by the community, for the community.</h1>
       <nav className="container columns is-multiline is-mobile is-centered is-vcentered">
