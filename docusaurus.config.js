@@ -2,7 +2,7 @@
 // Note: type annotations allow type checking and IDEs autocompletion
 
 const behead = require('remark-behead');
-const lightCodeTheme = require('prism-react-renderer/themes/github');
+var lightCodeTheme = require('./src/light-theme.cjs');
 var darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 
