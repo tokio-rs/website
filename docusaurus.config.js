@@ -112,6 +112,12 @@ const config = {
           },
           { to: '/blog', label: 'Blog', position: 'right' },
           {
+            href: '#',
+            'aria-label': '',
+            className: 'navbar-separator',
+            position: 'right',
+          },
+          {
             href: handles.twitter,
             'aria-label': 'Twitter Handle',
             className: 'navbar-icon navbar-twitter-link',
@@ -127,6 +133,12 @@ const config = {
             href: handles.discord,
             'aria-label': 'Discord Support',
             className: 'navbar-icon navbar-discord-link',
+            position: 'right',
+          },
+          {
+            href: '#',
+            'aria-label': '',
+            className: 'navbar-separator',
             position: 'right',
           }
         ],
