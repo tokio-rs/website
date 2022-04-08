@@ -52,7 +52,7 @@ function Help() {
   const { siteConfig: { customFields } } = useDocusaurusContext();
   return (
     <div className={clsx("column is-hidden-mobile", styles.getHelpContainer)}>
-      <GetHelp fill={"white"} qmHidden={true} />
+      <GetHelp fill={"white"} className={styles.socialIconsRow} />
       <div className={clsx("is-flex", styles.iconContainer)}>
         <div>Stay up to date: &nbsp;</div>
         <a href={customFields.handles.twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter Handle">

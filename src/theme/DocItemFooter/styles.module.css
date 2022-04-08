@@ -24,14 +24,10 @@
   vertical-align: sub;
 }
 
-.helpContainer div {
-  padding: 1rem 0;
-  color: var(--ifm-link-color);
-}
 
 .questionMark.helpIcon {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
 }
 
 .iconsContainer {

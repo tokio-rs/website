@@ -10,7 +10,8 @@
 }
 
 .theme-doc-footer {
-    border-top: 2px solid var(--ifm-table-border-color);
+    border-top: 1px solid var(--ifm-table-border-color);
+    padding-top: 2rem;
 }
 
 html[data-theme="dark"] .footer {
