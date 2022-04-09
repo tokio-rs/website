@@ -58,7 +58,7 @@ const Lib: FC<{ lib: Library }> = ({ lib }) => (
           </div>
         </div>
         <div className="content">
-          <div className={clsx(heroStyles.subtitle)}>{lib.desc}</div>
+          <h2 className={clsx(styles.subtitle)}>{lib.desc}</h2>
         </div>
         {/* <p className="learn-more has-text-right">
           <a href="#">Learn more ➔</a>
