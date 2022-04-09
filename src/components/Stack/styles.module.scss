@@ -56,6 +56,7 @@ $libs: "tokio" black 3.8rem -60%, "runtime" $tk-lib-runtime 2.2rem -22%,
 		top: 50%;
 		transform: translateY(-50%);
 
+
 		li {
 			line-height: .8rem;
 			font-weight: 400;
@@ -106,6 +107,9 @@ $libs: "tokio" black 3.8rem -60%, "runtime" $tk-lib-runtime 2.2rem -22%,
 		margin-top: 13rem;
 
 		> img {
+      @media screen and (min-width: $desktop) {
+        padding-right: 4rem;
+      }
 			display: block;
 			position: absolute;
 			opacity: 0.15;
@@ -197,3 +201,4 @@ $libs: "tokio" black 3.8rem -60%, "runtime" $tk-lib-runtime 2.2rem -22%,
 		display: none;
 	}
 }
+
