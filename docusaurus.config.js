@@ -4,6 +4,7 @@
 const behead = require('remark-behead');
 var lightCodeTheme = require('./src/light-theme.cjs');
 var darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const fs = require('fs');
 
 
 darkCodeTheme.styles = darkCodeTheme.styles.filter(({ types, style }) => style.fontStyle !== "italic");
@@ -110,7 +111,6 @@ const config = {
             label: 'API Docs',
             position: 'right',
           },
-          { to: '/blog', label: 'Blog', position: 'right' },
           {
             href: '#',
             'aria-label': '',
@@ -210,5 +210,12 @@ const config = {
     handles
   }
 };
+
+const blogDir = config.presets[0][1].blog.path;
+fs.readdir(blogDir, (err, files) => {
+  const lastBlogEntry = files[files.length - 1].split(".")[0];
+  config.themeConfig.navbar.items.splice(2, 0, { to: `/blog/${lastBlogEntry}`, label: 'Blog', position: 'right' });
+});
+
 
 module.exports = config;
