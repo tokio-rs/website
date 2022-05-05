@@ -9,3 +9,4 @@ The currently available topics articles are:
 
  * [Bridging with sync code](/tokio/topics/bridging)
  * [Graceful shutdown](/tokio/topics/shutdown)
+ * [Next steps with Tracing](/tokio/topics/tokio-next-steps)
