@@ -17,13 +17,19 @@ addition, `tracing` spans are *structured*, with the ability to record typed
 data as well as textual messages.
 
 You can use `tracing` to:
-- observe your application with Open Telemetry-supporting services
-- debug your application with Tokio Console
-- emit logs to `stdout` or `journald`
-- profile where your application is spending time
+- emit distributed traces to an [OpenTelemetry] collector
+- debug your application with [Tokio Console]
+- log to [`stdout`], [a log file] or [`journald`]
+- [profile] where your application is spending time
 
 [`tracing`]: https://docs.rs/tracing
 [`tracing-subscriber`]: https://docs.rs/tracing-subscriber
+[OpenTelemetry]: https://docs.rs/tracing-opentelemetry
+[Tokio Console]: https://docs.rs/console-subscriber
+[`stdout`]: https://docs.rs/tracing-subscriber/latest/tracing_subscriber/fmt/index.html
+[a log file]: https://docs.rs/tracing-appender/latest/tracing_appender/
+[`journald`]: https://docs.rs/tracing-journald/latest/tracing_journald/
+[profile]: https://docs.rs/tracing-timing/latest/tracing_timing/
 
 # Setup
 
