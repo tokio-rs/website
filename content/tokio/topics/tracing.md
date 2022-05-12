@@ -75,6 +75,54 @@ pub async fn main() -> mini_redis::Result<()> {
 If you run your application now, you may see some trace events emitted by tokio,
 but you will need to modify your own application to emit traces to get the most
 out of `tracing`.
+##  Subscriber Configuration
+
+In the above example, we've configured [`FmtSubscriber`] with its default
+configuration. However, `tracing-subscriber` also provides a number of ways to
+configure the [`FmtSubscriber`]'s behavior, such as customizing the output
+format, including additional information (such as thread IDs or source code
+locations) in the logs, and writing the logs to somewhere other than `stdout`.
+
+For example:
+```rust
+    // Start configuring a `fmt` subscriber
+    let subscriber = tracing_subscriber::fmt()
+        // Use a more compact, abbreviated log format
+        .compact()
+        // Display source code file paths
+        .with_file(true)
+        // Display source code line numbers
+        .with_line_number(true)
+        // Display the thread ID an event was recorded on
+        .with_thread_ids(true)
+        // Don't display the event's target (module path)
+        .with_target(false)
+        // Build the subscriber
+        .finish();
+```
+
+For details on the available configuration options, see [the
+`tracing_subscriber::fmt` documentation][fmt-cfg].
+
+
+In addition to the [`FmtSubscriber`] type from [`tracing-subscriber`], other
+`Subscriber`s can implement their own ways of recording `tracing` data. This
+includes alternative output formats, analysis and aggregation, and integration
+with other systems such as distributed tracing or log aggregation services. A
+number of crates provide additional `Subscriber` implementations that may be of
+interest. See [here][related-crates] for an (incomplete) list of additional
+`Subscriber` implementations.
+
+Finally, in some cases, it may be useful to combine multiple different ways of
+recording traces together to build a single `Subscriber` that implements
+multiple behaviors. For this purpose, the `tracing-subscriber` crate provides a
+[`Layer`] trait that represents a component that may be composed together with
+other `Layer`s to form a `Subscriber`. See [here][`Layer`] for details on using
+`Layer`s.
+
+[fmt-cfg]: https://docs.rs/tracing-subscriber/latest/tracing_subscriber/fmt/index.html#configuration
+[related-crates]: https://docs.rs/tracing/latest/tracing/index.html#related-crates
+[`Layer`]: https://docs.rs/tracing-subscriber/latest/tracing_subscriber/layer/index.html
 
 # Emitting Traces
 
