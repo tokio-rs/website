@@ -72,7 +72,7 @@ pub async fn main() -> mini_redis::Result<()> {
 
 [`FmtSubscriber`]: https://docs.rs/tracing-subscriber/latest/tracing_subscriber/fmt/index.html
 
-If you run your application now, you may see some trace events emitted by tokio,
+If you run your application now, you may see some trace events emitted by Tokio,
 but you will need to modify your own application to emit traces to get the most
 out of `tracing`.
 ##  Subscriber Configuration
@@ -152,19 +152,18 @@ impl Handler {
 }
 ```
 
-Now, `mini-redis-server` will emit a tracing span for each incoming connection
+`mini-redis-server` will now emit a `tracing` Span for each incoming connection
 that:
 
-1. has a priority [level] of `info` (the second-highest priority)
-2. is named `Handler::run`
-3. has some structured data associated with it:   
-    - `skip(self)` indicates that emitted traces should *not*
-    include the `Debug` representation of `Handler`
-    - `fields(...)` indicates that emitted traces *should* include
-    the `Debug` representation of the connection's `SocketAddr`, in a field
-    called `peer_addr`
+1. has a verbosity [level] of `info` (the "middle ground" verbosity),
+2. is named `Handler::run`,
+3. has some structured data associated with it.
+    - `fields(...)` indicates that emitted span *should* include
+    the `fmt::Debug` representation of the connection's `SocketAddr` in a field
+    called `peer_addr`. 
+    - `skip(self)` indicates that emitted span should *not* record `Hander`'s debug representation.
 
 [level]: https://docs.rs/tracing/latest/tracing/struct.Level.html
 
-If you run your application, you now will see trace events emitted for each
+If you run your application, you now will see events decorated with their span's context emitted for each
 incoming connection that it processes.
