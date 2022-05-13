@@ -37,7 +37,7 @@ To begin, add [`tracing`] and [`tracing-subscriber`] as dependencies:
 
 ```toml
 [dependencies]
-tracing = "0.1.34"
+tracing = "0.1"
 tracing-subscriber = "0.3"
 ```
 
