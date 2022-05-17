@@ -10,12 +10,16 @@ often be quite challenging. Since individual tasks are multiplexed on the same
 thread, associated events and log lines are intermixed making it difficult to
 trace the logic flow. `tracing` expands upon logging-style diagnostics by
 allowing libraries and applications to record structured events with additional
-information about *temporality* and *causality* — unlike a log message, a `Span`
-in `tracing` has a beginning and end time, may be entered and exited by the
-flow of execution, and may exist within a nested tree of similar spans. For
-representing things that occur in a moment-in-time, `tracing` provides the
-complementary concept of *events*. Both `Span`s and `Event`s are *structured*,
-with the ability to record typed data as well as textual messages.
+information about *temporality* and *causality* — unlike a log message, a
+[`Span`] in `tracing` has a beginning and end time, may be entered and exited
+by the flow of execution, and may exist within a nested tree of similar spans.
+For representing things that occur at a single moment in time, `tracing`
+provides the complementary concept of *events*. Both [`Span`]s and [`Event`]s
+are *structured*, with the ability to record typed data as well as textual
+messages.
+
+[`Span`]: https://docs.rs/tracing/latest/tracing/#spans
+[`Event`]: https://docs.rs/tracing/latest/tracing/#events
 
 You can use `tracing` to:
 - emit distributed traces to an [OpenTelemetry] collector
