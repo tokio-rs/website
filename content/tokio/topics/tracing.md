@@ -186,6 +186,17 @@ that:
 
 [level]: https://docs.rs/tracing/latest/tracing/struct.Level.html
 
+You can also construct a [`Span`] manually by invoking the [`span!`] macro, or
+any of its leveled shorthands ([`error_span!`], [`warn_span!`], [`info_span!`],
+[`debug_span!`], [`trace_span!`]).
+
+[`span!`]: https://docs.rs/tracing/*/tracing/macro.span.html
+[`error_span!`]: https://docs.rs/tracing/*/tracing/macro.error_span.html
+[`warn_span!`]: https://docs.rs/tracing/*/tracing/macro.warn_span.html
+[`info_span!`]: https://docs.rs/tracing/*/tracing/macro.info_span.html
+[`debug_span!`]: https://docs.rs/tracing/*/tracing/macro.debug_span.html
+[`trace_span!`]: https://docs.rs/tracing/*/tracing/macro.trace_span.html
+
 To emit events, invoke the [`event!`] macro, or any of its leveled shorthands
 ([`error!`], [`warn!`], [`info!`], [`debug!`], [`trace!`]). For instance, to
 log that a client sent a malformed command:
