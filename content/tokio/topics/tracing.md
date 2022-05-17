@@ -59,14 +59,19 @@ provided by [`tracing-subscriber`] prints formatted traces and events to
 `stdout`, can be registered like so:
 
 ```rust
+# mod mini_redis {
+#       pub type Error = Box<dyn std::error::Error + Send + Sync>;
+#       pub type Result<T> = std::result::Result<T, Error>;
+# }
 #[tokio::main]
 pub async fn main() -> mini_redis::Result<()> {
     // construct a subscriber that prints formatted traces to stdout
     let subscriber = tracing_subscriber::FmtSubscriber::new();
     // use that subscriber to process traces emitted after this point
     tracing::subscriber::set_global_default(subscriber)?;
-
+# /*
     ...
+# */ Ok(())
 }
 ```
 
@@ -136,6 +141,13 @@ For instance, to trace the method in `mini-redis-server` that handles each
 connection:
 
 ```rust
+# struct Handler {
+#     connection: tokio::net::TcpStream,
+# }
+# pub type Error = Box<dyn std::error::Error + Send + Sync>;
+# pub type Result<T> = std::result::Result<T, Error>;
+use tracing::instrument;
+
 impl Handler {
     /// Process a single connection.
     #[instrument(
@@ -146,8 +158,10 @@ impl Handler {
             ?peer_addr = self.connection.peer_addr().unwrap(),
         ),
     )]
-    async fn run(&mut self) -> crate::Result<()> {
+    async fn run(&mut self) -> mini_redis::Result<()> {
+# /*
         ...
+# */ Ok::<_, _>(())
     }
 }
 ```
