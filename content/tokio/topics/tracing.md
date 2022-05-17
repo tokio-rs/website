@@ -161,7 +161,8 @@ impl Handler {
         name = "Handler::run",
         skip(self),
         fields(
-            peer_addr = &self.connection.peer_addr().unwrap().to_string()[..]
+            // `%` serializes the peer IP addr with `Display`
+            peer_addr = %self.connection.peer_addr().unwrap()
         ),
     )]
     async fn run(&mut self) -> mini_redis::Result<()> {
