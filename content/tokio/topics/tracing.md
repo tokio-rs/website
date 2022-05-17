@@ -2,19 +2,20 @@
 title: Getting started with Tracing
 ---
 
-The [`tracing`] crate is a framework for instrumenting Rust programs to collect 
+The [`tracing`] crate is a framework for instrumenting Rust programs to collect
 structured, event-based diagnostic information.
 
-In asynchronous systems like Tokio, interpreting traditional log messages can 
-often be quite challenging. Since individual tasks are multiplexed on the same 
-thread, associated events and log lines are intermixed making it difficult to 
-trace the logic flow. `tracing` expands upon logging-style diagnostics by 
-allowing libraries and applications to record structured events with additional 
-information about *temporality* and *causality* — unlike a log message, a span 
-in `tracing` has a beginning and end time, may be entered and exited by the 
-flow of execution, and may exist within a nested tree of similar spans. In 
-addition, `tracing` spans are *structured*, with the ability to record typed 
-data as well as textual messages.
+In asynchronous systems like Tokio, interpreting traditional log messages can
+often be quite challenging. Since individual tasks are multiplexed on the same
+thread, associated events and log lines are intermixed making it difficult to
+trace the logic flow. `tracing` expands upon logging-style diagnostics by
+allowing libraries and applications to record structured events with additional
+information about *temporality* and *causality* — unlike a log message, a `Span`
+in `tracing` has a beginning and end time, may be entered and exited by the
+flow of execution, and may exist within a nested tree of similar spans. For
+representing things that occur in a moment-in-time, `tracing` provides the
+complementary concept of *events*. Both `Span`s and `Event`s are *structured*,
+with the ability to record typed data as well as textual messages.
 
 You can use `tracing` to:
 - emit distributed traces to an [OpenTelemetry] collector
@@ -41,16 +42,16 @@ tracing = "0.1"
 tracing-subscriber = "0.3"
 ```
 
-The [`tracing`] crate provides the API we will use to emit traces. The 
-[`tracing-subscriber`] crate provides some basic utilities for forwarding those 
+The [`tracing`] crate provides the API we will use to emit traces. The
+[`tracing-subscriber`] crate provides some basic utilities for forwarding those
 traces to external listeners (e.g., `stdout`).
 
 # Subscribing to Traces
 
-If you are authoring an executable (as opposed to a library), you will need to 
-register a tracing *subscriber*. Subscribers are types that process traces 
-emitted by your application and its dependencies, and and can perform tasks 
-such as computing metrics, monitoring for errors, and re-emitting traces to the 
+If you are authoring an executable (as opposed to a library), you will need to
+register a tracing *subscriber*. Subscribers are types that process traces
+emitted by your application and its dependencies, and and can perform tasks
+such as computing metrics, monitoring for errors, and re-emitting traces to the
 outside world (e.g., `journald`, `stdout`, or an `open-telemetry` daemon).
 
 In most circumstances, you should register your tracing subscriber as early as
@@ -80,6 +81,7 @@ pub async fn main() -> mini_redis::Result<()> {
 If you run your application now, you may see some trace events emitted by Tokio,
 but you will need to modify your own application to emit traces to get the most
 out of `tracing`.
+
 ##  Subscriber Configuration
 
 In the above example, we've configured [`FmtSubscriber`] with its default
@@ -129,10 +131,10 @@ other `Layer`s to form a `Subscriber`. See [here][`Layer`] for details on using
 [related-crates]: https://docs.rs/tracing/latest/tracing/index.html#related-crates
 [`Layer`]: https://docs.rs/tracing-subscriber/latest/tracing_subscriber/layer/index.html
 
-# Emitting Traces
+# Emitting Spans and Events
 
-The easiest way to emit traces is with the [`instrument`] proc-macro annotation
-provided by [`tracing`], which re-writes the bodies of functions to emit traces
+The easiest way to emit spans is with the [`instrument`] proc-macro annotation
+provided by [`tracing`], which re-writes the bodies of functions to emit spans
 each time they are invoked.
 
 [`instrument`]: https://docs.rs/tracing/latest/tracing/attr.instrument.html
@@ -174,10 +176,58 @@ that:
 3. has some structured data associated with it.
     - `fields(...)` indicates that emitted span *should* include
     the `fmt::Debug` representation of the connection's `SocketAddr` in a field
-    called `peer_addr`. 
+    called `peer_addr`.
     - `skip(self)` indicates that emitted span should *not* record `Hander`'s debug representation.
 
 [level]: https://docs.rs/tracing/latest/tracing/struct.Level.html
 
-If you run your application, you now will see events decorated with their span's context emitted for each
-incoming connection that it processes.
+To emit events, invoke the [`event!`] macro, or any of its leveled shorthands
+([`error!`], [`warn!`], [`info!`], [`debug!`], [`trace!`]). For instance, to
+log that a client sent a malformed command:
+```rust
+# type Error = Box<dyn std::error::Error + Send + Sync>;
+# type Result<T> = std::result::Result<T, Error>;
+# struct Command;
+# impl Command {
+#     fn from_frame<T>(frame: T) -> Result<()> {
+#         Result::Ok(())
+#     }
+#     fn from_error<T>(err: T) {}
+# }
+# let frame = ();
+// Convert the redis frame into a command struct. This returns an
+// error if the frame is not a valid redis command.
+let cmd = match Command::from_frame(frame) {
+    Ok(cmd) => cmd,
+    Err(cause) => {
+        // The frame was malformed and could not be parsed. This is
+        // probably indicative of an issue with the client (as opposed
+        // to our server), so we (1) emit a warning...
+        //
+        // The syntax here is a shorthand provided by the `tracing`
+        // crate. It can be thought of as similar to:
+        //      tracing::warn! {
+        //          cause = format!("{}", cause),
+        //          "failed to parse command from frame"
+        //      };
+        // `tracing` provides structured logging, so information is
+        // "logged" as key-value pairs.
+        tracing::warn! {
+            %cause,
+            "failed to parse command from frame"
+        };
+        // ...and (2) respond to the client with the error:
+        Command::from_error(cause)
+    }
+};
+```
+
+[`event!`]: https://docs.rs/tracing/*/tracing/macro.event.html
+[`error!`]: https://docs.rs/tracing/*/tracing/macro.error.html
+[`warn!`]: https://docs.rs/tracing/*/tracing/macro.warn.html
+[`info!`]: https://docs.rs/tracing/*/tracing/macro.info.html
+[`debug!`]: https://docs.rs/tracing/*/tracing/macro.debug.html
+[`trace!`]: https://docs.rs/tracing/*/tracing/macro.trace.html
+
+If you run your application, you now will see events decorated with their span's
+context emitted for each incoming connection that it processes.
