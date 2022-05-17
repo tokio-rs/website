@@ -161,7 +161,7 @@ impl Handler {
         name = "Handler::run",
         skip(self),
         fields(
-            ?peer_addr = self.connection.peer_addr().unwrap(),
+            peer_addr = &self.connection.peer_addr().unwrap().to_string()[..]
         ),
     )]
     async fn run(&mut self) -> mini_redis::Result<()> {
