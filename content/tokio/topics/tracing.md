@@ -182,7 +182,7 @@ that:
 2. is named `Handler::run`,
 3. has some structured data associated with it.
     - `fields(...)` indicates that emitted span *should* include
-    the `fmt::Debug` representation of the connection's `SocketAddr` in a field
+    the `fmt::Display` representation of the connection's `SocketAddr` in a field
     called `peer_addr`.
     - `skip(self)` indicates that emitted span should *not* record `Hander`'s debug representation.
 
