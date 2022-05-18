@@ -52,10 +52,12 @@ impl Server {
             let mut connection = listener.accept().await?;
             let request = read_http_request(&mut connection).await?;
 
-            // Call the handler provided by the user
-            let response = handler(request);
+            task::spawn(async move {
+                // Await the future returned by `handler`
+                let response = handler(request).await;
 
-            write_http_response(connection, response).await?;
+                write_http_response(connection, response).await?;
+            });
         }
     }
 }
@@ -105,10 +107,12 @@ impl Server {
             let mut connection = listener.accept().await?;
             let request = read_http_request(&mut connection).await?;
 
-            // Await the future returned by `handler`
-            let response = handler(request).await;
+            task::spawn(async move {
+                // Await the future returned by `handler`
+                let response = handler(request).await;
 
-            write_http_response(connection, response).await?;
+                write_http_response(connection, response).await?;
+            });
         }
     }
 }
@@ -153,11 +157,13 @@ impl Server {
             let mut connection = listener.accept().await?;
             let request = read_http_request(&mut connection).await?;
 
-            // Pattern match on the result of the response future
-            match handler(request).await {
-                Ok(response) => write_http_response(connection, response).await?,
-                Err(error) => handle_error_somehow(error, connection),
-            }
+            task::spawn(async move {
+                // Pattern match on the result of the response future
+                match handler(request).await {
+                    Ok(response) => write_http_response(connection, response).await?,
+                    Err(error) => handle_error_somehow(error, connection),
+                }
+            });
         }
     }
 }
@@ -527,11 +533,13 @@ impl Server {
             let mut connection = listener.accept().await?;
             let request = read_http_request(&mut connection).await?;
 
-            // have to call `Handler::call` here
-            match handler.call(request).await {
-                Ok(response) => write_http_response(connection, response).await?,
-                Err(error) => handle_error_somehow(error, connection),
-            }
+            task::spawn(async move {
+                // have to call `Handler::call` here
+                match handler.call(request).await {
+                    Ok(response) => write_http_response(connection, response).await?,
+                    Err(error) => handle_error_somehow(error, connection),
+                }
+            });
         }
     }
 }
@@ -735,7 +743,7 @@ Until now, we've only talked about the server side of things. But, our `Handler`
 trait actually fits HTTP clients as well. One can imagine a client `Handler`
 that accepts some request and asynchronously sends it to someone on the
 internet. Our `Timeout` wrapper is actually useful here as well.
-`JsonContentType` probably isn't, since it's not the clients job to set response
+`JsonContentType` probably isn't, since it's not the client's job to set response
 headers.
 
 Since our `Handler` trait is useful for defining both servers and clients,
