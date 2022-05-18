@@ -53,10 +53,12 @@ traces to external listeners (e.g., `stdout`).
 # Subscribing to Traces
 
 If you are authoring an executable (as opposed to a library), you will need to
-register a tracing *subscriber*. Subscribers are types that process traces
+register a tracing [*subscriber*]. Subscribers are types that process traces
 emitted by your application and its dependencies, and and can perform tasks
 such as computing metrics, monitoring for errors, and re-emitting traces to the
 outside world (e.g., `journald`, `stdout`, or an `open-telemetry` daemon).
+
+[*subscriber*]: https://docs.rs/tracing/latest/tracing/#subscribers
 
 In most circumstances, you should register your tracing subscriber as early as
 possible in your `main` function. For instance, the [`FmtSubscriber`] type
