@@ -53,8 +53,8 @@ impl Server {
             let request = read_http_request(&mut connection).await?;
 
             task::spawn(async move {
-                // Await the future returned by `handler`
-                let response = handler(request).await;
+                // Call the handler provided by the user
+                let response = handler(request);
 
                 write_http_response(connection, response).await?;
             });
