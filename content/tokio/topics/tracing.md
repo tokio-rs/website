@@ -141,12 +141,25 @@ other `Layer`s to form a `Subscriber`. See [here][`Layer`] for details on using
 
 The easiest way to emit spans is with the [`instrument`] proc-macro annotation
 provided by [`tracing`], which re-writes the bodies of functions to emit spans
-each time they are invoked.
+each time they are invoked; e.g.:
+
+```rust
+#[tracing::instrument]
+fn trace_me(a: u32, b: u32) -> u32 {
+    a + b
+}
+```
+
+Each invocation of `trace_me` will emit a `tracing` Span that:
+
+1. has a verbosity [level] of `trace` (the greatest verbosity),
+2. is named `trace_me`,
+3. has fields `a` and `b`, whose values are the arguments of `trace_me`
 
 [`instrument`]: https://docs.rs/tracing/latest/tracing/attr.instrument.html
 
-For instance, to trace the method in [`mini-redis-server`] that handles each
-connection:
+The [`instrument`] attribute is highly configurable; e.g., to trace
+the method in [`mini-redis-server`] that handles each connection:
 
 [`mini-redis-server`]: ../tutorial/setup#mini-redis
 
