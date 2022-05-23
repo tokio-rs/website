@@ -145,8 +145,10 @@ each time they are invoked.
 
 [`instrument`]: https://docs.rs/tracing/latest/tracing/attr.instrument.html
 
-For instance, to trace the method in `mini-redis-server` that handles each
+For instance, to trace the method in [`mini-redis-server`] that handles each
 connection:
+
+[`mini-redis-server`]: ../tutorial/setup#mini-redis
 
 ```rust
 # struct Handler {
@@ -175,8 +177,8 @@ impl Handler {
 }
 ```
 
-`mini-redis-server` will now emit a `tracing` Span for each incoming connection
-that:
+[`mini-redis-server`] will now emit a `tracing` Span for each incoming
+connection that:
 
 1. has a verbosity [level] of `info` (the "middle ground" verbosity),
 2. is named `Handler::run`,
