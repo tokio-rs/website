@@ -23,6 +23,7 @@ const menu = {
         nested: [
           "bridging",
           "shutdown",
+          "tracing",
         ],
       },
       glossary: {},
