@@ -50,6 +50,10 @@ Now we should be ready to start up mini-redis again, this time using the
 RUSTFLAGS="--cfg tokio_unstable" cargo run --bin mini-redis-server
 ```
 
+The `tokio_unstable` flag allows us to make use of additional APIs provided by
+tracing, that do not currently have a guarantee of stability (we might make
+breaking changes to them in the future).
+
 All that is remaining is to run the console itself in another terminal. The
 easiest way to do that would be to install it from crates.io:
 
