@@ -43,6 +43,10 @@ tracing_subscriber::fmt::try_init()?;
 console_subscriber::init();
 ```
 
+This will enable the `console_subscriber`, which means that any instrumentation
+relevant to `tokio-console` will be recorded. Logging to stdout will still
+happen (based on the value of the `RUST_LOG` environment variable).
+
 Now we should be ready to start up mini-redis again, this time using the
 `tokio_unstable` flag (which is needed to enable tracing):
 
@@ -51,8 +55,8 @@ RUSTFLAGS="--cfg tokio_unstable" cargo run --bin mini-redis-server
 ```
 
 The `tokio_unstable` flag allows us to make use of additional APIs provided by
-Tokio which do not currently have a guarantee of stability (we might make
-breaking changes to them in the future).
+Tokio which do not currently have a guarantee of stability (in other words,
+breaking changes are allowed for these APIs).
 
 All that is remaining is to run the console itself in another terminal. The
 easiest way to do that would be to install it from crates.io:
