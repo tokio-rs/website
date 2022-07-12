@@ -4,13 +4,13 @@ title: "Next steps with Tracing"
 
 # Tokio-console
 
-Tokio-console is an htop-like utility that enables you to see a real-time view
+[`tokio-console`](https://github.com/tokio-rs/console) is an htop-like utility that enables you to see a real-time view
 of an application’s spans and events. It can also represent "resources" that the
 Tokio runtime has created, such as Tasks. It's essential for understanding
 performance issues during the development process.
 
-To enable the console in mini-redis, you need to enable the `tracing` feature
-for the Tokio package:
+For instance, to use Tokio-console in [the mini-redis project](https://github.com/tokio-rs/mini-redis)), 
+you need to enable the `tracing` feature for the Tokio package:
 
 ```toml
 # Update the tokio import in your Cargo.toml
@@ -51,7 +51,7 @@ RUSTFLAGS="--cfg tokio_unstable" cargo run --bin mini-redis-server
 ```
 
 The `tokio_unstable` flag allows us to make use of additional APIs provided by
-tracing, that do not currently have a guarantee of stability (we might make
+Tokio which do not currently have a guarantee of stability (we might make
 breaking changes to them in the future).
 
 All that is remaining is to run the console itself in another terminal. The
