@@ -734,7 +734,7 @@ operations. However, the strategy used to run concurrent operations differs. The
 run it. A task is the object that the Tokio runtime schedules. Two different
 tasks are scheduled independently by Tokio. They may run simultaneously on
 different operating system threads. Because of this, a spawned task has the same
-restriction as a a spawned thread: no borrowing.
+restriction as a spawned thread: no borrowing.
 
 The `select!` macro runs all branches concurrently **on the same task**. Because
 all branches of the `select!` macro are executed on the same task, they will
