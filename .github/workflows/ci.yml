@@ -17,15 +17,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install Rust
-        run: rustup install nightly-2021-03-15
+        run: rustup update stable
 
       - name: Build dependencies
-        run: cargo +nightly-2021-03-15 build
+        run: cargo build
         working-directory: doc-test
         continue-on-error: true
 
       - name: Actually run the tests
-        run: cargo +nightly-2021-03-15 test
+        run: cargo test
         working-directory: doc-test
   tutorial-code:
     name: Test tutorial-code directory
