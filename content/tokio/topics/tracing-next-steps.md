@@ -34,7 +34,9 @@ the call to `console-susbcriber`:
 Replace this:
 
 ```rust
+# use std::error::Error;
 tracing_subscriber::fmt::try_init()?;
+# Ok::<(), Box<dyn Error + Send + Sync + 'static>>(())
 ```
 
 ...with this:
@@ -145,12 +147,19 @@ setup:
 Replace this:
 
 ```rust
+# use std::error::Error;
 tracing_subscriber::fmt::try_init()?;
+# Ok::<(), Box<dyn Error + Send + Sync + 'static>>(())
 ```
 
 ...with this:
 
 ```rust
+# use std::error::Error;
+# use opentelemetry::global;
+# use tracing_subscriber::{
+#     fmt, layer::SubscriberExt, util::SubscriberInitExt,
+# };
 // Allows you to pass along context (i.e., trace IDs) across services
 global::set_text_map_propagator(opentelemetry_jaeger::Propagator::new());
 // Sets up the machinery needed to export data to Jaeger
@@ -170,6 +179,7 @@ tracing_subscriber::registry()
     // Continue logging to stdout
     .with(fmt::Layer::default())
     .try_init()?;
+# Ok::<(), Box<dyn Error + Send + Sync + 'static>>(())
 ```
 
 Now you should be able to start up mini-redis:
@@ -181,7 +191,7 @@ cargo run --bin mini-redis-server
 In another terminal, run the hello world example  (this is available in the
 [mini-redis repository](https://github.com/tokio-rs/mini-redis):
 
-```
+```sh
 cargo run --example hello_world
 ```
 
