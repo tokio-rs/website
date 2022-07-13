@@ -20,12 +20,12 @@ jobs:
         run: rustup update stable
 
       - name: Build dependencies
-        run: cargo build
+        run: RUSTFLAGS="--cfg tokio_unstable" cargo build
         working-directory: doc-test
         continue-on-error: true
 
       - name: Actually run the tests
-        run: cargo test
+        run: RUSTFLAGS="--cfg tokio_unstable" cargo test
         working-directory: doc-test
   tutorial-code:
     name: Test tutorial-code directory
