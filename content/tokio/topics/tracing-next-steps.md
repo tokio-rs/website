@@ -9,7 +9,7 @@ of an application’s spans and events. It can also represent "resources" that t
 Tokio runtime has created, such as Tasks. It's essential for understanding
 performance issues during the development process.
 
-For instance, to use Tokio-console in [the mini-redis project](https://github.com/tokio-rs/mini-redis)), 
+For instance, to use tokio-console in [the mini-redis project](https://github.com/tokio-rs/mini-redis)), 
 you need to enable the `tracing` feature for the Tokio package:
 
 ```toml
@@ -73,8 +73,11 @@ and then run it with:
 tokio-console
 ```
 
-The initial view you will see is for tokio Tasks that are currently running. It
-can also show Tasks for a period of time after they have completed (the color
+The initial view you will see is for tokio Tasks that are currently running.
+Example: ![tokio-console Task
+view](https://raw.githubusercontent.com/tokio-rs/console/main/assets/tasks_list.png)
+
+It can also show Tasks for a period of time after they have completed (the color
 for these will be grey). You can generate some traces by running the mini-redis
 hello world example (this is available in the [mini-redis
 repository](https://github.com/tokio-rs/mini-redis)):
@@ -85,27 +88,32 @@ cargo run --example hello_world
 
 If you press `r`, you can switch to the Resources view. This displays
 semaphores, mutexes, and other constructs that are being used by the Tokio
-runtime.
+runtime. Example: ![tokio-console Resource
+view](https://raw.githubusercontent.com/tokio-rs/console/main/assets/resources.png)
 
 Whenever you need to introspect the Tokio runtime to understand the performance
 of you application better, you can make use of tokio-console to view what is
 happening in real time, helping you to spot deadlocks and other issues.
 
+To learn more about how to use tokio-console, please visit [its documentation
+page](https://docs.rs/tokio-console/latest/tokio_console/#using-the-console).
+
 # Integrating with OpenTelemetry
 
-[OpenTelemetry](https://opentelemetry.io/) (Otel) means multiple things; for
+[OpenTelemetry](https://opentelemetry.io/) (OTel) means multiple things; for
 one, it's an open specification, defining a data model for traces and metrics
 that can handle the needs of most users. It is also a set of language-specific
 SDKs, providing instrumentation so that traces and metrics can be emitted from
 an application. Thirdly, there is the OpenTelemetry Collector, a binary that
 runs alongside your application to collect the traces and metrics, ultimately
 pushing those out to a telemetry vendor, such as DataDog, Honeycomb, or AWS
-X-ray. It can also send data to tools such as Prometheus instead.
+X-Ray. It can also send data to tools such as Prometheus instead.
 
-For Rust, there is no "official" OTel SDK, but there are an excellent set of
-community-created crates available.
+The [opentelemetry crate](https://crates.io/crates/opentelemetry) is what
+provides the OpenTelemetry SDK for Rust, and is what we will be using for this
+tutorial.
 
-In this tutorial, we will be setting up mini-redis to send data to
+In this tutorial, we will be setting up mini-redis[^1] to send data to
 [Jaeger](https://www.jaegertracing.io/), which is a UI for visualizing traces.
 
 To run an instance of Jaeger, you can use Docker:
@@ -211,3 +219,12 @@ one, you might need to pull in an additional crate (for example, for sending
 data to the OTel Collector, you'll need the `opentelemetry-otlp` crate). There
 are many examples available in the [opentelemetry-rust
 repository](https://github.com/open-telemetry/opentelemetry-rust/tree/main/examples).
+
+[^1]: The mini-redis repo already contains a full example of OpenTelemetry with
+AWS X-Ray, details of which can be found in the
+[`README`](https://github.com/tokio-rs/mini-redis#aws-x-ray-example), as well as
+the
+[`Cargo.toml`](https://github.com/tokio-rs/mini-redis/blob/24d9d9f466d9078c46477bf5c2d68416553b9872/Cargo.toml#L35-L41)
+and
+[`src/bin/server.rs`](https://github.com/tokio-rs/mini-redis/blob/24d9d9f466d9078c46477bf5c2d68416553b9872/src/bin/server.rs#L59-L94)
+files.
