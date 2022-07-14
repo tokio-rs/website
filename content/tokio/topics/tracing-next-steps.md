@@ -113,7 +113,7 @@ The [opentelemetry crate](https://crates.io/crates/opentelemetry) is what
 provides the OpenTelemetry SDK for Rust, and is what we will be using for this
 tutorial.
 
-In this tutorial, we will be setting up mini-redis[^1] to send data to
+In this tutorial, we will be setting up mini-redis to send data to
 [Jaeger](https://www.jaegertracing.io/), which is a UI for visualizing traces.
 
 To run an instance of Jaeger, you can use Docker:
@@ -123,6 +123,8 @@ docker run -d -p6831:6831/udp -p6832:6832/udp -p16686:16686 -p14268:14268 jaeger
 ```
 
 You can visit the Jaeger page by going to http://localhost:16686.
+It will look like this:
+![Jaeger UI](./img/jaeger-first-pageload.png)
 
 We'll come back to this page once we have some trace data generated and sent.
 
@@ -208,9 +210,11 @@ Now, refresh the Jaeger UI that we had open, and on the main Search page, find
 
 Select that option, and click the "Find Traces" button. This should show the
 request we just made from running the example.
+![Jaeger UI, mini-redis overview](./img/jaeger-mini-redis-overview.png)
 
 Clicking on the trace should show you a detailed view of the spans that were
 emitted during the handling of the hello world example.
+![Jaeger UI, mini-redis request details](./img/jaeger-mini-redis-trace-details.png)
 
 That's it for now! You can explore this further by sending more requests, adding
 additional instrumentation for mini-redis, or setting up OTel with a telemetry
@@ -220,7 +224,7 @@ data to the OTel Collector, you'll need the `opentelemetry-otlp` crate). There
 are many examples available in the [opentelemetry-rust
 repository](https://github.com/open-telemetry/opentelemetry-rust/tree/main/examples).
 
-[^1]: The mini-redis repo already contains a full example of OpenTelemetry with
+Note: The mini-redis repo already contains a full example of OpenTelemetry with
 AWS X-Ray, details of which can be found in the
 [`README`](https://github.com/tokio-rs/mini-redis#aws-x-ray-example), as well as
 the
