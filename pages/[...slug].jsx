@@ -24,6 +24,7 @@ const menu = {
           "bridging",
           "shutdown",
           "tracing",
+          "tracing-next-steps",
         ],
       },
       glossary: {},
