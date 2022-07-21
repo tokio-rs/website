@@ -9,7 +9,7 @@ of an application’s spans and events. It can also represent "resources" that t
 Tokio runtime has created, such as Tasks. It's essential for understanding
 performance issues during the development process.
 
-For instance, to use tokio-console in [the mini-redis project](https://github.com/tokio-rs/mini-redis)), 
+For instance, to use tokio-console in [the mini-redis project](https://github.com/tokio-rs/mini-redis), 
 you need to enable the `tracing` feature for the Tokio package:
 
 ```toml
@@ -17,7 +17,7 @@ you need to enable the `tracing` feature for the Tokio package:
 tokio = { version = "1", features = ["full", "tracing"] }
 ```
 
-(the `full` feature doesn't enable `tracing`.)
+Note: The `full` feature doesn't enable `tracing`.
 
 You'll also need to add a dependency on the `console-subscriber` package. This
 crate provides a `Subscriber` implementation that will replace the one currently
@@ -129,7 +129,7 @@ It will look like this:
 We'll come back to this page once we have some trace data generated and sent.
 
 To set up mini-redis, we'll first need to add a few dependencies. Update your
-Cargo.toml with the following:
+`Cargo.toml` with the following:
 
 ```toml
 # Implements the types defined in the Otel spec
@@ -152,7 +152,7 @@ use tracing_subscriber::{
 We will look at what each of these do in a moment.
 
 The next step is to replace the call to `tracing_subscriber` with the OTel
-setup:
+setup.
 
 Replace this:
 
@@ -198,8 +198,8 @@ Now you should be able to start up mini-redis:
 cargo run --bin mini-redis-server
 ```
 
-In another terminal, run the hello world example  (this is available in the
-[mini-redis repository](https://github.com/tokio-rs/mini-redis):
+In another terminal, run the hello world example (this is available in the
+[mini-redis repository](https://github.com/tokio-rs/mini-redis)):
 
 ```sh
 cargo run --example hello_world
