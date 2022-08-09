@@ -697,7 +697,7 @@ use std::time::{Duration, Instant};
 
 struct Delay {
     when: Instant,
-    // This Some when we have spawned a thread, and None otherwise.
+    // This is Some when we have spawned a thread, and None otherwise.
     waker: Option<Arc<Mutex<Waker>>>,
 }
 
