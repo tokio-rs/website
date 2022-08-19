@@ -113,7 +113,9 @@ faster alternative to `std::sync::Mutex`.
 
 The process function no longer initializes a `HashMap`. Instead, it takes the
 shared handle to the `HashMap` as an argument. It also needs to lock the
-`HashMap` before using it.
+`HashMap` before using it. Remember that the value's type for the HashMap 
+is now `Bytes` (which we can cheaply clone), so this needs to be changed
+as well.
 
 ```rust
 use tokio::net::TcpStream;
