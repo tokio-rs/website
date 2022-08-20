@@ -23,7 +23,13 @@ locally.
 ### Getting Started
 
 The website is built using [Next.js] paired with the [Bulma] CSS framework.
-First, make sure you have NPM installed. Next, start the development server:
+You'll need NPM to install the required packages with:
+
+```bash
+npm install
+```
+
+Next, start the development server:
 
 ```bash
 npm run dev
@@ -54,8 +60,8 @@ terms or conditions.
 
 You can run our tests by running the commands:
 ```
-# in doc-test
-cargo +nightly test
+# in doc-test (unstable APIs are needed by some tests)
+RUSTFLAGS="--cfg tokio_unstable" cargo +nightly test
 
 # in tutorial-code
 cargo test --all
