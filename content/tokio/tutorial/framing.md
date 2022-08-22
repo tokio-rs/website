@@ -363,7 +363,7 @@ advances the cursor by one.
 There are more useful methods on the [`Buf`] trait. Check the [API docs][`Buf`]
 for more details.
 
-[check]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/frame.rs#L63-L100
+[check]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/frame.rs#L65-L103
 [`Buf::get_u8`]: https://docs.rs/bytes/1/bytes/buf/trait.Buf.html#method.get_u8
 [`Buf`]: https://docs.rs/bytes/1/bytes/buf/trait.Buf.html
 [`Cursor`]: https://doc.rust-lang.org/stable/std/io/struct.Cursor.html
