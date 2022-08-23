@@ -265,12 +265,12 @@ in a few weeks.
 
 <div style="text-align:right">&mdash; David Pedersen (<a href="https://twitter.com/davidpdrsn">@davidpdrsn</a>)</div>
 
-[state docs]: TODO
-[`FromRequest`]: TODO
-[`FromRequestParts`]: TODO
-[`middleware::from_fn`]: TODO
-[`RouterExt::route_with_tsr`]: TODO
-[extract state in middleware]: TODO
+[state docs]: https://docs.rs/axum/0.6.0-rc.1/axum/extract/struct.State.html
+[`FromRequest`]: https://docs.rs/axum/0.6.0-rc.1/axum/extract/trait.FromRequest.html
+[`FromRequestParts`]: https://docs.rs/axum/0.6.0-rc.1/axum/extract/trait.FromRequestParts.html
+[`middleware::from_fn`]: https://docs.rs/axum/0.6.0-rc.1/axum/middleware/fn.from_fn.html
+[`RouterExt::route_with_tsr`]: https://docs.rs/axum-extra/0.6.0-rc.1/axum_extra/routing/trait.RouterExt.html#tymethod.route_with_tsr
+[extract state in middleware]: https://docs.rs/axum/0.6.0-rc.1/axum/middleware/index.html#accessing-state-in-middleware
 [changelog]: https://github.com/tokio-rs/axum/blob/main/axum/CHANGELOG.md
 [Discord]: https://discord.gg/tokio
 [file issues]: https://github.com/tokio-rs/axum/issues
