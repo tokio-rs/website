@@ -197,7 +197,7 @@ is matched against `<pattern>`. If the result matches the pattern, then all
 remaining async expressions are dropped and `<handler>` is executed. The
 `<handler>` expression has access to any bindings established by `<pattern>`.
 
-The basic case is `<pattern>` is a variable name, the result of the async
+The basic case for `<pattern>` is a variable name, the result of the async
 expression is bound to the variable name and `<handler>` has access to that
 variable. This is why, in the original example, `val` was used for `<pattern>`
 and `<handler>` was able to access `val`.
