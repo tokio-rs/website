@@ -265,6 +265,10 @@ in a few weeks.
 
 <div style="text-align:right">&mdash; David Pedersen (<a href="https://twitter.com/davidpdrsn">@davidpdrsn</a>)</div>
 
+[`axum`]: https://docs.rs/axum/0.6.0-rc.1
+[`axum-core`]: https://docs.rs/axum-core/0.3.0-rc.1
+[`axum-extra`]: https://docs.rs/axum-extra/0.4.0-rc.1
+[`axum-macros`]: https://docs.rs/axum-macros/0.3.0-rc.1
 [state docs]: https://docs.rs/axum/0.6.0-rc.1/axum/extract/struct.State.html
 [`FromRequest`]: https://docs.rs/axum/0.6.0-rc.1/axum/extract/trait.FromRequest.html
 [`FromRequestParts`]: https://docs.rs/axum/0.6.0-rc.1/axum/extract/trait.FromRequestParts.html
