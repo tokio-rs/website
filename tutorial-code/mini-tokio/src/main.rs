@@ -2,6 +2,7 @@
 //! timer. The goal of this file is to provide some context into how the various
 //! building blocks fit together.
 
+use futures::future::BoxFuture;
 use std::cell::RefCell;
 use std::future::Future;
 use std::pin::Pin;
@@ -242,7 +243,10 @@ struct Task {
     // There will only ever be a single thread that attempts to use `future`.
     // The Tokio runtime avoids the mutex by using `unsafe` code. The box is
     // also avoided.
-    future: Mutex<Pin<Box<dyn Future<Output = ()> + Send>>>,
+
+    // BoxFuture<T> is a type alias for:
+    // Pin<Box<dyn Future<Output = T> + Send + 'static>>
+    future: Mutex<BoxFuture<'static, ()>>,
 
     // When a task is notified, it is queued into this channel. The executor
     // pops notified tasks and executes them.
