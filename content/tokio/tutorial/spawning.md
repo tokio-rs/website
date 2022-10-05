@@ -256,7 +256,8 @@ before its type is no longer valid.
 When we say that a value is `'static`, all that means is that it would not be
 incorrect to keep that value around forever. This is important because the
 compiler is unable to reason about how long a newly spawned task stays around.
-We have to make sure that the task is allowed to live forever, so that Tokio can make the task run as long as it needs to.
+We have to make sure that the task is allowed to live forever, so that Tokio
+can make the task run as long as it needs to.
 
 The article that the info-box earlier links to uses the terminology "bounded by
 `'static`" rather than "its type outlives `'static`" or "the value is `'static`"
