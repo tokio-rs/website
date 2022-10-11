@@ -14,6 +14,7 @@ const ORGANIZATIONS: Organization[] = [
   { name: "dropbox", url: "https://www.dropbox.com" },
   { name: "facebook", url: "https://www.facebook.com" },
   { name: "one-signal", url: "https://onesignal.com" },
+  { name: "cloudflare", url: "https://cloudflare.com" },
 ];
 
 const Logo: FC<{ org: Organization }> = ({ org }) => (
