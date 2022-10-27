@@ -10,12 +10,12 @@ and view the state of asynchronous tasks in your application.
 
 [crates.io]: https://crates.io/crates/async-backtrace
 
-In synchronous, multi-threaded applications, you can inspect the state of your
-applications simply by viewing stack traces of all running tasks. However, this
-approach breaks down for most asynchronous Rust applications, since suspended
-tasks — tasks that are not actively being polled — are invisible to traditional
-stack traces. The async-backtrace crate fills this gap, allowing you see the
-state of these hidden tasks.
+In synchronous, multi-threaded applications, you can investigate deadlocks by
+inspecting stack traces of all running threads. Unfortunately, this approach
+breaks down for most asynchronous Rust applications, since suspended tasks —
+tasks that are not actively being polled — are invisible to traditional stack
+traces. The async-backtrace crate fills this gap, allowing you see the state of
+these hidden tasks.
 
 ## Getting Started
 
