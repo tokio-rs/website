@@ -37,38 +37,62 @@ To use `async-backtrace`, first add the crate to your `Cargo.toml` file:
 async-backtrace = "0.2"
 ```
 
-Then, to include your `async fn`s in async task traces, simply annotate
-them with `#[async_backtrace::framed]`; e.g.:
-
-```rust
-#[async_backtrace::framed]
-async fn fiz() {
-    tokio::task::yield_now().await;
-}
-```
-
-Finally, to view a pretty-printed tree of your application's tasks, call
-[`taskdump_tree`], which produces outputs like:
-
-```text
-╼ taskdump::foo::{{closure}} at backtrace/examples/taskdump.rs:20:1
-  └╼ taskdump::bar::{{closure}} at backtrace/examples/taskdump.rs:25:1
-     ├╼ taskdump::buz::{{closure}} at backtrace/examples/taskdump.rs:35:1
-     │ └╼ taskdump::baz::{{closure}} at backtrace/examples/taskdump.rs:40:1
-     └╼ taskdump::fiz::{{closure}} at backtrace/examples/taskdump.rs:30:1
-╼ taskdump::pending::{{closure}} at backtrace/examples/taskdump.rs:15:1
-```
+Then, to include your `async fn`s in async task traces, simply annotate them
+with `#[async_backtrace::framed]` and call [`taskdump_tree`] to receive
+pretty-printed trees of your application's tasks. For instance:
 
 [`taskdump_tree`]: https://docs.rs/async-backtrace/0.2.0/async_backtrace/fn.taskdump_tree.html
 
-These traces become trees — instead of stacks — in the presence of operations
-like `select!` and `join!`. For a full example of this, see
-[`examples/taskdump.rs`]. Only `async fn`s annotated with
-`#[async_backtrace::framed]` are included in traces. The
-`#[async_backtrace::framed]` attribute can be applied liberally without
-significantly impacting performance.
+```rust
+#[tokio::main(flavor = "current_thread")]
+async fn main() {
+    tokio::select! {
+        // run the following branches in order of their appearance
+        biased;
 
-[`examples/taskdump.rs`]: https://github.com/tokio-rs/async-backtrace/blob/main/backtrace/examples/taskdump.rs
+        // spawn task #1
+        _ = tokio::spawn(foo()) => { unreachable!() }
+
+        // spawn task #2
+        _ = tokio::spawn(foo()) => { unreachable!() }
+
+        // print the running tasks
+        _ = tokio::spawn(async {}) => {
+            println!("{}", async_backtrace::taskdump_tree(true));
+        }
+    };
+}
+
+#[async_backtrace::framed]
+async fn foo() {
+    bar().await;
+}
+
+#[async_backtrace::framed]
+async fn bar() {
+    baz().await;
+}
+
+#[async_backtrace::framed]
+async fn baz() {
+    std::future::pending::<()>().await
+}
+```
+
+Running the above example prints the trees:
+
+```text
+╼ multiple::foo::{{closure}} at backtrace/examples/multiple.rs:22:1
+  └╼ multiple::bar::{{closure}} at backtrace/examples/multiple.rs:27:1
+     └╼ multiple::baz::{{closure}} at backtrace/examples/multiple.rs:32:1
+╼ multiple::foo::{{closure}} at backtrace/examples/multiple.rs:22:1
+  └╼ multiple::bar::{{closure}} at backtrace/examples/multiple.rs:27:1
+     └╼ multiple::baz::{{closure}} at backtrace/examples/multiple.rs:32:1
+```
+
+See [here][examples] for more examples!
+
+[examples]: https://github.com/tokio-rs/async-backtrace/blob/main/backtrace/examples
 
 ## Feedback Welcome
 
