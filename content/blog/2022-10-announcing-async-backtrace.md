@@ -14,8 +14,19 @@ In synchronous, multi-threaded applications, you can investigate deadlocks by
 inspecting stack traces of all running threads. Unfortunately, this approach
 breaks down for most asynchronous Rust applications, since suspended tasks —
 tasks that are not actively being polled — are invisible to traditional stack
-traces. The async-backtrace crate fills this gap, allowing you see the state of
-these hidden tasks.
+traces. The `async-backtrace` crate fills this gap, allowing you see the state
+of these hidden tasks. It is architected to be highly efficient without
+configuration, and is suitable for deployment in production environments.
+
+This crate complements (but is not yet integrated with) the [`tracing`] library
+and [`tokio-console`]. Use `async-backtrace` for a birds-eye view of task state
+in your application, and [`tracing`] for isolating the inputs that lead to that
+state. If your application uses the tokio runtime, you can use [`tokio-console`]
+for a deeper look into your application's interactions with tokio's
+synchronization primitives.
+
+[`tracing`]: https://github.com/tokio-rs/tracing
+[`tokio-console`]: https://github.com/tokio-rs/console
 
 ## Getting Started
 
@@ -53,18 +64,11 @@ Finally, to view a pretty-printed tree of your application's tasks, call
 These traces become trees — instead of stacks — in the presence of operations
 like `select!` and `join!`. For a full example of this, see
 [`examples/taskdump.rs`]. Only `async fn`s annotated with
-`#[async_backtrace::framed]` are included in traces.
+`#[async_backtrace::framed]` are included in traces. The
+`#[async_backtrace::framed]` attribute can be applied liberally without
+significantly impacting performance.
 
 [`examples/taskdump.rs`]: https://github.com/tokio-rs/async-backtrace/blob/main/backtrace/examples/taskdump.rs
-
-## Relationship to Other Projects
-
-This initial release of `async-backtrace` is runtime-agnostic; it is not
-integrated with `tokio`, or any other async runtime. It is also not yet
-integrated with the [`tracing`] library or [`tokio-console`].
-
-[`tracing`]: https://github.com/tokio-rs/tracing
-[`tokio-console`]: https://github.com/tokio-rs/console
 
 ## Feedback Welcome
 
