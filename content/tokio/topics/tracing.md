@@ -54,7 +54,7 @@ traces to external listeners (e.g., `stdout`).
 
 If you are authoring an executable (as opposed to a library), you will need to
 register a tracing [*subscriber*]. Subscribers are types that process traces
-emitted by your application and its dependencies, and and can perform tasks
+emitted by your application and its dependencies, and can perform tasks
 such as computing metrics, monitoring for errors, and re-emitting traces to the
 outside world (e.g., `journald`, `stdout`, or an `open-telemetry` daemon).
 
@@ -199,7 +199,7 @@ connection that:
     - `fields(...)` indicates that emitted span *should* include
     the `fmt::Display` representation of the connection's `SocketAddr` in a field
     called `peer_addr`.
-    - `skip(self)` indicates that emitted span should *not* record `Hander`'s debug representation.
+    - `skip(self)` indicates that emitted span should *not* record `Handler`'s debug representation.
 
 [level]: https://docs.rs/tracing/latest/tracing/struct.Level.html
 
