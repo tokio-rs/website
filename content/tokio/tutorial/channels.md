@@ -47,7 +47,7 @@ async fn main() {
 
     // Spawn two tasks, one gets a key, the other sets a key
     let t1 = tokio::spawn(async {
-        let res = client.get("hello").await;
+        let res = client.get("foo").await;
     });
 
     let t2 = tokio::spawn(async {
@@ -254,7 +254,7 @@ let tx2 = tx.clone();
 // Spawn two tasks, one gets a key, the other sets a key
 let t1 = tokio::spawn(async move {
     let cmd = Command::Get {
-        key: "hello".to_string(),
+        key: "foo".to_string(),
     };
 
     tx.send(cmd).await.unwrap();
@@ -354,7 +354,7 @@ Now, update the tasks issuing the commands to include the `oneshot::Sender`.
 let t1 = tokio::spawn(async move {
     let (resp_tx, resp_rx) = oneshot::channel();
     let cmd = Command::Get {
-        key: "hello".to_string(),
+        key: "foo".to_string(),
         resp: resp_tx,
     };
 
