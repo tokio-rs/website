@@ -4,11 +4,11 @@ title: "Announcing axum 0.6.0"
 description: "November 25, 2022"
 ---
 
-Back in August we announced `axum` [0.6.0-rc.1][rc1] and today I'm happy to
-report that the prelease period is over and `axum` 0.6.0 is out!
+Back in August we announced [`axum`] [0.6.0-rc.1][rc1] and today I'm happy to
+report that the prelease period is over and [`axum`] 0.6.0 is out!
 
-`axum` is an ergonomic and modular web framework built with `tokio`, `tower`,
-and `hyper`.
+[`axum`] is an ergonomic and modular web framework built with [`tokio`], [`tower`],
+and [`hyper`].
 
 This also includes new major versions for [`axum-core`], [`axum-extra`], and
 [`axum-macros`].
@@ -388,3 +388,7 @@ updating or discover bugs.
 [`axum-core`]: https://crates.io/crates/axum-core
 [`axum-extra`]: https://crates.io/crates/axum-extra
 [`axum-macros`]: https://crates.io/crates/axum-macros
+[`axum`]: https://crates.io/crates/axum
+[`tokio`]: https://crates.io/crates/tokio
+[`tower`]: https://crates.io/crates/tower
+[`hyper`]: https://crates.io/crates/hyper
