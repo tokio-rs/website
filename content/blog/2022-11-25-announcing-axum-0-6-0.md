@@ -15,7 +15,7 @@ This also includes new major versions for [`axum-core`], [`axum-extra`], and
 
 If you've already read the [rc.1][rc1] announcement then some of these things
 will be familiar. However many details of the APIs have been fine tuned to be
-easier to use and flexible.
+easier to use and more flexible.
 
 ## Type safe `State` extractor
 
@@ -86,22 +86,10 @@ use axum::{
     Router,
 };
 
-let state = AppState {
-    client: HttpClient {},
-    database: Database {},
-};
-
-let app = Router::new()
-    .route("/", get(handler))
-    .with_state(state);
-
-async fn handler(
-    // We can extract both `State<HttpClient>` and `State<Database>`
-    // because `#[derive(FromRef)]` makes them sub states of `AppState`
-    State(client): State<HttpClient>,
-    State(database): State<Database>,
-) {}
-
+// Our top level state that contains an `HttpClient` and a `Database`
+//
+// `#[derive(FromRef)]` makes them sub states so they can be extracted
+// independently
 #[derive(Clone, FromRef)]
 struct AppState {
     client: HttpClient,
@@ -113,6 +101,21 @@ struct HttpClient {}
 
 #[derive(Clone)]
 struct Database {}
+
+let state = AppState {
+    client: HttpClient {},
+    database: Database {},
+};
+
+let app = Router::new()
+    .route("/", get(handler))
+    .with_state(state);
+
+async fn handler(
+    // We can extract both `State<HttpClient>` and `State<Database>`
+    State(client): State<HttpClient>,
+    State(database): State<Database>,
+) {}
 ```
 
 It is also possible to use different state types on merged and nested sub routers:
@@ -123,7 +126,9 @@ let app = Router::new()
     // state
     .route("/", get(|_: State<OuterState>| { ... }))
     // Nest a router under `/api` that requires an `ApiState`
-    // we have to provide the state when nesting it into another router
+    //
+    // We have to provide the state when nesting it into another router
+    // since it uses a different state type
     .nest("/api", api_router().with_state(ApiState {}))
     // Same goes for routers we merge
     .merge(some_other_routes().with_state(SomeOtherState {}))
