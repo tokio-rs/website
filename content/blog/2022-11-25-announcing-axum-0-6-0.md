@@ -1,10 +1,8 @@
 ---
-date: "2022-11-24"
+date: "2022-11-25"
 title: "Announcing axum 0.6.0"
-description: "November 24, 2022"
+description: "November 25, 2022"
 ---
-
-TODO(david): Update the dates, both in header and file name
 
 Back in August we announced `axum` [0.6.0-rc.1][rc1] and today I'm happy to
 report that the prelease period is over and `axum` 0.6.0 is out!
@@ -79,7 +77,45 @@ async fn handler(
 ) {}
 ```
 
-This also supports using different state types on merged and nested sub routers:
+`State` also supports extracting "sub states":
+
+```rust
+use axum::{
+    extract::{State, FromRef},
+    routing::get,
+    Router,
+};
+
+let state = AppState {
+    client: HttpClient {},
+    database: Database {},
+};
+
+let app = Router::new()
+    .route("/", get(handler))
+    .with_state(state);
+
+async fn handler(
+    // We can extract both `State<HttpClient>` and `State<Database>`
+    // because `#[derive(FromRef)]` makes them sub states of `AppState`
+    State(client): State<HttpClient>,
+    State(database): State<Database>,
+) {}
+
+#[derive(Clone, FromRef)]
+struct AppState {
+    client: HttpClient,
+    database: Database,
+}
+
+#[derive(Clone)]
+struct HttpClient {}
+
+#[derive(Clone)]
+struct Database {}
+```
+
+It is also possible to use different state types on merged and nested sub routers:
 
 ```rust
 let app = Router::new()
@@ -188,6 +224,10 @@ async fn other_handler(
 This was done by reworking the [`FromRequest`] trait and adding a new
 [`FromRequestParts`] trait.
 
+This also means that if you have implementations of [`FromRequest`] that
+doesn't need the request body then you should implement [`FromRequestParts`]
+instead.
+
 ## Run extractors from `middleware::from_fn`
 
 [`middleware::from_fn`] makes it easy to write middleware using familiar
@@ -224,13 +264,13 @@ let app = Router::new()
 ```
 
 There are also new [`map_request`] and [`map_response`] middleware functions that
-work similarly to `middleware::from_fn`. As well as [`from_with_with_state`],
+work similarly to `middleware::from_fn`, as well as [`from_fn_with_state`],
 [`map_request_with_state`,] and [`map_response_with_state`] versions that support
 extracting `State`.
 
 ## Fallback inheritance for nested routers
 
-In `axum` 0.5 nested routers weren't allowed to have fallbacks and would cause a panic:
+In `axum` 0.5, nested routers weren't allowed to have fallbacks and would cause a panic:
 
 ```rust
 let api_router = Router::new()
@@ -245,8 +285,8 @@ let app = Router::new()
 However in 0.6 that now just works and requests that start with `/api` but
 aren't matched by `api_router` will go to `api_fallback`.
 
-Additionally nested routers will now inherit fallbacks from the outer router if
-they don't have their own fallback:
+The outer router's fallback will still apply if a nested router doesn't have
+its own fallback:
 
 ```rust
 // This time without a fallback
@@ -300,7 +340,8 @@ let app = Router::new()
 async fn foo() {}
 ```
 
-If you want to opt into the old behavior you can use [`RouterExt::route_with_tsr`]
+If you want to opt into the old behavior you can use
+[`RouterExt::route_with_tsr`] from [`axum-extra`].
 
 ## Mix wildcard routes and regular routes
 
@@ -343,4 +384,7 @@ updating or discover bugs.
 [`map_request`]: https://docs.rs/axum/0.6.0/axum/middleware/fn.map_request.html
 [`map_response_with_state`]: https://docs.rs/axum/0.6.0/axum/middleware/fn.map_response_with_state.html
 [`map_request_with_state`]: https://docs.rs/axum/0.6.0/axum/middleware/fn.map_request_with_state.html
-[`from_with_with_state`]: https://docs.rs/axum/0.6.0/axum/middleware/fn.from_with_with_state.html
+[`from_fn_with_state`]: https://docs.rs/axum/0.6.0/axum/middleware/fn.from_fn_with_state.html
+[`axum-core`]: https://crates.io/crates/axum-core
+[`axum-extra`]: https://crates.io/crates/axum-extra
+[`axum-macros`]: https://crates.io/crates/axum-macros
