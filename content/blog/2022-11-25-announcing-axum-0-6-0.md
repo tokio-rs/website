@@ -225,7 +225,7 @@ This was done by reworking the [`FromRequest`] trait and adding a new
 [`FromRequestParts`] trait.
 
 This also means that if you have implementations of [`FromRequest`] that
-doesn't need the request body then you should implement [`FromRequestParts`]
+don't need the request body then you should implement [`FromRequestParts`]
 instead.
 
 ## Run extractors from `middleware::from_fn`
