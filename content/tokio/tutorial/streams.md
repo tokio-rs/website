@@ -305,7 +305,7 @@ The `size_hint()` method is used the same way as it is with [iterators][iter].
 Usually, when manually implementing a `Stream`, it is done by composing futures
 and other streams. As an example, let's build off of the `Delay` future we
 implemented in [Async in depth][async]. We will convert it to a stream that
-yields `()` three times at 10 ms intervals
+yields `()` three times at 10 ms intervals.
 
 ```rust
 use tokio_stream::Stream;
@@ -326,6 +326,15 @@ struct Interval {
 #       Poll::Pending
 #   }  
 # }
+
+impl Interval {
+    fn new() -> Self {
+        Self {
+            rem: 3,
+            delay: Delay { when: Instant::now() }
+        }
+    }
+}
 
 impl Stream for Interval {
     type Item = ();
