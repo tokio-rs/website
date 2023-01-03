@@ -30,7 +30,7 @@ turmoil = "0.3"
 ```
 
 Similar to [`loom`][loom], we provide simulated networking types that mirror
-`tokio::net`. Define a new module in your crate named `net` any other name of
+`tokio::net`. Define a new module in your crate named `net` or any other name of
 your choosing. In this module, list out the types that need to be toggled
 between `turmoil` and `tokio::net`:
 
