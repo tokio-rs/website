@@ -86,7 +86,7 @@ This crate is still experimental. Your use cases and feedback are invaluable in
 guiding our development.
 
 Please [file issues][issues] and [ping us on Discord in
-#turmoil-sumulation][discord].
+#turmoil-simulation][discord].
 
 Happy testing!
 
