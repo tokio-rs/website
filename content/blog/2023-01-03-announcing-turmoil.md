@@ -42,7 +42,7 @@ pub use tokio::net::*;
 pub use turmoil::net::*;
 ```
 
-Then, write your software using networking types from this local module. 
+Then, write your software using networking types from this local module.
 
 ```rust
 #[cfg(feature = "turmoil")]
@@ -86,7 +86,7 @@ This crate is still experimental. Your use cases and feedback are invaluable in
 guiding our development.
 
 Please [file issues][issues] and [ping us on Discord in
-#turmoil-sumulation][discord].
+#turmoil-simulation][discord].
 
 Happy testing!
 
