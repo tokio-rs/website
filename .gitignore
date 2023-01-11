@@ -16,6 +16,7 @@ tutorial-code/Cargo.lock
 # next.js
 /.next/
 /out/
+/dist/
 
 # production
 /build
