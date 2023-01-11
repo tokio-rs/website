@@ -170,12 +170,12 @@ there will be contention. On the other hand, if the
 [`current_thread`][current_thread] runtime flavor is used, then the mutex will
 never be contended.
 
-[[info]]
-| The [`current_thread` runtime flavor][basic-rt] is a lightweight,
-| single-threaded runtime. It is a good choice when only spawning
-| a few tasks and opening a handful of sockets. For example, this
-| option works well when providing a synchronous API bridge on top
-| of an asynchronous client library.
+> **info**
+> The [`current_thread` runtime flavor][basic-rt] is a lightweight,
+> single-threaded runtime. It is a good choice when only spawning
+> a few tasks and opening a handful of sockets. For example, this
+> option works well when providing a synchronous API bridge on top
+> of an asynchronous client library.
 
 [basic-rt]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.new_current_thread
 

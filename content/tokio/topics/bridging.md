@@ -104,11 +104,11 @@ time, so we won't gain anything by running multiple threads. This makes the
 The [`enable_all`] call enables the IO and timer drivers on the Tokio runtime.
 If they are not enabled, the runtime is unable to perform IO or timers.
 
-[[warning]]
-| Because the `current_thread` runtime does not spawn threads, it only operates
-| when `block_on` is called. Once `block_on` returns, all spawned tasks on that
-| runtime will freeze until you call `block_on` again. Use the `multi_threaded`
-| runtime if spawned tasks must keep running when not calling `block_on`.
+> **warning**
+> Because the `current_thread` runtime does not spawn threads, it only operates
+> when `block_on` is called. Once `block_on` returns, all spawned tasks on that
+> runtime will freeze until you call `block_on` again. Use the `multi_threaded`
+> runtime if spawned tasks must keep running when not calling `block_on`.
 
 Once we have this struct, most of the methods are easy to implement:
 ```rs
