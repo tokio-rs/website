@@ -91,6 +91,11 @@ a:active {
   outline: none;
 }
 
+:root {
+  overflow-y: scroll;
+  overscroll-behavior-y: none;
+}
+
 .navbar {
   .navbar-brand {
     background-color: black;
