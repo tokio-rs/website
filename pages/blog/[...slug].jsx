@@ -22,7 +22,7 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params: { slug: slugParam } }) {
   let slug = slugParam[0];
   let postsByYear = blog.getBlogPostsByYear({
-    limit: SIDEBAR_POST_COUNT
+    limit: SIDEBAR_POST_COUNT,
   });
 
   const page = content.loadPage(`blog/${slug}`);
@@ -33,7 +33,7 @@ export async function getStaticProps({ params: { slug: slugParam } }) {
   if (next) {
     page.next = {
       title: next.menuTitle || next.title,
-      href: next.href
+      href: next.href,
     };
   }
 
