@@ -15,9 +15,7 @@ import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { CodeComponent } from "react-markdown/lib/ast-to-react";
-import {
-  ReactMarkdownProps,
-} from "react-markdown/lib/complex-types";
+import { ReactMarkdownProps } from "react-markdown/lib/complex-types";
 
 const CodeBlock: CodeComponent = ({ className, children, inline }) => {
   // Remove lines starting with `# `. This is code to make the doc tests pass
@@ -59,7 +57,11 @@ const BlockquoteBlock = ({
     }
   }, [quoteRef]);
   return (
-    <blockquote ref={quoteRef} className={classnames(name, className)} {...props}>
+    <blockquote
+      ref={quoteRef}
+      className={classnames(name, className)}
+      {...props}
+    >
       {children}
     </blockquote>
   );
@@ -142,20 +144,20 @@ function TableOfContents({ headings }) {
     for (const heading of headings) {
       insertHeading(heading, menu);
     }
-  
+
     return menu.map((entry) => {
       const heading = entry.heading;
-  
+
       let nested = entry.nested.map((entry) => {
         const heading = entry.heading;
-  
+
         return (
           <li key={heading.slug}>
             <a href={`#${heading.slug}`}>{heading.title}</a>
           </li>
         );
       });
-  
+
       return (
         <li key={heading.slug}>
           <a href={`#${heading.slug}`}>{heading.title}</a>
@@ -163,8 +165,7 @@ function TableOfContents({ headings }) {
         </li>
       );
     });
-  }, [headings])
-
+  }, [headings]);
 
   return (
     <aside className="column is-one-third tk-content-summary">
@@ -184,20 +185,20 @@ export default function Content({
 }) {
   const isBlogRoute = href.startsWith("/blog");
 
-  const [headings, setHeadings] = useState([])
-  const mdRef = useRef<HTMLDivElement>(null)
+  const [headings, setHeadings] = useState([]);
+  const mdRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    mdRef.current?.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(el => {
+    mdRef.current?.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((el) => {
       const level = Number(el.tagName.slice(-1));
       const title = el.textContent;
       const slug = el.id;
-      setHeadings(headings => [...headings, {level, title, slug}])
-    })
+      setHeadings((headings) => [...headings, { level, title, slug }]);
+    });
     return () => {
-      setHeadings([])
-    }
-  }, [mdRef])
+      setHeadings([]);
+    };
+  }, [mdRef]);
 
   return (
     <>
@@ -215,7 +216,9 @@ export default function Content({
           <section className="section content">
             <div className="columns">
               <div className="column is-two-thirds tk-markdown" ref={mdRef}>
-                <h1 className="title" id="">{title}</h1>
+                <h1 className="title" id="">
+                  {title}
+                </h1>
                 <ReactMarkdown
                   components={{
                     // pre: CodeBlock,
