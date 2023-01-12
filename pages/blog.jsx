@@ -14,7 +14,7 @@ export default function Blog({ app, postsByYear }) {
               {Object.entries(postsByYear)
                 .reverse()
                 .map(([year, { key, title, nested }]) => (
-                  <YearPosts year={year} posts={nested} key={year} />
+                  <YearPosts year={year} posts={nested} key={title} />
                 ))}
             </section>
           </div>
@@ -30,7 +30,7 @@ function YearPosts({ year, posts }) {
       <h2>{year}</h2>
       <ul>
         {posts.map((post) => (
-          <li>
+          <li key={post.title}>
             <Link href={post.href}>{post.menuTitle || post.title}</Link>
           </li>
         ))}
