@@ -1,77 +1,7 @@
 import Menu from "../components/menu";
-import classnames from "classnames";
 import { DiscordIcon, GitHubIcon } from "./icons";
-import React, {
-  ComponentPropsWithoutRef,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import ReactMarkdown from "react-markdown";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import rehypeRaw from "rehype-raw";
-import rehypeSlug from "rehype-slug";
-import remarkGfm from "remark-gfm";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { CodeComponent } from "react-markdown/lib/ast-to-react";
-import { ReactMarkdownProps } from "react-markdown/lib/complex-types";
-
-const CodeBlock: CodeComponent = ({ className, children, inline }) => {
-  // Remove lines starting with `# `. This is code to make the doc tests pass
-  // but should not be displayed.
-  const match = /language-(\w+)/.exec(className || "");
-  const language = match ? match[1] : "rs";
-
-  const value = String(children)
-    .split("\n")
-    .filter((line) => !line.startsWith("# "))
-    .join("\n");
-
-  return inline ? (
-    <code>{value}</code>
-  ) : (
-    <SyntaxHighlighter useInlineStyles={false} language={language} PreTag="div">
-      {value}
-    </SyntaxHighlighter>
-  );
-};
-
-const BlockquoteBlock = ({
-  node,
-  className,
-  children,
-  ...props
-}: ComponentPropsWithoutRef<"blockquote"> & ReactMarkdownProps) => {
-  const [name, setName] = useState("");
-  const quoteRef = useRef<HTMLQuoteElement>(null);
-  useEffect(() => {
-    if (quoteRef.current) {
-      const strong = quoteRef.current.getElementsByTagName("strong").item(0);
-      const isWarning = strong.innerText.match(/warning/i);
-      const isInfo = strong.innerText.match(/info/i);
-      setName(isWarning ? "is-warning" : isInfo ? "is-info" : "");
-      if (isWarning || isInfo) {
-        strong.parentNode.removeChild(strong);
-      }
-    }
-  }, [quoteRef]);
-  return (
-    <blockquote
-      ref={quoteRef}
-      className={classnames(name, className)}
-      {...props}
-    >
-      {children}
-    </blockquote>
-  );
-};
-
-// function flatten(text, child) {
-//   return typeof child === "string"
-//     ? text + child
-//     : React.Children.toArray(child.props.children).reduce(flatten, text);
-// }
 
 function Footer({ next, prev, mdPath }) {
   let edit = `https://github.com/tokio-rs/website/edit/master/content/${mdPath}`;
@@ -219,17 +149,7 @@ export default function Content({
                 <h1 className="title" id="">
                   {title}
                 </h1>
-                <ReactMarkdown
-                  components={{
-                    // pre: CodeBlock,
-                    code: CodeBlock,
-                    blockquote: BlockquoteBlock,
-                  }}
-                  remarkPlugins={[[remarkGfm]]}
-                  rehypePlugins={[[rehypeRaw], [rehypeSlug]]}
-                >
-                  {body}
-                </ReactMarkdown>
+                <div dangerouslySetInnerHTML={{ __html: body }}></div>
                 <Footer next={next} prev={prev} mdPath={mdPath} />
               </div>
               <TableOfContents headings={headings} />
