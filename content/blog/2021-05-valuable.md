@@ -37,7 +37,7 @@ Let's look at an actual use case. Given an HTTP service, at the start of an HTTP
 request, we want to emit a tracing event that includes relevant HTTP headers.
 The data may look something like this.
 
-```javascript=
+```javascript
 {
   user_agent: "Mozilla/4.0 (compatible; MSIE5.01; Windows NT)",
   host: "www.example.com",
