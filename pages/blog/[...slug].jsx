@@ -1,5 +1,6 @@
 import * as content from "../../lib/api";
 import * as blog from "../../lib/blog";
+import { toHTML } from "../../lib/markdown";
 import Page from "../../lib/page";
 
 export default Page;
@@ -26,6 +27,7 @@ export async function getStaticProps({ params: { slug: slugParam } }) {
   });
 
   const page = content.loadPage(`blog/${slug}`);
+  page.body = await toHTML(page.body)
 
   let next = blog.getNextPost(slug);
   let previous = blog.getPreviousPost(slug);
