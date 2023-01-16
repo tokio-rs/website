@@ -143,10 +143,10 @@ a routine that operates asynchronously. Any calls to `.await` within the `async
 fn` yield control back to the thread. The thread may do other work while the
 operation processes in the background.
 
-[[warning]]
-| Although other languages implement [`async/await`] too, Rust takes a unique
-| approach. Primarily, Rust's async operations are **lazy**. This results in
-| different runtime semantics than other languages.
+> **warning**
+> Although other languages implement [`async/await`] too, Rust takes a unique
+> approach. Primarily, Rust's async operations are **lazy**. This results in
+> different runtime semantics than other languages.
 
 [`async/await`]: https://en.wikipedia.org/wiki/Async/await
 

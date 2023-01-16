@@ -19,10 +19,10 @@ Then create a new, empty `src/main.rs` and continue.
 The first thing our Redis server needs to do is to accept inbound TCP sockets.
 This is done with [`tokio::net::TcpListener`][tcpl].
 
-[[info]]
-| Many of Tokio's types are named the same as their synchronous equivalent in
-| the Rust standard library. When it makes sense, Tokio exposes the same APIs
-| as `std` but using `async fn`.
+> **info**
+> Many of Tokio's types are named the same as their synchronous equivalent in
+> the Rust standard library. When it makes sense, Tokio exposes the same APIs
+> as `std` but using `async fn`.
 
 A `TcpListener` is bound to port **6379**, then sockets are accepted in a loop.
 Each socket is processed then closed. For now, we will read the command, print
@@ -98,16 +98,16 @@ the socket.
 We want our Redis server to process **many** concurrent requests. To do this, we
 need to add some concurrency.
 
-[[info]]
-| Concurrency and parallelism are not the same thing. If you alternate between
-| two tasks, then you are working on both tasks concurrently, but not in
-| parallel. For it to qualify as parallel, you would need two people, one
-| dedicated to each task.
+> **info**
+> Concurrency and parallelism are not the same thing. If you alternate between
+> two tasks, then you are working on both tasks concurrently, but not in
+> parallel. For it to qualify as parallel, you would need two people, one
+> dedicated to each task.
 |
-| One of the advantages of using Tokio is that asynchronous code allows you to
-| work on many tasks concurrently, without having to work on them in parallel
-| using ordinary threads. In fact, Tokio can run many tasks concurrently on a
-| single thread!
+> One of the advantages of using Tokio is that asynchronous code allows you to
+> work on many tasks concurrently, without having to work on them in parallel
+> using ordinary threads. In fact, Tokio can run many tasks concurrently on a
+> single thread!
 
 To process connections concurrently, a new task is spawned for each inbound
 connection. The connection is processed on this task.
@@ -181,11 +181,11 @@ When you spawn a task on the Tokio runtime, its type's lifetime must be `'static
 means that the spawned task must not contain any references to data owned
 outside the task.
 
-[[info]]
-| It is a common misconception that `'static` always means "lives forever",
-| but this is not the case. Just because a value is `'static` does not mean
-| that you have a memory leak. You can read more in [Common Rust Lifetime
-| Misconceptions][common-lifetime].
+> **info**
+> It is a common misconception that `'static` always means "lives forever",
+> but this is not the case. Just because a value is `'static` does not mean
+> that you have a memory leak. You can read more in [Common Rust Lifetime
+> Misconceptions][common-lifetime].
 
 [common-lifetime]: https://github.com/pretzelhammer/rust-blog/blob/master/posts/common-rust-lifetime-misconceptions.md#2-if-t-static-then-t-must-be-valid-for-the-entire-program
 

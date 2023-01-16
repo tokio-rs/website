@@ -13,8 +13,8 @@ export default function Blog({ app, postsByYear }) {
               <h1 className="title">Blog Posts</h1>
               {Object.entries(postsByYear)
                 .reverse()
-                .map(([year, {key, title, nested}]) => (
-                  <YearPosts year={year} posts={nested} key={year} />
+                .map(([year, { key, title, nested }]) => (
+                  <YearPosts year={year} posts={nested} key={title} />
                 ))}
             </section>
           </div>
@@ -30,10 +30,8 @@ function YearPosts({ year, posts }) {
       <h2>{year}</h2>
       <ul>
         {posts.map((post) => (
-          <li>
-            <Link href={post.href}>
-              <a>{post.menuTitle || post.title}</a>
-            </Link>
+          <li key={post.title}>
+            <Link href={post.href}>{post.menuTitle || post.title}</Link>
           </li>
         ))}
       </ul>
@@ -43,5 +41,5 @@ function YearPosts({ year, posts }) {
 
 export async function getStaticProps() {
   let postsByYear = blog.getBlogPostsByYear();
-  return await api.withAppProps({ props: { postsByYear }});
+  return await api.withAppProps({ props: { postsByYear } });
 }

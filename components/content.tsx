@@ -1,65 +1,7 @@
 import Menu from "../components/menu";
-import classnames from "classnames";
 import { DiscordIcon, GitHubIcon } from "./icons";
-import React from "react";
-import ReactMarkdown from "react-markdown/with-html";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import GithubSlugger from "github-slugger";
-import CustomBlocks from "remark-custom-blocks";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-
-const CodeBlock = ({ language, value }) => {
-  // Remove lines starting with `# `. This is code to make the doc tests pass
-  // but should not be displayed.
-  value = value
-    .split("\n")
-    .filter((line) => !line.startsWith("# "))
-    .join("\n");
-
-  return (
-    <SyntaxHighlighter useInlineStyles={false} language={language}>
-      {value}
-    </SyntaxHighlighter>
-  );
-};
-
-const Blocks = {
-  warning: {
-    classes: "is-warning",
-  },
-  info: {
-    classes: "is-info",
-  },
-};
-
-function Heading(slugger, headings, props) {
-  let children = React.Children.toArray(props.children);
-  let text = children.reduce(flatten, "");
-  let slug = slugger.slug(text);
-  headings.push({ level: props.level, title: text, slug });
-  return React.createElement("h" + props.level, { id: slug }, props.children);
-}
-
-function Block({
-  children,
-  data: {
-    hProperties: { className },
-  },
-}) {
-  return (
-    <blockquote className={classnames(...className)}>{children}</blockquote>
-  );
-}
-
-function BlockBody({ children }) {
-  return children;
-}
-
-function flatten(text, child) {
-  return typeof child === "string"
-    ? text + child
-    : React.Children.toArray(child.props.children).reduce(flatten, text);
-}
 
 function Footer({ next, prev, mdPath }) {
   let edit = `https://github.com/tokio-rs/website/edit/master/content/${mdPath}`;
@@ -127,32 +69,33 @@ function insertHeading(heading, menu, level = 1) {
 }
 
 function TableOfContents({ headings }) {
-  let menu = [];
+  const list = useMemo(() => {
+    let menu = [];
+    for (const heading of headings) {
+      insertHeading(heading, menu);
+    }
 
-  for (const heading of headings) {
-    insertHeading(heading, menu);
-  }
-
-  const list = menu.map((entry) => {
-    const heading = entry.heading;
-
-    let nested = entry.nested.map((entry) => {
+    return menu.map((entry) => {
       const heading = entry.heading;
+
+      let nested = entry.nested.map((entry) => {
+        const heading = entry.heading;
+
+        return (
+          <li key={heading.slug}>
+            <a href={`#${heading.slug}`}>{heading.title}</a>
+          </li>
+        );
+      });
 
       return (
         <li key={heading.slug}>
           <a href={`#${heading.slug}`}>{heading.title}</a>
+          {entry.nested.length > 0 && <ul>{nested}</ul>}
         </li>
       );
     });
-
-    return (
-      <li key={heading.slug}>
-        <a href={`#${heading.slug}`}>{heading.title}</a>
-        {entry.nested.length > 0 && <ul>{nested}</ul>}
-      </li>
-    );
-  });
+  }, [headings]);
 
   return (
     <aside className="column is-one-third tk-content-summary">
@@ -161,46 +104,52 @@ function TableOfContents({ headings }) {
   );
 }
 
-export default function Content({ menu, href, title, next, prev, body, mdPath }) {
-  const slugger = new GithubSlugger();
-  let headings = [{ level: 1, title, slug: "" }];
-  const HeadingRenderer = (props) => {
-    return Heading(slugger, headings, props);
-  };
+export default function Content({
+  menu,
+  href,
+  title,
+  next,
+  prev,
+  body,
+  mdPath,
+}) {
+  const isBlogRoute = href.startsWith("/blog");
 
-  let isBlogRoute = href.startsWith("/blog");
+  const [headings, setHeadings] = useState([]);
+  const mdRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    mdRef.current?.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((el) => {
+      const level = Number(el.tagName.slice(-1));
+      const title = el.textContent;
+      const slug = el.id;
+      setHeadings((headings) => [...headings, { level, title, slug }]);
+    });
+    return () => {
+      setHeadings([]);
+    };
+  }, [mdRef]);
 
   return (
     <>
       <div className="columns is-marginless tk-docs">
         <div className="column is-one-quarter tk-docs-nav">
           <Menu href={href} menu={menu}>
-            { isBlogRoute && (
-                <div className="all-posts-link">
-                  <Link href="/blog"><a>More Blog Posts</a></Link>
-                </div>
-              )
-            }
+            {isBlogRoute && (
+              <div className="all-posts-link">
+                <Link href="/blog">More Blog Posts</Link>
+              </div>
+            )}
           </Menu>
         </div>
         <div className="column is-three-quarters tk-content">
           <section className="section content">
             <div className="columns">
-              <div className="column is-two-thirds tk-markdown">
-                <h1 className="title">{title}</h1>
-                <ReactMarkdown
-                  escapeHtml={false}
-                  source={body}
-                  renderers={{
-                    code: CodeBlock,
-                    heading: HeadingRenderer,
-                    warningCustomBlock: Block,
-                    warningCustomBlockBody: BlockBody,
-                    infoCustomBlock: Block,
-                    infoCustomBlockBody: BlockBody,
-                  }}
-                  plugins={[[CustomBlocks, Blocks]]}
-                />
+              <div className="column is-two-thirds tk-markdown" ref={mdRef}>
+                <h1 className="title" id="">
+                  {title}
+                </h1>
+                <div dangerouslySetInnerHTML={{ __html: body }}></div>
                 <Footer next={next} prev={prev} mdPath={mdPath} />
               </div>
               <TableOfContents headings={headings} />

@@ -1,4 +1,4 @@
-@use 'sass:color';
+@use "sass:color";
 
 // Tokio color palette
 $cream: #faf8f4;
@@ -89,6 +89,11 @@ a:hover,
 a:focus,
 a:active {
   outline: none;
+}
+
+:root {
+  overflow-y: scroll;
+  overscroll-behavior-y: none;
 }
 
 .navbar {

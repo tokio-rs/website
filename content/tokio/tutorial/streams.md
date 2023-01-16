@@ -20,10 +20,10 @@ Tokio provides stream support in a separate crate: `tokio-stream`.
 tokio-stream = "0.1"
 ```
 
-[[info]]
-| Currently, Tokio's Stream utilities exist in the `tokio-stream` crate.
-| Once the `Stream` trait is stabilized in the Rust standard library, Tokio's
-| stream utilities will be moved into the `tokio` crate.
+> **info**
+> Currently, Tokio's Stream utilities exist in the `tokio-stream` crate.
+> Once the `Stream` trait is stabilized in the Rust standard library, Tokio's
+> stream utilities will be moved into the `tokio` crate.
 
 <!--
 TODO: uncomment this once it is true again.
@@ -122,11 +122,11 @@ arrive. Before we start iterating the messages, note that the stream is
 requires the stream to be [pinned][pin]. The `into_stream()` function returns a
 stream that is *not* pinned, we must explicitly pin it in order to iterate it.
 
-[[info]]
-| A Rust value is "pinned" when it can no longer be moved in memory. A key
-| property of a pinned value is that pointers can be taken to the pinned
-| data and the caller can be confident the pointer stays valid. This feature
-| is used by `async/await` to support borrowing data across `.await` points.
+> **info**
+> A Rust value is "pinned" when it can no longer be moved in memory. A key
+> property of a pinned value is that pointers can be taken to the pinned
+> data and the caller can be confident the pointer stays valid. This feature
+> is used by `async/await` to support borrowing data across `.await` points.
 
 If we forget to pin the stream, we get an error like this:
 

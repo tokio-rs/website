@@ -1,5 +1,6 @@
 import * as content from "../../lib/api";
 import * as blog from "../../lib/blog";
+import { toHTML } from "../../lib/markdown";
 import Page from "../../lib/page";
 
 export default Page;
@@ -22,10 +23,11 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params: { slug: slugParam } }) {
   let slug = slugParam[0];
   let postsByYear = blog.getBlogPostsByYear({
-    limit: SIDEBAR_POST_COUNT
+    limit: SIDEBAR_POST_COUNT,
   });
 
   const page = content.loadPage(`blog/${slug}`);
+  page.body = await toHTML(page.body)
 
   let next = blog.getNextPost(slug);
   let previous = blog.getPreviousPost(slug);
@@ -33,7 +35,7 @@ export async function getStaticProps({ params: { slug: slugParam } }) {
   if (next) {
     page.next = {
       title: next.menuTitle || next.title,
-      href: next.href
+      href: next.href,
     };
   }
 

@@ -11,14 +11,12 @@ const LIBS: Library[] = [
   {
     id: "runtime",
     name: "Reliable",
-    desc:
-      "Tokio's APIs are memory-safe, thread-safe, and misuse-resistant. This helps prevent common bugs, such as unbounded queues, buffer overflows, and task starvation.",
+    desc: "Tokio's APIs are memory-safe, thread-safe, and misuse-resistant. This helps prevent common bugs, such as unbounded queues, buffer overflows, and task starvation.",
   },
   {
     id: "hyper",
     name: "Fast",
-    desc:
-      "Building on top of Rust, Tokio provides a multi-threaded, work-stealing scheduler. Applications can process hundreds of thousands of requests per second with minimal overhead.",
+    desc: "Building on top of Rust, Tokio provides a multi-threaded, work-stealing scheduler. Applications can process hundreds of thousands of requests per second with minimal overhead.",
   },
   {
     id: "tonic",
@@ -34,8 +32,7 @@ const LIBS: Library[] = [
   {
     id: "tower",
     name: "Flexible",
-    desc:
-      "The needs of a server application differ from that of an embedded device. Although Tokio comes with defaults that work well out of the box, it also provides the knobs needed to fine tune to different cases.",
+    desc: "The needs of a server application differ from that of an embedded device. Although Tokio comes with defaults that work well out of the box, it also provides the knobs needed to fine tune to different cases.",
   },
 ];
 

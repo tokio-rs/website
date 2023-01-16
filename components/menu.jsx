@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { Fragment, useCallback, useState } from "react";
 import classnames from "classnames";
 import Link from "next/link";
 
@@ -20,10 +20,10 @@ const monthNames = [
 export default function Menu({ href, menu, children }) {
   const groups = menu.map(({ key, title, nested }) => {
     return (
-      <React.Fragment key={key}>
+      <Fragment key={key}>
         <p className="menu-label">{title}</p>
         <Level1 href={href} menu={nested} />
-      </React.Fragment>
+      </Fragment>
     );
   });
 
@@ -120,11 +120,11 @@ function Level2({ href, menu }) {
 
   if (menu.data.subtitle) {
     const className = href == menu.href ? "is-active" : "";
-    items.unshift((
+    items.unshift(
       <li key={menu.key} className={className}>
         <a href={menu.href}>{menu.data.subtitle}</a>
       </li>
-    ));
+    );
   }
 
   return <ul>{items}</ul>;
