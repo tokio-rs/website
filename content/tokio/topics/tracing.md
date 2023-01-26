@@ -152,7 +152,7 @@ fn trace_me(a: u32, b: u32) -> u32 {
 
 Each invocation of `trace_me` will emit a `tracing` Span that:
 
-1. has a verbosity [level] of `trace` (the greatest verbosity),
+1. has a verbosity [level] of `info` (the "middle ground" verbosity),
 2. is named `trace_me`,
 3. has fields `a` and `b`, whose values are the arguments of `trace_me`
 
@@ -174,7 +174,6 @@ use tracing::instrument;
 impl Handler {
     /// Process a single connection.
     #[instrument(
-        level = "info",
         name = "Handler::run",
         skip(self),
         fields(
