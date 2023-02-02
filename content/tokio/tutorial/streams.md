@@ -152,7 +152,7 @@ If you hit an error message like this, try pinning the value!
 
 Before trying to run this, start the Mini-Redis server:
 
-```text
+```bash
 $ mini-redis-server
 ```
 
