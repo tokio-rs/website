@@ -98,6 +98,12 @@ If a partial frame is received, the data is buffered and more data is read from
 the socket.  If multiple frames are received, the first frame is returned and
 the rest of the data is buffered until the next call to `read_frame`.
 
+If you haven't already, create a new file called `connection.rs`.
+
+```bash
+touch src/connection.rs
+```
+
 To implement this, `Connection` needs a read buffer field. Data is read from the
 socket into the read buffer. When a frame is parsed, the corresponding data is
 removed from the buffer.
@@ -395,7 +401,6 @@ tutorial. See the full implementation [here][write-frame].
 
 First, the `Connection` struct is updated:
 
-
 ```rust
 use tokio::io::BufWriter;
 use tokio::net::TcpStream;
@@ -487,7 +492,6 @@ caller to write queue multiple small frames in the write buffer then write them
 all to the socket with one `write` syscall. Doing this complicates the
 `Connection` API. Simplicity is one of Mini-Redis' goals, so we decided to
 include the `flush().await` call in `fn write_frame()`.
-
 
 [buf-writer]: https://docs.rs/tokio/1/tokio/io/struct.BufWriter.html
 [write-frame]: https://github.com/tokio-rs/mini-redis/blob/tutorial/src/connection.rs#L159-L184
