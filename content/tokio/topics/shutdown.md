@@ -157,7 +157,6 @@ before waiting for the channel to be closed.
 [ctrl_c]: https://docs.rs/tokio/1/tokio/signal/fn.ctrl_c.html
 [an mpsc channel]: https://docs.rs/tokio/1/tokio/sync/mpsc/index.html
 [select]: https://docs.rs/tokio/1/tokio/macro.select.html
-[broadcast]: https://docs.rs/tokio/1/tokio/sync/broadcast/index.html
 [cancellation-tokens]: https://docs.rs/tokio-util/latest/tokio_util/sync/struct.CancellationToken.html
 [watch]: https://docs.rs/tokio/1/tokio/sync/watch/index.html
 [shutdown.rs]: https://github.com/tokio-rs/mini-redis/blob/master/src/shutdown.rs
