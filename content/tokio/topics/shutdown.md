@@ -69,33 +69,47 @@ async fn main() {
 
 ## Telling things to shut down
 
-The most common tool for telling every part of the application to shut down is
-to use a [broadcast channel][broadcast]. The idea is simple: every task in the
-application has a receiver for the broadcast channel, and when a message is
-broadcast on the channel, the tasks shut themselves down. Usually, receiving
-this broadcast message is implemented using [`tokio::select`][select]. For
-example, in mini-redis each task receives shutdown in this way:
+When you want to tell one or more tasks to shut down, you can use [Cancellation 
+Tokens][cancellation-tokens]. These tokens allow you to notify tasks that they 
+should terminate themselves in response to a cancellation request, making it 
+easy to implement graceful shutdowns.
+
+To use Cancellation Tokens, you first create a new `CancellationToken`, then 
+pass it to the tasks that should respond to cancellation requests. When you 
+want to shut down these tasks gracefully, you call the `cancel` method on the 
+token, and any task listening to the cancellation request will be notified 
+to shut down.
+
 ```rs
-let next_frame = tokio::select! {
-    res = self.connection.read_frame() => res?,
-    _ = self.shutdown.recv() => {
-        // If a shutdown signal is received, return from `run`.
-        // This will result in the task terminating.
-        return Ok(());
+// Step 1: Create a new CancellationToken
+let token = CancellationToken::new();
+
+// Task 1 - Wait for token cancellation or a long time
+tokio::spawn(async move {
+    tokio::select! {
+        // Step 2: Listen to cancellation requests
+        _ = token.cancelled() => {
+            // The token was cancelled, task can shut down
+        }
+        _ = tokio::time::sleep(std::time::Duration::from_secs(9999)) => {
+            // Long work has completed
+        }
     }
-};
+});
+
+// Task 2 - Cancel the token after a small delay 
+tokio::spawn(async move {
+    tokio::time::sleep(std::time::Duration::from_millis(10)).await;
+
+    // Step 3: Cancel the token to notify other tasks about shutting down gracefully
+    token.cancel();
+});
 ```
-In the case of mini-redis, the task immediately terminates when the shutdown
-message is received, but in some cases you will need to run a shutdown procedure
-before terminating the task. For example, in some cases you need to flush some
-data to a file or database before terminating, or if the task manages a
-connection, you might want to send a shutdown message on the connection.
 
-It is usually a good idea to wrap the broadcast channel in a struct. An example
-of this can be found [here][shutdown.rs].
-
-It's worth mentioning that you can do the same thing using a [watch
-channel][watch]. There is no significant difference between the two choices.
+With Cancellation Tokens, you don't have to shut down a task immediately when 
+the token is cancelled. Instead, you can run a shutdown procedure before 
+terminating the task, such as flushing data to a file or database, or sending 
+a shutdown message on a connection.
 
 ## Waiting for things to finish shutting down
 
@@ -144,6 +158,7 @@ before waiting for the channel to be closed.
 [an mpsc channel]: https://docs.rs/tokio/1/tokio/sync/mpsc/index.html
 [select]: https://docs.rs/tokio/1/tokio/macro.select.html
 [broadcast]: https://docs.rs/tokio/1/tokio/sync/broadcast/index.html
+[cancellation-tokens]: https://docs.rs/tokio-util/latest/tokio_util/sync/struct.CancellationToken.html
 [watch]: https://docs.rs/tokio/1/tokio/sync/watch/index.html
 [shutdown.rs]: https://github.com/tokio-rs/mini-redis/blob/master/src/shutdown.rs
 [server.rs]: https://github.com/tokio-rs/mini-redis/blob/master/src/server.rs
