@@ -74,21 +74,34 @@ Tokens][cancellation-tokens]. These tokens allow you to notify tasks that they
 should terminate themselves in response to a cancellation request, making it 
 easy to implement graceful shutdowns.
 
-To use Cancellation Tokens, you first create a new `CancellationToken`, then 
-pass it to the tasks that should respond to cancellation requests. When you 
-want to shut down these tasks gracefully, you call the `cancel` method on the 
-token, and any task listening to the cancellation request will be notified 
-to shut down.
+Note that, a `CancellationToken` can only be used by one task at a time due to 
+ownership rule. To use the same `CancellationToken` in multiple tasks you can make 
+a clone of it. A cloned token can be utilized by another task to either listen for 
+cancellation requests or to send a cancel request. By using a cloned token, each 
+task can respond to the cancellation request independently, and you can ensure that 
+all tasks are properly shut down when the token is canceled.
+
+Here are the steps to use `CancellationToken` in multiple tasks:
+1. First, create a new `CancellationToken`.
+2. Then, create a clone of the original `CancellationToken` by calling the `clone` method on the original token. This will create a new token that can be used by another task.
+3. Pass the original or cloned token to the tasks that should respond to cancellation requests.
+4. When you want to shut down the tasks gracefully, call the `cancel` method on the original or cloned token. Any task listening to the cancellation request on the original or cloned token will be notified to shut down.
+
+
+Here is code snippet showcasing the above mentioned steps:
 
 ```rs
 // Step 1: Create a new CancellationToken
 let token = CancellationToken::new();
 
+// Step 2: Clone the token for use in another task
+let cloned_token = token.clone();
+
 // Task 1 - Wait for token cancellation or a long time
-tokio::spawn(async move {
+let task1_handle = tokio::spawn(async move {
     tokio::select! {
-        // Step 2: Listen to cancellation requests
-        _ = token.cancelled() => {
+        // Step 3: Using cloned token to listen to cancellation requests
+        _ = cloned_token.cancelled() => {
             // The token was cancelled, task can shut down
         }
         _ = tokio::time::sleep(std::time::Duration::from_secs(9999)) => {
@@ -97,13 +110,16 @@ tokio::spawn(async move {
     }
 });
 
-// Task 2 - Cancel the token after a small delay 
+// Task 2 - Cancel the original token after a small delay
 tokio::spawn(async move {
     tokio::time::sleep(std::time::Duration::from_millis(10)).await;
 
-    // Step 3: Cancel the token to notify other tasks about shutting down gracefully
+    // Step 4: Cancel the original or clonned token to notify other tasks about shutting down gracefully
     token.cancel();
 });
+
+// Wait for tasks to complete
+task1_handle.await.unwrap()
 ```
 
 With Cancellation Tokens, you don't have to shut down a task immediately when 
