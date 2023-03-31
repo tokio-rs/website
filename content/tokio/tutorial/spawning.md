@@ -103,7 +103,7 @@ need to add some concurrency.
 > two tasks, then you are working on both tasks concurrently, but not in
 > parallel. For it to qualify as parallel, you would need two people, one
 > dedicated to each task.
-|
+>
 > One of the advantages of using Tokio is that asynchronous code allows you to
 > work on many tasks concurrently, without having to work on them in parallel
 > using ordinary threads. In fact, Tokio can run many tasks concurrently on a
