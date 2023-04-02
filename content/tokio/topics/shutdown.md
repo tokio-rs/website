@@ -74,12 +74,11 @@ Tokens][cancellation-tokens]. These tokens allow you to notify tasks that they
 should terminate themselves in response to a cancellation request, making it 
 easy to implement graceful shutdowns.
 
-Note that, a `CancellationToken` can only be used by one task at a time due to 
-ownership rule. To use the same `CancellationToken` in multiple tasks you can make 
-a clone of it. A cloned token can be utilized by another task to either listen for 
-cancellation requests or to send a cancel request. By using a cloned token, each 
-task can respond to the cancellation request independently, and you can ensure that 
-all tasks are properly shut down when the token is canceled.
+To share a `CancellationToken` between several tasks, you must clone it. This is due 
+to the single ownership rule that requires that each value has a single owner. When 
+cloning a token, you get another token that's indistinguishable from the original; 
+if one is cancelled, then the other is also cancelled. You can make as many clones 
+as you need, and when you call `cancel` on one of them, they're all cancelled.
 
 Here are the steps to use `CancellationToken` in multiple tasks:
 1. First, create a new `CancellationToken`.
