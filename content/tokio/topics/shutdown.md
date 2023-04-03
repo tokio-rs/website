@@ -69,33 +69,62 @@ async fn main() {
 
 ## Telling things to shut down
 
-The most common tool for telling every part of the application to shut down is
-to use a [broadcast channel][broadcast]. The idea is simple: every task in the
-application has a receiver for the broadcast channel, and when a message is
-broadcast on the channel, the tasks shut themselves down. Usually, receiving
-this broadcast message is implemented using [`tokio::select`][select]. For
-example, in mini-redis each task receives shutdown in this way:
+When you want to tell one or more tasks to shut down, you can use [Cancellation 
+Tokens][cancellation-tokens]. These tokens allow you to notify tasks that they 
+should terminate themselves in response to a cancellation request, making it 
+easy to implement graceful shutdowns.
+
+To share a `CancellationToken` between several tasks, you must clone it. This is due 
+to the single ownership rule that requires that each value has a single owner. When 
+cloning a token, you get another token that's indistinguishable from the original; 
+if one is cancelled, then the other is also cancelled. You can make as many clones 
+as you need, and when you call `cancel` on one of them, they're all cancelled.
+
+Here are the steps to use `CancellationToken` in multiple tasks:
+1. First, create a new `CancellationToken`.
+2. Then, create a clone of the original `CancellationToken` by calling the `clone` method on the original token. This will create a new token that can be used by another task.
+3. Pass the original or cloned token to the tasks that should respond to cancellation requests.
+4. When you want to shut down the tasks gracefully, call the `cancel` method on the original or cloned token. Any task listening to the cancellation request on the original or cloned token will be notified to shut down.
+
+
+Here is code snippet showcasing the above mentioned steps:
+
 ```rs
-let next_frame = tokio::select! {
-    res = self.connection.read_frame() => res?,
-    _ = self.shutdown.recv() => {
-        // If a shutdown signal is received, return from `run`.
-        // This will result in the task terminating.
-        return Ok(());
+// Step 1: Create a new CancellationToken
+let token = CancellationToken::new();
+
+// Step 2: Clone the token for use in another task
+let cloned_token = token.clone();
+
+// Task 1 - Wait for token cancellation or a long time
+let task1_handle = tokio::spawn(async move {
+    tokio::select! {
+        // Step 3: Using cloned token to listen to cancellation requests
+        _ = cloned_token.cancelled() => {
+            // The token was cancelled, task can shut down
+        }
+        _ = tokio::time::sleep(std::time::Duration::from_secs(9999)) => {
+            // Long work has completed
+        }
     }
-};
+});
+
+// Task 2 - Cancel the original token after a small delay
+tokio::spawn(async move {
+    tokio::time::sleep(std::time::Duration::from_millis(10)).await;
+
+    // Step 4: Cancel the original or clonned token to notify other tasks about shutting down gracefully
+    token.cancel();
+});
+
+// Wait for tasks to complete
+task1_handle.await.unwrap()
 ```
-In the case of mini-redis, the task immediately terminates when the shutdown
-message is received, but in some cases you will need to run a shutdown procedure
-before terminating the task. For example, in some cases you need to flush some
-data to a file or database before terminating, or if the task manages a
-connection, you might want to send a shutdown message on the connection.
 
-It is usually a good idea to wrap the broadcast channel in a struct. An example
-of this can be found [here][shutdown.rs].
-
-It's worth mentioning that you can do the same thing using a [watch
-channel][watch]. There is no significant difference between the two choices.
+With Cancellation Tokens, you don't have to shut down a task immediately when 
+the token is cancelled. Instead, you can run a shutdown procedure before 
+terminating the task, such as flushing data to a file or database, or sending 
+a shutdown message on a connection.
 
 ## Waiting for things to finish shutting down
 
@@ -143,7 +172,7 @@ before waiting for the channel to be closed.
 [ctrl_c]: https://docs.rs/tokio/1/tokio/signal/fn.ctrl_c.html
 [an mpsc channel]: https://docs.rs/tokio/1/tokio/sync/mpsc/index.html
 [select]: https://docs.rs/tokio/1/tokio/macro.select.html
-[broadcast]: https://docs.rs/tokio/1/tokio/sync/broadcast/index.html
+[cancellation-tokens]: https://docs.rs/tokio-util/latest/tokio_util/sync/struct.CancellationToken.html
 [watch]: https://docs.rs/tokio/1/tokio/sync/watch/index.html
 [shutdown.rs]: https://github.com/tokio-rs/mini-redis/blob/master/src/shutdown.rs
 [server.rs]: https://github.com/tokio-rs/mini-redis/blob/master/src/server.rs
