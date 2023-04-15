@@ -60,33 +60,35 @@ methods:
  * [`Client::publish`]
  * [`Client::subscribe`]
 
-To do this, we introduce a new file called `src/blocking_client.rs` and
+To do this, we introduce a new file called `src/clients/blocking_client.rs` and
 initialize it with a wrapper struct around the async `Client` type:
 ```rs
 use tokio::net::ToSocketAddrs;
 use tokio::runtime::Runtime;
 
-pub use crate::client::Message;
+pub use crate::clients::client::Message;
 
 /// Established connection with a Redis server.
 pub struct BlockingClient {
     /// The asynchronous `Client`.
-    inner: crate::client::Client,
+    inner: crate::clients::Client,
 
     /// A `current_thread` runtime for executing operations on the
     /// asynchronous client in a blocking manner.
     rt: Runtime,
 }
 
-pub fn connect<T: ToSocketAddrs>(addr: T) -> crate::Result<BlockingClient> {
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()?;
+impl BlockingClient {
+    pub fn connect<T: ToSocketAddrs>(addr: T) -> crate::Result<BlockingClient> {
+        let rt = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()?;
 
-    // Call the asynchronous connect method using the runtime.
-    let inner = rt.block_on(crate::client::connect(addr))?;
+        // Call the asynchronous connect method using the runtime.
+        let inner = rt.block_on(crate::clients::Client::connect(addr))?;
 
-    Ok(BlockingClient { inner, rt })
+        Ok(BlockingClient { inner, rt })
+    }
 }
 ```
 Here, we have included the constructor function as our first example of how to
@@ -150,7 +152,7 @@ manner:
 /// prevent non-pub/sub methods from being called.
 pub struct BlockingSubscriber {
     /// The asynchronous `Subscriber`.
-    inner: crate::client::Subscriber,
+    inner: crate::clients::Subscriber,
 
     /// A `current_thread` runtime for executing operations on the
     /// asynchronous client in a blocking manner.
