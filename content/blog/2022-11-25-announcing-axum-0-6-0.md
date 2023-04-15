@@ -350,7 +350,7 @@ If you want to opt into the old behavior you can use
 
 ## Mix wildcard routes and regular routes
 
-`axum`'s `Router` now has better support for mixing wilcard routes and regular
+`axum`'s `Router` now has better support for mixing wildcard routes and regular
 routes:
 
 ```rust
