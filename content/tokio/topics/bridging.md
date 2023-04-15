@@ -84,6 +84,7 @@ impl BlockingClient {
             .enable_all()
             .build()?;
 
+        // Call the asynchronous connect method using the runtime.
         let inner = rt.block_on(crate::clients::Client::connect(addr))?;
 
         Ok(BlockingClient { inner, rt })
