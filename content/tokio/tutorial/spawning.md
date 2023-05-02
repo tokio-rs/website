@@ -17,16 +17,15 @@ Then create a new, empty `src/main.rs` and continue.
 # Accepting sockets
 
 The first thing our Redis server needs to do is to accept inbound TCP sockets.
-This is done with [`tokio::net::TcpListener`][tcpl].
+This is done by binding [`tokio::net::TcpListener`][tcpl] to port **6379**.
 
 > **info**
 > Many of Tokio's types are named the same as their synchronous equivalent in
 > the Rust standard library. When it makes sense, Tokio exposes the same APIs
 > as `std` but using `async fn`.
 
-A `TcpListener` is bound to port **6379**, then sockets are accepted in a loop.
-Each socket is processed then closed. For now, we will read the command, print
-it to stdout and respond with an error.
+Then the sockets are accepted in a loop. Each socket is processed then closed.
+For now, we will read the command, print it to stdout and respond with an error.
 
 ```rust
 use tokio::net::{TcpListener, TcpStream};
