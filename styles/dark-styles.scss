@@ -74,6 +74,11 @@ body {
   }
 }
 
+.toggle-theme__btn {
+  &:hover {
+    background-color: $black-pink;
+  }
+}
 
 .hero {
   &.is-primary {
