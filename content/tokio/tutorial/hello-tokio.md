@@ -247,4 +247,3 @@ utilities, multiple scheduler types, etc). Not all applications need all
 functionality. When attempting to optimize compile time or the end application
 footprint, the application can decide to opt into **only** the features it uses.
 
-For now, use the "full" feature when depending on Tokio.
