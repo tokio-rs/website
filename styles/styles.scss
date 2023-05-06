@@ -103,6 +103,21 @@ a:active {
     margin: 0 1.5rem;
   }
 
+  // Reducing whitespace around toggle button to make it consistent
+  // with other navbar links and icons on breakpoint: mobile < 800px < tablet/desktop
+  @include until(800px) {
+    &__container {
+      margin: 0 0.85rem;
+    }
+  }
+
+  @include mobile {
+    &__container {
+      margin: 0 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+
   &__btn {
     // button style reset/cleanup
     background: none;
@@ -165,6 +180,22 @@ a:active {
     }
   }
 
+  // Reducing whitespace in navbar to fit links and icons
+  // on breakpoint: mobile < 800px < tablet/desktop
+  @include until(800px) {
+    .navbar-item {
+      &.navbar-text {
+        padding: 0 0.85rem;
+      }
+      &.navbar-icon {
+        padding: 0 0.85rem;
+      }
+    }
+    hr {
+      margin: 1rem 0.85rem;
+    }
+  }
+
   @include mobile {
     .navbar-menu {
       display: block;
@@ -189,6 +220,10 @@ a:active {
 
         &:first-child {
           margin-top: 0.5rem;
+        }
+        // Resetting reduced whitespace to normal
+        &.navbar-text, &.navbar-icon {
+          padding: 0 1.5rem;
         }
       }
 
