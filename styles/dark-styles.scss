@@ -12,8 +12,10 @@ $light-gray: #D6D6D6; // hover on secondary text
 $gray: #A0A0A0; // secondary text
 $dark-gray: #939393; // code snippet text
 
-$magenta-100: #DE46A9; // Normal
-$magenta-200: #E25AB2; // Light
+$magenta-000: #C63995;
+$magenta-100: #DE46A9;
+$magenta-200: #E25AB2;
+$magenta-300: #E670BD;
 
 $pure-white: #ffffff;
 $white: #F0F0F0; // text, title
@@ -27,7 +29,7 @@ $blue: #4197E3;
 $lightblue: #56A3E6;
 
 // Each color is associated with a library
-$tk-lib-runtime: $magenta-100;
+$tk-lib-runtime: $magenta-200;
 $tk-lib-hyper: $orange;
 $tk-lib-tonic: $yellow;
 $tk-lib-tower: $green;
@@ -37,7 +39,7 @@ $tk-lib-bytes: $blue;
 
 
 // Per lib styling: [ name, bg-color, color, size, logo-adjust ]
-$libs: "tokio" $white $surface-100 3.8rem -60%, "runtime" darken($tk-lib-runtime) $pure-white 2.2rem -22%,
+$libs: "tokio" $white $surface-100 3.8rem -60%, "runtime" $tk-lib-runtime $surface-100 2.2rem -22%,
   "hyper" $tk-lib-hyper $surface-100 100% -50%, "tonic" $tk-lib-tonic $surface-100 100% -25%,
   "tower" $tk-lib-tower $surface-100 100% -52%, "mio" $tk-lib-mio $surface-100 100% -41%,
   "tracing" $tk-lib-tracing $surface-100 100% -31%, "bytes" $tk-lib-bytes $surface-100 100% -30%;
@@ -89,10 +91,10 @@ body {
   }
   &.tk-intro {
     .button {
-      background-color: $magenta-100;
+      background-color: $magenta-000;
     }
     .button:hover {
-      background-color: $magenta-200;
+      background-color: $magenta-100;
     }
     .title, .subtitle {
       color: $white;
@@ -281,12 +283,12 @@ body {
 
         strong,
         code {
-          color: $magenta-100;
+          color: $magenta-200;
         }
       }
 
       blockquote.is-warning {
-        border-left-color: $magenta-100;
+        border-left-color: $magenta-200;
       }
     }
 
@@ -295,10 +297,10 @@ body {
     }
 
     a code {
-      color: $magenta-100;
+      color: $magenta-200;
     }
     a:hover code {
-      color: $magenta-200;
+      color: $magenta-300;
     }
   }
 }
@@ -313,9 +315,18 @@ strong {
   color: $white;
 }
 
-.content blockquote {
+.content blockquote,
+.content blockquote.is-info {
   background-color: $surface-200;
   border-color: $surface-600;
+
+  a {
+    color: $magenta-200;
+
+    &:hover {
+      color: $magenta-300;
+    }
+  }
 }
 
 .footer {
@@ -372,7 +383,7 @@ pre, code {
 .hljs-keyword,
 .hljs-selector-tag,
 .hljs-subst {
-  color: $magenta-100;
+  color: $magenta-200;
 }
 
 .hljs-number {
