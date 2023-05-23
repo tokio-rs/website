@@ -1,20 +1,16 @@
 ---
 title: "Bridging with sync code"
 ---
-
-In most examples of using Tokio, we mark the main function with `#[tokio::main]`
-and make the entire project asynchronous.
-
-In some cases, you may need to run a small portion of synchronous code.  For more
-information on that, see [`spawn_blocking`].
-
-In other cases, it may be easier to structure the application as largely
-synchronous, with smaller or logically distinct asynchronous portions.
-For instance, a GUI application might want to run the GUI code on the
-main thread and run a Tokio runtime next to it on another thread.
-
-This page explains how you can isolate async/await to a small part of your
-project.
+We can opt-in and out of sync and async behavior depending upon our use case 
+by adopting any of the below ways.
+ * Marking the main function with `#[tokio::main]` and making the entire project 
+   asynchronous. 
+ * Making the entire project asynchronous but opting out of asynchronous behavior 
+   for a small portion of code by using [`spawn_blocking`].
+ * Structuring the application as largely synchronous, with small portion of 
+   asynchronous code. For instance, a GUI application might want to run the GUI code 
+   on the main thread and run a Tokio runtime next to it on another thread.
+This page explains how we can isolate async/await behavior to a small part of your project.
 
 # What `#[tokio::main]` expands to
 
