@@ -1,8 +1,7 @@
 ---
 title: "Bridging with sync code"
 ---
-We can opt-in and out of sync and async behavior depending upon our use case 
-by adopting any of the below ways.
+We can choose to use synchronous or asynchronous behavior depending on our need. For instance, 
  * Marking the main function with `#[tokio::main]` and making the entire project 
    asynchronous. 
  * Making the entire project asynchronous but opting out of asynchronous behavior 
