@@ -727,6 +727,10 @@ a:active {
       @tablet {
         font-size: 2.5rem;
       }
+
+      &.blog-title {
+        margin-bottom : 0rem;
+      }
     }
 
     h1:not(.title) {
@@ -801,6 +805,11 @@ a:active {
     }
     a:hover code {
       color: darken($magenta);
+    }
+
+    .description {
+      margin-bottom: 1.5rem;
+      color: $dark-gray;
     }
   }
 }
