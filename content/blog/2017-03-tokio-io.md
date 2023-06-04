@@ -1,7 +1,7 @@
 ---
 date: "2017-03-17"
 title: "Announcing the tokio-io Crate"
-description: "17 March 2017"
+description: "March 17, 2017"
 ---
 
 Today we're happy to announce a new crate and several new tools to work with in
