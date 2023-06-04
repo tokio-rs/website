@@ -1,7 +1,7 @@
 ---
 date: "2018-03-08"
 title: "Announcing the Tokio runtime"
-description: "08 March 2018"
+description: "March 8, 2018"
 ---
 
 I'm happy to announce a new release of Tokio. This release includes the first
