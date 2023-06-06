@@ -77,7 +77,7 @@ assigning CPU time -- a global resource -- to the task.
 
 The article discusses user-space schedulers, i.e., schedulers that run on top of
 operating system threads (which, in turn, are powered by a kernel land
-scheduler). The Tokio scheduler executes Rust futures, which can be though of as
+scheduler). The Tokio scheduler executes Rust futures, which can be thought of as
 "asynchronous green threads". This is the [M:N threading][mn] pattern where many
 user land tasks are multiplexed on a few operating system threads.
 
