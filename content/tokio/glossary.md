@@ -198,7 +198,7 @@ purpose.
 - [watch]: single-producer, multi-consumer. Many values can be sent, but no
   history is kept. Receivers only see the most recent value.
 
-If you need a multi-producer multi-consumer channel where only one consumer sees
+If you need a multi-producer single-consumer channel where only one consumer sees
 each message, you can use the [`async-channel`] crate.
 
 There are also channels for use outside of asynchronous Rust, such as
