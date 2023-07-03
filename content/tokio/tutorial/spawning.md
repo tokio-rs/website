@@ -27,6 +27,8 @@ This is done by binding [`tokio::net::TcpListener`][tcpl] to port **6379**.
 Then the sockets are accepted in a loop. Each socket is processed then closed.
 For now, we will read the command, print it to stdout and respond with an error.
 
+`src/main.rs`
+
 ```rust
 use tokio::net::{TcpListener, TcpStream};
 use mini_redis::{Connection, Frame};
