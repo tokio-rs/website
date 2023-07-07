@@ -1,7 +1,7 @@
 ---
 date: "2022-02-18"
 title: "Announcing Tokio Metrics 0.1"
-description: "February 18, 2021"
+description: "February 18, 2022"
 ---
 
 Today, we are happy to announce the initial release of
