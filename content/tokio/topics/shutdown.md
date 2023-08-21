@@ -51,7 +51,7 @@ use tokio::sync::mpsc;
 
 #[tokio::main]
 async fn main() {
-    let (shutdown_send, shutdown_recv) = mpsc::unbounded_channel();
+    let (shutdown_send, mut shutdown_recv) = mpsc::unbounded_channel();
 
     // ... spawn application as separate task ...
     //
