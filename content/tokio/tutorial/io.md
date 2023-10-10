@@ -230,7 +230,7 @@ use tokio::net::TcpStream;
 # fn dox() {
 #[tokio::main]
 async fn main() -> io::Result<()> {
-    let socket = TcpStream::connect("127.0.0.1:6142").await?;
+    let (socket, _) = TcpStream::connect("127.0.0.1:6142").await?;
     let (mut rd, mut wr) = io::split(socket);
 
     // Write data in the background
