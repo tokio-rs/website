@@ -91,7 +91,7 @@ simultaneously, there are also some use-cases where Tokio is not a good fit.
    task spends most of its time waiting for IO. If the only thing your
    application does is run computations in parallel, you should be using
    [rayon]. That said, it is still possible to "mix & match"
-   if you need to do both.
+   if you need to do both. See [this blog post for a practical example][rayon-example].
  - Reading a lot of files. Although it seems like Tokio would be useful for
    projects that simply need to read a lot of files, Tokio provides no advantage
    here compared to an ordinary threadpool. This is because operating systems
@@ -106,6 +106,7 @@ simultaneously, there are also some use-cases where Tokio is not a good fit.
    bridging with sync code][bridging].
 
 [rayon]: https://docs.rs/rayon/
+[rayon-example]: https://ryhl.io/blog/async-what-is-blocking/#the-rayon-crate
 [reqwest]: https://docs.rs/reqwest/
 [bridging]: /tokio/topics/bridging
 
