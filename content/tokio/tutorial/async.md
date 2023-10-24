@@ -416,8 +416,7 @@ future.
 
 The updated Mini Tokio will use a channel to store scheduled tasks. Channels
 allow tasks to be queued for execution from any thread. Wakers must be `Send`
-and `Sync`, so we use the channel from the crossbeam crate, as the standard
-library channel is not `Sync`.
+and `Sync`.
 
 > **info**
 > The `Send` and `Sync` traits are marker traits related to concurrency
@@ -434,21 +433,15 @@ library channel is not `Sync`.
 [`Cell`]: https://doc.rust-lang.org/std/cell/struct.Cell.html
 [ch]: https://doc.rust-lang.org/book/ch16-04-extensible-concurrency-sync-and-send.html
 
-Add the following dependency to your `Cargo.toml` to pull in channels.
-
-```toml
-crossbeam = "0.8"
-```
-
-Then, update the `MiniTokio` struct.
+Update the `MiniTokio` struct.
 
 ```rust
-use crossbeam::channel;
+use std::sync::mpsc;
 use std::sync::Arc;
 
 struct MiniTokio {
-    scheduled: channel::Receiver<Arc<Task>>,
-    sender: channel::Sender<Arc<Task>>,
+    scheduled: mpsc::Receiver<Arc<Task>>,
+    sender: mpsc::Sender<Arc<Task>>,
 }
 
 struct Task {
@@ -465,7 +458,7 @@ contain both the spawned future and the channel send half.
 ```rust
 # use std::future::Future;
 # use std::pin::Pin;
-# use crossbeam::channel;
+# use std::sync::mpsc;
 use std::sync::{Arc, Mutex};
 
 struct Task {
@@ -476,7 +469,7 @@ struct Task {
     // more lines of code than can fit in a single tutorial
     // page.
     future: Mutex<Pin<Box<dyn Future<Output = ()> + Send>>>,
-    executor: channel::Sender<Arc<Task>>,
+    executor: mpsc::Sender<Arc<Task>>,
 }
 
 impl Task {
@@ -522,19 +515,19 @@ channel. Next, we implement receiving and executing the tasks in the
 `MiniTokio::run()` function.
 
 ```rust
-# use crossbeam::channel;
+# use std::sync::mpsc;
 # use futures::task::{self, ArcWake};
 # use std::future::Future;
 # use std::pin::Pin;
 # use std::sync::{Arc, Mutex};
 # use std::task::{Context};
 # struct MiniTokio {
-#   scheduled: channel::Receiver<Arc<Task>>,
-#   sender: channel::Sender<Arc<Task>>,
+#   scheduled: mpsc::Receiver<Arc<Task>>,
+#   sender: mpsc::Sender<Arc<Task>>,
 # }
 # struct Task {
 #   future: Mutex<Pin<Box<dyn Future<Output = ()> + Send>>>,
-#   executor: channel::Sender<Arc<Task>>,
+#   executor: mpsc::Sender<Arc<Task>>,
 # }
 # impl ArcWake for Task {
 #   fn wake_by_ref(arc_self: &Arc<Self>) {}
@@ -548,7 +541,7 @@ impl MiniTokio {
 
     /// Initialize a new mini-tokio instance.
     fn new() -> MiniTokio {
-        let (sender, scheduled) = channel::unbounded();
+        let (sender, scheduled) = mpsc::channel();
 
         MiniTokio { scheduled, sender }
     }
@@ -584,7 +577,7 @@ impl Task {
     // Initializes a new Task harness containing the given future and pushes it
     // onto `sender`. The receiver half of the channel will get the task and
     // execute it.
-    fn spawn<F>(future: F, sender: &channel::Sender<Arc<Task>>)
+    fn spawn<F>(future: F, sender: &mpsc::Sender<Arc<Task>>)
     where
         F: Future<Output = ()> + Send + 'static,
     {
