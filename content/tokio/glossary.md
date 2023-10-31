@@ -78,7 +78,7 @@ can also refer to creating new thread with [`std::thread::spawn`].
 An async block is an easy way to create a future that runs some code. For
 example:
 
-```
+```rust
 let world = async {
     println!(" world!");
 };
@@ -161,7 +161,7 @@ code][api-blocking] section from the Tokio API reference.
 A [`Stream`] is an asynchronous version of an [`Iterator`], and provides a
 stream of values. It is commonly used together with a `while let` loop like this:
 
-```
+```rust
 use tokio_stream::StreamExt; // for next()
 
 # async fn dox() {
