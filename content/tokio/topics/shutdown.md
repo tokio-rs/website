@@ -129,48 +129,45 @@ a shutdown message on a connection.
 ## Waiting for things to finish shutting down
 
 Once you have told other tasks to shut down, you will need to wait for them to
-finish. The easiest way to do this is to use [an mpsc channel] where, instead of
-sending messages, you wait for the channel to be closed, which happens when
-every sender has been dropped.
+finish. One easy way to do so is to use a [task tracker]. A task tracker is a
+collection of tasks. The [`wait`] method of the task tracker gives you a future
+which resolves only after all of its contained futures have resolved **and**
+the task tracker has been closed.
 
-As a simple example of this pattern, the following example will spawn 10 tasks,
-then use an mpsc channel to wait for them to shut down.
+The following example will spawn 10 tasks, then use a task tracker to wait for
+them to shut down.
+
 ```rs
-use tokio::sync::mpsc::{channel, Sender};
-use tokio::time::{sleep, Duration};
+use std::time::Duration;
+use tokio::time::sleep;
+use tokio_util::task::TaskTracker;
 
 #[tokio::main]
 async fn main() {
-    let (send, mut recv) = channel(1);
+    let tracker = TaskTracker::new();
 
     for i in 0..10 {
-        tokio::spawn(some_operation(i, send.clone()));
+        tracker.spawn(some_operation(i));
     }
 
-    // Wait for the tasks to finish.
-    //
-    // We drop our sender first because the recv() call otherwise
-    // sleeps forever.
-    drop(send);
+    // Once we spawned everything, we close the tracker.
+    tracker.close();
 
-    // When every sender has gone out of scope, the recv call
-    // will return with an error. We ignore the error.
-    let _ = recv.recv().await;
+    // Wait for everything to finish.
+    tracker.wait().await;
+
+    println!("This is printed after all of the tasks.");
 }
 
-async fn some_operation(i: u64, _sender: Sender<()>) {
+async fn some_operation(i: u64) {
     sleep(Duration::from_millis(100 * i)).await;
     println!("Task {} shutting down.", i);
-
-    // sender goes out of scope ...
 }
 ```
-A very important detail is that the task waiting for shutdown usually holds one
-of the senders. When this is the case, you must make sure to drop that sender
-before waiting for the channel to be closed.
 
 [ctrl_c]: https://docs.rs/tokio/1/tokio/signal/fn.ctrl_c.html
-[an mpsc channel]: https://docs.rs/tokio/1/tokio/sync/mpsc/index.html
+[task tracker]: https://docs.rs/tokio-util/latest/tokio_util/task/task_tracker
+[`wait`]: https://docs.rs/tokio-util/latest/tokio_util/task/task_tracker/struct.TaskTracker.html#method.wait
 [select]: https://docs.rs/tokio/1/tokio/macro.select.html
 [cancellation-tokens]: https://docs.rs/tokio-util/latest/tokio_util/sync/struct.CancellationToken.html
 [watch]: https://docs.rs/tokio/1/tokio/sync/watch/index.html
