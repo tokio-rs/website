@@ -17,8 +17,8 @@ foundational library for much of the networking ecosystem in Rust and finally
 having a stable API is a big milestone.
 
 `hyper` 1.0 comes with a big shuffling of the APIs. The previous low level APIs
-(found in [`hyper::server::conn`]) is what has been stabilized whereas the high
-level APIs (such as [`hyper::Server`]) has been removed.
+(found in [`hyper::server::conn`]) were stabilized whereas the high
+level APIs (such as [`hyper::Server`]) have been removed.
 
 The plan is to add the high level APIs to a new crate called [`hyper-util`].
 There we can build out the APIs without worrying too much about stability
@@ -56,15 +56,15 @@ let listener = TcpListener::bind("0.0.0.0:3000").await.unwrap();
 axum::serve(listener, app).await.unwrap();
 ```
 
-The purpose of `axum::serve` is provide a way to get started with `axum`
+The purpose of `axum::serve` is to provide a way to get started with `axum`
 quickly and as such it does not support any configuration options whatsoever.
 If you need configuration you have to use `hyper` and `hyper-util` directly. We
 provide an example showing how to do that [here][hyper-serve-example].
 
 ## Our own `Body` type
 
-The [`http-body`] crate is also now 1.0 and that comes with a similar API split
-that `hyper` and `hyper-util` has. `http-body` now just provides the core APIs
+The [`http-body`] crate is now also at 1.0 and that comes with a similar API split
+that `hyper` and `hyper-util` have. `http-body` now just provides the core APIs,
 and high level utilities has been moved to [`http-body-util`]. That includes
 things like `Full`, `Empty`, and `UnsyncBoxBody`, which used to be re-exported by
 `axum`.
@@ -72,7 +72,7 @@ things like `Full`, `Empty`, and `UnsyncBoxBody`, which used to be re-exported b
 For the same reason that `hyper-util` shouldn't be part of `axum`'s public API,
 `http-body-util` shouldn't either.
 
-As a replacement `axum` now provides its own body type found at `axum::body::Body`.
+As a replacement, `axum` now provides its own body type found at `axum::body::Body`.
 
 Its API is similar to what `hyper::Body` had:
 
@@ -105,7 +105,7 @@ let bytes = body.collect().await?.to_bytes();
 ## Fewer generics
 
 `axum::Router` used to be generic over the request body type. That meant
-applying middleware that changed the request body type would have knock on
+applying middleware that changed the request body type would have knock-on
 effects throughout your routes:
 
 ```rust
@@ -130,7 +130,7 @@ The reason it doesn't work is that `RequestBodyLimitLayer` changes the request
 body type so you have to extract `Request<http_body::Limited<Body>>` instead of
 `Request<Body>`. This was very subtle and the source of some confusion.
 
-However in axum 0.7 everything continues working as before, regardless of which
+In axum 0.7, everything continues working as before, regardless of which
 middleware you add:
 
 ```rust
@@ -144,7 +144,7 @@ Router::new()
     .layer(tower_http::limit::RequestBodyLimitLayer::new(1024));
 ```
 
-There is also a convenient type alias of `Request` that uses `Body`:
+There is also a convenient type alias of `http::Request` that uses axum's `Body` type:
 
 ```rust
 use axum::extract::Request;
@@ -158,7 +158,7 @@ traits including `FromRequest`, `MethodRouter`, `Next`, and more.
 ## See the changelog for more
 
 I encourage you to read the [changelog] to see all the changes and for tips on
-how to update from 0.6 to 0.7.
+how to upgrade from 0.6 to 0.7.
 
 Also, please ask questions in [Discord] or [file issues] if you have trouble
 updating or discover bugs.
