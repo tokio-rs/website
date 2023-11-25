@@ -69,23 +69,23 @@ async fn main() {
 
 ## Telling things to shut down
 
-When you want to tell one or more tasks to shut down, you can use [Cancellation 
-Tokens][cancellation-tokens]. These tokens allow you to notify tasks that they 
-should terminate themselves in response to a cancellation request, making it 
+When you want to tell one or more tasks to shut down, you can use [Cancellation
+Tokens][cancellation-tokens]. These tokens allow you to notify tasks that they
+should terminate themselves in response to a cancellation request, making it
 easy to implement graceful shutdowns.
 
-To share a `CancellationToken` between several tasks, you must clone it. This is due 
-to the single ownership rule that requires that each value has a single owner. When 
-cloning a token, you get another token that's indistinguishable from the original; 
-if one is cancelled, then the other is also cancelled. You can make as many clones 
+To share a `CancellationToken` between several tasks, you must clone it. This is due
+to the single ownership rule that requires that each value has a single owner. When
+cloning a token, you get another token that's indistinguishable from the original;
+if one is cancelled, then the other is also cancelled. You can make as many clones
 as you need, and when you call `cancel` on one of them, they're all cancelled.
 
 Here are the steps to use `CancellationToken` in multiple tasks:
+
 1. First, create a new `CancellationToken`.
 2. Then, create a clone of the original `CancellationToken` by calling the `clone` method on the original token. This will create a new token that can be used by another task.
 3. Pass the original or cloned token to the tasks that should respond to cancellation requests.
 4. When you want to shut down the tasks gracefully, call the `cancel` method on the original or cloned token. Any task listening to the cancellation request on the original or cloned token will be notified to shut down.
-
 
 Here is code snippet showcasing the above mentioned steps:
 
@@ -121,9 +121,9 @@ tokio::spawn(async move {
 task1_handle.await.unwrap()
 ```
 
-With Cancellation Tokens, you don't have to shut down a task immediately when 
-the token is cancelled. Instead, you can run a shutdown procedure before 
-terminating the task, such as flushing data to a file or database, or sending 
+With Cancellation Tokens, you don't have to shut down a task immediately when
+the token is cancelled. Instead, you can run a shutdown procedure before
+terminating the task, such as flushing data to a file or database, or sending
 a shutdown message on a connection.
 
 ## Waiting for things to finish shutting down
@@ -173,7 +173,6 @@ before waiting for the channel to be closed.
 [an mpsc channel]: https://docs.rs/tokio/1/tokio/sync/mpsc/index.html
 [select]: https://docs.rs/tokio/1/tokio/macro.select.html
 [cancellation-tokens]: https://docs.rs/tokio-util/latest/tokio_util/sync/struct.CancellationToken.html
-[watch]: https://docs.rs/tokio/1/tokio/sync/watch/index.html
 [shutdown.rs]: https://github.com/tokio-rs/mini-redis/blob/master/src/shutdown.rs
 [server.rs]: https://github.com/tokio-rs/mini-redis/blob/master/src/server.rs
 [mini-redis]: https://github.com/tokio-rs/mini-redis/

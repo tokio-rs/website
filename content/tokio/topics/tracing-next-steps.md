@@ -9,7 +9,7 @@ of an application’s spans and events. It can also represent "resources" that t
 Tokio runtime has created, such as Tasks. It's essential for understanding
 performance issues during the development process.
 
-For instance, to use tokio-console in [the mini-redis project](https://github.com/tokio-rs/mini-redis), 
+For instance, to use tokio-console in [the mini-redis project](https://github.com/tokio-rs/mini-redis),
 you need to enable the `tracing` feature for the Tokio package:
 
 ```toml
@@ -29,7 +29,7 @@ console-subscriber = "0.1.5"
 ```
 
 Finally, in `src/bin/server.rs`, replace the call to `tracing_subscriber` with
-the call to `console-susbcriber`:
+the call to `console-subscriber`:
 
 Replace this:
 
@@ -122,7 +122,7 @@ To run an instance of Jaeger, you can use Docker:
 docker run -d -p6831:6831/udp -p6832:6832/udp -p16686:16686 -p14268:14268 jaegertracing/all-in-one:latest
 ```
 
-You can visit the Jaeger page by going to http://localhost:16686.
+You can visit the Jaeger page by going to <http://localhost:16686>.
 It will look like this:
 ![Jaeger UI](/img/tracing-next-steps/jaeger-first-pageload.png)
 

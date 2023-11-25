@@ -371,14 +371,12 @@ This example could be configured in many ways. For instance, you could use a
 the opposite direction to send a response to the spawner. When you spawn a
 runtime in this way, it is a type of [actor].
 
-
 [`Runtime`]: https://docs.rs/tokio/1/tokio/runtime/struct.Runtime.html
 [`block_on`]: https://docs.rs/tokio/1/tokio/runtime/struct.Runtime.html#method.block_on
 [`spawn`]: https://docs.rs/tokio/1/tokio/runtime/struct.Runtime.html#method.spawn
 [`spawn_blocking`]: https://docs.rs/tokio/1/tokio/task/fn.spawn_blocking.html
 [`multi_thread`]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.new_multi_thread
 [`current_thread`]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.new_current_thread
-[`worker_threads`]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.worker_threads
 [`enable_all`]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.enable_all
 [`JoinHandle`]: https://docs.rs/tokio/1/tokio/task/struct.JoinHandle.html
 [`tokio::sync::mpsc`]: https://docs.rs/tokio/1/tokio/sync/mpsc/index.html

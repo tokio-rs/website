@@ -122,7 +122,7 @@ completes. Historically, this is a tedious and error-prone task.
 
 ## Compile-time green-threading
 
-Rust implements asynchronous programing using a feature called [`async/await`].
+Rust implements asynchronous programming using a feature called [`async/await`].
 Functions that perform asynchronous operations are labeled with the `async`
 keyword. In our example, the `connect` function is defined like this:
 
@@ -246,4 +246,3 @@ Tokio has a lot of functionality (TCP, UDP, Unix sockets, timers, sync
 utilities, multiple scheduler types, etc). Not all applications need all
 functionality. When attempting to optimize compile time or the end application
 footprint, the application can decide to opt into **only** the features it uses.
-

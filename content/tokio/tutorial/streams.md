@@ -406,8 +406,6 @@ stream! {
 [`Stream`]: https://docs.rs/futures-core/0.3/futures_core/stream/trait.Stream.html
 [`Future`]: https://doc.rust-lang.org/std/future/trait.Future.html
 [`StreamExt`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html
-[rx]: https://docs.rs/tokio/1/tokio/sync/mpsc/struct.Receiver.html
-[`AsyncBufReadExt::lines()`]: https://docs.rs/tokio/1/tokio/io/trait.AsyncBufReadExt.html#method.lines
 [next]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html#method.next
 [`map`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html#method.map
 [`take`]: https://docs.rs/tokio-stream/0.1/tokio_stream/trait.StreamExt.html#method.take
