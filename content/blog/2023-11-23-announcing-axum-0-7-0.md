@@ -32,7 +32,9 @@ Because `hyper-util` is not stable we don't want it to be part of `axum`'s
 public API. If you want to use something from `hyper-util` you have to depend
 it directly.
 
-`axum` 0.7 also requires [`tower-http`] 0.5.
+If you are using `axum` together with `tower-http`, please note that since both
+have a public dependency on the `http` crate which also had its 1.0 release,
+you need to upgrade `tower-http` at the same time (to v0.5+).
 
 ## A new `axum::serve` function
 
