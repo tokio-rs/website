@@ -61,13 +61,12 @@ combined part is said to be "in the same task".
 Multiple tasks are required for parallelism, but it is possible to concurrently
 do multiple things on one task using tools such as `join!`.
 
-[`tokio::spawn`]: https://docs.rs/tokio/1/tokio/fn.spawn.html
 [`Runtime::block_on`]: https://docs.rs/tokio/1/tokio/runtime/struct.Runtime.html#method.block_on
 [`join!`]: https://docs.rs/tokio/1/tokio/macro.join.html
 
 ## Spawning
 
-Spawning is when the `tokio::spawn` function is used to create a new task. It
+Spawning is when the [`tokio::spawn`] function is used to create a new task. It
 can also refer to creating new thread with [`std::thread::spawn`].
 
 [`tokio::spawn`]: https://docs.rs/tokio/1/tokio/fn.spawn.html

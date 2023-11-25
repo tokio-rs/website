@@ -22,6 +22,7 @@ messages.
 [`Event`]: https://docs.rs/tracing/latest/tracing/#events
 
 You can use `tracing` to:
+
 - emit distributed traces to an [OpenTelemetry] collector
 - debug your application with [Tokio Console]
 - log to [`stdout`], [a log file] or [`journald`]
@@ -88,7 +89,7 @@ If you run your application now, you may see some trace events emitted by Tokio,
 but you will need to modify your own application to emit traces to get the most
 out of `tracing`.
 
-##  Subscriber Configuration
+## Subscriber Configuration
 
 In the above example, we've configured [`FmtSubscriber`] with its default
 configuration. However, `tracing-subscriber` also provides a number of ways to
@@ -116,7 +117,6 @@ let subscriber = tracing_subscriber::fmt()
 
 For details on the available configuration options, see [the
 `tracing_subscriber::fmt` documentation][fmt-cfg].
-
 
 In addition to the [`FmtSubscriber`] type from [`tracing-subscriber`], other
 `Subscriber`s can implement their own ways of recording `tracing` data. This

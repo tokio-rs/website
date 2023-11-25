@@ -3,7 +3,7 @@ title: "Channels"
 ---
 
 Now that we have learned a bit about concurrency with Tokio, let's apply this on
-the client side. Put the server code we wrote before into an explicit binary 
+the client side. Put the server code we wrote before into an explicit binary
 file:
 
 ```text
