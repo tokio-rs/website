@@ -162,8 +162,8 @@ traits including `FromRequest`, `MethodRouter`, `Next`, and more.
 I encourage you to read the [changelog] to see all the changes and for tips on
 how to upgrade from 0.6 to 0.7.
 
-Also, please ask questions in [Discord] or [file issues] if you have trouble
-updating or discover bugs.
+Also, please [open a GitHub discussion] if you have trouble updating. You're
+also welcome to ask questions in [Discord].
 
 <div style="text-align:right">&mdash; David Pedersen (<a href="https://twitter.com/davidpdrsn">@davidpdrsn</a>)</div>
 
@@ -177,7 +177,7 @@ updating or discover bugs.
 [`tower-http`]: https://crates.io/crates/tower-http
 [changelog]: https://github.com/tokio-rs/axum/blob/main/axum/CHANGELOG.md
 [Discord]: https://discord.gg/tokio
-[file issues]: https://github.com/tokio-rs/axum/issues
+[open a GitHub discussion]: https://github.com/tokio-rs/axum/discussions
 [`hyper::server::conn`]: https://docs.rs/hyper/0.14.27/hyper/server/conn/index.html
 [`hyper::Server`]: https://docs.rs/hyper/0.14.27/hyper/server/struct.Server.html
 [`axum-core`]: https://crates.io/crates/axum-core
