@@ -11,3 +11,4 @@ The currently available topics articles are:
  * [Graceful shutdown](/tokio/topics/shutdown)
  * [Getting started with Tracing](/tokio/topics/tracing)
  * [Next steps with Tracing](/tokio/topics/tracing-next-steps)
+ * [Testing](/tokio/topics/testing)
