@@ -16,7 +16,10 @@ The headline feature of `axum` 0.7 is support for `hyper` 1.0. `hyper` is a
 foundational library for much of the networking ecosystem in Rust and finally
 having a stable API is a big milestone.
 
-[`hyper` 1.0] comes with a big shuffling of the APIs. The previous low level APIs
+[`hyper` is guaranteeing] to not make anymore breaking changes for the next
+three years which means the surrounding ecosystem can also become more stable.
+
+`hyper` 1.0 comes with a big shuffling of the APIs. The previous low level APIs
 (found in [`hyper::server::conn`]) were stabilized whereas the high
 level APIs (such as [`hyper::Server`]) have been removed.
 
@@ -184,4 +187,4 @@ also welcome to ask questions in [Discord].
 [`axum-extra`]: https://crates.io/crates/axum-extra
 [`axum-macros`]: https://crates.io/crates/axum-macros
 [hyper-serve-example]: https://github.com/tokio-rs/axum/blob/main/examples/serve-with-hyper/src/main.rs
-[`hyper` 1.0]: https://seanmonstar.com/blog/hyper-v1/
+[`hyper` is guaranteeing]: https://seanmonstar.com/blog/hyper-v1/
