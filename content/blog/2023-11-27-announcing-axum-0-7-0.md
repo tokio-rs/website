@@ -1,5 +1,5 @@
 ---
-date: "2023-11-23"
+date: "2023-11-27"
 title: "Announcing axum 0.7.0"
 description: "November 23, 2022"
 ---
