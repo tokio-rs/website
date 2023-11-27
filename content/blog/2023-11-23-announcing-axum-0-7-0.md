@@ -142,8 +142,12 @@ middleware you add:
 Router::new()
     .route(
         "/",
-        // You always extract `Request<Body>` no which middleware
-        // you add
+        // You always extract `Request<Body>` no matter
+        // which middleware you add
+        //
+        // This works because `Router` internally converts
+        // the body into an `axum::body::Body`, which internally
+        // holds a trait object
         get(|body: Request<Body>| async { ... })
     )
     .layer(tower_http::limit::RequestBodyLimitLayer::new(1024));
