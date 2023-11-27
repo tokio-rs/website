@@ -1,7 +1,7 @@
 ---
 date: "2023-11-27"
 title: "Announcing axum 0.7.0"
-description: "November 27, 2022"
+description: "November 27, 2023"
 ---
 
 Today, we're happy to announce [`axum`] version 0.7. `axum` is an ergonomic
