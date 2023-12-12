@@ -42,9 +42,9 @@ async fn main() {
     // send shutdown signal to application and wait
 }
 ```
-If you have multiple shutdown conditions, you can use [an mpsc channel] to send
-the shutdown signal to one place. You can then [select] on [`ctrl_c`][ctrl_c]
-and the channel. For example:
+If you have multiple shutdown conditions, you can use [an mpsc channel][mpsc]
+to send the shutdown signal to one place. You can then [select] on
+[`ctrl_c`][ctrl_c] and the channel. For example:
 ```rs
 use tokio::signal;
 use tokio::sync::mpsc;
@@ -173,3 +173,4 @@ async fn some_operation(i: u64) {
 [shutdown.rs]: https://github.com/tokio-rs/mini-redis/blob/master/src/shutdown.rs
 [server.rs]: https://github.com/tokio-rs/mini-redis/blob/master/src/server.rs
 [mini-redis]: https://github.com/tokio-rs/mini-redis/
+[mpsc]: https://docs.rs/tokio/1/tokio/sync/mpsc/index.html
