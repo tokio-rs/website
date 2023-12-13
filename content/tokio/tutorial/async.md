@@ -697,7 +697,7 @@ struct Delay {
 impl Future for Delay {
     type Output = ();
 
-    fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<&'static str> {
+    fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<()> {
         // Check the current instant. If the duration has elapsed, then
         // this future has completed so we return `Poll::Ready`.
         if Instant::now() >= self.when {
@@ -706,7 +706,7 @@ impl Future for Delay {
 
         // The duration has not elapsed. If this is the first time the future
         // is called, spawn the timer thread. If the timer thread is already
-        // running, ensure thestored `Waker` matches the current task's waker.
+        // running, ensure the stored `Waker` matches the current task's waker.
         if let Some(waker) = &self.waker {
             let mut waker = waker.lock().unwrap();
 
