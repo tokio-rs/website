@@ -698,9 +698,15 @@ impl Future for Delay {
     type Output = ();
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<()> {
-        // First, if this is the first time the future is called, spawn the
-        // timer thread. If the timer thread is already running, ensure the
-        // stored `Waker` matches the current task's waker.
+        // Check the current instant. If the duration has elapsed, then
+        // this future has completed so we return `Poll::Ready`.
+        if Instant::now() >= self.when {
+            return Poll::Ready(());
+        }
+
+        // The duration has not elapsed. If this is the first time the future
+        // is called, spawn the timer thread. If the timer thread is already
+        // running, ensure the stored `Waker` matches the current task's waker.
         if let Some(waker) = &self.waker {
             let mut waker = waker.lock().unwrap();
 
@@ -732,28 +738,22 @@ impl Future for Delay {
             });
         }
 
-        // Once the waker is stored and the timer thread is started, it is
-        // time to check if the delay has completed. This is done by
-        // checking the current instant. If the duration has elapsed, then
-        // the future has completed and `Poll::Ready` is returned.
-        if Instant::now() >= self.when {
-            Poll::Ready(())
-        } else {
-            // The duration has not elapsed, the future has not completed so
-            // return `Poll::Pending`.
-            //
-            // The `Future` trait contract requires that when `Pending` is
-            // returned, the future ensures that the given waker is signalled
-            // once the future should be polled again. In our case, by
-            // returning `Pending` here, we are promising that we will
-            // invoke the given waker included in the `Context` argument
-            // once the requested duration has elapsed. We ensure this by
-            // spawning the timer thread above.
-            //
-            // If we forget to invoke the waker, the task will hang
-            // indefinitely.
-            Poll::Pending
-        }
+        // By now, the waker is stored and the timer thread is started.
+        // The duration has not elapsed (recall that we checked for this
+        // first thing), ergo the future has not completed so we must
+        // return `Poll::Pending`.
+        //
+        // The `Future` trait contract requires that when `Pending` is
+        // returned, the future ensures that the given waker is signalled
+        // once the future should be polled again. In our case, by
+        // returning `Pending` here, we are promising that we will
+        // invoke the given waker included in the `Context` argument
+        // once the requested duration has elapsed. We ensure this by
+        // spawning the timer thread above.
+        //
+        // If we forget to invoke the waker, the task will hang
+        // indefinitely.
+        Poll::Pending
     }
 }
 ```
