@@ -248,7 +248,7 @@ impl MiniTokio {
             tasks: VecDeque::new(),
         }
     }
-    
+
     /// Spawn a future onto the mini-tokio instance.
     fn spawn<F>(&mut self, future: F)
     where
@@ -256,11 +256,11 @@ impl MiniTokio {
     {
         self.tasks.push_back(Box::pin(future));
     }
-    
+
     fn run(&mut self) {
         let waker = task::noop_waker();
         let mut cx = Context::from_waker(&waker);
-        
+
         while let Some(mut task) = self.tasks.pop_front() {
             if task.as_mut().poll(&mut cx).is_pending() {
                 self.tasks.push_back(task);
@@ -670,7 +670,7 @@ use std::pin::Pin;
 #   type Output = ();
 #   fn poll(self: Pin<&mut Self>, _cx: &mut Context<'_>) -> Poll<()> {
 #       Poll::Pending
-#   }  
+#   }
 # }
 
 #[tokio::main]
