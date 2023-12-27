@@ -49,7 +49,8 @@ First, for convenience, add the following type alias after the `use` statements.
 ```rust
 use bytes::Bytes;
 use std::collections::HashMap;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
+use tokio::sync::Mutex;
 
 type Db = Arc<Mutex<HashMap<String, Bytes>>>;
 ```
