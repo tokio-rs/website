@@ -4,7 +4,7 @@ The website for the Tokio project. Lives at https://tokio.rs.
 
 Besides containing the content for the website, it also includes crates
 containing the example code used in the tutorial. These crates can be compiled
-and ran.
+and run.
 
 * [hello-tokio](tutorial-code/hello-tokio/src/main.rs)
 * [spawning](tutorial-code/spawning/src/main.rs)
