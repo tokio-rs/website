@@ -455,7 +455,8 @@ is called on the waker, the task is pushed into the send half of the channel.
 Our `Task` structure will implement the wake logic. To do this, it needs to
 contain both the spawned future and the channel send half. We place the future
 in a `TaskFuture` struct alongside a `Poll` enum to keep track of the latest
-`future.poll` result, the purpose of which will be made evident later.
+`Future::poll()` result, which is needed to handle spurious wake-ups. More
+details are given in the implementation of the `poll()` method in `TaskFuture`.
 
 ```rust
 # use std::future::Future;
@@ -581,10 +582,11 @@ impl TaskFuture {
     }
 
     fn poll(&mut self, cx: &mut Context<'_>) {
-        // Spurious wakeups are allowed, so we need to
-        // check that the future is still pending before
-        // calling `poll`. Failure to do so can lead to
-        // a panic.
+        // Spurious wake-ups are allowed, even after a future has                                  
+        // returned `Ready`. However, polling a future which has                                   
+        // already returned `Ready` is *not* allowed. For this                                     
+        // reason we need to check that the future is still pending                                
+        // before we call it. Failure to do so can lead to a panic.
         if self.poll.is_pending() {
             self.poll = self.future.as_mut().poll(cx);
         }
