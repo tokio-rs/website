@@ -184,7 +184,7 @@ outside the task.
 
 > **info**
 > It is a common misconception that `'static` always means "lives forever",
-> but this is not the case. Just because a value is `'static` does not mean
+> but this is not the case. Just because a value is `'static` it does not mean
 > that you have a memory leak. You can read more in [Common Rust Lifetime
 > Misconceptions][common-lifetime].
 
