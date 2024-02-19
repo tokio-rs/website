@@ -101,7 +101,7 @@ begun. To guide our development, we need your feedback. So, give it a shot, and
 let us know how it goes. Please [file issues][issue-tracker] and
 [ping us on Discord][discord].
 
-[issue-tracker]: https://github.com/tokio-rs/tokio-metrics/issues
+[issue-tracker]: https://github.com/tokio-rs/async-backtrace/issues
 [discord]: https://discord.gg/tokio
 
 <div style="text-align:right">
