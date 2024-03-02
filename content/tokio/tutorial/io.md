@@ -163,13 +163,13 @@ To start, we will implement the echo logic using the [`io::copy`][copy] utility.
 
 You can write up this code in a new binary file:
 
-```text
+```bash
 touch src/bin/echo-server-copy.rs
 ```
 
 That you can launch (or just check the compilation) with:
 
-```text
+```bash
 cargo run --bin echo-server-copy
 ```
 
