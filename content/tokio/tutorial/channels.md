@@ -175,12 +175,10 @@ async fn main() {
     let tx2 = tx.clone();
 
     tokio::spawn(async move {
-        // send() returns a `Result` which cannot be ignored.
         tx.send("sending from first handle").await.unwrap();
     });
 
     tokio::spawn(async move {
-        // send() returns a `Result` which cannot be ignored.
         tx2.send("sending from second handle").await.unwrap();
     });
 
