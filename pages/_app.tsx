@@ -2,8 +2,12 @@ import React from "react";
 import { AppProps } from "next/app";
 
 import "../styles/styles.scss";
+import { useTheme } from "../hooks/use-theme";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  // Handle Theme Selection on client side
+  useTheme();
+
   return <Component {...pageProps} />;
 }
 
