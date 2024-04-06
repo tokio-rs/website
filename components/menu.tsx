@@ -1,6 +1,5 @@
 import { Fragment, useCallback, useState } from "react";
 import classnames from "classnames";
-import Link from "next/link";
 
 const monthNames = [
   "January",
@@ -130,7 +129,8 @@ function Level2({ href, menu }) {
   return <ul>{items}</ul>;
 }
 
-function pagesFor(menu) {
+// TODO: Type the menu hierarchy
+function pagesFor(menu: Record<PropertyKey, any>) {
   return Object.entries(menu).map(([, entry]) => {
     if (entry.page) {
       return {
