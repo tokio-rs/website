@@ -17,10 +17,14 @@ export default function Footer() {
     <div key={name} className="column is-one-third">
       <p className="tk-lib-name">{name}</p>
       <p>
-        <a href={docs} target="_blank">Docs</a>
+        <a href={docs} target="_blank">
+          Docs
+        </a>
       </p>
       <p>
-        <a href={github} target="_blank">Github</a>
+        <a href={github} target="_blank">
+          Github
+        </a>
       </p>
     </div>
   ));
@@ -38,7 +42,10 @@ export default function Footer() {
             <div className="tk-help-links">
               <p>
                 Get Help:
-                <a href="https://github.com/tokio-rs/tokio/discussions" target="_blank">
+                <a
+                  href="https://github.com/tokio-rs/tokio/discussions"
+                  target="_blank"
+                >
                   <GitHubIcon className="is-medium" />
                 </a>
                 <a href="https://discord.gg/tokio" target="_blank">
@@ -74,7 +81,10 @@ export default function Footer() {
         <div className="container has-text-centered">
           <p>
             with the help of{" "}
-            <a href="https://github.com/tokio-rs/tokio/graphs/contributors" target="_blank">
+            <a
+              href="https://github.com/tokio-rs/tokio/graphs/contributors"
+              target="_blank"
+            >
               our contributors
             </a>
             .
@@ -83,7 +93,11 @@ export default function Footer() {
         <div className="container has-text-centered">
           <p>
             Hosted by{" "}
-            <a href="https://netlify.com"  target="_blank" rel="sponsored nofollow">
+            <a
+              href="https://netlify.com"
+              target="_blank"
+              rel="sponsored nofollow"
+            >
               Netlify
             </a>
           </p>

@@ -147,14 +147,13 @@ export default function Content({
           <section className="section content">
             <div className="columns">
               <div className="column is-two-thirds tk-markdown" ref={mdRef}>
-                <h1 className={`title ${isBlogRoute ? 'blog-title' : ''}`} id="">
+                <h1
+                  className={`title ${isBlogRoute ? "blog-title" : ""}`}
+                  id=""
+                >
                   {title}
                 </h1>
-                {isBlogRoute && (
-                  <p className="description">
-                    {description}
-                  </p>
-                )}
+                {isBlogRoute && <p className="description">{description}</p>}
                 <div dangerouslySetInnerHTML={{ __html: body }}></div>
                 <Footer next={next} prev={prev} mdPath={mdPath} />
               </div>
