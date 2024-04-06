@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && npm run build:rss && next export",
-    "build:rss": "node ./scripts/generate-rss-feed.js",
+    "build:rss": "tsx scripts/generate-rss-feed.ts",
     "start": "next start",
     "fmt": "prettier --write --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'",
     "fmt:check": "prettier --check --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'"
@@ -37,6 +37,7 @@
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.26",
     "prettier": "^2.8.2",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "tsx": "^4.7.2"
   }
 }

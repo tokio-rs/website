@@ -4,7 +4,7 @@ import path from "path";
 import matter from "gray-matter";
 import util from "util";
 
-import { toHTML } from "./markdown.js";
+import { toHTML } from "./markdown";
 
 const contentDir = path.join(process.cwd(), "content").replace(/\\/g, "/");
 

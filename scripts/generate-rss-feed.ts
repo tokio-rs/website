@@ -1,5 +1,5 @@
 import RSS from "rss";
-import { getDateOrderedPaths } from "../lib/api.js";
+import { getDateOrderedPaths } from "../lib/api";
 import fs from "fs";
 
 const siteUrl = "https://tokio.rs";
