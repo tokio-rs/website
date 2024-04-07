@@ -27,7 +27,7 @@ export async function getStaticProps({ params: { slug: slugParam } }) {
   });
 
   const page = content.loadPage(`blog/${slug}`);
-  page.body = await toHTML(page.body)
+  page.body = await toHTML(page.body);
 
   let next = blog.getNextPost(slug);
   let previous = blog.getPreviousPost(slug);

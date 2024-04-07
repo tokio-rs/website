@@ -8,7 +8,8 @@
     "build": "next build && npm run build:rss && next export",
     "build:rss": "node ./scripts/generate-rss-feed.js",
     "start": "next start",
-    "fmt": "prettier --write --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'"
+    "fmt": "prettier --write --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'",
+    "fmt:check": "prettier --check --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'"
   },
   "dependencies": {
     "@next/font": "^13.1.1",

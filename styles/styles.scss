@@ -532,7 +532,7 @@ a:active {
     font-size: $menu-font-size;
     position: relative;
     z-index: 2;
-    
+
     @include tablet {
       max-width: 280px;
       margin-left: auto;
@@ -729,7 +729,7 @@ a:active {
       }
 
       &.blog-title {
-        margin-bottom : 0rem;
+        margin-bottom: 0rem;
       }
     }
 
