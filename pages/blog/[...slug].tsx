@@ -22,11 +22,10 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params: { slug: slugParam } }) {
   let slug = slugParam[0];
-  let postsByYear = blog.getBlogPostsByYear({
-    limit: SIDEBAR_POST_COUNT,
-  });
+  let postsByYear = blog.getBlogPostsByYear(SIDEBAR_POST_COUNT);
 
-  const page = content.loadPage(`blog/${slug}`);
+  // TODO: Properly type the page content
+  const page: any = content.loadPage(`blog/${slug}`);
   page.body = await toHTML(page.body);
 
   let next = blog.getNextPost(slug);

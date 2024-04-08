@@ -1,4 +1,3 @@
-import { stream } from "unified-stream";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
@@ -80,11 +79,13 @@ export const toHTML = async (raw) => {
     await unified()
       .use(remarkParse)
       .use(remarkCodeRemoveSomeLines)
+      // @ts-expect-error: unified's plugin type mistakenly selects the wrong union overload
       .use(remarkRehype, { allowDangerousHtml: true })
       .use(rehypeHighlight, rehypeHighlightOptions)
       .use(rehypeRaw)
       .use(rehypeSlug)
       .use(rehyperBlockquotePlus, rehyperBlockquotePlusOptions)
+      // @ts-expect-error: unified's plugin type mistakenly selects the Array<void> union variant
       .use(rehypeStringify)
       .process(raw)
   );

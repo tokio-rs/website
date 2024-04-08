@@ -1,4 +1,4 @@
-import Menu from "../components/menu";
+import Menu from "./menu";
 import { DiscordIcon, GitHubIcon } from "./icons";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";

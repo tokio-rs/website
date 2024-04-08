@@ -2,14 +2,15 @@ import fs from "fs";
 import glob from "glob";
 import path from "path";
 import matter from "gray-matter";
-import util from "util";
 
-import { toHTML } from "./markdown.js";
+import { toHTML } from "./markdown";
 
 const contentDir = path.join(process.cwd(), "content").replace(/\\/g, "/");
 
 // Merge app level props in with page props
-export function withAppProps(props = { props: {} }) {
+export function withAppProps(
+  props: { props: Record<PropertyKey, unknown> } = { props: {} }
+) {
   const blog = getLastBlog();
   delete blog.body;
   props.props.app = {
@@ -64,7 +65,6 @@ export async function getProps(menu, slug) {
   const page = loadPage(`${slug}`);
   page.body = await toHTML(page.body);
 
-  const sectionTitle = menu[root].title;
   const normalized = [
     {
       key: root,
@@ -86,31 +86,39 @@ export async function getProps(menu, slug) {
 function setPrevNext(page, menu) {
   let didMatch = false;
 
-  eachPage(menu, (p, prev) => {
-    if (p.href == page.href) {
-      didMatch = true;
+  eachPage(
+    menu,
+    (p, prev) => {
+      if (p.href == page.href) {
+        didMatch = true;
 
-      if (prev && prev.title) {
-        page.prev = {
-          title: prev.menuTitle || prev.title,
-          href: prev.href,
+        if (prev && prev.title) {
+          page.prev = {
+            title: prev.menuTitle || prev.title,
+            href: prev.href,
+          };
+        }
+      } else if (didMatch) {
+        page.next = {
+          title: p.menuTitle || p.title,
+          href: p.href,
         };
-      }
-    } else if (didMatch) {
-      page.next = {
-        title: p.menuTitle || p.title,
-        href: p.href,
-      };
 
-      didMatch = false;
-    }
-  });
+        didMatch = false;
+      }
+    },
+    undefined,
+    undefined
+  );
 
   return page;
 }
 
 // Build a list of paths from the sitemap
-function collectPaths(level, prefix = "") {
+function collectPaths(
+  level: Record<string, { nested?: string[]; href?: string }>,
+  prefix = ""
+) {
   let out = [];
 
   for (const [k, v] of Object.entries(level)) {
