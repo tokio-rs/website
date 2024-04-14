@@ -6,28 +6,28 @@ Now that we have learned a bit about concurrency with Tokio, let's apply this on
 the client side. Put the server code we wrote before into an explicit binary
 file:
 
-```text
-mkdir src/bin
-mv src/main.rs src/bin/server.rs
+```bash
+$ mkdir src/bin
+$ mv src/main.rs src/bin/server.rs
 ```
 
 and create a new binary file that will contain the client code:
 
-```text
-touch src/bin/client.rs
+```bash
+$ touch src/bin/client.rs
 ```
 
 In this file you will write this page's code. Whenever you want to run it,
 you will have to launch the server first in a separate terminal window:
 
-```text
-cargo run --bin server
+```bash
+$ cargo run --bin server
 ```
 
 And then the client, __separately__:
 
-```text
-cargo run --bin client
+```bash
+$ cargo run --bin client
 ```
 
 That being said, let's code!
