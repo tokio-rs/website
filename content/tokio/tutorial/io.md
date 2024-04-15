@@ -163,14 +163,14 @@ To start, we will implement the echo logic using the [`io::copy`][copy] utility.
 
 You can write up this code in a new binary file:
 
-```text
-touch src/bin/echo-server-copy.rs
+```bash
+$ touch src/bin/echo-server-copy.rs
 ```
 
 That you can launch (or just check the compilation) with:
 
-```text
-cargo run --bin echo-server-copy
+```bash
+$ cargo run --bin echo-server-copy
 ```
 
 You will be able to try the server using a standard command-line tool such as `telnet`, or by writing
