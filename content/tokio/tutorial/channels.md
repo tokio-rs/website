@@ -428,7 +428,7 @@ You can find the entire code [here][full].
 # Backpressure and bounded channels
 
 Whenever concurrency or queuing is introduced, it is important to ensure that the
-queueing is bounded and the system will gracefully handle the load. Unbounded queues
+queing is bounded and the system will gracefully handle the load. Unbounded queues
 will eventually fill up all available memory and cause the system to fail in
 unpredictable ways.
 
