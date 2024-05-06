@@ -212,10 +212,15 @@ shard.insert(key, value);
 The simple implementation outlined above requires using a fixed number of
 shards, and the number of shards cannot be changed once the sharded map is
 created. The [dashmap] crate provides an implementation of a more sophisticated
-sharded hash map.
+sharded hash map. You may also want to have a look at such concurrent hash table
+implementations as [leapfrog] and [flurry], the latter being a port of Java's
+`ConcurrentHashMap` data structure.
 
 [current_thread]: https://docs.rs/tokio/1/tokio/runtime/index.html#current-thread-scheduler
 [dashmap]: https://docs.rs/dashmap
+[leapfrog]: https://docs.rs/leapfrog
+[flurry]: https://docs.rs/flurry
+
 
 # Holding a `MutexGuard` across an `.await`
 
