@@ -221,7 +221,6 @@ implementations as [leapfrog] and [flurry], the latter being a port of Java's
 [leapfrog]: https://docs.rs/leapfrog
 [flurry]: https://docs.rs/flurry
 
-
 # Holding a `MutexGuard` across an `.await`
 
 You might write code that looks like this:
