@@ -211,11 +211,9 @@ shard.insert(key, value);
 
 The simple implementation outlined above requires using a fixed number of
 shards, and the number of shards cannot be changed once the sharded map is
-created. The [dashmap] crate provides an implementation of a more sophisticated
-sharded hash map.
+created.
 
 [current_thread]: https://docs.rs/tokio/1/tokio/runtime/index.html#current-thread-scheduler
-[dashmap]: https://docs.rs/dashmap
 
 # Holding a `MutexGuard` across an `.await`
 
