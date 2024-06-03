@@ -70,7 +70,7 @@ provide an example showing how to do that [here][hyper-serve-example].
 
 The [`http-body`] crate is now also at 1.0 and that comes with a similar API split
 that `hyper` and `hyper-util` have. `http-body` now just provides the core APIs,
-and high level utilities has been moved to [`http-body-util`]. That includes
+and high level utilities have been moved to [`http-body-util`]. That includes
 things like `Full`, `Empty`, and `UnsyncBoxBody`, which used to be re-exported by
 `axum`.
 
