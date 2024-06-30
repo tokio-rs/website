@@ -90,7 +90,7 @@ async fn main() {
 # async fn process(_: tokio::net::TcpStream, _: Db) {}
 ```
 
-## On using `std::sync::Mutex`
+## Most of the time, don't use `std::sync::Mutex`
 
 Note that `std::sync::Mutex` and **not** `tokio::sync::Mutex` is used to guard
 the `HashMap`. A common error is to unconditionally use `tokio::sync::Mutex`
@@ -150,76 +150,6 @@ async fn process(socket: TcpStream, db: Db) {
     }
 }
 ```
-
-# Tasks, threads, and contention
-
-Using a blocking mutex to guard short critical sections is an acceptable
-strategy when contention is minimal. When a lock is contended, the thread
-executing the task must block and wait on the mutex. This will not only block
-the current task but it will also block all other tasks scheduled on the current
-thread.
-
-By default, the Tokio runtime uses a multi-threaded scheduler. Tasks are
-scheduled on any number of threads managed by the runtime. If a large number of
-tasks are scheduled to execute and they all require access to the mutex, then
-there will be contention. On the other hand, if the
-[`current_thread`][current_thread] runtime flavor is used, then the mutex will
-never be contended.
-
-> **info**
-> The [`current_thread` runtime flavor][basic-rt] is a lightweight,
-> single-threaded runtime. It is a good choice when only spawning
-> a few tasks and opening a handful of sockets. For example, this
-> option works well when providing a synchronous API bridge on top
-> of an asynchronous client library.
-
-[basic-rt]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.new_current_thread
-
-If contention on a synchronous mutex becomes a problem, the best fix is rarely
-to switch to the Tokio mutex. Instead, options to consider are:
-
-- Switching to a dedicated task to manage state and use message passing.
-- Shard the mutex.
-- Restructure the code to avoid the mutex.
-
-In our case, as each *key* is independent, mutex sharding will work well. To do
-this, instead of having a single `Mutex<HashMap<_, _>>` instance, we would
-introduce `N` distinct instances.
-
-```rust
-# use std::collections::HashMap;
-# use std::sync::{Arc, Mutex};
-type ShardedDb = Arc<Vec<Mutex<HashMap<String, Vec<u8>>>>>;
-
-fn new_sharded_db(num_shards: usize) -> ShardedDb {
-    let mut db = Vec::with_capacity(num_shards);
-    for _ in 0..num_shards {
-        db.push(Mutex::new(HashMap::new()));
-    }
-    Arc::new(db)
-}
-```
-
-Then, finding the cell for any given key becomes a two step process. First, the
-key is used to identify which shard it is part of. Then, the key is looked up in
-the `HashMap`.
-
-```rust,compile_fail
-let shard = db[hash(key) % db.len()].lock().unwrap();
-shard.insert(key, value);
-```
-
-The simple implementation outlined above requires using a fixed number of
-shards, and the number of shards cannot be changed once the sharded map is
-created. The [dashmap] crate provides an implementation of a more sophisticated
-sharded hash map. You may also want to have a look at such concurrent hash table
-implementations as [leapfrog] and [flurry], the latter being a port of Java's
-`ConcurrentHashMap` data structure.
-
-[current_thread]: https://docs.rs/tokio/1/tokio/runtime/index.html#current-thread-scheduler
-[dashmap]: https://docs.rs/dashmap
-[leapfrog]: https://docs.rs/leapfrog
-[flurry]: https://docs.rs/flurry
 
 # Holding a `MutexGuard` across an `.await`
 
@@ -308,15 +238,18 @@ run on the same thread, and this other task may also try to lock that mutex,
 which would result in a deadlock as the task waiting to lock the mutex would
 prevent the task holding the mutex from releasing the mutex.
 
-We will discuss some approaches to fix the error message below:
+Keep in mind that some mutex crates implement `Send` for their MutexGuards.
+In this case, there is no compiler error, even if you hold a MutexGuard across
+an `.await`. The code compiles, but it deadlocks!
+
+We will discuss some approaches to avoid these issues below:
 
 [send-bound]: spawning#send-bound
 
 ## Restructure your code to not hold the lock across an `.await`
 
-We have already seen one example of this in the snippet above, but there are
-some more robust ways to do this. For example, you can wrap the mutex in a
-struct, and only ever lock the mutex inside non-async methods on that struct.
+The safest way to handle a mutex is to wrap it in a struct, and lock the mutex
+only inside non-async methods on that struct.
 ```rust
 use std::sync::Mutex;
 
@@ -338,7 +271,12 @@ async fn increment_and_do_stuff(can_incr: &CanIncrement) {
 # async fn do_something_async() {}
 ```
 This pattern guarantees that you won't run into the `Send` error, because the
-mutex guard does not appear anywhere in an async function.
+mutex guard does not appear anywhere in an async function. It also protects you
+from deadlocks, when using crates whose `MutexGuard` implements `Send`.
+
+You can find a more detailed example [in this blog post][shared-mutable-state-blog-post].
+
+[shared-mutable-state-blog-post]: https://draft.ryhl.io/blog/shared-mutable-state/
 
 ## Spawn a task to manage the state and use message passing to operate on it
 
@@ -367,3 +305,83 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 ```
 
 [`tokio::sync::Mutex`]: https://docs.rs/tokio/1/tokio/sync/struct.Mutex.html
+
+# Tasks, threads, and contention
+
+Using a blocking mutex to guard short critical sections is an acceptable
+strategy when contention is minimal. When a lock is contended, the thread
+executing the task must block and wait on the mutex. This will not only block
+the current task but it will also block all other tasks scheduled on the current
+thread.
+
+By default, the Tokio runtime uses a multi-threaded scheduler. Tasks are
+scheduled on any number of threads managed by the runtime. If a large number of
+tasks are scheduled to execute and they all require access to the mutex, then
+there will be contention. On the other hand, if the
+[`current_thread`][current_thread] runtime flavor is used, then the mutex will
+never be contended.
+
+> **info**
+> The [`current_thread` runtime flavor][basic-rt] is a lightweight,
+> single-threaded runtime. It is a good choice when only spawning
+> a few tasks and opening a handful of sockets. For example, this
+> option works well when providing a synchronous API bridge on top
+> of an asynchronous client library.
+
+[basic-rt]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.new_current_thread
+
+If contention on a synchronous mutex becomes a problem, the best fix is rarely
+to switch to the Tokio mutex. Instead, options to consider are:
+
+- Switching to a dedicated task to manage state and use message passing.
+- Shard the mutex.
+- Restructure the code to avoid the mutex.
+
+## Mutex sharding
+
+In our case, as each *key* is independent, mutex sharding will work well. To do
+this, instead of having a single `Mutex<HashMap<_, _>>` instance, we would
+introduce `N` distinct instances.
+
+```rust
+# use std::collections::HashMap;
+# use std::sync::{Arc, Mutex};
+type ShardedDb = Arc<Vec<Mutex<HashMap<String, Vec<u8>>>>>;
+
+fn new_sharded_db(num_shards: usize) -> ShardedDb {
+    let mut db = Vec::with_capacity(num_shards);
+    for _ in 0..num_shards {
+        db.push(Mutex::new(HashMap::new()));
+    }
+    Arc::new(db)
+}
+```
+
+Then, finding the cell for any given key becomes a two step process. First, the
+key is used to identify which shard it is part of. Then, the key is looked up in
+the `HashMap`.
+
+```rust,compile_fail
+let shard = db[hash(key) % db.len()].lock().unwrap();
+shard.insert(key, value);
+```
+
+The simple implementation outlined above requires using a fixed number of
+shards, and the number of shards cannot be changed once the sharded map is
+created.
+
+The [dashmap] crate provides an implementation of a more sophisticated
+sharded hash map. You may also want to have a look at such concurrent hash table
+implementations as [leapfrog] and [flurry], the latter being a port of Java's
+`ConcurrentHashMap` data structure.
+
+Before you start using any of these crates, be sure you structure your code so,
+that you cannot hold a `MutexGuard` across an `.await`. If you don't, you will
+either have compiler errors (in case of non-Send guards) or your code will
+deadlock (in case of Send guards). See a full example and more context [in this blog post][shared-mutable-state-blog-post].
+
+[current_thread]: https://docs.rs/tokio/1/tokio/runtime/index.html#current-thread-scheduler
+[dashmap]: https://docs.rs/dashmap
+[leapfrog]: https://docs.rs/leapfrog
+[flurry]: https://docs.rs/flurry
+[shared-mutable-state-blog-post]: https://draft.ryhl.io/blog/shared-mutable-state/
