@@ -331,7 +331,7 @@ never be contended.
 [basic-rt]: https://docs.rs/tokio/1/tokio/runtime/struct.Builder.html#method.new_current_thread
 
 If contention on a synchronous mutex becomes a problem, the best fix is rarely
-to switch to the Tokio mutex. Instead, options to consider are:
+to switch to the Tokio mutex. Instead, options to consider are to:
 
 - Let a dedicated task manage state and use message passing.
 - Shard the mutex.
