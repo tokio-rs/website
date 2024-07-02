@@ -333,7 +333,7 @@ never be contended.
 If contention on a synchronous mutex becomes a problem, the best fix is rarely
 to switch to the Tokio mutex. Instead, options to consider are:
 
-- Switching to a dedicated task to manage state and use message passing.
+- Let a dedicated task manage state and use message passing.
 - Shard the mutex.
 - Restructure the code to avoid the mutex.
 
