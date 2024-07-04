@@ -90,7 +90,7 @@ async fn main() {
 # async fn process(_: tokio::net::TcpStream, _: Db) {}
 ```
 
-## Most of the time, don't use `std::sync::Mutex`
+## On using `std::sync::Mutex` and `tokio::sync::Mutex`
 
 Note that `std::sync::Mutex` and **not** `tokio::sync::Mutex` is used to guard
 the `HashMap`. A common error is to unconditionally use `tokio::sync::Mutex`
@@ -275,8 +275,6 @@ mutex guard does not appear anywhere in an async function. It also protects you
 from deadlocks, when using crates whose `MutexGuard` implements `Send`.
 
 You can find a more detailed example [in this blog post][shared-mutable-state-blog-post].
-
-[shared-mutable-state-blog-post]: https://draft.ryhl.io/blog/shared-mutable-state/
 
 ## Spawn a task to manage the state and use message passing to operate on it
 
