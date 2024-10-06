@@ -533,6 +533,10 @@ a:active {
   body {
     margin: revert !important;
   }
+  pre {
+    white-space: pre-wrap !important;
+    overflow-wrap: break-word !important;
+  }
 }
 
 .tk-docs {
