@@ -127,7 +127,7 @@ a:active {
     font-family: inherit;
     padding: 0;
     -webkit-tap-highlight-color: transparent;
-  
+
     // custom styles
     width: 100%;
     height: 100%;
@@ -136,17 +136,17 @@ a:active {
     align-items: center;
     justify-content: center;
     transition: background 200ms;
-    
+
     &:hover {
       background-color: darken($dark-gray);
     }
   }
 
-  body[data-theme=dark] &__icon--light {
+  body[data-theme="dark"] &__icon--light {
     display: none;
   }
 
-  body:not([data-theme=dark]) &__icon--dark {
+  body:not([data-theme="dark"]) &__icon--dark {
     display: none;
   }
 }
@@ -222,7 +222,8 @@ a:active {
           margin-top: 0.5rem;
         }
         // Resetting reduced whitespace to normal
-        &.navbar-text, &.navbar-icon {
+        &.navbar-text,
+        &.navbar-icon {
           padding: 0 1.5rem;
         }
       }
@@ -1123,7 +1124,7 @@ Docco style used in http://jashkenas.github.com/docco/ converted by Simon Madine
 //#region Dark Theme Styles
 
 // Applying dark theme when body has dark atribute, not matter the theme preference
-body[data-theme=dark] {
+body[data-theme="dark"] {
   @import "./dark-styles.scss";
 }
 

@@ -6,13 +6,13 @@ const ToggleTheme: React.FC = () => {
    * Handles theme change
    */
   const toggleTheme = () => {
-    const THEME_KEY = 'data-theme';
+    const THEME_KEY = "data-theme";
 
     // getting current theme from body element
     const currentTheme = document.body.getAttribute(THEME_KEY);
 
     // new theme, opposite to current theme
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    const newTheme = currentTheme === "light" ? "dark" : "light";
 
     // set new theme on body element
     document.body.setAttribute(THEME_KEY, newTheme);
