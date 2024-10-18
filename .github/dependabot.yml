@@ -1,0 +1,22 @@
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    groups:
+      npm-dependencies:
+        patterns: ["*"]
+  - package-ecosystem: "cargo"
+    directories: ["doc-test", "tutorial-code"]
+    schedule:
+      interval: "monthly"
+    groups:
+      cargo-dependencies:
+        patterns: ["*"]
