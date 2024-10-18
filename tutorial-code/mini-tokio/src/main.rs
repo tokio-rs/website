@@ -138,7 +138,7 @@ where
 // not use this strategy. However, it can be implemented with few lines of code,
 // so here we are.
 async fn delay(dur: Duration) {
-    // `delay` is a leaf future. Sometimes, this is refered to as a "resource".
+    // `delay` is a leaf future. Sometimes, this is referred to as a "resource".
     // Other resources include sockets and channels. Resources may not be
     // implemented in terms of `async/await` as they must integrate with some
     // operating system detail. Because of this, we must manually implement the

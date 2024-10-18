@@ -290,7 +290,7 @@ initialization process is not free. When working with `BytesMut` and `BufMut`,
 capacity is **uninitialized**. The `BytesMut` abstraction prevents us from
 reading the uninitialized memory. This lets us avoid the initialization step.
 
-[`BufMut`]: https://docs.rs/bytes/1/bytes/trait.BufMut.html
+[`BufMut`]: https://docs.rs/bytes/1/bytes/buf/trait.BufMut.html
 [`bytes`]: https://docs.rs/bytes/
 
 # Parsing

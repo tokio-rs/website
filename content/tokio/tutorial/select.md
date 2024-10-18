@@ -67,7 +67,6 @@ Tokio's `oneshot::Receiver` implements `Drop` by sending a closed notification t
 the `Sender` half. The sender half can receive this notification and abort the
 in-progress operation by dropping it.
 
-
 ```rust
 use tokio::sync::oneshot;
 
@@ -278,7 +277,7 @@ computation.
 
 # Return value
 
-The `tokio::select!` macro returns the result of the evaluated `<handler>` expression. 
+The `tokio::select!` macro returns the result of the evaluated `<handler>` expression.
 
 ```rust
 async fn computation1() -> String {

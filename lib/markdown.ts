@@ -1,4 +1,3 @@
-import { stream } from "unified-stream";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
@@ -18,7 +17,19 @@ const remarkCodeRemoveSomeLines = () => {
       if (node.lang && langs.includes(node.lang)) {
         node.value = node.value
           .split("\n")
-          .filter((line) => !line.startsWith("# "))
+          .map((line) => {
+            let trimmed = line.trim();
+            if (trimmed.startsWith("##")) {
+              return line.replace("##", "#");
+            } else if (trimmed.startsWith("# ")) {
+              return null;
+            } else if (trimmed === "#") {
+              return null;
+            } else {
+              return line;
+            }
+          })
+          .filter((line) => line !== null)
           .join("\n");
       }
     });
@@ -60,7 +71,7 @@ const rehyperBlockquotePlusOptions = {
 const rehypeHighlightOptions = {
   languages: { rust: rust },
   aliases: { rust: ["rs", "rust,compile_fail", "rust,ignore", "rust="] },
-  plainText: ['txt', 'text', "plain", "log"]
+  plainText: ["txt", "text", "plain", "log"],
 };
 
 export const toHTML = async (raw) => {
@@ -68,11 +79,13 @@ export const toHTML = async (raw) => {
     await unified()
       .use(remarkParse)
       .use(remarkCodeRemoveSomeLines)
+      // @ts-expect-error: unified's plugin type mistakenly selects the wrong union overload
       .use(remarkRehype, { allowDangerousHtml: true })
       .use(rehypeHighlight, rehypeHighlightOptions)
       .use(rehypeRaw)
       .use(rehypeSlug)
       .use(rehyperBlockquotePlus, rehyperBlockquotePlusOptions)
+      // @ts-expect-error: unified's plugin type mistakenly selects the Array<void> union variant
       .use(rehypeStringify)
       .process(raw)
   );

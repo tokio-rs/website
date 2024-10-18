@@ -20,7 +20,13 @@ const menu = {
         ],
       },
       topics: {
-        nested: ["bridging", "shutdown", "tracing", "tracing-next-steps"],
+        nested: [
+          "bridging",
+          "shutdown",
+          "tracing",
+          "tracing-next-steps",
+          "testing",
+        ],
       },
       glossary: {},
       api: {

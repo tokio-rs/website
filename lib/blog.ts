@@ -9,10 +9,10 @@ function cachedPaths() {
   return paths;
 }
 
-export function getBlogPostsByYear({ limit } = {}) {
+export function getBlogPostsByYear(limit?: number) {
   let count = 0;
   return cachedPaths().reduce((years, post) => {
-    if (limit != null && count >= limit) {
+    if (limit !== undefined && count >= limit) {
       return years;
     }
     const date = new Date(post.date);

@@ -1,4 +1,4 @@
-import Menu from "../components/menu";
+import Menu from "./menu";
 import { DiscordIcon, GitHubIcon } from "./icons";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -112,6 +112,7 @@ export default function Content({
   prev,
   body,
   mdPath,
+  description,
 }) {
   const isBlogRoute = href.startsWith("/blog");
 
@@ -146,9 +147,13 @@ export default function Content({
           <section className="section content">
             <div className="columns">
               <div className="column is-two-thirds tk-markdown" ref={mdRef}>
-                <h1 className="title" id="">
+                <h1
+                  className={`title ${isBlogRoute ? "blog-title" : ""}`}
+                  id=""
+                >
                   {title}
                 </h1>
+                {isBlogRoute && <p className="description">{description}</p>}
                 <div dangerouslySetInnerHTML={{ __html: body }}></div>
                 <Footer next={next} prev={prev} mdPath={mdPath} />
               </div>

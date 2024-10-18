@@ -3,31 +3,31 @@ title: "Channels"
 ---
 
 Now that we have learned a bit about concurrency with Tokio, let's apply this on
-the client side. Put the server code we wrote before into an explicit binary 
+the client side. Put the server code we wrote before into an explicit binary
 file:
 
-```text
-mkdir src/bin
-mv src/main.rs src/bin/server.rs
+```bash
+$ mkdir src/bin
+$ mv src/main.rs src/bin/server.rs
 ```
 
 and create a new binary file that will contain the client code:
 
-```text
-touch src/bin/client.rs
+```bash
+$ touch src/bin/client.rs
 ```
 
 In this file you will write this page's code. Whenever you want to run it,
 you will have to launch the server first in a separate terminal window:
 
-```text
-cargo run --bin server
+```bash
+$ cargo run --bin server
 ```
 
 And then the client, __separately__:
 
-```text
-cargo run --bin client
+```bash
+$ cargo run --bin client
 ```
 
 That being said, let's code!
@@ -93,7 +93,7 @@ Tokio provides a [number of channels][channels], each serving a different purpos
 - [oneshot]: single-producer, single consumer channel. A single value can be sent.
 - [broadcast]: multi-producer, multi-consumer. Many values can be sent. Each
   receiver sees every value.
-- [watch]: single-producer, multi-consumer. Many values can be sent, but no
+- [watch]: multi-producer, multi-consumer. Many values can be sent, but no
   history is kept. Receivers only see the most recent value.
 
 If you need a multi-producer multi-consumer channel where only one consumer sees
@@ -175,11 +175,11 @@ async fn main() {
     let tx2 = tx.clone();
 
     tokio::spawn(async move {
-        tx.send("sending from first handle").await;
+        tx.send("sending from first handle").await.unwrap();
     });
 
     tokio::spawn(async move {
-        tx2.send("sending from second handle").await;
+        tx2.send("sending from second handle").await.unwrap();
     });
 
     while let Some(message) = rx.recv().await {
@@ -428,7 +428,7 @@ You can find the entire code [here][full].
 # Backpressure and bounded channels
 
 Whenever concurrency or queuing is introduced, it is important to ensure that the
-queueing is bounded and the system will gracefully handle the load. Unbounded queues
+queing is bounded and the system will gracefully handle the load. Unbounded queues
 will eventually fill up all available memory and cause the system to fail in
 unpredictable ways.
 

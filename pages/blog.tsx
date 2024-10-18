@@ -3,7 +3,13 @@ import Layout from "../components/layout";
 import * as blog from "../lib/blog";
 import * as api from "../lib/api";
 
-export default function Blog({ app, postsByYear }) {
+type Props = {
+  app: any;
+  // TODO: Properly type the posts
+  postsByYear: Record<number, any>;
+};
+
+export default function Blog({ app, postsByYear }: Props) {
   return (
     <Layout title={"Blog Posts"} blog={app.blog}>
       <div className="is-marginless tk-docs">
@@ -13,7 +19,7 @@ export default function Blog({ app, postsByYear }) {
               <h1 className="title">Blog Posts</h1>
               {Object.entries(postsByYear)
                 .reverse()
-                .map(([year, { key, title, nested }]) => (
+                .map(([year, { title, nested }]) => (
                   <YearPosts year={year} posts={nested} key={title} />
                 ))}
             </section>
