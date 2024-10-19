@@ -13,7 +13,7 @@
 [build.environment]
   # Environment variables are set here
 
-  NODE_VERSION = "18.13.0"
+  NODE_VERSION = "20.18.0"
 
   # For apps that use next export to generate static HTML
   # set the NETLIFY_NEXT_PLUGIN_SKIP to true.

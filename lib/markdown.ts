@@ -87,6 +87,6 @@ export const toHTML = async (raw) => {
       .use(rehyperBlockquotePlus, rehyperBlockquotePlusOptions)
       // @ts-expect-error: unified's plugin type mistakenly selects the Array<void> union variant
       .use(rehypeStringify)
-      .process(raw)
+      .process(raw),
   );
 };
