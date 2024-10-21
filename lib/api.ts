@@ -9,7 +9,7 @@ const contentDir = path.join(process.cwd(), "content").replace(/\\/g, "/");
 
 // Merge app level props in with page props
 export function withAppProps(
-  props: { props: Record<PropertyKey, unknown> } = { props: {} }
+  props: { props: Record<PropertyKey, unknown> } = { props: {} },
 ) {
   const blog = getLastBlog();
   delete blog.body;
@@ -108,7 +108,7 @@ function setPrevNext(page, menu) {
       }
     },
     undefined,
-    undefined
+    undefined,
   );
 
   return page;
@@ -117,7 +117,7 @@ function setPrevNext(page, menu) {
 // Build a list of paths from the sitemap
 function collectPaths(
   level: Record<string, { nested?: string[]; href?: string }>,
-  prefix = ""
+  prefix = "",
 ) {
   let out = [];
 

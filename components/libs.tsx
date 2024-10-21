@@ -43,7 +43,7 @@ const Lib: FC<{ lib: Library }> = ({ lib }) => (
       "is-half",
       "is-flex",
       "tk-lib",
-      `tk-lib-${lib.id}`
+      `tk-lib-${lib.id}`,
     )}
   >
     <div className="card">
