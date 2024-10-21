@@ -2,7 +2,7 @@ import React, { FC, ReactNode } from "react";
 
 import Head from "next/head";
 import Navigation from "./nav";
-import { Roboto } from "@next/font/google";
+import { Roboto } from "next/font/google";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],

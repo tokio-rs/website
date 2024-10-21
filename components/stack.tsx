@@ -123,7 +123,7 @@ const Layer: FC<{ layer: StackLayer }> = ({ layer }) => (
 export default function Stack() {
   useEffect(() => {
     var stack = document.getElementsByClassName(
-      "tk-stack-active"
+      "tk-stack-active",
     ) as HTMLCollectionOf<HTMLElement>;
     var links = document.querySelectorAll(".tk-stack .menu li");
     var lines = document.getElementById("tk-stack-lines");

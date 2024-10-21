@@ -122,7 +122,7 @@ function Level2({ href, menu }) {
     items.unshift(
       <li key={menu.key} className={className}>
         <a href={menu.href}>{menu.data.subtitle}</a>
-      </li>
+      </li>,
     );
   }
 
