@@ -49,7 +49,9 @@ model Todo {
 }
 ```
 
-Using the Toasty CLI tool, you will generate all necessary Rust code for working with this data model. The generated code for the above schema is here.
+Using the Toasty CLI tool, you will generate all necessary Rust code for working
+with this data model. The generated code for the above schema is
+[here](https://github.com/tokio-rs/toasty/tree/main/examples/hello-toasty/src/db).
 
 Then, you can easily work with the data model:
 
@@ -91,7 +93,7 @@ secondary concern to productivity. So why are teams adopting Rust more often
 where performance is less critical? It is because once you learn Rust, you can
 be very productive.
 
-Productivity is complex and multifaceted. No one would disagree that Rust's
+Productivity is complex and multifaceted. We can all agree that Rust's
 edit-compile-test cycle could be quicker. This friction is countered by fewer
 bugs, production issues, and a robust long-term maintenance story (Rust's borrow
 checker tends to incentivize more maintainable code). Additionally, because Rust
