@@ -5,10 +5,13 @@ description: "October 23, 2024"
 ---
 
 [Toasty](https://github.com/tokio-rs/toasty) is an asynchronous ORM for the Rust
-programming language that prioritizes ease of use. It is currently in the early
-stages of development and should be considered a "preview" (not ready for
-real-world usage yet). Toasty supports SQL and NoSQL databases, including
-DynamoDB and Cassandra (soon).
+programming language that prioritizes ease of use. Toasty supports SQL and NoSQL
+databases, including DynamoDB and Cassandra (soon).
+
+Toasty is currently in the early stages of development and should be considered
+a "preview" (not ready for real-world usage yet). It also isn't released on
+crates.io yet. I am announcing it now as I have made the Github repository open,
+will continue development in the open, and am hoping to get feedback.
 
 Projects that use Toasty start by creating a schema file to define the
 application's data model. For example, this is the contents of the
