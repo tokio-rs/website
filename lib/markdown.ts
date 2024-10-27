@@ -3,6 +3,7 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import rehypeHighlight from "rehype-highlight";
+import { common } from "lowlight";
 import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
 import { visit } from "unist-util-visit";
@@ -69,7 +70,7 @@ const rehyperBlockquotePlusOptions = {
 };
 
 const rehypeHighlightOptions = {
-  languages: { rust: rust },
+  languages: { ...common, rust: rust },
   aliases: { rust: ["rs", "rust,compile_fail", "rust,ignore", "rust="] },
   plainText: ["txt", "text", "plain", "log"],
 };
@@ -82,11 +83,11 @@ export const toHTML = async (raw) => {
       // @ts-expect-error: unified's plugin type mistakenly selects the wrong union overload
       .use(remarkRehype, { allowDangerousHtml: true })
       .use(rehypeHighlight, rehypeHighlightOptions)
+      // @ts-expect-error: unified's plugin type mistakenly selects the never union variant
       .use(rehypeRaw)
       .use(rehypeSlug)
       .use(rehyperBlockquotePlus, rehyperBlockquotePlusOptions)
-      // @ts-expect-error: unified's plugin type mistakenly selects the Array<void> union variant
       .use(rehypeStringify)
-      .process(raw),
+      .process(raw)
   );
 };
