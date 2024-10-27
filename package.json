@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && npm run build:rss && next export",
-    "build:rss": "tsc --outDir dist --noEmit false && sed -i 's/markdown\"/markdown.js\"/g' dist/lib/api.js && node scripts/generate-rss-feed.js",
+    "build:rss": "tsc --outDir dist --noEmit false && sed -i.bak 's/markdown\"/markdown.js\"/g' dist/lib/api.js && rm dist/lib/api.js.bak && node scripts/generate-rss-feed.js",
     "start": "next start",
     "fmt": "prettier --write --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'",
     "fmt:check": "prettier --check --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'"
