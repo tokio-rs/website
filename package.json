@@ -28,7 +28,7 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.1",
     "rss": "^1.2.2",
-    "sass": "^1.38.1",
+    "sass": "1.80.4",
     "unified": "^11.0.5",
     "unified-stream": "^3.0.0",
     "unist-util-visit": "5.0.0"
