@@ -31,7 +31,7 @@
     "sass": "^1.38.1",
     "unified": "^11.0.5",
     "unified-stream": "^3.0.0",
-    "unist-util-visit": "^4.1.1"
+    "unist-util-visit": "5.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
