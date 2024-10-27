@@ -80,10 +80,8 @@ export const toHTML = async (raw) => {
     await unified()
       .use(remarkParse)
       .use(remarkCodeRemoveSomeLines)
-      // @ts-expect-error: unified's plugin type mistakenly selects the wrong union overload
       .use(remarkRehype, { allowDangerousHtml: true })
       .use(rehypeHighlight, rehypeHighlightOptions)
-      // @ts-expect-error: unified's plugin type mistakenly selects the never union variant
       .use(rehypeRaw)
       .use(rehypeSlug)
       .use(rehyperBlockquotePlus, rehyperBlockquotePlusOptions)
