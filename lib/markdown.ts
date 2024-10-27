@@ -86,6 +86,6 @@ export const toHTML = async (raw) => {
       .use(rehypeSlug)
       .use(rehyperBlockquotePlus, rehyperBlockquotePlusOptions)
       .use(rehypeStringify)
-      .process(raw)
+      .process(raw),
   );
 };
