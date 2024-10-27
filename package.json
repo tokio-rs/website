@@ -12,7 +12,6 @@
     "fmt:check": "prettier --check --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'"
   },
   "dependencies": {
-    "@next/font": "^13.1.1",
     "bulma": "^0.8.2",
     "classnames": "^2.3.1",
     "glob": "^7.1.7",
