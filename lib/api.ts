@@ -1,5 +1,5 @@
 import fs from "fs";
-import glob from "glob";
+import { globSync } from "glob";
 import path from "path";
 import matter from "gray-matter";
 
@@ -40,8 +40,7 @@ export function getLastBlog() {
 }
 
 export function getDateOrderedPaths(root) {
-  return glob
-    .sync(`${contentDir}/${root}/*.md`)
+  return globSync(`${contentDir}/${root}/*.md`)
     .map((fullPath) => {
       const path = fullPath.replace(`${contentDir}/`, "").replace(/\.md$/, "");
       const page = loadPage(path);
