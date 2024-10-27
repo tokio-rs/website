@@ -1,5 +1,5 @@
 import fs from "fs";
-import glob from "glob";
+import { globSync } from "glob";
 import path from "path";
 import matter from "gray-matter";
 
@@ -9,7 +9,7 @@ const contentDir = path.join(process.cwd(), "content").replace(/\\/g, "/");
 
 // Merge app level props in with page props
 export function withAppProps(
-  props: { props: Record<PropertyKey, unknown> } = { props: {} },
+  props: { props: Record<PropertyKey, unknown> } = { props: {} }
 ) {
   const blog = getLastBlog();
   delete blog.body;
@@ -40,8 +40,7 @@ export function getLastBlog() {
 }
 
 export function getDateOrderedPaths(root) {
-  return glob
-    .sync(`${contentDir}/${root}/*.md`)
+  return globSync(`${contentDir}/${root}/*.md`)
     .map((fullPath) => {
       const path = fullPath.replace(`${contentDir}/`, "").replace(/\.md$/, "");
       const page = loadPage(path);
@@ -108,7 +107,7 @@ function setPrevNext(page, menu) {
       }
     },
     undefined,
-    undefined,
+    undefined
   );
 
   return page;
@@ -117,7 +116,7 @@ function setPrevNext(page, menu) {
 // Build a list of paths from the sitemap
 function collectPaths(
   level: Record<string, { nested?: string[]; href?: string }>,
-  prefix = "",
+  prefix = ""
 ) {
   let out = [];
 
