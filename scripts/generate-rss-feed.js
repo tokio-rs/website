@@ -1,8 +1,10 @@
 import RSS from "rss";
 import { getDateOrderedPaths } from "../dist/lib/api.js";
 import fs from "fs";
+import path from 'path';
 
 const siteUrl = "https://tokio.rs";
+const staticOutputPath = path.join(process.cwd(), 'out');
 
 function generateRSSFeed() {
   const feed = new RSS({
@@ -19,7 +21,7 @@ function generateRSSFeed() {
     });
   });
   const rss = feed.xml({ indent: true });
-  fs.writeFileSync("./.next/static/feed.xml", rss);
+  fs.writeFileSync(`${staticOutputPath}/blog/index.xml`, rss);
 }
 
 generateRSSFeed();
