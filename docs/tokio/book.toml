@@ -1,0 +1,15 @@
+[book]
+authors = []
+language = "en"
+multilingual = false
+src = "./"
+title = "Tokio"
+
+[output.html]
+git-repository-icon = "fa-github"
+git-repository-url = "https://github.com/tokio-rs/tokio"
+edit-url-template = "https://github.com/tokio-rs/website/tree/master/content/tokio/{path}"
+
+[output.html.playground]
+editable = false
+runnable = false
