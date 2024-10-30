@@ -264,7 +264,7 @@ Specifically `impl Fn() -> impl Future` is not allowed. Using `Box` would be
 possible but that has a performance cost we would like to avoid.
 
 You also wouldn't be able to add other behavior to your handlers besides calling
-them but why thats necessary is something we'll get back to.
+them but why that's necessary is something we'll get back to.
 
 # The `Handler` trait
 
