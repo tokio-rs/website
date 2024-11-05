@@ -101,6 +101,61 @@ a:active {
   overscroll-behavior-y: none;
 }
 
+.toggle-theme {
+  &__container {
+    width: 2rem;
+    height: 2rem;
+    margin: 0 1.5rem;
+  }
+
+  // Reducing whitespace around toggle button to make it consistent
+  // with other navbar links and icons on breakpoint: mobile < 800px < tablet/desktop
+  @include until(800px) {
+    &__container {
+      margin: 0 0.85rem;
+    }
+  }
+
+  @include mobile {
+    &__container {
+      margin: 0 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  &__btn {
+    // button style reset/cleanup
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  
+    // custom styles
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 200ms;
+    
+    &:hover {
+      background-color: darken($dark-gray);
+    }
+  }
+
+  body[data-theme=dark] &__icon--light {
+    display: none;
+  }
+
+  body:not([data-theme=dark]) &__icon--dark {
+    display: none;
+  }
+}
+
 .navbar {
   .navbar-brand {
     background-color: black;
@@ -130,6 +185,22 @@ a:active {
     }
   }
 
+  // Reducing whitespace in navbar to fit links and icons
+  // on breakpoint: mobile < 800px < tablet/desktop
+  @include until(800px) {
+    .navbar-item {
+      &.navbar-text {
+        padding: 0 0.85rem;
+      }
+      &.navbar-icon {
+        padding: 0 0.85rem;
+      }
+    }
+    hr {
+      margin: 1rem 0.85rem;
+    }
+  }
+
   @include mobile {
     .navbar-menu {
       display: block;
@@ -154,6 +225,10 @@ a:active {
 
         &:first-child {
           margin-top: 0.5rem;
+        }
+        // Resetting reduced whitespace to normal
+        &.navbar-text, &.navbar-icon {
+          padding: 0 1.5rem;
         }
       }
 
@@ -1038,7 +1113,7 @@ Docco style used in http://jashkenas.github.com/docco/ converted by Simon Madine
 
   a {
     font-weight: 500;
-    color: #c83895;
+    color: $magenta;
   }
 
   @include mobile {
@@ -1049,3 +1124,19 @@ Docco style used in http://jashkenas.github.com/docco/ converted by Simon Madine
 .blog-year-posts ul {
   margin-bottom: 2rem;
 }
+
+//#region Dark Theme Styles
+
+// Applying dark theme when body has dark atribute, not matter the theme preference
+body[data-theme=dark] {
+  @import "./dark-styles.scss";
+}
+
+// When body element has light theme data and the theme preference is set to dark, Use light theme
+@media (prefers-color-scheme: dark) {
+  body:not([data-theme="light"]) {
+    @import "./dark-styles.scss";
+  }
+}
+
+//#endregion Dark Theme Styles
