@@ -5,9 +5,9 @@ const menu = {
   tokio: {
     title: "Tokio",
     nested: {
+      introduction: {},
       tutorial: {
         nested: [
-          "setup",
           "hello-tokio",
           "spawning",
           "shared-state",
