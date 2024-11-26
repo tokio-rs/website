@@ -96,6 +96,24 @@ You can find the full code [here][full].
 
 [full]: https://github.com/tokio-rs/website/blob/master/tutorial-code/hello-tokio/src/main.rs
 
+# Troubleshooting
+
+A common mistake is to forget to add `.await` on calls to asynchronous
+functions. This is particularly easy to forget for functions where the return
+value is not used by the application. The compiler warns you and teaches you how
+to fix this error.
+
+```plain
+warning: unused implementer of `std::future::Future` that must be used
+  --> examples/hello-redis.rs:12:5
+   |
+12 |     client.set("hello", "world".into());
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: futures do nothing unless you `.await` or poll them
+   = note: `#[warn(unused_must_use)]` on by default
+```
+
 # Breaking it down
 
 Let's take some time to go over what we just did. There isn't much code, but a
