@@ -21,6 +21,8 @@ const menu = {
       },
       topics: {
         nested: [
+          "async",
+          "feature-flags",
           "bridging",
           "shutdown",
           "tracing",
