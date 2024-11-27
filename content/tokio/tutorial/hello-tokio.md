@@ -122,6 +122,7 @@ lot is happening.
 ## Async `main` function
 
 ```rust
+# use mini_redis::{Result};
 #[tokio::main]
 async fn main() -> Result<()> {
     // ...
@@ -130,10 +131,11 @@ async fn main() -> Result<()> {
 }
 ```
 
-The main function is an asynchronous function. This is indicated by the `async` keyword
-before the function definition. It returns a `Result`. The `Ok(())` value indicates that the
-program completed successfully. The `#[tokio::main]` macro, wraps the asynchronous function
-in a standard synchronous function and runs the asynchronous code on the tokio runtime.
+The main function is an asynchronous function. This is indicated by the `async`
+keyword before the function definition. It returns `mini_redis::Result`. The
+`Ok(())` value indicates that the program completed successfully. The
+`#[tokio::main]` macro, wraps the asynchronous function in a standard
+synchronous function and runs the asynchronous code on the tokio runtime.
 
 For more information on this see the [Async `main` function] section of the
 [Asynchronous Programming] topic.
@@ -171,7 +173,12 @@ method is asynchronous, so we use `await`.
 [`Client::set`]: https://docs.rs/mini-redis/latest/mini_redis/client/struct.Client.html#method.set
 
 ```rust
+# use mini_redis::client;
+# async fn dox() -> mini_redis::Result<()> {
+# let mut client = client::connect("127.0.0.1:6379").await?;
 client.set("hello", "world".into()).await?;
+# Ok(())
+# }
 ```
 
 To get the value of a key, we use the [`Client::get`] method, which also requires `await`.
@@ -179,13 +186,19 @@ To get the value of a key, we use the [`Client::get`] method, which also require
 [`Client::get`]: https://docs.rs/mini-redis/latest/mini_redis/client/struct.Client.html#method.get
 
 ```rust
+# use mini_redis::client;
+# async fn dox() -> mini_redis::Result<()> {
+# let mut client = client::connect("127.0.0.1:6379").await?;
 let result = client.get("hello").await?;
+# Ok(())
+# }
 ```
 
 The result is an `Option<Bytes>`, which will be `Some(Bytes)` if the key exists
 or `None` if it does not. We print the Debug format of the result.
 
-```rust
+```rust,ignore
+# let result = 42;
 println!("got value from the server; result={result:?}");
 ```
 
