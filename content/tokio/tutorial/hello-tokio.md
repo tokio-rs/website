@@ -39,7 +39,7 @@ tokio = { version = "1.41.1", features = ["full"] }
 mini-redis = "0.4.1"
 ```
 
-We use the `full` feature flag in the example for simplicity. For more
+We use the `full` feature flag for simplicity. For more
 information about the available feature flags see the [feature flags
 topic](/tokio/topics/feature-flags).
 
