@@ -171,7 +171,7 @@ and fix it.
 # SQL and NoSQL
 
 Toasty supports both SQL and NoSQL databases. As of today, that means Sqlite and
-DyanmoDB, though adding support for other SQL databases should be pretty
+DynamoDB, though adding support for other SQL databases should be pretty
 straightforward. I also plan to add support for Cassandra soon, but I hope
 others will also contribute to implementations for different databases.
 
