@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useState } from "react";
 import classnames from "classnames";
 import SocialLinks from "./social-links";
+import ToggleTheme from "./toggle-theme";
 
 // TODO: what is this thing??
 type Blog = any;
@@ -67,6 +68,8 @@ const Navigation: FC<{ blog: Blog }> = ({ blog }) => {
         >
           <div className="navbar-end">
             <Links blog={blog} />
+
+            <ToggleTheme />
 
             <hr className="is-hidden-mobile" />
 

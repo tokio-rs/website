@@ -1,0 +1,457 @@
+/** COLOR VALUES */
+$surface-100: #1B1B1B; // For body background color
+$surface-200: #1F1F1F; // For cards, aside, sidebars background color
+$surface-250: #242424;
+$surface-300: #2D2D2D; // Navbar - For chips buttons, dropdowns background color
+$surface-400: #353535; // For sidebars, navbar background color
+$surface-500: #3D3D3D; // For modal, dialogs background color
+$surface-600: #404040; // divider, hr, border
+$surface-700: #696969; // For on background texts color | 267 0 41
+
+$light-gray: #D6D6D6; // hover on secondary text
+$gray: #A0A0A0; // secondary text
+$dark-gray: #939393; // code snippet text
+
+$magenta-000: #C63995;
+$magenta-100: #DE46A9;
+$magenta-200: #E25AB2;
+$magenta-300: #E670BD;
+
+$pure-white: #ffffff;
+$white: #F0F0F0; // text, title
+$red: #e7544c;
+$orange: #f5a623;
+$black-pink: #211E21;
+$purple: #B284EB;
+$green: #81C42C;
+$yellow: #DDB218;
+$blue: #4197E3;
+$lightblue: #56A3E6;
+
+// Each color is associated with a library
+$tk-lib-runtime: $magenta-200;
+$tk-lib-hyper: $orange;
+$tk-lib-tonic: $yellow;
+$tk-lib-tower: $green;
+$tk-lib-mio: $red;
+$tk-lib-tracing: $purple;
+$tk-lib-bytes: $blue;
+
+
+// Per lib styling: [ name, bg-color, color, size, logo-adjust ]
+$libs: "tokio" $white $surface-100 3.8rem -60%, "runtime" $tk-lib-runtime $surface-100 2.2rem -22%,
+  "hyper" $tk-lib-hyper $surface-100 100% -50%, "tonic" $tk-lib-tonic $surface-100 100% -25%,
+  "tower" $tk-lib-tower $surface-100 100% -52%, "mio" $tk-lib-mio $surface-100 100% -41%,
+  "tracing" $tk-lib-tracing $surface-100 100% -31%, "bytes" $tk-lib-bytes $surface-100 100% -30%;
+
+body {
+  background-color: $surface-100;
+  color: $white;
+}
+
+.navbar {
+  background-color: $surface-400;
+
+  .navbar-burger {
+    color: $white;
+  }
+
+  .navbar-link,
+  .navbar-item {
+    color: $white;
+
+    &:hover,
+    &:focus,
+    &:focus-within,
+    &.is-active {
+      background-color: initial;
+      color: $magenta-200;
+    }
+  }
+  .navbar-brand, .navbar-menu {
+    background-color: $surface-400;
+  }
+  hr {
+    background-color: $gray;
+  }
+}
+
+.toggle-theme__btn {
+  &:hover {
+    background-color: $black-pink;
+  }
+}
+
+.hero {
+  &.is-primary {
+    background-color: $surface-200;
+    .title, .subtitle {
+      color: $white;
+    }
+  }
+  &.tk-intro {
+    .button {
+      background-color: $magenta-000;
+    }
+    .button:hover {
+      background-color: $magenta-100;
+    }
+    .title, .subtitle {
+      color: $white;
+    }
+  }
+  &.tk-users {
+    background-color: $surface-100;
+
+    .title, .subtitle {
+      color: $white;
+    }
+
+    .image {
+      img {
+        filter: invert(0.95);
+      }
+    }
+  }
+}
+
+.tk-features,
+.tk-stack {
+  code {
+    background-color: $surface-400;
+    color: $white;
+  }
+}
+
+.tk-features {
+  background-color: $surface-200;
+
+  .card {
+    background-color: $surface-250;
+    border: 2px solid $white;
+  }
+
+  @each $name, $bgColor, $color, $size, $adjust in $libs {
+    .tk-lib-#{$name} {
+      .title,
+      .learn-more a {
+        color: $bgColor;
+      }
+      .learn-more a:hover {
+        color: darken($bgColor);
+      }
+      .card {
+        border-color: $bgColor;
+      }
+    }
+  }
+}
+
+.card {
+  background-color: $surface-200;
+}
+
+.tk-stack {
+  background-color: $surface-100;
+
+  .menu {
+    @each $name, $bgColor, $color, $size, $adjust in $libs {
+      .tk-lib-#{$name} {
+        a:hover {
+          color: $bgColor;
+        }
+
+        a {
+          color: $gray;
+        }
+
+        &.is-active {
+          background-color: $bgColor;
+
+          a {
+            color: $color;
+          }
+        }
+      }
+    }
+  }
+
+  // Per lib styling
+  @each $name, $bgColor, $color, $size, $adjust in $libs {
+    .tk-lib-#{$name} {
+      .title,
+      .learn-more a {
+        color: $bgColor;
+      }
+      .title img {
+        vertical-align: $adjust;
+        height: $size;
+      }
+    }
+  }
+
+  .tk-lib-tokio {
+    .title img {
+      filter: invert(1);
+    }
+  }
+}
+
+.tk-docs {
+  background-color: $surface-100;
+
+  .tk-docs-nav {
+    background-color: $surface-200;
+  }
+
+  .menu {
+    @include mobile {
+      .tk-toc {
+        background-color: $surface-200;
+
+        a {
+          color: $white;
+        }
+
+        .tk-arrow {
+          &:before,
+          &:after {
+            background-color: $white;
+          }
+        }
+      }
+
+      .tk-menu-body {
+        background-color: $surface-200;
+      }
+    }
+
+    .menu-label {
+      color: $gray;
+    }
+    .menu-list {
+      a {
+        color: $gray;
+
+        &:hover {
+          color: $magenta-200;
+        }
+      }
+      
+    }
+
+    li.is-active {
+      background-color: $surface-100;
+
+      > a {
+        color: $white;
+      }
+    }
+  }
+
+  .tk-content {
+    background-color: $surface-100;
+    color: $white;
+
+    .tk-content-summary {
+      a {
+        color: $gray;
+
+        &:hover {
+          color: $light-gray;
+        }
+      }
+
+      > ul {
+        border-left: solid 1px $surface-600;
+      }
+    }
+
+    h1:not(.title) {
+      border-bottom: solid 1px $surface-600;
+    }
+
+    a {
+      color: $magenta-100;
+    }
+    a:hover {
+      color: $magenta-200;
+    }
+
+    .tk-markdown {
+      .is-warning {
+        background: $black-pink;
+        color: $light-gray;// $magenta-100;
+
+        strong,
+        code {
+          color: $magenta-200;
+        }
+      }
+
+      blockquote.is-warning {
+        border-left-color: $magenta-200;
+      }
+    }
+
+    code {
+      color: $white;
+    }
+
+    a code {
+      color: $magenta-200;
+    }
+    a:hover code {
+      color: $magenta-300;
+    }
+  }
+}
+
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6,
+strong {
+  color: $white;
+}
+
+.content blockquote,
+.content blockquote.is-info {
+  background-color: $surface-200;
+  border-color: $surface-600;
+
+  a {
+    color: $magenta-200;
+
+    &:hover {
+      color: $magenta-300;
+    }
+  }
+}
+
+.footer {
+  color: $white;
+  background-color: $surface-400;
+
+  a {
+    color: $lightblue;
+
+    &:hover {
+      color: $blue;
+    }
+  }
+
+  .tk-footer-libs {
+    a:hover {
+      color: $magenta-100;
+    }
+  }
+
+  .tk-footer-libs,
+  .tk-footer-libs a,
+  .tk-sponsored,
+  .tk-sponsored a {
+    color: $white;
+  }
+}
+
+.tk-doc-footer {
+  border-top: 1px solid $surface-600;
+
+  .tk-help-links {
+    .tk-svg-path {
+      fill: $white !important;
+    }
+  }
+}
+
+/*
+ *
+ * Syntax highlighting
+ *
+ */
+
+pre, code {
+  background-color: $surface-250;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: $dark-gray;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: $magenta-200;
+}
+
+.hljs-number {
+  color: $green;
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: $green;
+}
+
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-section,
+.hljs-type {
+  color: $blue;
+}
+
+.hljs-params {
+  color: $purple;
+}
+
+.hljs-title {
+  color: $purple;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+  color: $lightblue;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: $green;
+}
+
+.hljs-regexp,
+.hljs-link {
+  color: $green;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: $purple;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: $yellow;
+}
+
+.hljs-meta {
+  color: $dark-gray;
+}
+
+.hljs-deletion {
+  background: $red;
+}
+
+.hljs-addition {
+  background: $green;
+}
+
+.all-posts-link {
+  a {
+    color: $magenta-100;
+  }
+}
