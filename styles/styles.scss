@@ -101,6 +101,20 @@ a:active {
   overscroll-behavior-y: none;
 }
 
+.content {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    code {
+      // use the same `font-weight` as the parent element
+      font-weight: unset;
+    }
+  }
+}
+
 .navbar {
   .navbar-brand {
     background-color: black;
