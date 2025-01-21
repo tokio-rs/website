@@ -717,7 +717,7 @@ impl Future for Delay {
         // Check the current instant. If the duration has elapsed, then
         // this future has completed so we return `Poll::Ready`.
         if Instant::now() >= self.when {
-            Poll::Ready(());
+            Poll::Ready(())
         } else {
             // The duration has not elapsed. If this is the first time the future
             // is called, spawn the timer thread. If the timer thread is already
