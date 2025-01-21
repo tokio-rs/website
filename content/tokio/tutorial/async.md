@@ -598,7 +598,7 @@ impl Task {
         F: Future<Output = ()> + Send + 'static,
     {
         let task = Arc::new(Task {
-            future: Mutex::new(TaskFuture::new(future)),
+            future: Mutex::new(Box::pin(future)),
             executor: sender.clone(),
             is_done: RwLock::new(false)
         });
