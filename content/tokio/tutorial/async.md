@@ -460,7 +460,7 @@ details are given in the implementation of the `poll()` method.
 ```rust
 # use std::future::Future;
 # use std::pin::Pin;
-# use std::sync::mpsc;
+# use std::sync::{mpsc, RwLock};
 use std::sync::{Arc, Mutex};
 
 struct Task {
@@ -524,7 +524,7 @@ channel. Next, we implement receiving and executing the tasks in the
 # use std::future::Future;
 # use std::ops::Deref;
 # use std::pin::Pin;
-# use std::sync::{Arc, Mutex};
+# use std::sync::{Arc, Mutex, RwLock};
 # use std::task::{Context, Poll};
 # struct MiniTokio {
 #   scheduled: mpsc::Receiver<Arc<Task>>,
