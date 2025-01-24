@@ -646,7 +646,7 @@ The logic we want to implement is:
 async fn action(input: Option<i32>) -> Option<String> {
     input.map(|i| {
         // async logic here
-#       input.to_string()
+#       i.to_string()
     })
 }
 
