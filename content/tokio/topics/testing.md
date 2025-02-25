@@ -41,6 +41,7 @@ async fn paused_time() {
 }
 ```
 
+Keep in mind that the `start_paused` attribute requires the tokio feature `test-util`.
 See [tokio::test "Configure the runtime to start with time paused"](https://docs.rs/tokio/latest/tokio/attr.test.html#configure-the-runtime-to-start-with-time-paused) for more details.
 
 Of course, the temporal order of future resolution is maintained, even when
