@@ -105,7 +105,9 @@ Consider now the actual client handler task, especially the `where`-clause of th
 function signature:
 
 ```rust
-use tokio::io::{AsyncBufReadExt, AsyncRead, AsyncWrite, AsyncWriteExt, BufReader};
+use tokio::io::{
+    AsyncBufReadExt, AsyncRead, AsyncWrite, AsyncWriteExt, BufReader,
+};
 
 async fn handle_connection<Reader, Writer>(
     reader: Reader,
@@ -124,7 +126,9 @@ where
                 break Ok(());
             }
             writer
-                .write_all(format!("Thanks for your message.\r\n").as_bytes())
+                .write_all(
+                    format!("Thanks for your message.\r\n").as_bytes()
+                )
                 .await
                 .unwrap();
         }
