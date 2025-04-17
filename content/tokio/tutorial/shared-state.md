@@ -13,7 +13,7 @@ There are a couple of different ways to share state in Tokio.
 2. Spawn a task to manage the state and use message passing to operate on it.
 
 Generally you want to use the first approach for simple data, and the second
-approach for things that require asynchronous work such as I/O primitives.  In
+approach for things that require asynchronous work such as I/O primitives. In
 this chapter, the shared state is a `HashMap` and the operations are `insert`
 and `get`. Neither of these operations is asynchronous, so we will use a
 `Mutex`.
@@ -133,7 +133,7 @@ async fn process(socket: TcpStream, db: Db) {
                 let mut db = db.lock().unwrap();
                 db.insert(cmd.key().to_string(), cmd.value().clone());
                 Frame::Simple("OK".to_string())
-            }           
+            }
             Get(cmd) => {
                 let db = db.lock().unwrap();
                 if let Some(value) = db.get(cmd.key()) {
@@ -154,6 +154,7 @@ async fn process(socket: TcpStream, db: Db) {
 # Holding a `MutexGuard` across an `.await`
 
 You might write code that looks like this:
+
 ```rust
 use std::sync::{Mutex, MutexGuard};
 
@@ -165,8 +166,10 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 } // lock goes out of scope here
 # async fn do_something_async() {}
 ```
+
 When you try to spawn something that calls this function, you will encounter the
 following error message:
+
 ```text
 error: future cannot be sent between threads safely
    --> src/lib.rs:13:5
@@ -191,11 +194,13 @@ note: future is not `Send` as this value is used across an await
 8   | }
     | - `mut lock` is later dropped here
 ```
+
 This happens because the `std::sync::MutexGuard` type is **not** `Send`. This
 means that you can't send a mutex lock to another thread, and the error happens
 because the Tokio runtime can move a task between threads at every `.await`.
 To avoid this, you should restructure your code such that the mutex lock's
 destructor runs before the `.await`.
+
 ```rust
 # use std::sync::{Mutex, MutexGuard};
 // This works!
@@ -209,7 +214,9 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 }
 # async fn do_something_async() {}
 ```
+
 Note that this does not work:
+
 ```rust
 use std::sync::{Mutex, MutexGuard};
 
@@ -223,6 +230,7 @@ async fn increment_and_do_stuff(mutex: &Mutex<i32>) {
 }
 # async fn do_something_async() {}
 ```
+
 This is because the compiler currently calculates whether a future is `Send`
 based on scope information only. The compiler will hopefully be updated to
 support explicitly dropping it in the future, but for now, you must explicitly
@@ -250,6 +258,7 @@ We will discuss some approaches to avoid these issues below:
 
 The safest way to handle a mutex is to wrap it in a struct, and lock the mutex
 only inside non-async methods on that struct.
+
 ```rust
 use std::sync::Mutex;
 
@@ -270,6 +279,7 @@ async fn increment_and_do_stuff(can_incr: &CanIncrement) {
 }
 # async fn do_something_async() {}
 ```
+
 This pattern guarantees that you won't run into the `Send` error, because the
 mutex guard does not appear anywhere in an async function. It also protects you
 from deadlocks, when using crates whose `MutexGuard` implements `Send`.
@@ -288,6 +298,7 @@ The [`tokio::sync::Mutex`] type provided by Tokio can also be used. The primary
 feature of the Tokio mutex is that it can be held across an `.await` without any
 issues. That said, an asynchronous mutex is more expensive than an ordinary
 mutex, and it is typically better to use one of the two other approaches.
+
 ```rust
 use tokio::sync::Mutex; // note! This uses the Tokio mutex
 
@@ -337,7 +348,7 @@ to switch to the Tokio mutex. Instead, options to consider are to:
 
 ## Mutex sharding
 
-In our case, as each *key* is independent, mutex sharding will work well. To do
+In our case, as each _key_ is independent, mutex sharding will work well. To do
 this, instead of having a single `Mutex<HashMap<_, _>>` instance, we would
 introduce `N` distinct instances.
 
@@ -373,7 +384,7 @@ sharded hash map. You may also want to have a look at such concurrent hash table
 implementations as [leapfrog] and [flurry], the latter being a port of Java's
 `ConcurrentHashMap` data structure.
 
-Before you start using any of these crates, be sure you structure your code so,
+Before you start using any of these crates, be sure you structure your code so
 that you cannot hold a `MutexGuard` across an `.await`. If you don't, you will
 either have compiler errors (in case of non-Send guards) or your code will
 deadlock (in case of Send guards). See a full example and more context [in this blog post][shared-mutable-state-blog-post].
