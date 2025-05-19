@@ -59,8 +59,8 @@ async fn main() {
     // the application
 
     tokio::select! {
-        _ = signal::ctrl_c() => {},
-        _ = shutdown_recv.recv() => {},
+        Ok(_) = signal::ctrl_c() => {},
+        Some(_) = shutdown_recv.recv() => {},
     }
 
     // send shutdown signal to application and wait
