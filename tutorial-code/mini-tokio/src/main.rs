@@ -6,15 +6,13 @@ use futures::future::BoxFuture;
 use std::cell::RefCell;
 use std::future::Future;
 use std::pin::Pin;
-use std::sync::{Arc, Mutex};
+use std::sync::{mpsc, Arc, Mutex};
 use std::task::{Context, Poll, Waker};
 use std::thread;
 use std::time::{Duration, Instant};
 // A utility that allows us to implement a `std::task::Waker` without having to
 // use `unsafe` code.
 use futures::task::{self, ArcWake};
-// Used as a channel to queue scheduled tasks.
-use crossbeam::channel;
 
 // Main entry point. A mini-tokio instance is created and a few tasks are
 // spawned. Our mini-tokio implementation only supports spawning tasks and
@@ -60,16 +58,16 @@ struct MiniTokio {
     // is ready to make progress. This usually happens when a resource the task
     // uses becomes ready to perform an operation. For example, a socket
     // received data and a `read` call will succeed.
-    scheduled: channel::Receiver<Arc<Task>>,
+    scheduled: mpsc::Receiver<Arc<Task>>,
 
     // Send half of the scheduled channel.
-    sender: channel::Sender<Arc<Task>>,
+    sender: mpsc::Sender<Arc<Task>>,
 }
 
 impl MiniTokio {
     /// Initialize a new mini-tokio instance.
     fn new() -> MiniTokio {
-        let (sender, scheduled) = channel::unbounded();
+        let (sender, scheduled) = mpsc::channel();
 
         MiniTokio { scheduled, sender }
     }
@@ -232,7 +230,7 @@ async fn delay(dur: Duration) {
 // Used to track the current mini-tokio instance so that the `spawn` function is
 // able to schedule spawned tasks.
 thread_local! {
-    static CURRENT: RefCell<Option<channel::Sender<Arc<Task>>>> =
+    static CURRENT: RefCell<Option<mpsc::Sender<Arc<Task>>>> =
         RefCell::new(None);
 }
 
@@ -250,7 +248,7 @@ struct Task {
 
     // When a task is notified, it is queued into this channel. The executor
     // pops notified tasks and executes them.
-    executor: channel::Sender<Arc<Task>>,
+    executor: mpsc::Sender<Arc<Task>>,
 }
 
 impl Task {
@@ -259,7 +257,7 @@ impl Task {
     // Initializes a new Task harness containing the given future and pushes it
     // onto `sender`. The receiver half of the channel will get the task and
     // execute it.
-    fn spawn<F>(future: F, sender: &channel::Sender<Arc<Task>>)
+    fn spawn<F>(future: F, sender: &mpsc::Sender<Arc<Task>>)
     where
         F: Future<Output = ()> + Send + 'static,
     {

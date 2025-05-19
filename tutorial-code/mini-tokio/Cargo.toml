@@ -9,4 +9,3 @@ publish = false
 
 [dependencies]
 futures = "0.3"
-crossbeam = "0.8"
