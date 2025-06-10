@@ -12,7 +12,7 @@ const ORGANIZATIONS: Organization[] = [
   { name: "azure", url: "https://azure.microsoft.com" },
   { name: "pingcap", url: "https://pingcap.com" },
   { name: "dropbox", url: "https://www.dropbox.com" },
-  { name: "facebook", url: "https://www.facebook.com" },
+  { name: "meta", url: "https://www.meta.com" },
   { name: "one-signal", url: "https://onesignal.com" },
 ];
 
