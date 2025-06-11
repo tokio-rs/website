@@ -66,7 +66,7 @@ means that exclusive access is required to call it. We could open a connection
 per task, but that is not ideal. We cannot use `std::sync::Mutex` as `.await`
 would need to be called with the lock held. We could use `tokio::sync::Mutex`,
 but that would only allow a single in-flight request. If the client implements
-[pipelining](in short, sending many commands without waiting for each prior
+[pipelining] (in short, sending many commands without waiting for each prior
 command's response), an async mutex results in underutilizing
 the connection.
 
