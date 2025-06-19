@@ -11,8 +11,8 @@ into how they use Tokio and Rust to power high-performance production systems.
 Expect practical talks, engaging panels, and plenty of time to share challenges,
 lessons learned, and what you’re building.
 
-When: **April 20-22, 2026**
-Where: **Portland, OR**
+When: **April 20-22, 2026** <br/>
+Where: **Portland, OR** <br/>
 Website: [**tokioconf.com**](https://tokioconf.com) | [Mastodon] | [BlueSky]
 
 ## Why TokioConf?
