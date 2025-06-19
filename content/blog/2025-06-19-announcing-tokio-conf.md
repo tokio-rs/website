@@ -4,12 +4,12 @@ title: "Announcing TokioConf 2026"
 description: "June 19, 2025"
 ---
 
-We’re thrilled to announce the inaugural **TokioConf**—the first dedicated
-conference for developers building asynchronous network applications in Rust.
-This single-track event brings together engineers from across industries to dive
-into how they use Tokio and Rust to power high-performance production systems.
-Expect practical talks, engaging panels, and plenty of time to share challenges,
-lessons learned, and what you’re building.
+We’re happy to announce the inaugural **TokioConf**, a dedicated conference for
+developers building asynchronous network applications in Rust. It will be a
+single-track event bringing together developers from many areas to talk about
+how they use Tokio and Rust to build high-performance, reliable production
+applications. Expect talks, panels, and time to share challenges and lessons
+learned.
 
 When: **April 20-22, 2026** <br/>
 Where: **Portland, OR** <br/>
