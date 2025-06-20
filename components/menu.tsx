@@ -83,7 +83,7 @@ function Level1({ href, menu }) {
       link = (
         <a href={entry.href}>
           <b>
-            {monthNames[date.getMonth()]} {date.getDate()}
+            {monthNames[date.getUTCMonth()]} {date.getUTCDate()}
           </b>
           {entry.title}
         </a>

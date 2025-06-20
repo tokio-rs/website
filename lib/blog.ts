@@ -16,7 +16,7 @@ export function getBlogPostsByYear(limit?: number) {
       return years;
     }
     const date = new Date(post.date);
-    const year = date.getFullYear().toString();
+    const year = date.getUTCFullYear().toString();
     if (!years[year]) {
       years[year] = {
         key: year,
