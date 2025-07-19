@@ -69,7 +69,8 @@ $ cargo run
 ```
 
 In a separate terminal window, run the `hello-redis` example (the `SET`/`GET`
-command from the previous section):
+command from the previous section, which is playing the role of the Redis
+client):
 
 ```bash
 $ cargo run --example hello-redis
@@ -413,13 +414,13 @@ Now, start the server:
 $ cargo run
 ```
 
-and in a separate terminal window, run the `hello-redis` example:
+and in a separate terminal window, run the `hello-redis` client example again:
 
 ```bash
 $ cargo run --example hello-redis
 ```
 
-Now, the output will be:
+Now, the output from the client will be:
 
 ```text
 got value from the server; result=Some(b"world")
