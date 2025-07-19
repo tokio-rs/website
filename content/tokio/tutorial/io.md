@@ -281,7 +281,7 @@ can use [`TcpStream::split`]. The task that processes the echo logic in the serv
 # fn dox(mut socket: TcpStream) {
 tokio::spawn(async move {
     let (mut rd, mut wr) = socket.split();
-    
+
     if io::copy(&mut rd, &mut wr).await.is_err() {
         eprintln!("failed to copy");
     }

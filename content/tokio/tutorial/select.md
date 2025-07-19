@@ -554,15 +554,15 @@ async fn action() {
 
 #[tokio::main]
 async fn main() {
-    let (mut tx, mut rx) = tokio::sync::mpsc::channel(128);    
+    let (mut tx, mut rx) = tokio::sync::mpsc::channel(128);
 #   tokio::spawn(async move {
 #       let _ = tx.send(1).await;
 #       let _ = tx.send(2).await;
 #   });
-    
+
     let operation = action();
     tokio::pin!(operation);
-    
+
     loop {
         tokio::select! {
             _ = &mut operation => break,
@@ -657,17 +657,17 @@ async fn action(input: Option<i32>) -> Option<String> {
 #[tokio::main]
 async fn main() {
     let (mut tx, mut rx) = tokio::sync::mpsc::channel(128);
-    
+
     let mut done = false;
     let operation = action(None);
     tokio::pin!(operation);
-    
+
     tokio::spawn(async move {
         let _ = tx.send(1).await;
         let _ = tx.send(3).await;
         let _ = tx.send(2).await;
     });
-    
+
     loop {
         tokio::select! {
             res = &mut operation, if !done => {

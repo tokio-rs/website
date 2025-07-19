@@ -329,7 +329,7 @@ error: future cannot be sent between threads safely
     |
 6   |     tokio::spawn(async {
     |     ^^^^^^^^^^^^ future created by async block is not `Send`
-    | 
+    |
    ::: [..]spawn.rs:127:21
     |
 127 |         T: Future + Send + 'static,

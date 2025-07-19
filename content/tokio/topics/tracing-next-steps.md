@@ -135,7 +135,7 @@ To set up mini-redis, we'll first need to add a few dependencies. Update your
 # Implements the types defined in the Otel spec
 opentelemetry = "0.17.0"
 # Integration between the tracing crate and the opentelemetry crate
-tracing-opentelemetry = "0.17.2" 
+tracing-opentelemetry = "0.17.2"
 # Allows you to export data to Jaeger
 opentelemetry-jaeger = "0.16.0"
 ```
