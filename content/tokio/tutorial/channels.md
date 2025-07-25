@@ -425,6 +425,41 @@ dropped. This indicates the receiver is no longer interested in the response. In
 our scenario, the receiver cancelling interest is an acceptable event. The `Err`
 returned by `resp.send(...)` does not need to be handled.
 
+Now, when running the server in one terminal:
+```bash
+$ cargo run --bin server
+```
+
+You should see the following output:
+```text
+Listening
+```
+
+Then, after running the client in a __separate__ terminal:
+```bash
+$ cargo run --bin client
+```
+
+The server terminal should show this output:
+```text
+Listening
+Accepted
+```
+
+And the client terminal should show either this output:
+```text
+GOT = Ok(Ok(()))
+GOT = Ok(Ok(Some(b"bar")))
+```
+
+Or this output:
+```text
+GOT = Ok(Ok(Some(b"bar")))
+GOT = Ok(Ok(()))
+```
+
+Depending on which task was processed first by the scheduler.
+
 You can find the entire code [here][full].
 
 # Backpressure and bounded channels
