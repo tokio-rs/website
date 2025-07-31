@@ -582,10 +582,10 @@ impl TaskFuture {
     }
 
     fn poll(&mut self, cx: &mut Context<'_>) {
-        // Spurious wake-ups are allowed, even after a future has                                  
-        // returned `Ready`. However, polling a future which has                                   
-        // already returned `Ready` is *not* allowed. For this                                     
-        // reason we need to check that the future is still pending                                
+        // Spurious wake-ups are allowed, even after a future has
+        // returned `Ready`. However, polling a future which has
+        // already returned `Ready` is *not* allowed. For this
+        // reason we need to check that the future is still pending
         // before we call it. Failure to do so can lead to a panic.
         if self.poll.is_pending() {
             self.poll = self.future.as_mut().poll(cx);

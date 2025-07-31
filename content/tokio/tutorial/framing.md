@@ -64,7 +64,7 @@ struct Connection {
 
 impl Connection {
     /// Read a frame from the connection.
-    /// 
+    ///
     /// Returns `None` if EOF is reached
     pub async fn read_frame(&mut self)
         -> Result<Option<Frame>>
