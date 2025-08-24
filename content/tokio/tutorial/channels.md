@@ -223,13 +223,11 @@ let manager = tokio::spawn(async move {
 
     // Start receiving messages
     while let Some(cmd) = rx.recv().await {
-        use Command::*;
-
         match cmd {
-            Get { key } => {
+            Command::Get { key } => {
                 client.get(&key).await;
             }
-            Set { key, val } => {
+            Command::Set { key, val } => {
                 client.set(&key, val).await;
             }
         }
