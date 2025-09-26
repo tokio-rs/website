@@ -24,42 +24,42 @@ sharing beginner lessons or advanced optimization tricks, focus on real
 experiences and practical applications that people can actually use. . We are
 especially interested in talks about:
 
-##### Production Lessons
+**Production Lessons:**<br/>
 What actually happened when you shipped Tokio code to production - the outages,
 the tough debugging sessions, the scaling surprises. What tools do you wish
 you'd known about, and what would you do differently next time?
 
-##### Architecture Patterns & Design
+**Architecture Patterns & Design:**<br/>
 The architectural decisions that worked (and the ones that didn't) - actor
 patterns, channels, when to spin up multiple runtimes, different concurrency
 approaches, and when you probably shouldn't use Tokio at all.
 
-##### Performance Optimization
+**Performance Optimization:**<br/>
 Stories about hunting down that one blocking call that was tanking performance,
 tuning runtimes, dealing with oversubscription, and annoying OS scheduling
 pauses. Share the optimization tricks that actually made a difference.
 
-##### Debugging & Monitoring
+**Debugging & Monitoring:**<br/>
 How do you actually figure out what's going wrong in async code, especially in
 production? Share your debugging and monitoring setups that work.
 
-##### Rust Everywhere
+**Rust Everywhere:**<br/>
 Can Rust really work everywhere, not just for high-performance systems? Real
 experiences using async Rust for typical applications, what's working, what's
 still missing, and what we'd need to get there.
 
-##### Testing Async Code
+**Testing Async Code:**<br/>
 How to actually test this stuff without pulling your hair out, catching those
 sneaky cancellation bugs before they hit users, and the practices that help you
 ship reliable async systems.
 
-##### Team Adoption
+**Team Adoption:**<br/>
 The real story of adoption - what worked when convincing your team, the training
 that actually helped, the failures and false starts, the common concerns and
 roadblocks you hit, and how to build codebases that your whole team can work
 with.
 
-##### What's Next
+**What's Next:**<br/>
 Industry shifts and emerging technologies that will impact how we build async
 applications. New paradigms, AI, evolving infrastructure - what's coming that
 async Rust developers should be thinking about?
