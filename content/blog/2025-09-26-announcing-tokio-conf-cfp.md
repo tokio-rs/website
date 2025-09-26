@@ -25,7 +25,7 @@ experiences and practical applications that people can actually use. We are
 especially interested in talks about:
 
 <ins>Production Lessons:</ins><br/>
-What actually happened when you shipped Tokio code to production - the outages,
+What actually happened when you shipped async code to production - the outages,
 the tough debugging sessions, the scaling surprises. What tools do you wish
 you'd known about, and what would you do differently next time?
 
