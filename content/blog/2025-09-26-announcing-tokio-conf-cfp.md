@@ -21,7 +21,7 @@ uses async Rust in production.
 We're looking for talks across all technical levels - every talk should provide
 people with practical insights they can apply in their own work. Whether you're
 sharing beginner lessons or advanced optimization tricks, focus on real
-experiences and practical applications that people can actually use. . We are
+experiences and practical applications that people can actually use. We are
 especially interested in talks about:
 
 <ins>Production Lessons:</ins><br/>
