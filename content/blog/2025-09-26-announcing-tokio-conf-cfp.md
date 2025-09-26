@@ -29,37 +29,37 @@ What actually happened when you shipped Tokio code to production - the outages,
 the tough debugging sessions, the scaling surprises. What tools do you wish
 you'd known about, and what would you do differently next time?
 
-**Architecture Patterns & Design:**<br/>
+<ins>Architecture Patterns & Design:</ins><br/>
 The architectural decisions that worked (and the ones that didn't) - actor
 patterns, channels, when to spin up multiple runtimes, different concurrency
 approaches, and when you probably shouldn't use Tokio at all.
 
-**Performance Optimization:**<br/>
+<ins>Performance Optimization:</ins><br/>
 Stories about hunting down that one blocking call that was tanking performance,
 tuning runtimes, dealing with oversubscription, and annoying OS scheduling
 pauses. Share the optimization tricks that actually made a difference.
 
-**Debugging & Monitoring:**<br/>
+<ins>Debugging & Monitoring:</ins><br/>
 How do you actually figure out what's going wrong in async code, especially in
 production? Share your debugging and monitoring setups that work.
 
-**Rust Everywhere:**<br/>
+<ins>Rust Everywhere:</ins><br/>
 Can Rust really work everywhere, not just for high-performance systems? Real
 experiences using async Rust for typical applications, what's working, what's
 still missing, and what we'd need to get there.
 
-**Testing Async Code:**<br/>
+<ins>Testing Async Code:</ins><br/>
 How to actually test this stuff without pulling your hair out, catching those
 sneaky cancellation bugs before they hit users, and the practices that help you
 ship reliable async systems.
 
-**Team Adoption:**<br/>
+<ins>Team Adoption:</ins><br/>
 The real story of adoption - what worked when convincing your team, the training
 that actually helped, the failures and false starts, the common concerns and
 roadblocks you hit, and how to build codebases that your whole team can work
 with.
 
-**What's Next:**<br/>
+<ins>What's Next:</ins><br/>
 Industry shifts and emerging technologies that will impact how we build async
 applications. New paradigms, AI, evolving infrastructure - what's coming that
 async Rust developers should be thinking about?
