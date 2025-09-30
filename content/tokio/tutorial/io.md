@@ -88,7 +88,8 @@ use tokio::fs::File;
 async fn main() -> io::Result<()> {
     let mut file = File::create("foo.txt").await?;
 
-    // Writes some prefix of the byte string, but not necessarily all of it.
+    // Writes some prefix of the byte string, but not necessarily all
+    // of it.
     let n = file.write(b"some bytes").await?;
 
     println!("Wrote the first {} bytes of 'some bytes'.", n);
@@ -281,7 +282,7 @@ can use [`TcpStream::split`]. The task that processes the echo logic in the serv
 # fn dox(mut socket: TcpStream) {
 tokio::spawn(async move {
     let (mut rd, mut wr) = socket.split();
-    
+
     if io::copy(&mut rd, &mut wr).await.is_err() {
         eprintln!("failed to copy");
     }
@@ -316,20 +317,21 @@ async fn main() -> io::Result<()> {
 
             loop {
                 match socket.read(&mut buf).await {
-                    // Return value of `Ok(0)` signifies that the remote has
-                    // closed
+                    // Return value of `Ok(0)` signifies that the
+                    // remote has closed
                     Ok(0) => return,
                     Ok(n) => {
                         // Copy the data back to socket
                         if socket.write_all(&buf[..n]).await.is_err() {
-                            // Unexpected socket error. There isn't much we can
-                            // do here so just stop processing.
+                            // Unexpected socket error. There isn't
+                            // much we can do here, so just stop
+                            // processing.
                             return;
                         }
                     }
                     Err(_) => {
-                        // Unexpected socket error. There isn't much we can do
-                        // here so just stop processing.
+                        // Unexpected socket error. There isn't much
+                        // we can do here so just stop processing.
                         return;
                     }
                 }
