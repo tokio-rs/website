@@ -210,7 +210,7 @@ The `#[tokio::main]` function is a macro. It transforms the `async fn main()`
 into a synchronous `fn main()` that initializes a runtime instance and executes
 the async main function.
 
-For example, the following:
+For example, the following code:
 
 ```rust
 #[tokio::main]
@@ -219,11 +219,11 @@ async fn main() {
 }
 ```
 
-gets transformed into:
+is functionally equivalent to:
 
 ```rust
 fn main() {
-    let mut rt = tokio::runtime::Runtime::new().unwrap();
+    let rt = tokio::runtime::Runtime::new().unwrap();
     rt.block_on(async {
         println!("hello");
     })
