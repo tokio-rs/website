@@ -2,6 +2,7 @@ import React, { FC, ReactNode } from "react";
 
 import Head from "next/head";
 import Navigation from "./nav";
+import Announcement from "./announcement";
 import { Roboto } from "next/font/google";
 
 const roboto = Roboto({
@@ -35,6 +36,7 @@ const Layout: FC<Props> = ({ title, blog, children }) => (
       <link rel="alternate" type="application/rss+xml" href="/blog/index.xml" />
     </Head>
     <main className={roboto.className}>
+      <Announcement />
       <Navigation blog={blog} />
       {children}
     </main>
