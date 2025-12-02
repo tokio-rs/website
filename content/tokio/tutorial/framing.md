@@ -180,7 +180,7 @@ pub async fn read_frame(&mut self)
 Let's break this down. The `read_frame` method operates in a loop. First,
 `self.parse_frame()` is called. This will attempt to parse a redis frame from
 `self.buffer`. If there is enough data to parse a frame, the frame is returned
-to the caller of `read_frame()`.Otherwise, we attempt to read more data from the
+to the caller of `read_frame()`. Otherwise, we attempt to read more data from the
 socket into the buffer. After reading more data, `parse_frame()` is called
 again. This time, if enough data has been received, parsing may succeed.
 
@@ -488,7 +488,7 @@ in the buffer to the socket.
 
 Another alternative would be to **not** call `flush()` in `write_frame()`.
 Instead, provide a `flush()` function on `Connection`. This would allow the
-caller to write queue multiple small frames in the write buffer then write them
+caller to queue multiple small frames in the write buffer then write them
 all to the socket with one `write` syscall. Doing this complicates the
 `Connection` API. Simplicity is one of Mini-Redis' goals, so we decided to
 include the `flush().await` call in `fn write_frame()`.
