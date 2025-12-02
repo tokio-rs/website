@@ -464,9 +464,7 @@ async fn write_frame(&mut self, frame: &Frame)
         Frame::Array(_val) => unimplemented!(),
     }
 
-    self.stream.flush().await;
-
-    Ok(())
+    self.stream.flush().await
 }
 # async fn write_decimal(&mut self, val: u64) -> io::Result<()> { unimplemented!() }
 # }
