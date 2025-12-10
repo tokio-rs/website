@@ -101,27 +101,6 @@ a:active {
   overscroll-behavior-y: none;
 }
 
-.tk-announcement {
-  width: 100%;
-  background-color: $magenta;
-  padding: 0.75rem 1rem;
-  text-align: center;
-
-  .tk-announcement-content {
-    a {
-      color: white;
-      font-weight: 500;
-      text-decoration: none;
-      display: block;
-
-      &:hover {
-        color: white;
-        text-decoration: underline;
-      }
-    }
-  }
-}
-
 .content {
   h1,
   h2,
