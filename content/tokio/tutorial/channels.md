@@ -432,7 +432,9 @@ You can find the entire code [here][full].
 Whenever concurrency or queuing is introduced, it is important to ensure that the
 queing is bounded and the system will gracefully handle the load. Unbounded queues
 will eventually fill up all available memory and cause the system to fail in
-unpredictable ways.
+unpredictable ways. This tends to happen due to _backpressure_, which is when
+the rate at which data is added to a queue exceeds the rate at which it is removed.
+You can find more information about backpressure [here][backpressure].
 
 Tokio takes care to avoid implicit queuing. A big part of this is the fact that
 async operations are lazy. Consider the following:
@@ -483,3 +485,4 @@ capacity. Specific bound values will be application specific.
 Taking care and picking good bounds is a big part of writing reliable Tokio applications.
 
 [full]: https://github.com/tokio-rs/website/blob/master/tutorial-code/channels/src/main.rs
+[backpressure]: https://tokio.rs/blog/2021-05-14-inventing-the-service-trait#backpressure
