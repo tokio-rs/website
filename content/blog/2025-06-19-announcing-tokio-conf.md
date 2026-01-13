@@ -45,7 +45,7 @@ email updates at [tokioconf.com](https://tokioconf.com), or follow us on
 
 We’re so excited to bring the community together—see you in Portland next year!
 
-<div style="text-align:right">&mdash; <a href="https://github.com/tokio-rs/axum/discussions/3099">the Tokio team</a></div>
+<div style="text-align:right">&mdash; the Tokio team</div>
 
 [Mastodon]: https://hachyderm.io/@tokioconf
 [BlueSky]: https://bsky.app/profile/tokioconf.com
