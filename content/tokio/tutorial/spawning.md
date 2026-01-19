@@ -225,7 +225,7 @@ note: function requires argument type to outlive `'static`
   |
 7 |       task::spawn(async {
   |  _________________^
-8 | |         println!("Here's a vector: {:?}", v);
+8 | |         println!("Here's a vec: {:?}", v);
 9 | |     });
   | |_____^
 help: to force the async block to take ownership of `v` (and any other

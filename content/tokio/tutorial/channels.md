@@ -271,7 +271,7 @@ let t2 = tokio::spawn(async move {
     tx2.send(cmd).await.unwrap();
 });
 # }
-````
+```
 
 At the bottom of the `main` function, we `.await` the join handles to ensure the
 commands fully complete before the process exits.
