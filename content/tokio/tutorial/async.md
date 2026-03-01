@@ -142,7 +142,7 @@ enum MainFuture {
 impl Future for MainFuture {
     type Output = ();
 
-    fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>)
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>)
         -> Poll<()>
     {
         use MainFuture::*;
