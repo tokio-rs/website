@@ -40,7 +40,7 @@ We're also setting aside space for people who want to hack on things together �
 
 ## See you there
 
-[Tickets][tickets] are available. If you have questions about anything — the event, the workshop, travel, whatever — reach out at [hello@tokioconf.com][email] or in the [#tokioconf channel on Discord][Discord]. Sign up for email updates at [tokioconf.com], or follow us on [Bluesky] or [Mastodon] for announcements.
+[Tickets][tickets] are available. If you have questions about anything — the event, the workshop, travel, whatever — reach out at [hello@tokioconf.com][email] or in the [#tokioconf channel on Discord][Discord]. Sign up for email updates at [tokioconf], or follow us on [Bluesky] or [Mastodon] for announcements.
 
 See you in Portland.
 
@@ -66,4 +66,4 @@ See you in Portland.
 [david]: https://github.com/davidpdrsn
 [Tonic]: https://github.com/hyperium/tonic
 [Axum]: https://github.com/tokio-rs/axum
-[tokioconf.com]
+[tokioconf]: https://tokioconf.com/?utm_source=tokio&utm_medium=referral&utm_campaign=noregrets
