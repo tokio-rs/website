@@ -551,6 +551,50 @@ a:active {
   }
 }
 
+@media print {
+  // Hide these elements in the printed version
+  .footer,
+  .navbar,
+  .tk-announcement,
+  .tk-content-summary,
+  .tk-doc-footer,
+  .tk-docs-nav,
+  .tk-menu {
+    display: none !important;
+  }
+
+  // Remove excess whitespace and padding
+  .tk-content,
+  .tk-markdown {
+    padding: 0 !important;
+    // Override reduced width from column related styling
+    width: 100% !important;
+  }
+  .section {
+    padding: 0 !important;
+  }
+  // Restore missing margin
+  body,
+  .columns {
+    margin: revert !important;
+  }
+
+  pre {
+    // Wrap code blocks while printing, to avoid clipping content
+    white-space: pre-wrap !important;
+    overflow-wrap: break-word !important;
+    // Try to avoid breaking code blocks across separate pages, if possible.
+    break-inside: avoid !important;
+  }
+
+  // Force the stack images to look like they would before scrolling down. The
+  // implementation lives in components/stack.tsx, and the normal styling is
+  // above, near the other .anchor selector.
+  .tk-stack .anchor > img:not(#tk-stack-lines) {
+    opacity: 1 !important;
+  }
+}
+
 .tk-docs {
   .tk-docs-nav {
     background-color: $light-gray;
