@@ -6,9 +6,9 @@ description: "March 3, 2026"
 
 We're about seven weeks out from [TokioConf 2026][tokioconf] and most of the big planning decisions are behind us. The [program] is set, including a [workshop] (somehow, I convinced Alice and Sean to do the workshop with me), the venue, A/V, and social events are figured out. A big thanks to Tiffanie who is doing most of the conference organizing.
 
-* When: April 20-22, 2026
-* Where: Portland, OR
-* What: Two days of talks from people building with Tokio sharing what they learned, a workshop, and social events.
+* **When**: April 20-22, 2026
+* **Where**: Portland, OR
+* **What**: Two days of talks from people building with Tokio sharing what they learned, a workshop, and social events.
 
 Since we [announced the program and tickets][jan-announcement] in January, I've been getting similar questions. So, I wanted to write a post that addresses those questions directly, and also explain some of the thinking behind the decisions we've made. A lot of what makes TokioConf different isn't obvious from just looking at the website and I probably haven't done a good job at explaining it yet.
 
