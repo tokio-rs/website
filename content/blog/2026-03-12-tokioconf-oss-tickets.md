@@ -15,7 +15,7 @@ If you know someone who fits the description and wants to come to TokioConf, ple
 * **What**: Two days of talks from people building with Tokio sharing what they learned, a workshop, and social events. [Read more][what-to-expect]
 * **Tickets**: [https://www.tokioconf.com][tokioconf]
 
-[tokioconf]: https://www.tokioconf.com
+[tokioconf]: https://tokioconf.com/?utm_source=tokio&utm_medium=referral&utm_campaign=noregrets
 [tokio-rs]: https://github.com/tokio-rs
 [hyperium]: https://github.com/hyperium
 [tower-rs]: https://github.com/tower-rs
