@@ -4,7 +4,7 @@ title: "Free TokioConf tickets for contributors and open source maintainers"
 description: "March 12, 2026"
 ---
 
-We're setting aside 20 free [TokioConf][tokioconf] tickets for contributors to Tokio-related projects. You are eligible if you have submitted a PR (even if it didn't get merged) to any of the repositories hosted under [tokio-rs], [hyperium], or [tower-rs] before March 10, 2026.
+We're setting aside 20 free [TokioConf][tokioconf] tickets for contributors to Tokio-related projects. You are eligible if you have submitted a PR (even if it didn't get merged) to any of the repositories hosted under [tokio-rs], [hyperium], or [tower-rs] **before March 10, 2026**.
 
 We also want to extend the offer to anyone who maintains an open source project that is important to the Tokio community. If that's you and you want to come to TokioConf, email us at [hello@tokioconf.com][email].
 
