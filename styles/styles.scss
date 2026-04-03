@@ -120,6 +120,15 @@ a:active {
       }
     }
   }
+
+  @include mobile {
+    padding: 0.5rem 0.75rem;
+
+    .tk-announcement-content a {
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .content {
