@@ -39,12 +39,6 @@ struct Todo {
     title: String,
 }
 
-// Connect to the database
-let mut db = toasty::Db::builder()
-    .models(toasty::models!(crate::*))
-    .connect("sqlite::memory:")
-    .await?;
-
 // Create a user, the ID is not specified as it is set automatically
 toasty::create!(User {
     name: "John Doe",
