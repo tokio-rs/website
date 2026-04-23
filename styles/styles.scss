@@ -186,12 +186,16 @@ a:active {
 
       opacity: 0;
       pointer-events: none;
-      transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+      transition:
+        transform 0.2s ease-in-out,
+        opacity 0.2s ease-in-out;
     }
     .navbar-menu.is-active {
       opacity: 1;
       transform: translateY(100%);
-      transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+      transition:
+        transform 0.2s ease-in-out,
+        opacity 0.2s ease-in-out;
       pointer-events: auto;
     }
     .navbar-end {
