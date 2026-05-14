@@ -16,7 +16,7 @@ for the Rust programming language that prioritizes ease of use. Toasty supports
 both SQL and NoSQL databases. Today, on the NoSQL front, only DynamoDB works,
 but I'm hoping to get more support in the coming months. The guide has lots of details.
 
-Now, what is new since v0.3
+Now, what is new since v0.3.
 
 ## More control over selected fields.
 
@@ -39,7 +39,7 @@ struct Article {
 ```
 
 The `body` field might be big (the full body of the article). When querying a
-list of articles for an index page, you probably don't want to load the the full
+list of articles for an index page, you probably don't want to load the full
 body. One way you can do that now is by marking the `body` field as deferred.
 
 ```rust
@@ -47,9 +47,9 @@ body. One way you can do that now is by marking the `body` field as deferred.
 body: toasty::Deferred<String>,
 ```
 
-Now, by default, when loading an Article. The `body` field is omitted. You can
-can either load it on-demand *or* you can eagerly load it the same way you do
-with relations:
+Now, by default, when loading an Article, the `body` field is omitted. You can
+either load it on-demand *or* you can eagerly load it the same way you do with
+relations:
 
 ```rust
 Article::filter_by_id(article_id)
@@ -59,11 +59,11 @@ Article::filter_by_id(article_id)
 ```
 
 The other way is to explicitly request fields when querying data. This is done
-with `select()`. The thing to note there is since you can pick the fields at
+with `select()`. The thing to note there is, since you can pick the fields at
 runtime, it doesn't load the actual model *type*, just the fields.
 
 ```rust
-let title: Vec<String> = Article::filter_by_id(article_id)
+let titles: Vec<String> = Article::filter_by_id(article_id)
     .select(Article::fields().title())
     .exec(&mut db)
     .await?;
@@ -72,7 +72,7 @@ let title: Vec<String> = Article::filter_by_id(article_id)
 You can select more than just one field using a tuple:
 
 ```rust
-let title: Vec<(u64, String)> = Article::filter_by_id(article_id)
+let ids_and_titles: Vec<(u64, String)> = Article::filter_by_id(article_id)
     .select((
         Article::fields().id(),
         Article::fields().title()
@@ -138,7 +138,7 @@ databases provide a wide range of similar capabilities. Toasty will be providing
 built in support for these sort of access and storage patterns.
 
 What is interesting about the document storage feature, including how well
-PostgreSQL supports it, is it continues to advance my believe that the
+PostgreSQL supports it, is it continues to advance my belief that the
 difference between a good SQL-focused library and a good NoSQL-focused library
 isn't actually that different. The amount of overlap between the two is much
 bigger than what I anticipated it would be when I started working on Toasty. I'm
