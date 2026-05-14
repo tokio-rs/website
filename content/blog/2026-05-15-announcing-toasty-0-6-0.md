@@ -20,7 +20,7 @@ Now, what is new since v0.3.
 
 ## More control over selected fields.
 
-Toasty added both [deferred fields] and `.select()`. This lets you control which
+Toasty added both [deferred fields] and [`.select()`]. This lets you control which
 fields you want to load when querying models.
 
 Say you have a model, like `Article`
@@ -83,7 +83,7 @@ let ids_and_titles: Vec<(u64, String)> = Article::filter_by_id(article_id)
 
 ## `Vec<scalar>` collection fields
 
-You can now have `Vec` fields as long as the item type is a "scalar"
+You can now have [`Vec` fields] as long as the item type is a "scalar"
 (primitive). So, you can have `Vec<u64>` fields. How these fields are stored
 depends on the target database capabilities. PostgreSQL uses arrays, other SQL
 databases use JSON storage, and DynamoDB uses its native list storage.
@@ -160,4 +160,6 @@ Toasty contributors.
 [Toasty]: https://github.com/tokio-rs/toasty
 [guide]: https://tokio-rs.github.io/toasty/nightly/guide/
 [deferred fields]: https://tokio-rs.github.io/toasty/nightly/guide/deferred-fields.html
+[`.select()`]: https://tokio-rs.github.io/toasty/nightly/guide/querying-records.html#projecting-columns-with-select
+[`Vec` fields]: https://tokio-rs.github.io/toasty/nightly/guide/vec-scalar-fields.html
 [Tokio Discord]: https://discord.gg/tokio
