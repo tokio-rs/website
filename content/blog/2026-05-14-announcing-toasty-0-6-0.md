@@ -4,17 +4,17 @@ title: "Toasty 0.6.0 - What is new?"
 description: "May 14, 2026"
 ---
 
-It has been a bit more than a month since Toasty's initial crates.io release,
+It has been a bit more than a month since Toasty's initial [crates.io release],
 and what a month it has been, not just with Toasty. We also had our first
-TokioConf (talk recordings will be announced soon). But, there also has been a
+[TokioConf] (talk recordings will be announced soon). But, there also has been a
 lot of development on Toasty itself. We published v0.4, 0.5, and 0.6. These came
 in pretty rapid succession. I didn't have much time to announce them officially,
 so I will do it as a batch here.
 
-First, in case you haven't heard about Toasty yet. Toasty is an asynchronous ORM
+First, in case you haven't heard about [Toasty] yet. Toasty is an asynchronous ORM
 for the Rust programming language that prioritizes ease of use. Toasty supports
 both SQL and NoSQL databases. Today, on the NoSQL front, only DynamoDB works,
-but I'm hoping to get more support in the coming months. The guide has lots of details.
+but I'm hoping to get more support in the coming months. The [guide] has lots of details.
 
 Now, what is new since v0.3.
 
@@ -154,3 +154,10 @@ chipping away at it.
 Hopefully you give Toasty a spin and share your feedback. The [Tokio Discord]
 has a `#toasty` channel where you can ask questions and share the feedback with
 Toasty contributors.
+
+[crates.io release]: https://crates.io/crates/toasty
+[TokioConf]: https://tokioconf.com
+[Toasty]: https://github.com/tokio-rs/toasty
+[guide]: https://tokio-rs.github.io/toasty/nightly/guide/
+[deferred fields]: https://tokio-rs.github.io/toasty/nightly/guide/deferred-fields.html
+[Tokio Discord]: https://discord.gg/tokio
