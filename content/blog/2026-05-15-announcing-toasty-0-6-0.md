@@ -1,7 +1,7 @@
 ---
 date: "2026-05-14"
 title: "Toasty 0.6.0 - What is new?"
-description: "May 14, 2026"
+description: "May 15, 2026"
 ---
 
 It has been a bit more than a month since Toasty's initial [crates.io release],
