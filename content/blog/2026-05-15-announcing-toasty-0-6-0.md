@@ -4,12 +4,12 @@ title: "Toasty 0.6.0 - What is new?"
 description: "May 15, 2026"
 ---
 
-It has been a bit more than a month since Toasty's initial [crates.io release],
-and what a month it has been, not just with Toasty. We also had our first
-[TokioConf] (talk recordings will be announced soon). But, there also has been a
-lot of development on Toasty itself. We published v0.4, 0.5, and 0.6. These came
-in pretty rapid succession. I didn't have much time to announce them officially,
-so I will do it as a batch here.
+It has been a bit more than a month since [Toasty]'s initial [crates.io
+release], and what a month it has been, not just with Toasty. We also had our
+first [TokioConf] (talk recordings will be announced soon). But, there also has
+been a lot of development on Toasty itself. We published v0.4, 0.5, and 0.6
+([changelog]). These came in pretty rapid succession. I didn't have much time to
+announce them officially, so I will do it as a batch here.
 
 First, in case you haven't heard about [Toasty] yet. Toasty is an asynchronous ORM
 for the Rust programming language that prioritizes ease of use. Toasty supports
@@ -148,7 +148,7 @@ pretty excited to see how this aspect evolves.
 
 There are quite a number of other improvements. Too many for a blog post,
 including more support for query expressions, db-native enums, optimistic
-version control, TLS support, etc. We have a lot more on our roadmap and will be
+version control, TLS support, etc. We have a lot more on our [roadmap] and will be
 chipping away at it.
 
 Hopefully you give Toasty a spin and share your feedback. The [Tokio Discord]
@@ -162,4 +162,6 @@ Toasty contributors.
 [deferred fields]: https://tokio-rs.github.io/toasty/nightly/guide/deferred-fields.html
 [`.select()`]: https://tokio-rs.github.io/toasty/nightly/guide/querying-records.html#projecting-columns-with-select
 [`Vec` fields]: https://tokio-rs.github.io/toasty/nightly/guide/vec-scalar-fields.html
+[roadmap]: https://github.com/tokio-rs/toasty/blob/main/docs/dev/roadmap.md
 [Tokio Discord]: https://discord.gg/tokio
+[changelog]: https://github.com/tokio-rs/toasty/blob/main/crates/toasty/CHANGELOG.md
