@@ -238,6 +238,10 @@ async fn main() -> io::Result<()> {
         wr.write_all(b"hello\r\n").await?;
         wr.write_all(b"world\r\n").await?;
 
+        // Explicitly shut down the write half to signal EOF to the peer;
+        // `io::split` does not close the connection on drop.
+        wr.shutdown().await?;
+
         // Sometimes, the rust type inferencer needs
         // a little help
         Ok::<_, io::Error>(())
