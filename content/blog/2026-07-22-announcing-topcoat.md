@@ -4,8 +4,6 @@ title: "Announcing Topcoat: a framework for building full-stack reactive web app
 description: "July 22, 2026"
 ---
 
-# Announcing Topcoat: a framework for building full-stack reactive web apps with Rust
-
 [Topcoat] is a modular, batteries-included Rust framework for building full-stack, reactive web apps. It prioritizes simplicity and productivity. Topcoat is entirely server-rendered. Reactivity is added by rendering HTML snippets in the server and adding "reactive instructions" as metadata (similar in idea to HTMX).
 
 Here is the "hello world" app with Topcoat:
