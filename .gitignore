@@ -23,6 +23,7 @@ tutorial-code/Cargo.lock
 
 # misc
 .DS_Store
+public/sitemap.xml
 
 # debug
 npm-debug.log*
