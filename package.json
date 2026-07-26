@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build && npm run build:rss",
+    "dev": "npm run build:sitemap && next dev --turbopack",
+    "build": "npm run build:sitemap && next build && npm run build:rss",
+    "build:sitemap": "node scripts/generate-sitemap.js",
     "build:rss": "tsc --outDir dist --noEmit false && sed -i.bak 's/markdown\"/markdown.js\"/g' dist/lib/api.js && rm dist/lib/api.js.bak && node scripts/generate-rss-feed.js",
     "fmt": "prettier --write --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'",
     "fmt:check": "prettier --check --prose-wrap always '{components,content,pages,lib,styles}/**/*.{js,jsx,ts,tsx,scss}'"
