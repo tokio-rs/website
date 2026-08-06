@@ -374,7 +374,7 @@ sharded hash map. You may also want to have a look at such concurrent hash table
 implementations as [leapfrog] and [flurry], the latter being a port of Java's
 `ConcurrentHashMap` data structure.
 
-Before you start using any of these crates, be sure you structure your code so,
+Before you start using any of these crates, be sure you structure your code so
 that you cannot hold a `MutexGuard` across an `.await`. If you don't, you will
 either have compiler errors (in case of non-Send guards) or your code will
 deadlock (in case of Send guards). See a full example and more context [in this blog post][shared-mutable-state-blog-post].
