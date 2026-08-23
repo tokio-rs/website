@@ -128,7 +128,7 @@ async fn main() {
         let (socket, _) = listener.accept().await.unwrap();
         // A new task is spawned for each inbound socket. The socket is
         // moved to the new task and processed there.
-        tokio::spawn(async move {
+        tokio::spawn(async {
             process(socket).await;
         });
     }
