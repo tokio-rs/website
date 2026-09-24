@@ -35,10 +35,12 @@ well-designed libraries can look nice.
 Rust is the best general-purpose language for the new world of AI-driven
 development. That includes building web applications or any server application,
 really. The role of libraries and frameworks in this new world is still up in
-the air. They will continue to play a substantial, but slightly different role.
-Well-defined conventions and abstractions will help the LLM work faster, with
-fewer tokens and fewer errors. That is fundamentally why I am still pushing for
-a batteries-included framework for Rust.
+the air. The cost of ditching a library or framework and using a bespoke
+solution has gone down, but not disappeared entirely. They will continue to play
+a substantial, but slightly different role. Well-defined conventions and
+abstractions will help the LLM work faster, with fewer tokens and fewer errors.
+That is fundamentally why I am still pushing for a batteries-included framework
+for Rust.
 
 I partnered with Julien, who has been leading the front-end design of Topcoat
 while I mostly focus on Toasty and the DB layer. We are still figuring out
