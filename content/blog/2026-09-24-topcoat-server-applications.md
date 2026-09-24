@@ -6,8 +6,9 @@ description: "September 24, 2026"
 
 [Two months][ann] ago, we ([Julien] and [I][Carl]) announced [Topcoat], a
 batteries-included full-stack Rust framework. It includes views, components,
-mailers, an ORM ([Toasty]), and more. We have been hard at work shipping features,
-so it is a good time to talk about what is new.
+mailers, an ORM ([Toasty]), and more. Topcoat aims to make building web apps
+with Rust as productive as any other language. We have been hard at work
+shipping features, so it is a good time to talk about what is new.
 
 I started my career as a professional software developer building web
 applications with Ruby on Rails. At the time, the [“build a blog in 15 minutes”
@@ -50,6 +51,8 @@ something very nice.
 With that, what is new with Topcoat and Toasty?
 
 # Client-side reactivity in Topcoat 0.9 and beyond
+
+Today, we published [Topcoat v.0.9][https://github.com/tokio-rs/topcoat/releases/tag/v0.9.0].
 
 When starting to build a web framework, you typically choose to either build a
 browser-side renderer or a server-side renderer. If you start with browser
