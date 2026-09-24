@@ -4,7 +4,7 @@ title: "Topcoat is pushing the boundary of server applications with Rust"
 description: "September 24, 2026"
 ---
 
-[Two months][ann] ago, we ([Julien] and I) announced [Topcoat], a
+[Two months][ann] ago, we ([Julien] and [I][Carl]) announced [Topcoat], a
 batteries-included full-stack Rust framework. It includes views, components,
 mailers, an ORM ([Toasty]), and more. We have been hard at work shipping features,
 so it is a good time to talk about what is new.
@@ -409,6 +409,7 @@ say hi in the #topcoat channel on the Tokio [Discord].
 <div style="text-align:right">&mdash; <a href="https://github.com/carllerche">Carl Lerche</a> & <a href="https://github.com/pikaju">Julien Scholz</a></div>
 
 [Julien]: https://github.com/pikaju
+[Carl]: https://github.com/carllerche
 [Topcoat]: https://github.com/tokio-rs/topcoat
 [Toasty]: https://github.com/tokio-rs/toasty
 [topcoat-0.8]: https://github.com/tokio-rs/topcoat/releases/tag/v0.8.0
