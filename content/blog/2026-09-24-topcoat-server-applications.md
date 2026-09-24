@@ -244,7 +244,7 @@ pub async fn chat_messages(cx: &Cx) -> Result<impl View> {
 }
 ```
 
-## Toasty, Topcoat’s DB client
+# Toasty, Topcoat’s DB client
 
 [Toasty] has received many incremental updates over the months. I’m just going
 to highlight a few of them quickly.
