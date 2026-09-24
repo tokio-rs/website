@@ -6,12 +6,12 @@ description: "September 24, 2026"
 
 [Two months][ann] ago, we ([Julien] and I) announced [Topcoat], a
 batteries-included full-stack Rust framework. It includes views, components,
-mailers, an ORM (Toasty), and more. We have been hard at work shipping features,
+mailers, an ORM ([Toasty]), and more. We have been hard at work shipping features,
 so it is a good time to talk about what is new.
 
 I started my career as a professional software developer building web
-applications with Ruby on Rails. At the time, the “build a blog in 15 minutes”
-video was groundbreaking. Back then, building software was tedious: writing
+applications with Ruby on Rails. At the time, the [“build a blog in 15 minutes”
+video][blog-video] was groundbreaking. Back then, building software was tedious: writing
 boilerplate instead of shipping features. Ruby on Rails challenged that and
 proved you could be productive and that building software could also be fun. I
 fell in love with Ruby on Rails, worked on the core team for a few years, and am
@@ -403,6 +403,9 @@ high-quality app that runs fast and uses little memory.
 
 And for web apps, I will be building with Rust, [Topcoat], and [Toasty].
 
+To give it a try, follow the [getting started guide][getting-started], and come
+say hi in the #topcoat channel on the Tokio [Discord].
+
 <div style="text-align:right">&mdash; <a href="https://github.com/carllerche">Carl Lerche</a> & <a href="https://github.com/pikaju">Julien Scholz</a></div>
 
 [Julien]: https://github.com/pikaju
@@ -412,3 +415,6 @@ And for web apps, I will be building with Rust, [Topcoat], and [Toasty].
 [suspense]: https://react.dev/reference/react/Suspense
 [ann]: https://tokio.rs/blog/2026-07-22-announcing-topcoat
 [contrib]: https://contributors.rubyonrails.org/contributors/carl-lerche/commits
+[blog-video]: https://www.youtube.com/watch?v=Gzj723LkRJY
+[getting-started]: https://github.com/tokio-rs/topcoat/blob/main/crates/topcoat/docs/getting_started.md
+[Discord]: https://discord.gg/tokio
