@@ -52,7 +52,7 @@ With that, what is new with Topcoat and Toasty?
 
 # Client-side reactivity in Topcoat 0.9 and beyond
 
-Today, we published [Topcoat v.0.9][https://github.com/tokio-rs/topcoat/releases/tag/v0.9.0].
+Today, we published [Topcoat v0.9](https://github.com/tokio-rs/topcoat/releases/tag/v0.9.0).
 
 When starting to build a web framework, you typically choose to either build a
 browser-side renderer or a server-side renderer. If you start with browser
