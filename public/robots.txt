@@ -1,0 +1,4 @@
+Sitemap: https://tokio.rs/sitemap.xml
+
+User-agent: *
+Allow: /
