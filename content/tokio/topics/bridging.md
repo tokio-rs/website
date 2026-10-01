@@ -79,7 +79,10 @@ pub struct BlockingClient {
 }
 
 impl BlockingClient {
-    pub fn connect<T: ToSocketAddrs>(addr: T) -> crate::Result<BlockingClient> {
+    pub fn connect<T>(addr: T) -> crate::Result<BlockingClient>
+    where
+        T: ToSocketAddrs,
+    {
         let rt = tokio::runtime::Builder::new_current_thread()
             .enable_all()
             .build()?;
@@ -135,7 +138,11 @@ impl BlockingClient {
         self.rt.block_on(self.inner.set_expires(key, value, expiration))
     }
 
-    pub fn publish(&mut self, channel: &str, message: Bytes) -> crate::Result<u64> {
+    pub fn publish(
+        &mut self,
+        channel: &str,
+        message: Bytes,
+    ) -> crate::Result<u64> {
         self.rt.block_on(self.inner.publish(channel, message))
     }
 }
@@ -160,7 +167,10 @@ pub struct BlockingSubscriber {
 }
 
 impl BlockingClient {
-    pub fn subscribe(self, channels: Vec<String>) -> crate::Result<BlockingSubscriber> {
+    pub fn subscribe(
+        self,
+        channels: Vec<String>,
+    ) -> crate::Result<BlockingSubscriber> {
         let subscriber = self.rt.block_on(self.inner.subscribe(channels))?;
         Ok(BlockingSubscriber {
             inner: subscriber,
@@ -178,11 +188,17 @@ impl BlockingSubscriber {
         self.rt.block_on(self.inner.next_message())
     }
 
-    pub fn subscribe(&mut self, channels: &[String]) -> crate::Result<()> {
+    pub fn subscribe(
+        &mut self,
+        channels: &[String],
+    ) -> crate::Result<()> {
         self.rt.block_on(self.inner.subscribe(channels))
     }
 
-    pub fn unsubscribe(&mut self, channels: &[String]) -> crate::Result<()> {
+    pub fn unsubscribe(
+        &mut self,
+        channels: &[String],
+    ) -> crate::Result<()> {
         self.rt.block_on(self.inner.unsubscribe(channels))
     }
 }
