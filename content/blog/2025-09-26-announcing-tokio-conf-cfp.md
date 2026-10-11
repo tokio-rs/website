@@ -71,7 +71,7 @@ through December 8, 2025. Submit your proposal at
 decisions late January 2026.
 
 Questions about your talk idea? Reach out to us at
-[hello@tokioconf.com](hello@tokioconf.com) - we're happy to help you figure out
+[hello@tokioconf.com](mailto:hello@tokioconf.com) - we're happy to help you figure out
 if your experience would make a great talk. There is also a #tokioconf channel
 on the Tokio project [Discord], another good place to ask questions.
 
