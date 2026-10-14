@@ -1,0 +1,5 @@
+Contact: mailto:security@tokio.rs
+Policy: https://github.com/tokio-rs/tokio/blob/master/SECURITY.md
+Preferred-Languages: en
+Canonical: https://tokio.rs/.well-known/security.txt
+Expires: 2027-01-01T00:00:00.000Z
