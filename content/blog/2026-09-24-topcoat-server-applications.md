@@ -402,7 +402,7 @@ Look, I don’t know where we are going. The world of software engineering is
 completely different every three months. Who knows where it will land? I sure as
 hell don’t. What I do know is that I am very excited. I feel like I am living
 through science fiction, and the future is bright. Is Rust going to be part of
-the destination? Maybe. Maybe not. It will definietly play a big part in the
+the destination? Maybe. Maybe not. It will definitely play a big part in the
 journey. There is no reason we can’t maximize productivity AND have a really
 high-quality app that runs fast and uses little memory. 
 
