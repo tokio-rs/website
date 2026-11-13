@@ -217,7 +217,7 @@ Happy building.
 
 [Topcoat]: https://github.com/tokio-rs/topcoat
 [Toasty]: https://github.com/tokio-rs/toasty/
-[guide]: https://github.com/tokio-rs/topcoat/blob/main/crates/topcoat/docs/getting_started.md
+[guide]: https://github.com/tokio-rs/topcoat/blob/main/docs/getting_started.md
 [tokioconf]: https://www.youtube.com/watch?v=d76btqAUWSE
 [pikaju]: https://github.com/pikaju
 [Axum]: https://github.com/tokio-rs/axum
